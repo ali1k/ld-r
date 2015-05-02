@@ -6,6 +6,9 @@
  */
 
 import express from 'express';
+import csrf from 'csurf';
+import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import favicon from 'serve-favicon';
 import path from 'path';
 import serialize from 'serialize-javascript';
@@ -20,13 +23,29 @@ const htmlComponent = React.createFactory(HtmlComponent);
 const debug = debugLib('linked-data-reactor');
 
 const server = express();
+// we need this because "cookie" is true in csrfProtection
+server.use(cookieParser());
+server.use(bodyParser.json());
+server.use(csrf({cookie: true}));
 server.set('state namespace', 'App');
 server.use(favicon(path.join(__dirname, '/favicon.ico')));
 server.use('/public', express.static(path.join(__dirname, '/build')));
 server.use('/bower_components', express.static(path.join(__dirname, '/bower_components')));
 server.use('/assets', express.static(path.join(__dirname, '/assets')));
+// Get access to the fetchr plugin instance
+let fetchrPlugin = app.getPlugin('FetchrPlugin');
+// Register our services
+fetchrPlugin.registerService(require('./services/dbpedia'));
+// Set up the fetchr middleware
+server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
+
 server.use((req, res, next) => {
-    let context = app.createContext();
+    let context = app.createContext({
+        req: req, // The fetchr plugin depends on this
+        xhrContext: {
+            _csrf: req.csrfToken() // Make sure all XHR requests have the CSRF token
+        }
+    });
 
     debug('Executing navigate action');
     context.getActionContext().executeAction(navigateAction, {
