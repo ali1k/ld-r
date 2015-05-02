@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = {
+export default {
   parseDBpediaLookup: function (body){
     var output=[];
     var desc='',parsed = JSON.parse(body);
@@ -17,4 +17,4 @@ module.exports = {
     });
     return output;
   }
-};
+}
