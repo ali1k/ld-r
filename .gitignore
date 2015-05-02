@@ -1,0 +1,8 @@
+node_modules
+bower_components
+build
+*.log
+logs
+test.js
+configs/general.js
+configs/reactor.js

@@ -1,0 +1,5 @@
+//important: first value in the array is considered as default value for the property
+//this file is visible to the server-side
+export default {
+
+};

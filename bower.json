@@ -1,0 +1,17 @@
+{
+  "name": "Linked Data Reactor",
+  "version": "0.1.0",
+  "authors": [
+    "ali1k <hyperir@gmail.com>"
+  ],
+  "description": "Reactive Linked Data Components",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "homepage": "http://risis.eu",
+  "dependencies": {
+    "semantic-ui": "~1.11.4",
+    "animate.css": "~3.2.3"
+  }
+}
