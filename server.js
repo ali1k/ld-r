@@ -9,7 +9,7 @@ import express from 'express';
 import favicon from 'serve-favicon';
 import path from 'path';
 import serialize from 'serialize-javascript';
-import {navigateAction} from 'flux-router-component';
+import {navigateAction} from 'fluxible-router';
 import debugLib from 'debug';
 import React from 'react';
 import generalConfig from './configs/general';

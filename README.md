@@ -8,6 +8,8 @@ Reactive Linked Data Components
 
 Save `configs/general.config.js` as `general.js` and fill in the appropriate values for server port, URLs of your SPARQL endpoint and DBpedia lookup service.
 
+Save `configs/reactor.config.js` as `reactor.js` and fill in the appropriate settings for your UI reactors.
+
 `npm install`
 
 `bower install`
