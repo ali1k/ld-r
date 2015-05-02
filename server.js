@@ -36,6 +36,7 @@ server.use('/assets', express.static(path.join(__dirname, '/assets')));
 let fetchrPlugin = app.getPlugin('FetchrPlugin');
 // Register our services
 fetchrPlugin.registerService(require('./services/dbpedia'));
+fetchrPlugin.registerService(require('./services/dataset'));
 // Set up the fetchr middleware
 server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
 

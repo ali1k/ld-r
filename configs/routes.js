@@ -23,12 +23,18 @@ export default {
         }
     },
     dataset: {
-        path: '/dataset/:id',
+        //if no id is provided -> will start by defaultGraphName in reactor.config
+        path: '/dataset/:id?',
         method: 'get',
         handler: require('../components/Dataset'),
         label: 'Dataset',
         action: (context, payload, done) => {
-            context.executeAction(loadDataset, { id: payload.get('params').get('id')}, done);
+            let graphName;
+            graphName = payload.get('params').get('id');
+            if (!graphName) {
+                graphName = 'default';
+            }
+            context.executeAction(loadDataset, { id: graphName}, done);
         }
     },
     resource: {
@@ -38,10 +44,9 @@ export default {
         label: 'Resource',
         action: (context, payload, done) => {
             //predicate Category
-            var category;
-            if (payload.get('params').get('pcategory')) {
-                category = payload.get('params').get('pcategory');
-            } else {
+            let category;
+            category = payload.get('params').get('pcategory');
+            if (!category) {
                 category = 'general';
             }
             context.executeAction(loadResource, { dataset: payload.get('params').get('did'), resource: payload.get('params').get('rid'), category: category}, done);

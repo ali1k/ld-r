@@ -1,9 +1,9 @@
 'use strict';
 
 export default {
-  parseDBpediaLookup: function (body){
-    var output=[];
-    var desc='',parsed = JSON.parse(body);
+  parseDBpediaLookup: (body) => {
+    let output=[];
+    let desc='',parsed = JSON.parse(body);
     if(!parsed){
       return output;
     }
