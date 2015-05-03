@@ -16,8 +16,12 @@ class Resource extends React.Component {
             <div className="ui page grid" ref="resource">
                 <div className="ui column">
                     <div className="ui segment">
-                        <h3> {this.props.ResourceStore.resourceURI}</h3>
-                        {list}
+                        <h3 className="ui big label"> {this.props.ResourceStore.resourceURI}</h3>
+                        <div className="ui grid">
+                            <div className="column ui list">
+                                {list}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
