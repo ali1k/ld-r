@@ -7,6 +7,15 @@ class IndividualObjectReactor extends React.Component {
         super(props);
         this.state = {isEditMode: 0};
     }
+    handleEdit(evt){
+        this.setState({isEditMode: 1});
+    }
+    handleSave(evt){
+        this.setState({isEditMode: 0});
+    }
+    handleUndo(evt){
+        this.setState({isEditMode: 0});
+    }
     render() {
         let dataViewType, dataEditType;
         switch(this.props.config? (this.props.config.dataViewType? this.props.config.dataViewType[0]:'') : ''){
@@ -24,14 +33,28 @@ class IndividualObjectReactor extends React.Component {
                 dataEditType = <IndividualDataEdit spec={this.props.spec} config={this.props.config}/>;
         }
         if (this.state.isEditMode) {
+            //edit mode
             return (
                 <div className="ui list">
                     <div className="item">
-                        {dataEditType}
+                        <div className="ui form grid">
+                                <div className="twelve wide column field">
+                                        {dataEditType}
+                                </div>
+                                <div className="four wide column field">
+                                    <div onClick={this.handleSave.bind(this)} className="medium ui circular basic icon button">
+                                        <i className="save large blue icon link "></i>
+                                    </div>
+                                    <div onClick={this.handleUndo.bind(this)} className="medium ui circular basic icon button">
+                                        <i className="undo large green icon link "></i>
+                                    </div>
+                                </div>
+                        </div>
                     </div>
                 </div>
             );
         }else{
+            //view mode
             return (
                 <div className="ui list">
                     <div className="item">
@@ -40,7 +63,7 @@ class IndividualObjectReactor extends React.Component {
                                         {dataViewType}
                                 </div>
                                 <div className="four wide column field">
-                                    <div className="medium ui circular basic icon button">
+                                    <div onClick={this.handleEdit.bind(this)} className="medium ui circular basic icon button">
                                         <i className="edit large blue icon link "></i>
                                     </div>
                                 </div>
