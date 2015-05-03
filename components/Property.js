@@ -30,7 +30,7 @@ class Property extends React.Component {
                 <div className="ui horizontal list">
                     <div className="item">
                         <h3>
-                            {this.props.spec.property}
+                            <a href={this.props.spec.propertyURI} target="_blank"> {this.props.spec.property} </a>
                         </h3>
                     </div>
                     <i className="item circle info icon link"></i>
