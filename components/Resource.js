@@ -1,6 +1,6 @@
 import React from 'react';
 import Property from './Property';
-import {propertiesConfig} from '../configs/reactor';
+import {readOnly, propertiesConfig} from '../configs/reactor';
 import ResourceStore from '../stores/ResourceStore';
 import {connectToStores} from 'fluxible/addons';
 import {NavLink} from 'fluxible-router';
@@ -9,7 +9,7 @@ class Resource extends React.Component {
     render() {
         let list = this.props.ResourceStore.properties.map(function(node, index) {
             return (
-                <Property key={index} spec={node} config={propertiesConfig[node.propertyURI]}/>
+                <Property key={index} spec={node} readOnly={readOnly} config={propertiesConfig[node.propertyURI]}/>
             );
         });
         return (

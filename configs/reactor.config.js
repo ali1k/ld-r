@@ -5,6 +5,21 @@ export default {
     defaultGraphName: [''],
     //resource types to start with
     resourceFocusType: [''],
+    //only allow to view data -> disable edit
+    readOnly: 0,
     //config for property components
-    propertiesConfig: {}
+    propertiesConfig: {
+        'dcterms:title': {
+            category: ['general'],
+            hint: [''],
+            defaultOptions: [
+
+            ],
+            reactorType: ['IndividualObjectReactor'],
+            dataViewType: ['IndividualDataView'],
+            viewer: ['BasicIndividualView'],
+            dataEditType: ['IndividualDataEdit'],
+            editor: ['BasicIndividualInput']
+        }
+    }
 };

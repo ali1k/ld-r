@@ -5,7 +5,7 @@ import IndividualDataEdit from './IndividualDataEdit';
 class IndividualObjectReactor extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {isEditMode: 0};
+        this.state = {isEditMode: 0, readOnly: this.props.readOnly};
     }
     handleEdit(evt){
         this.setState({isEditMode: 1});
@@ -32,6 +32,19 @@ class IndividualObjectReactor extends React.Component {
             default:
                 dataEditType = <IndividualDataEdit spec={this.props.spec} config={this.props.config}/>;
         }
+        let editDIV, saveDIV, undoDIV;
+        //disable edit in readOnly mode
+        if(!this.state.readOnly){
+            editDIV = <div onClick={this.handleEdit.bind(this)} className="medium ui circular basic icon button">
+                            <i className="edit large blue icon link "></i>
+                      </div>;
+            saveDIV = <div onClick={this.handleSave.bind(this)} className="medium ui circular basic icon button">
+                            <i className="save large blue icon link "></i>
+                      </div>;
+            undoDIV = <div onClick={this.handleUndo.bind(this)} className="medium ui circular basic icon button">
+                            <i className="undo large green icon link "></i>
+                      </div>;
+        }
         if (this.state.isEditMode) {
             //edit mode
             return (
@@ -42,12 +55,8 @@ class IndividualObjectReactor extends React.Component {
                                         {dataEditType}
                                 </div>
                                 <div className="four wide column field">
-                                    <div onClick={this.handleSave.bind(this)} className="medium ui circular basic icon button">
-                                        <i className="save large blue icon link "></i>
-                                    </div>
-                                    <div onClick={this.handleUndo.bind(this)} className="medium ui circular basic icon button">
-                                        <i className="undo large green icon link "></i>
-                                    </div>
+                                    {saveDIV}
+                                    {undoDIV}
                                 </div>
                         </div>
                     </div>
@@ -60,12 +69,10 @@ class IndividualObjectReactor extends React.Component {
                     <div className="item">
                         <div className="ui form grid">
                                 <div className="twelve wide column field">
-                                        {dataViewType}
+                                    {dataViewType}
                                 </div>
                                 <div className="four wide column field">
-                                    <div onClick={this.handleEdit.bind(this)} className="medium ui circular basic icon button">
-                                        <i className="edit large blue icon link "></i>
-                                    </div>
+                                    {editDIV}
                                 </div>
                         </div>
                     </div>
