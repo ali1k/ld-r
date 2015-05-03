@@ -6,19 +6,26 @@ import {NavLink} from 'fluxible-router';
 class Dataset extends React.Component {
     render() {
         let graphName = this.props.DatasetStore.graphName;
-        let list = this.props.DatasetStore.resources.map((node, index) => {
-            return (
-                <NavLink key={index} routeName="resource" className="item active" href={'/dataset/'+ encodeURIComponent(graphName) +'/resource/' + encodeURIComponent(node)} >
-                    {node}
-                </NavLink>
-            );
-        });
+        let list;
+        if(!this.props.DatasetStore.resources.length){
+            list = <div className="ui warning message"><div className="header"> There was no resource in the selected dataset! Either add resources to your dataset or go to another dataset which has resources...</div></div>;
+        }else{
+            list = this.props.DatasetStore.resources.map((node, index) => {
+                return (
+                    <div className="item active" key={index}>
+                        <NavLink routeName="resource" className="ui label" href={'/dataset/'+ encodeURIComponent(graphName) +'/resource/' + encodeURIComponent(node)} >
+                            {node}
+                        </NavLink>
+                    </div>
+                );
+            });
+        }
         return (
             <div className="ui page grid" ref="dataset">
                 <div className="ui column">
                     <div className="ui segment">
                         <h3> Resources</h3>
-                        <div className="ui divided list">
+                        <div className="ui divided link list">
                             {list}
                         </div>
                     </div>
