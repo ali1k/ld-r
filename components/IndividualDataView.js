@@ -3,25 +3,17 @@ import BasicIndividualView from './BasicIndividualView';
 
 class IndividualDataView extends React.Component {
     render() {
-        let list;
+        let viewer;
         switch(this.props.config? (this.props.config.viewer? this.props.config.viewer[0]:'') : ''){
             case 'BasicIndividualView':
-                list = this.props.spec.instances.map(function(node, index) {
-                    return (
-                        <BasicIndividualView spec={node}/>
-                    );
-                });
+                viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
             break;
             default:
-                list = this.props.spec.instances.map(function(node, index) {
-                    return (
-                        <BasicIndividualView spec={node}/>
-                    );
-                });
+                viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
         }
         return (
             <div className="ui">
-                {list}
+                {viewer}
             </div>
         );
     }

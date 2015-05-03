@@ -4,17 +4,26 @@ import AggregateObjectReactor from './AggregateObjectReactor';
 
 class Property extends React.Component {
     render() {
-        let objectReactor;
+        const self = this;
+        let list;
         //dispatch to the right reactor
         switch(this.props.config? (this.props.config.reactorType? this.props.config.reactorType[0]:'') : ''){
             case 'IndividualObjectReactor':
-                objectReactor = <IndividualObjectReactor spec={this.props.spec} config={this.props.config}/>;
+                list = this.props.spec.instances.map(function(node, index) {
+                    return (
+                        <IndividualObjectReactor key={index} spec={node} config={self.props.config}/>
+                    );
+                });
             break;
             case 'AggregateObjectReactor':
-                objectReactor = <AggregateObjectReactor spec={this.props.spec} config={this.props.config}/>;
+                list = <AggregateObjectReactor spec={this.props.spec} config={self.props.config}/>;
             break;
             default:
-                objectReactor = <IndividualObjectReactor spec={this.props.spec} config={this.props.config}/>;
+                list = this.props.spec.instances.map(function(node, index) {
+                    return (
+                        <IndividualObjectReactor key={index} spec={node} config={self.props.config}/>
+                    );
+                });
         }
         return (
             <div className="property item">
@@ -28,7 +37,7 @@ class Property extends React.Component {
                 </div>
                 <div className="ui dividing header"></div>
                 <div className="property-objects">
-                    {objectReactor}
+                    {list}
                 </div>
             </div>
         );
