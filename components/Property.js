@@ -4,7 +4,18 @@ import AggregateObjectReactor from './AggregateObjectReactor';
 
 class Property extends React.Component {
     render() {
-        const self = this;
+        let self = this;
+        let newValueDIV;
+        if(this.props.config && this.props.config.allowNewValue){
+            newValueDIV = <div className="ui list">
+                                <div className="item">
+                                    <div className="medium ui basic icon labeled button">
+                                        <i className="plus square large blue icon link "></i> &nbsp; Add another <strong> {this.props.spec.property} </strong>
+                                    </div>
+                                </div>
+
+                          </div>;
+        }
         let list;
         //dispatch to the right reactor
         switch(this.props.config? (this.props.config.reactorType? this.props.config.reactorType[0]:'') : ''){
@@ -39,6 +50,7 @@ class Property extends React.Component {
                 <div className="property-objects">
                     {list}
                 </div>
+                {newValueDIV}
             </div>
         );
     }

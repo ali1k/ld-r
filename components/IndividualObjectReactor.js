@@ -19,6 +19,9 @@ class IndividualObjectReactor extends React.Component {
     handleDetails(evt){
         this.setState({isEditMode: 0});
     }
+    handleAddDetails(evt){
+        this.setState({isEditMode: 0});
+    }
     render() {
         let dataViewType, dataEditType;
         switch(this.props.config? (this.props.config.dataViewType? this.props.config.dataViewType[0]:'') : ''){
@@ -52,6 +55,14 @@ class IndividualObjectReactor extends React.Component {
             detailDIV = <div title="show details" onClick={this.handleDetails.bind(this)} className="medium ui circular basic icon button">
                             <i className="unhide large blue icon link "> </i>
                         </div>;
+        }else{
+            //show add detail icon if enabled
+            if(this.props.config && this.props.config.allowExtension){
+
+                detailDIV = <div title="add details" onClick={this.handleAddDetails.bind(this)} className="medium ui circular basic icon button">
+                                <i className="add user large blue icon link "> </i>
+                            </div>;
+            }
         }
         if (this.state.isEditMode) {
             //edit mode
