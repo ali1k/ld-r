@@ -12,7 +12,7 @@ const httpOptions = {
 };
 const outputFormat = 'application/sparql-results+json';
 /*-----------------------------------*/
-let rpPath, graphName, resourceURI, query, queryObject, utilObject;
+let rpPath, category, graphName, resourceURI, query, queryObject, utilObject;
 queryObject = new ResourceQuery();
 utilObject = new ResourceUtil();
 
@@ -21,6 +21,7 @@ export default {
     // At least one of the CRUD methods is Required
     read: (req, resource, params, config, callback) => {
         if (resource === 'resource.properties') {
+            category = params.category;
             //SPARQL QUERY
             graphName = params.dataset;
             resourceURI = params.resource;
@@ -33,11 +34,12 @@ export default {
                 callback(null, {
                     graphName: graphName,
                     resourceURI: resourceURI,
-                    properties: utilObject.parseProperties(res, params.category)
+                    currentCategory: category,
+                    properties: utilObject.parseProperties(res, category)
                 });
             }).catch(function (err) {
                 console.log(err);
-                callback(null, {graphName: graphName, resourceURI: resourceURI, properties: []});
+                callback(null, {graphName: graphName, resourceURI: resourceURI, currentCategory: 'default', properties: []});
             });
         }
 

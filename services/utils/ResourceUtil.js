@@ -1,4 +1,5 @@
 'use strict';
+import {propertiesConfig} from '../../configs/reactor';
 class ResourceUtil{
     constructor() {
 
@@ -25,6 +26,16 @@ class ResourceUtil{
         }else{
           parsed.results.bindings.forEach(function(el) {
             var property=self.getPropertyLabel(el.p.value);
+            if(category && category !== 'default'){
+                //filter by category
+                if(propertiesConfig[el.p.value] && propertiesConfig[el.p.value].category){
+                    if(category === propertiesConfig[el.p.value].category[0]){
+                        console.log(el.p.value);
+                    }
+                }
+            }else{
+
+            }
             //group by properties
             //I put the valueType into instances because we might have cases (e.g. subject property) in which for different instances, we have different value types
             if(propIndex[el.p.value]){

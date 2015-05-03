@@ -5,11 +5,13 @@ class ResourceStore extends BaseStore {
         super(dispatcher);
         this.properties = [];
         this.graphName = '';
+        this.currentCategory = 'default';
         this.resourceURI = '';
     }
     updatePropertyList(payload) {
         this.graphName = payload.graphName;
         this.resourceURI = payload.resourceURI;
+        this.currentCategory = payload.currentCategory;
         this.properties = payload.properties;
         this.emitChange();
     }
@@ -22,10 +24,14 @@ class ResourceStore extends BaseStore {
     getResourceURI() {
         return this.resourceURI;
     }
+    getCurrentCategory() {
+        return this.currentCategory;
+    }
     getState() {
         return {
             graphName: this.graphName,
             resourceURI: this.resourceURI,
+            currentCategory: this.currentCategory,
             properties: this.properties
         };
     }
@@ -36,6 +42,7 @@ class ResourceStore extends BaseStore {
         this.properties = state.properties;
         this.resourceURI = state.resourceURI;
         this.graphName = state.graphName;
+        this.currentCategory = state.currentCategory;
     }
 }
 

@@ -47,7 +47,7 @@ export default {
             let category;
             category = payload.get('params').get('pcategory');
             if (!category) {
-                category = 'general';
+                category = 'default';
             }
             context.executeAction(loadResource, { dataset: decodeURIComponent(payload.get('params').get('did')), resource: decodeURIComponent(payload.get('params').get('rid')), category: category}, done);
         }

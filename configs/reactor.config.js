@@ -7,6 +7,9 @@ export default {
     resourceFocusType: [''],
     //only allow to view data -> disable edit
     readOnly: 0,
+    //if enabled, will categorize properties in different tabs based on propertyCategories
+    usePropertyCategories: 0,
+    propertyCategories: [],
     //config for property components
     propertiesConfig: {
         'dcterms:title': {
