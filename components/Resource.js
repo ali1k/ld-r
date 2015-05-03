@@ -7,7 +7,7 @@ import {NavLink} from 'fluxible-router';
 
 class Resource extends React.Component {
     render() {
-        const self = this;
+        let self = this;
         let list = this.props.ResourceStore.properties.map(function(node, index) {
             return (
                 <Property key={index} spec={node} readOnly={readOnly} config={propertiesConfig[node.propertyURI]}/>

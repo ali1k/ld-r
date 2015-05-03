@@ -1,5 +1,5 @@
 'use strict';
-import {propertiesConfig} from '../../configs/reactor';
+import {usePropertyCategories, propertiesConfig} from '../../configs/reactor';
 class ResourceUtil{
     constructor() {
 
@@ -17,25 +17,25 @@ class ResourceUtil{
         return property;
     }
     parseProperties(body, category) {
-        let self=this;
+        let filterByCategory=0, self=this;
         let parsed = JSON.parse(body);
         let output=[], propIndex={}, finalOutput=[];
+        if(usePropertyCategories && category && category !== 'default'){
+            //allow filter by category
+            filterByCategory=1;
+        }
         if(parsed.head.vars[0]=== 'callret-0'){
           //no results!
           return [];
         }else{
           parsed.results.bindings.forEach(function(el) {
-            var property=self.getPropertyLabel(el.p.value);
-            if(category && category !== 'default'){
-                //filter by category
-                if(propertiesConfig[el.p.value] && propertiesConfig[el.p.value].category){
-                    if(category === propertiesConfig[el.p.value].category[0]){
-                        console.log(el.p.value);
-                    }
+            if(filterByCategory){
+                if(!propertiesConfig[el.p.value] || !propertiesConfig[el.p.value].category || category !== propertiesConfig[el.p.value].category[0]){
+                    //skip property
+                    return;
                 }
-            }else{
-
             }
+            var property=self.getPropertyLabel(el.p.value);
             //group by properties
             //I put the valueType into instances because we might have cases (e.g. subject property) in which for different instances, we have different value types
             if(propIndex[el.p.value]){
