@@ -6,7 +6,7 @@ class Property extends React.Component {
     render() {
         let self = this;
         let newValueDIV;
-        if(this.props.config && this.props.config.allowNewValue){
+        if(this.props.config && this.props.config.allowNewValue && !this.props.readOnly){
             newValueDIV = <div className="ui list">
                                 <div className="item">
                                     <div className="medium ui basic icon labeled button">

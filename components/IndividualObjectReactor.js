@@ -57,7 +57,7 @@ class IndividualObjectReactor extends React.Component {
                         </div>;
         }else{
             //show add detail icon if enabled
-            if(this.props.config && this.props.config.allowExtension){
+            if(this.props.config && this.props.config.allowExtension && !this.state.readOnly){
 
                 detailDIV = <div title="add details" onClick={this.handleAddDetails.bind(this)} className="medium ui circular basic icon button">
                                 <i className="add user large blue icon link "> </i>

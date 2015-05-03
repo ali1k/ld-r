@@ -29,6 +29,10 @@ export default {
         },
         'http://purl.org/dc/terms/format': {
             allowNewValue: 1
+        },
+        'http://purl.org/dc/terms/contributor': {
+            allowNewValue: 1,
+            allowExtension: 1
         }
     }
 };
