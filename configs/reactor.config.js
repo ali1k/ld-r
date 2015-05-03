@@ -5,6 +5,6 @@ export default {
     defaultGraphName: [''],
     //resource types to start with
     resourceFocusType: [''],
-    //config for predicate components
-    properties: {}
+    //config for property components
+    propertiesConfig: {}
 };

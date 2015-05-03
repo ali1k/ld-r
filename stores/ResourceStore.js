@@ -5,9 +5,11 @@ class ResourceStore extends BaseStore {
         super(dispatcher);
         this.properties = [];
         this.graphName = '';
+        this.resourceURI = '';
     }
     updatePropertyList(payload) {
         this.graphName = payload.graphName;
+        this.resourceURI = payload.resourceURI;
         this.properties = payload.properties;
         this.emitChange();
     }
@@ -17,9 +19,13 @@ class ResourceStore extends BaseStore {
     getGraphName() {
         return this.graphName;
     }
+    getResourceURI() {
+        return this.resourceURI;
+    }
     getState() {
         return {
             graphName: this.graphName,
+            resourceURI: this.resourceURI,
             properties: this.properties
         };
     }
@@ -28,6 +34,7 @@ class ResourceStore extends BaseStore {
     }
     rehydrate(state) {
         this.properties = state.properties;
+        this.resourceURI = state.resourceURI;
         this.graphName = state.graphName;
     }
 }

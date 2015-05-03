@@ -32,11 +32,12 @@ export default {
             rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
                 callback(null, {
                     graphName: graphName,
+                    resourceURI: resourceURI,
                     properties: utilObject.parseProperties(res, params.category)
                 });
             }).catch(function (err) {
                 console.log(err);
-                callback(null, {graphName: graphName, properties: []});
+                callback(null, {graphName: graphName, resourceURI: resourceURI, properties: []});
             });
         }
 
