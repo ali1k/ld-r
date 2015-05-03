@@ -6,7 +6,7 @@ class Property extends React.Component {
     render() {
         let objectReactor;
         //dispatch to the right reactor
-        switch(this.props.config? (this.props.reactorType? this.props.config.reactorType[0]:'') : ''){
+        switch(this.props.config? (this.props.config.reactorType? this.props.config.reactorType[0]:'') : ''){
             case 'IndividualObjectReactor':
                 objectReactor = <IndividualObjectReactor spec={this.props.spec} config={this.props.config}/>;
             break;

@@ -5,6 +5,10 @@ import AggregateDataView from './AggregateDataView';
 import AggregateDataEdit from './AggregateDataEdit';
 
 class IndividualObjectReactor extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {isEditMode: 0};
+    }
     render() {
         let dataViewType, dataEditType;
         switch(this.props.config? (this.props.config.dataViewType? this.props.config.dataViewType[0]:'') : ''){
@@ -27,13 +31,23 @@ class IndividualObjectReactor extends React.Component {
             default:
                 dataEditType = <IndividualDataEdit spec={this.props.spec} config={this.props.config}/>;
         }
-        return (
-            <div className="ui list">
-                <div className="item">
-                    {this.props.spec.propertyURI}
+        if (this.state.isEditMode) {
+            return (
+                <div className="ui list">
+                    <div className="item">
+                        {dataEditType}
+                    </div>
                 </div>
-            </div>
-        );
+            );
+        }else{
+            return (
+                <div className="ui list">
+                    <div className="item">
+                        {dataViewType}
+                    </div>
+                </div>
+            );
+        }
     }
 }
 
