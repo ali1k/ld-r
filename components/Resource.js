@@ -9,9 +9,11 @@ class Resource extends React.Component {
     render() {
         let self = this;
         let list = this.props.ResourceStore.properties.map(function(node, index) {
-            return (
-                <Property key={index} spec={node} readOnly={readOnly} config={propertiesConfig[node.propertyURI]}/>
-            );
+            if(!propertiesConfig[node.propertyURI] || !propertiesConfig[node.propertyURI].isHidden){
+                return (
+                    <Property key={index} spec={node} readOnly={readOnly} config={propertiesConfig[node.propertyURI]}/>
+                );
+            }
         });
         let mainDIV, tabsDIV, tabsContentDIV;
         //categorize properties in different tabs

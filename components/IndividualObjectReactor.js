@@ -38,18 +38,18 @@ class IndividualObjectReactor extends React.Component {
         let editDIV, saveDIV, undoDIV, detailDIV;
         //disable edit in readOnly mode
         if(!this.state.readOnly){
-            editDIV = <div onClick={this.handleEdit.bind(this)} className="medium ui circular basic icon button">
+            editDIV = <div title="edit" onClick={this.handleEdit.bind(this)} className="medium ui circular basic icon button">
                             <i className="edit large blue icon link "></i>
                       </div>;
-            saveDIV = <div onClick={this.handleSave.bind(this)} className="medium ui circular basic icon button">
+            saveDIV = <div title="save" onClick={this.handleSave.bind(this)} className="medium ui circular basic icon button">
                             <i className="save large blue icon link "></i>
                       </div>;
-            undoDIV = <div onClick={this.handleUndo.bind(this)} className="medium ui circular basic icon button">
+            undoDIV = <div title="undo" onClick={this.handleUndo.bind(this)} className="medium ui circular basic icon button">
                             <i className="undo large green icon link "></i>
                       </div>;
         }
         if(this.props.spec.extended){
-            detailDIV = <div onClick={this.handleDetails.bind(this)} className="medium ui circular basic icon button">
+            detailDIV = <div title="show details" onClick={this.handleDetails.bind(this)} className="medium ui circular basic icon button">
                             <i className="unhide large blue icon link "> </i>
                         </div>;
         }

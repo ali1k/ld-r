@@ -12,7 +12,7 @@ export default {
     propertyCategories: [],
     //config for property components
     propertiesConfig: {
-        'dcterms:title': {
+        'http://purl.org/dc/terms/title': {
             category: ['general'],
             hint: [''],
             defaultOptions: [
@@ -23,6 +23,9 @@ export default {
             viewer: ['BasicIndividualView'],
             dataEditType: ['IndividualDataEdit'],
             editor: ['BasicIndividualInput']
+        },
+        'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
+            isHidden: 1
         }
     }
 };
