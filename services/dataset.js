@@ -12,24 +12,26 @@ const httpOptions = {
 };
 const outputFormat = 'application/sparql-results+json';
 /*-----------------------------------*/
-let rpPath, query;
+let rpPath, graphName, query;
 export default {
     name: 'dataset',
     // At least one of the CRUD methods is Required
     read: (req, resource, params, config, callback) => {
         if (resource === 'dataset.resourcesByType') {
             //SPARQL QUERY
-            query = queries.getPrefixes() + queries.getResourcesByType((params.id==='default'? defaultGraphName : graphName:params.id), resourceFocusType);
+            graphName = (params.id==='default'? defaultGraphName: params.id);
+            query = queries.getPrefixes() + queries.getResourcesByType(graphName, resourceFocusType);
             //build http uri
             rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
                 callback(null, {
+                    graphName: graphName,
                     resources: utils.parseResourcesByType(res)
                 });
             }).catch(function (err) {
                 console.log(err);
-                callback(null, {datasets: []});
+                callback(null, {graphName: graphName, resources: []});
             });
         }
 
