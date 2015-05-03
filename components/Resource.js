@@ -15,8 +15,8 @@ class Resource extends React.Component {
         return (
             <div className="ui page grid" ref="resource">
                 <div className="ui column">
+                    <h2> {this.props.ResourceStore.resourceURI}</h2>
                     <div className="ui segment">
-                        <h3 className="ui big label"> {this.props.ResourceStore.resourceURI}</h3>
                         <div className="ui grid">
                             <div className="column ui list">
                                 {list}

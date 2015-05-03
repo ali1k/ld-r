@@ -12,7 +12,7 @@ class IndividualDataView extends React.Component {
                 viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
         }
         return (
-            <div className="ui">
+            <div className="ui secondary segment">
                 {viewer}
             </div>
         );

@@ -35,7 +35,16 @@ class IndividualObjectReactor extends React.Component {
             return (
                 <div className="ui list">
                     <div className="item">
-                        {dataViewType}
+                        <div className="ui form grid">
+                                <div className="twelve wide column field">
+                                        {dataViewType}
+                                </div>
+                                <div className="four wide column field">
+                                    <div className="medium ui circular basic icon button">
+                                        <i className="edit large blue icon link "></i>
+                                    </div>
+                                </div>
+                        </div>
                     </div>
                 </div>
             );
