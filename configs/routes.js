@@ -49,7 +49,7 @@ export default {
             if (!category) {
                 category = 'general';
             }
-            context.executeAction(loadResource, { dataset: payload.get('params').get('did'), resource: payload.get('params').get('rid'), category: category}, done);
+            context.executeAction(loadResource, { dataset: decodeURIComponent(payload.get('params').get('did')), resource: decodeURIComponent(payload.get('params').get('rid')), category: category}, done);
         }
     }
 };

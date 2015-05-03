@@ -6,5 +6,5 @@ export default {
     //resource types to start with
     resourceFocusType: [''],
     //config for predicate components
-    predicates: {}
+    properties: {}
 };

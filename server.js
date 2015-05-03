@@ -37,6 +37,7 @@ let fetchrPlugin = app.getPlugin('FetchrPlugin');
 // Register our services
 fetchrPlugin.registerService(require('./services/dbpedia'));
 fetchrPlugin.registerService(require('./services/dataset'));
+fetchrPlugin.registerService(require('./services/resource'));
 // Set up the fetchr middleware
 server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
 

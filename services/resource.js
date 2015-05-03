@@ -1,8 +1,8 @@
 'use strict';
 import {sparqlEndpoint} from '../configs/general';
 import {defaultGraphName, resourceFocusType} from '../configs/reactor';
-import DatasetQuery from './sparql/DatasetQuery';
-import DatasetUtil from './utils/DatasetUtil';
+import ResourceQuery from './sparql/ResourceQuery';
+import ResourceUtil from './utils/ResourceUtil';
 import rp from 'request-promise';
 /*-------------config-------------*/
 const httpOptions = {
@@ -12,29 +12,31 @@ const httpOptions = {
 };
 const outputFormat = 'application/sparql-results+json';
 /*-----------------------------------*/
-let rpPath, graphName, query, queryObject, utilObject;
-queryObject = new DatasetQuery();
-utilObject = new DatasetUtil();
+let rpPath, graphName, resourceURI, query, queryObject, utilObject;
+queryObject = new ResourceQuery();
+utilObject = new ResourceUtil();
 
 export default {
-    name: 'dataset',
+    name: 'resource',
     // At least one of the CRUD methods is Required
     read: (req, resource, params, config, callback) => {
-        if (resource === 'dataset.resourcesByType') {
+        if (resource === 'resource.properties') {
             //SPARQL QUERY
-            graphName = (params.id==='default'? defaultGraphName: params.id);
-            query = queryObject.getResourcesByType(graphName, resourceFocusType);
+            graphName = params.dataset;
+            resourceURI = params.resource;
+            query = queryObject.getProperties(graphName, resourceURI);
+            // console.log(query);
             //build http uri
             rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
                 callback(null, {
                     graphName: graphName,
-                    resources: utilObject.parseResourcesByType(res)
+                    properties: utilObject.parseProperties(res, params.category)
                 });
             }).catch(function (err) {
                 console.log(err);
-                callback(null, {graphName: graphName, resources: []});
+                callback(null, {graphName: graphName, properties: []});
             });
         }
 

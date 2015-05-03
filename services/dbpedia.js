@@ -1,8 +1,10 @@
 'use strict';
 import {dbpediaLookupService} from '../configs/general';
 import rp from 'request-promise';
-import utils from './utils/dbpedia_utils';
+import DBpediaUtil from './utils/DBpediaUtil';
 let query;
+let utilObject = new DBpediaUtil();
+
 export default {
     // Name is the resource. Required.
     name: 'dbpedia',
@@ -13,7 +15,7 @@ export default {
             //send request
             rp({method: 'get', headers: {'Accept': 'application/json'}, accept: 'application/json', uri: 'http://'+dbpediaLookupService[0].host+'/api/search.asmx/PrefixSearch?QueryClass=&MaxHits=5&QueryString='+ query}).then(function(res){
                 callback(null, {
-                    suggestions: utils.parseDBpediaLookup(res)
+                    suggestions: utilObject.parseDBpediaLookup(res)
                 });
             }).catch(function (err) {
                 console.log('\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
