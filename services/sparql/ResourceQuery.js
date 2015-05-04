@@ -19,5 +19,12 @@ class ResourceQuery{
       } ORDER BY ?p ?o';
       return this.prefixes + this.query;
     }
+    getObjectProperties(graphName, objectURI) {
+        this.query = '\
+        SELECT ?p ?o FROM <'+ graphName +'> WHERE { \
+        <'+ objectURI + '> ?p ?o .\
+        } ORDER BY ?p ?o';
+      return this.prefixes + this.query;
+    }
 }
 export default ResourceQuery;

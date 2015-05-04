@@ -11,7 +11,7 @@ class Resource extends React.Component {
         let list = this.props.ResourceStore.properties.map(function(node, index) {
             if(!propertiesConfig[node.propertyURI] || !propertiesConfig[node.propertyURI].isHidden){
                 return (
-                    <Property key={index} spec={node} readOnly={readOnly} config={propertiesConfig[node.propertyURI]}/>
+                    <Property key={index} spec={node} readOnly={readOnly} config={propertiesConfig[node.propertyURI]} graphName={self.props.ResourceStore.graphName} resource={self.props.ResourceStore.resourceURI}/>
                 );
             }
         });

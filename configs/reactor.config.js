@@ -25,14 +25,18 @@ export default {
             editor: ['BasicIndividualInput']
         },
         'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
-            isHidden: 1
+            isHidden: 1,
+            category: ['general']
         },
         'http://purl.org/dc/terms/format': {
-            allowNewValue: 1
+            allowNewValue: 1,
+            category: ['structural']
         },
         'http://purl.org/dc/terms/contributor': {
             allowNewValue: 1,
-            allowExtension: 1
+            allowExtension: 1,
+            category: ['general'],
+            extendedViewer: ['BasicIndividualDetailView']
         }
     }
 };

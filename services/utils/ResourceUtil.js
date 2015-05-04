@@ -54,5 +54,16 @@ class ResourceUtil{
           return finalOutput;
         }
     }
+    parseObjectProperties(body) {
+        let self=this;
+        let parsed = JSON.parse(body);
+        var output=[];
+        if(parsed.results.bindings.length){
+          parsed.results.bindings.forEach(function(el) {
+            output.push({property: self.getPropertyLabel(el.p.value), propertyURI: el.p.value, valueType: el.o.type, dataType:(el.o.type==='typed-literal'?el.o.datatype:''), value: el.o.value});
+          });
+          return output;
+        }
+    }
 }
 export default ResourceUtil;

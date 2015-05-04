@@ -22,17 +22,17 @@ class Property extends React.Component {
             case 'IndividualObjectReactor':
                 list = this.props.spec.instances.map(function(node, index) {
                     return (
-                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config}/>
+                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource}/>
                     );
                 });
             break;
             case 'AggregateObjectReactor':
-                list = <AggregateObjectReactor readOnly={self.props.readOnly} spec={this.props.spec} config={self.props.config}/>;
+                list = <AggregateObjectReactor readOnly={self.props.readOnly} spec={this.props.spec} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource}/>;
             break;
             default:
                 list = this.props.spec.instances.map(function(node, index) {
                     return (
-                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config}/>
+                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource}/>
                     );
                 });
         }

@@ -1,11 +1,15 @@
 import React from 'react';
+import {provideContext} from 'fluxible/addons';
+import loadObjectProperties from '../actions/loadObjectProperties';
 import IndividualDataView from './IndividualDataView';
 import IndividualDataEdit from './IndividualDataEdit';
+import IndividualObjectStore from '../stores/IndividualObjectStore';
+import {connectToStores} from 'fluxible/addons';
 
 class IndividualObjectReactor extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {isEditMode: 0, readOnly: this.props.readOnly};
+        this.state = {isEditMode: 0, readOnly: this.props.readOnly, isExtendedView: 0};
     }
     handleEdit(evt){
         this.setState({isEditMode: 1});
@@ -16,13 +20,28 @@ class IndividualObjectReactor extends React.Component {
     handleUndo(evt){
         this.setState({isEditMode: 0});
     }
-    handleDetails(evt){
-        this.setState({isEditMode: 0});
+    handleShowDetails(evt){
+        this.context.executeAction(loadObjectProperties, {
+          dataset: this.props.graphName,
+          objectURI: this.props.spec.value
+        });
+        this.setState({isExtendedView: 1});
+    }
+    handleHideDetails(evt){
+        this.setState({isExtendedView: 0});
     }
     handleAddDetails(evt){
         this.setState({isEditMode: 0});
     }
     render() {
+        //add object Properties only to the relevant ones
+        if(this.props.spec.extended){
+            if(this.state.isExtendedView){
+                this.props.spec.extendedViewData = this.props.IndividualObjectStore.objectProperties[this.props.spec.value];
+            }else{
+                this.props.spec.extendedViewData = 0;
+            }
+        }
         let dataViewType, dataEditType;
         switch(this.props.config? (this.props.config.dataViewType? this.props.config.dataViewType[0]:'') : ''){
             case 'IndividualDataView':
@@ -52,9 +71,15 @@ class IndividualObjectReactor extends React.Component {
                       </div>;
         }
         if(this.props.spec.extended){
-            detailDIV = <div title="show details" onClick={this.handleDetails.bind(this)} className="medium ui circular basic icon button">
-                            <i className="unhide large blue icon link "> </i>
-                        </div>;
+            if(this.state.isExtendedView){
+                detailDIV = <div title="show details" onClick={this.handleHideDetails.bind(this)} className="medium ui circular basic icon button">
+                                <i className="hide large blue icon link "> </i>
+                            </div>;
+            }else{
+                detailDIV = <div title="show details" onClick={this.handleShowDetails.bind(this)} className="medium ui circular basic icon button">
+                                <i className="unhide large blue icon link "> </i>
+                            </div>;
+            }
         }else{
             //show add detail icon if enabled
             if(this.props.config && this.props.config.allowExtension && !this.state.readOnly){
@@ -101,5 +126,12 @@ class IndividualObjectReactor extends React.Component {
         }
     }
 }
-
+IndividualObjectReactor.contextTypes = {
+    executeAction: React.PropTypes.func.isRequired
+};
+IndividualObjectReactor = connectToStores(IndividualObjectReactor, [IndividualObjectStore], function (stores, props) {
+    return {
+        IndividualObjectStore: stores.IndividualObjectStore.getState()
+    };
+});
 export default IndividualObjectReactor;

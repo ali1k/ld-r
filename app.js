@@ -7,6 +7,7 @@ import RouteStore from './stores/RouteStore';
 import ApplicationStore from './stores/ApplicationStore';
 import DatasetStore from './stores/DatasetStore';
 import ResourceStore from './stores/ResourceStore';
+import IndividualObjectStore from './stores/IndividualObjectStore';
 
 let app = new Fluxible({
     component: Application,
@@ -14,7 +15,8 @@ let app = new Fluxible({
         RouteStore,
         ApplicationStore,
         DatasetStore,
-        ResourceStore
+        ResourceStore,
+        IndividualObjectStore
     ]
 });
 
