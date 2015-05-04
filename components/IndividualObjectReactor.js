@@ -17,6 +17,9 @@ class IndividualObjectReactor extends React.Component {
     handleSave(evt){
         this.setState({isEditMode: 0});
     }
+    handleDelete(evt){
+        this.setState({isEditMode: 0});
+    }
     handleUndo(evt){
         this.setState({isEditMode: 0});
     }
@@ -57,7 +60,7 @@ class IndividualObjectReactor extends React.Component {
             default:
                 dataEditType = <IndividualDataEdit spec={this.props.spec} config={this.props.config}/>;
         }
-        let editDIV, saveDIV, undoDIV, detailDIV;
+        let editDIV, saveDIV, undoDIV, detailDIV, deleteDIV;
         //disable edit in readOnly mode
         if(!this.state.readOnly){
             editDIV = <div title="edit" onClick={this.handleEdit.bind(this)} className="medium ui circular basic icon button">
@@ -69,6 +72,11 @@ class IndividualObjectReactor extends React.Component {
             undoDIV = <div title="undo" onClick={this.handleUndo.bind(this)} className="medium ui circular basic icon button">
                             <i className="undo large green icon link "></i>
                       </div>;
+            if(this.props.config && this.props.config.allowNewValue){
+                deleteDIV = <div title="delete" onClick={this.handleDelete.bind(this)} className="medium ui circular basic icon button">
+                                <i className="minus square large red icon link "></i>
+                          </div>;
+            }
         }
         if(this.props.spec.extended){
             if(this.state.isExtendedView){
@@ -118,6 +126,7 @@ class IndividualObjectReactor extends React.Component {
                                 <div className="four wide column field">
                                     {detailDIV}
                                     {editDIV}
+                                    {deleteDIV}
                                 </div>
                         </div>
                     </div>

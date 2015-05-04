@@ -32,6 +32,10 @@ export default {
             allowNewValue: 1,
             category: ['structural']
         },
+        'http://purl.org/dc/terms/description': {
+            category: ['general'],
+            editor: ['BasicTextareaInput']
+        },
         'http://purl.org/dc/terms/contributor': {
             allowNewValue: 1,
             allowExtension: 1,
