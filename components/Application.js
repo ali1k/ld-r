@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Nav from './Nav';
+import HelpModal from './HelpModal';
 import Home from './Home';
 import About from './About';
 import ApplicationStore from '../stores/ApplicationStore';
@@ -26,6 +27,7 @@ class Application extends React.Component {
             <div>
                 <Nav />
                 <Handler />
+                <HelpModal />
             </div>
         );
     }
