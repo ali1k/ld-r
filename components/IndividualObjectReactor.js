@@ -9,19 +9,19 @@ import {connectToStores} from 'fluxible/addons';
 class IndividualObjectReactor extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {isEditMode: 0, readOnly: this.props.readOnly, isExtendedView: 0};
+        this.state = {inEditMode: this.props.inEditMode? 1 : 0, readOnly: this.props.readOnly, isExtendedView: 0};
     }
     handleEdit(evt){
-        this.setState({isEditMode: 1});
+        this.setState({inEditMode: 1});
     }
     handleSave(evt){
-        this.setState({isEditMode: 0});
+        this.setState({inEditMode: 0});
     }
     handleDelete(evt){
         this.props.onDelete(this.props.spec.value, this.props.spec.valueType);
     }
     handleUndo(evt){
-        this.setState({isEditMode: 0});
+        this.setState({inEditMode: 0});
     }
     handleShowDetails(evt){
         this.context.executeAction(loadObjectProperties, {
@@ -34,7 +34,7 @@ class IndividualObjectReactor extends React.Component {
         this.setState({isExtendedView: 0});
     }
     handleAddDetails(evt){
-        this.setState({isEditMode: 0});
+        this.setState({inEditMode: 0});
     }
     render() {
         //add object Properties only to the relevant ones
@@ -69,9 +69,11 @@ class IndividualObjectReactor extends React.Component {
             saveDIV = <div title="save" onClick={this.handleSave.bind(this)} className="medium ui circular basic icon button">
                             <i className="save large blue icon link "></i>
                       </div>;
-            undoDIV = <div title="undo" onClick={this.handleUndo.bind(this)} className="medium ui circular basic icon button">
-                            <i className="undo large green icon link "></i>
-                      </div>;
+            if(!this.props.isNewValue){
+                undoDIV = <div title="undo" onClick={this.handleUndo.bind(this)} className="medium ui circular basic icon button">
+                                <i className="undo large green icon link "></i>
+                          </div>;
+            }
             if(this.props.config && this.props.config.allowNewValue && !this.props.isOnlyChild){
                 deleteDIV = <div title="delete" onClick={this.handleDelete.bind(this)} className="medium ui circular basic icon button">
                                 <i className="minus square large red icon link "></i>
@@ -97,7 +99,7 @@ class IndividualObjectReactor extends React.Component {
                             </div>;
             }
         }
-        if (this.state.isEditMode) {
+        if (this.state.inEditMode) {
             //edit mode
             return (
                 <div className="ui list">
@@ -123,7 +125,7 @@ class IndividualObjectReactor extends React.Component {
                                 <div className="twelve wide column field">
                                     {dataViewType}
                                 </div>
-                                <div className="four wide column field">
+                                <div className="four wide column field animated fadeInLeft">
                                     {detailDIV}
                                     {editDIV}
                                     {deleteDIV}

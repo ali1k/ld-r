@@ -70,6 +70,13 @@ class HelpModal extends React.Component {
                           <div className="description"> If a property allows multiple values, you can use this icon to add another values to the property. The system automatically generates a default value for the property. You then need to change the inserted default value.</div>
                         </div>
                       </div>
+                      <div className="item">
+                        <i className="big red icon cancel square"></i>
+                        <div className="content">
+                          <a className="header"> Cancel value</a>
+                          <div className="description"> Clicking on this icon cancels adding new values to a property.</div>
+                        </div>
+                      </div>
                     </div>
                 </div>
               </div>

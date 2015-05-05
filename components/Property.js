@@ -6,6 +6,10 @@ import AggregateObjectReactor from './AggregateObjectReactor';
 import deleteIndividualObject from '../actions/deleteIndividualObject';
 
 class Property extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {inNewValueMode: 0};
+    }
     componentDidMount() {
         let currentComp = this.refs.property.getDOMNode();
     }
@@ -29,18 +33,37 @@ class Property extends React.Component {
           valueType: valueType
         });
     }
+    handleNewIndividualObject(){
+        this.setState({inNewValueMode: 1});
+    }
+    handleCancelNewIndividualObject(){
+        this.setState({inNewValueMode: 0});
+    }
     render() {
         let self = this;
-        let newValueDIV;
+        let newValueDIV, defaultValueDIV;
         if(this.props.config && this.props.config.allowNewValue && !this.props.readOnly){
-            newValueDIV = <div className="ui list">
-                                <div className="item">
-                                    <div className="medium ui basic icon labeled circular button">
-                                        <i className="plus square large blue icon "></i> &nbsp; Add another <strong> {this.props.spec.property} </strong>
-                                    </div>
-                                </div>
+            if(this.state.inNewValueMode){
+                defaultValueDIV = <IndividualObjectReactor isNewValue="1" inEditMode="1" key="defaultValue" spec={{value: 'default'}} config={this.props.config} graphName={this.props.graphName} resource={this.props.resource} />;
+                newValueDIV = <div className="ui list">
+                                        <div className="item">
+                                            <div onClick={this.handleCancelNewIndividualObject.bind(this)} className="medium ui basic icon labeled button">
+                                                <i className="cancel square large red icon "></i> &nbsp; Cancel adding new <strong> {this.props.spec.property} </strong>
+                                            </div>
+                                        </div>
 
-                          </div>;
+                               </div>;
+            }else{
+                defaultValueDIV = '';
+                newValueDIV = <div className="ui list">
+                                    <div className="item">
+                                        <div onClick={this.handleNewIndividualObject.bind(this)} className="medium ui basic icon labeled button">
+                                            <i className="plus square large blue icon "></i> &nbsp; Add another <strong> {this.props.spec.property} </strong>
+                                        </div>
+                                    </div>
+
+                              </div>;
+            }
         }
         let list;
         //dispatch to the right reactor
@@ -82,6 +105,7 @@ class Property extends React.Component {
                 <div className="property-objects">
                     {list}
                 </div>
+                {defaultValueDIV}
                 {newValueDIV}
             </div>
         );
