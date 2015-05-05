@@ -4,6 +4,7 @@ import PropertyHeader from './PropertyHeader';
 import IndividualObjectReactor from './IndividualObjectReactor';
 import AggregateObjectReactor from './AggregateObjectReactor';
 import deleteIndividualObject from '../actions/deleteIndividualObject';
+import createIndividualObject from '../actions/createIndividualObject';
 
 class Property extends React.Component {
     constructor(props) {
@@ -14,14 +15,25 @@ class Property extends React.Component {
         let currentComp = this.refs.property.getDOMNode();
     }
     //considers 0 elements
-    calculateValueCount (arr){
-        var count = 0;
-        arr.forEach(function(v, i) {
-            if(arr[i]){
+    calculateValueCount (instances){
+        let count = 0;
+        instances.forEach(function(v, i) {
+            if(instances[i]){
                 count++;
             }
         });
         return count;
+    }
+    //considers 0 elements
+    simulateDefaultValue (instances, value){
+        let t;
+        instances.forEach(function(v, i) {
+            if(instances[i]){
+                t = {'isDefault': 1, 'value': value, 'valueType': instances[i].valueType, 'dataType': instances[i].dataType};
+                return t;
+            }
+        });
+        return t;
     }
     handleDeleteIndividualObject(propertyURI, objectValue, valueType){
         this.context.executeAction(deleteIndividualObject, {
@@ -32,6 +44,20 @@ class Property extends React.Component {
           objectValue: objectValue,
           valueType: valueType
         });
+    }
+    handleCreateIndividualObject(propertyURI, objectValue, valueType){
+        this.context.executeAction(createIndividualObject, {
+          category: (this.props.config? (this.props.config.category? this.props.config.category[0]: ''): ''),
+          dataset: this.props.graphName,
+          resourceURI: this.props.resource,
+          propertyURI: propertyURI,
+          objectValue: objectValue,
+          valueType: valueType
+        });
+        this.setState({inNewValueMode: 0});
+    }
+    handleUpdateIndividualObject(propertyURI, objectValue, valueType){
+
     }
     handleNewIndividualObject(){
         this.setState({inNewValueMode: 1});
@@ -44,7 +70,7 @@ class Property extends React.Component {
         let newValueDIV, defaultValueDIV;
         if(this.props.config && this.props.config.allowNewValue && !this.props.readOnly){
             if(this.state.inNewValueMode){
-                defaultValueDIV = <IndividualObjectReactor isNewValue="1" inEditMode="1" key="defaultValue" spec={{value: 'default'}} config={this.props.config} graphName={this.props.graphName} resource={this.props.resource} />;
+                defaultValueDIV = <IndividualObjectReactor isNewValue="1" inEditMode="1" key="defaultValue" spec={this.simulateDefaultValue(this.props.spec.instances, 'default')} config={this.props.config} graphName={this.props.graphName} resource={this.props.resource} onCreate={this.handleCreateIndividualObject.bind(this, this.props.spec.propertyURI)}/>;
                 newValueDIV = <div className="ui list">
                                         <div className="item">
                                             <div onClick={this.handleCancelNewIndividualObject.bind(this)} className="medium ui basic icon labeled button">
@@ -76,7 +102,7 @@ class Property extends React.Component {
                         return undefined; // stop processing this iteration
                     }
                     return (
-                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self, self.props.spec.propertyURI)}/>
+                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self, self.props.spec.propertyURI)} onUpdate={self.handleUpdateIndividualObject.bind(self, self.props.spec.propertyURI)}/>
                     );
                 });
             break;
@@ -90,7 +116,7 @@ class Property extends React.Component {
                         return undefined; // stop processing this iteration
                     }
                     return (
-                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self, self.props.spec.propertyURI)}/>
+                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self, self.props.spec.propertyURI)} onUpdate={self.handleUpdateIndividualObject.bind(self, self.props.spec.propertyURI)}/>
                     );
                 });
         }

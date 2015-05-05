@@ -26,17 +26,31 @@ class ResourceQuery{
         } ORDER BY ?p ?o';
       return this.prefixes + this.query;
     }
+    addTriple (graphName, resourceURI, propertyURI, objectValue, valueType) {
+        //todo: consider different value types
+      let newValue;
+      if(valueType==='uri'){
+        newValue='<'+objectValue+'>';
+      }else{
+        newValue='"""'+objectValue+'"""';
+      }
+      /*jshint multistr: true */
+      this.query = '\
+      INSERT DATA INTO <'+ graphName +'> { \
+      <'+ resourceURI + '> <'+ propertyURI +'> '+newValue+' } ';
+      return this.prefixes + this.query;
+    }
     deleteTriple(graphName, resourceURI, propertyURI, objectValue, valueType) {
         if(objectValue){
           //if we just want to delete a specific value for multi-valued ones
           if(valueType === 'uri'){
-              this.query='DELETE FROM <'+ graphName +'> {<'+ resourceURI +'> <'+ propertyURI +'> ?uri} WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?uri . FILTER(iri(?uri)= <'+ objectValue +'> ) }';
+              this.query = 'DELETE FROM <'+ graphName +'> {<'+ resourceURI +'> <'+ propertyURI +'> ?uri} WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?uri . FILTER(iri(?uri)= <'+ objectValue +'> ) }';
           }else{
               //todo: handle each typed literal separately e.g. date
-              this.query='DELETE FROM <'+ graphName +'> {<'+ resourceURI +'> <'+ propertyURI +'> ?label} WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?label . FILTER(str(?label)="""'+ objectValue +'""")}';
+              this.query = 'DELETE FROM <'+ graphName +'> {<'+ resourceURI +'> <'+ propertyURI +'> ?label} WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?label . FILTER(str(?label)="""'+ objectValue +'""")}';
           }
         }else{
-            this.query='DELETE FROM <'+ graphName +'> {<'+ resourceURI +'> <'+ propertyURI +'> ?z } WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?z } ';
+            this.query = 'DELETE FROM <'+ graphName +'> {<'+ resourceURI +'> <'+ propertyURI +'> ?z } WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?z } ';
         }
         return this.prefixes + this.query;
     }

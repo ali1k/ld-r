@@ -9,31 +9,39 @@ import {connectToStores} from 'fluxible/addons';
 class IndividualObjectReactor extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {inEditMode: this.props.inEditMode? 1 : 0, readOnly: this.props.readOnly, isExtendedView: 0};
+        this.state = {objectValue: this.props.spec.value, inEditMode: this.props.inEditMode? 1 : 0, readOnly: this.props.readOnly, isExtendedView: 0};
     }
-    handleEdit(evt){
+    handleEdit(){
         this.setState({inEditMode: 1});
     }
-    handleSave(evt){
+    handleDataEdit(value){
+        this.setState({objectValue: value});
+    }
+    handleSave(){
+        if(this.props.isNewValue){
+            this.props.onCreate(this.state.objectValue, this.props.spec.valueType);
+        }else{
+            this.props.onUpdate(this.state.objectValue, this.props.spec.valueType);
+        }
         this.setState({inEditMode: 0});
     }
-    handleDelete(evt){
+    handleDelete(){
         this.props.onDelete(this.props.spec.value, this.props.spec.valueType);
     }
-    handleUndo(evt){
-        this.setState({inEditMode: 0});
+    handleUndo(){
+        this.setState({objectValue: this.props.spec.value, inEditMode: 0});
     }
-    handleShowDetails(evt){
+    handleShowDetails(){
         this.context.executeAction(loadObjectProperties, {
           dataset: this.props.graphName,
           objectURI: this.props.spec.value
         });
         this.setState({isExtendedView: 1});
     }
-    handleHideDetails(evt){
+    handleHideDetails(){
         this.setState({isExtendedView: 0});
     }
-    handleAddDetails(evt){
+    handleAddDetails(){
         this.setState({inEditMode: 0});
     }
     render() {
@@ -55,10 +63,10 @@ class IndividualObjectReactor extends React.Component {
         }
         switch(this.props.config? (this.props.config.dataEditType? this.props.config.dataEditType[0]:'') : ''){
             case 'IndividualDataEdit':
-                dataEditType = <IndividualDataEdit spec={this.props.spec} config={this.props.config}/>;
+                dataEditType = <IndividualDataEdit spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
             break;
             default:
-                dataEditType = <IndividualDataEdit spec={this.props.spec} config={this.props.config}/>;
+                dataEditType = <IndividualDataEdit spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
         }
         let editDIV, saveDIV, undoDIV, detailDIV, deleteDIV;
         //disable edit in readOnly mode
