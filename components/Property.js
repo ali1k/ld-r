@@ -5,6 +5,7 @@ import IndividualObjectReactor from './IndividualObjectReactor';
 import AggregateObjectReactor from './AggregateObjectReactor';
 import deleteIndividualObject from '../actions/deleteIndividualObject';
 import createIndividualObject from '../actions/createIndividualObject';
+import updateIndividualObject from '../actions/updateIndividualObject';
 
 class Property extends React.Component {
     constructor(props) {
@@ -56,8 +57,16 @@ class Property extends React.Component {
         });
         this.setState({inNewValueMode: 0});
     }
-    handleUpdateIndividualObject(propertyURI, objectValue, valueType){
-
+    handleUpdateIndividualObject(propertyURI, oldObjectValue, newObjectValue, valueType){
+        this.context.executeAction(updateIndividualObject, {
+          category: (this.props.config? (this.props.config.category? this.props.config.category[0]: ''): ''),
+          dataset: this.props.graphName,
+          resourceURI: this.props.resource,
+          propertyURI: propertyURI,
+          oldObjectValue: oldObjectValue,
+          newObjectValue: newObjectValue,
+          valueType: valueType
+        });
     }
     handleNewIndividualObject(){
         this.setState({inNewValueMode: 1});

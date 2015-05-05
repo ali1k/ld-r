@@ -21,7 +21,10 @@ class IndividualObjectReactor extends React.Component {
         if(this.props.isNewValue){
             this.props.onCreate(this.state.objectValue, this.props.spec.valueType);
         }else{
-            this.props.onUpdate(this.state.objectValue, this.props.spec.valueType);
+            //update only in case of change
+            if(this.props.spec.value !== this.state.objectValue){
+                this.props.onUpdate(this.props.spec.value, this.state.objectValue, this.props.spec.valueType);
+            }
         }
         this.setState({inEditMode: 0});
     }

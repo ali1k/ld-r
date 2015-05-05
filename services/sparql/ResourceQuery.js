@@ -10,6 +10,9 @@ class ResourceQuery{
          ';
         this.query='';
     }
+    getPrefixes() {
+        return this.prefixes;
+    }
     getProperties(graphName, resourceURI) {
         /*jshint multistr: true */
         this.query = '\
@@ -17,14 +20,14 @@ class ResourceQuery{
         <'+ resourceURI + '> ?p ?o . \
         OPTIONAL {?o ?uri ?extendedVal .} \
       } ORDER BY ?p ?o';
-      return this.prefixes + this.query;
+      return this.query;
     }
     getObjectProperties(graphName, objectURI) {
         this.query = '\
         SELECT ?p ?o FROM <'+ graphName +'> WHERE { \
         <'+ objectURI + '> ?p ?o .\
         } ORDER BY ?p ?o';
-      return this.prefixes + this.query;
+      return this.query;
     }
     addTriple (graphName, resourceURI, propertyURI, objectValue, valueType) {
         //todo: consider different value types
@@ -38,7 +41,7 @@ class ResourceQuery{
       this.query = '\
       INSERT DATA INTO <'+ graphName +'> { \
       <'+ resourceURI + '> <'+ propertyURI +'> '+newValue+' } ';
-      return this.prefixes + this.query;
+      return this.query;
     }
     deleteTriple(graphName, resourceURI, propertyURI, objectValue, valueType) {
         if(objectValue){
@@ -52,7 +55,11 @@ class ResourceQuery{
         }else{
             this.query = 'DELETE FROM <'+ graphName +'> {<'+ resourceURI +'> <'+ propertyURI +'> ?z } WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?z } ';
         }
-        return this.prefixes + this.query;
+        return this.query;
+    }
+    updateTriple (graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType) {
+        this.query = this.deleteTriple(graphName, resourceURI, propertyURI, oldObjectValue, valueType) + this.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType);
+        return this.query;
     }
 }
 export default ResourceQuery;

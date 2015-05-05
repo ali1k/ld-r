@@ -25,7 +25,7 @@ export default {
             //SPARQL QUERY
             graphName = params.dataset;
             resourceURI = params.resource;
-            query = queryObject.getProperties(graphName, resourceURI);
+            query = queryObject.getPrefixes() + queryObject.getProperties(graphName, resourceURI);
             // console.log(query);
             //build http uri
             rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
@@ -44,7 +44,7 @@ export default {
         } else if (resource === 'resource.objectProperties') {
             graphName = params.dataset;
             objectURI = params.objectURI;
-            query = queryObject.getObjectProperties(graphName, objectURI);
+            query = queryObject.getPrefixes() + queryObject.getObjectProperties(graphName, objectURI);
             rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
@@ -62,7 +62,7 @@ export default {
     // other methods
      create: function(req, resource, params, body, config, callback) {
          if (resource === 'resource.individualObject') {
-             query = queryObject.addTriple(params.dataset, params.resourceURI, params.propertyURI, params.objectValue, params.valueType);
+             query = queryObject.getPrefixes() + queryObject.addTriple(params.dataset, params.resourceURI, params.propertyURI, params.objectValue, params.valueType);
              rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
              //send request
              rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
@@ -73,10 +73,22 @@ export default {
              });
          }
      },
-    // update: function(req, resource, params, body, config, callback) {},
+    update: function(req, resource, params, body, config, callback) {
+        if (resource === 'resource.individualObject') {
+            query = queryObject.getPrefixes() + queryObject.updateTriple(params.dataset, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType);
+            rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+            //send request
+            rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+                callback(null, {category: params.category});
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {category: params.category});
+            });
+        }
+    },
     delete: function(req, resource, params, config, callback) {
         if (resource === 'resource.individualObject') {
-            query = queryObject.deleteTriple(params.dataset, params.resourceURI, params.propertyURI, params.objectValue, params.valueType);
+            query = queryObject.getPrefixes() + queryObject.deleteTriple(params.dataset, params.resourceURI, params.propertyURI, params.objectValue, params.valueType);
             rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
