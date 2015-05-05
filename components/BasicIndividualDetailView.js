@@ -1,37 +1,25 @@
 import React from 'react';
+import PropertyHeader from './PropertyHeader';
 import BasicIndividualView from './BasicIndividualView';
 
 class BasicIndividualDetailView extends React.Component {
     componentDidMount() {
         let currentComp = this.refs.detailProperties.getDOMNode();
-        //enable hints
-        /*global $*/
-        $(currentComp).find('.hint')
-        .popup({
-          hoverable: true
-        });
     }
     render() {
-        let outputDIV, hintDIV;
+        let outputDIV;
         if(this.props.spec.valueType === 'uri'){
             outputDIV = <a href={this.props.spec.value} target="_blank"> {this.props.spec.value} </a>;
         }else{
             outputDIV = <span> {this.props.spec.value} </span>;
         }
         let list = this.props.spec.extendedViewData.map(function(node, index) {
-            hintDIV = '';
-            if(node.config && node.config.hint){
-                hintDIV = <a className="hint" data-content={node.config.hint[0]}> <i className="item circle info icon link"></i> </a>;
-            }
             return (
                 <div className="item" key={index}>
                     <div className="ui form grid">
                         <div className="ui horizontal list">
                             <div className="item">
-                                <h4>
-                                    <a href={node.spec.propertyURI} target="_blank"> {node.spec.property} </a>
-                                    {hintDIV}
-                                </h4>
+                                <PropertyHeader spec={node.spec} config={node.config} size="4" />
                             </div>
                         </div>
                         <div className="ui dividing header"></div>
