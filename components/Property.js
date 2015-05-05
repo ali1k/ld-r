@@ -1,11 +1,22 @@
 import React from 'react';
+import {provideContext} from 'fluxible/addons';
 import PropertyHeader from './PropertyHeader';
 import IndividualObjectReactor from './IndividualObjectReactor';
 import AggregateObjectReactor from './AggregateObjectReactor';
+import deleteIndividualObject from '../actions/deleteIndividualObject';
 
 class Property extends React.Component {
     componentDidMount() {
         let currentComp = this.refs.property.getDOMNode();
+    }
+    handleDeleteIndividualObject(propertyURI, objectValue, valueType){
+        this.context.executeAction(deleteIndividualObject, {
+          dataset: this.props.graphName,
+          resourceURI: this.props.resource,
+          propertyURI: propertyURI,
+          objectValue: objectValue,
+          valueType: valueType
+        });
     }
     render() {
         let self = this;
@@ -36,7 +47,7 @@ class Property extends React.Component {
             default:
                 list = this.props.spec.instances.map(function(node, index) {
                     return (
-                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource}/>
+                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} onDelete={self.handleDeleteIndividualObject.bind(self, self.props.spec.propertyURI)}/>
                     );
                 });
         }
@@ -56,5 +67,7 @@ class Property extends React.Component {
         );
     }
 }
-
+Property.contextTypes = {
+    executeAction: React.PropTypes.func.isRequired
+};
 export default Property;

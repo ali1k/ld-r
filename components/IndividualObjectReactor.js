@@ -18,7 +18,7 @@ class IndividualObjectReactor extends React.Component {
         this.setState({isEditMode: 0});
     }
     handleDelete(evt){
-        this.setState({isEditMode: 0});
+        this.props.onDelete(this.props.spec.value, this.props.spec.valueType);
     }
     handleUndo(evt){
         this.setState({isEditMode: 0});

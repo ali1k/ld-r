@@ -12,7 +12,7 @@ const httpOptions = {
 };
 const outputFormat = 'application/sparql-results+json';
 /*-----------------------------------*/
-let rpPath, category, graphName, resourceURI, objectURI, query, queryObject, utilObject;
+let rpPath, category, graphName, resourceURI, objectURI, objectValue, query, queryObject, utilObject;
 queryObject = new ResourceQuery();
 utilObject = new ResourceUtil();
 
@@ -58,9 +58,21 @@ export default {
             });
         }
 
-    }
+    },
     // other methods
     // create: function(req, resource, params, body, config, callback) {},
     // update: function(req, resource, params, body, config, callback) {},
-    // delete: function(req, resource, params, config, callback) {}
+    delete: function(req, resource, params, config, callback) {
+        if (resource === 'resource.individualObject') {
+            query = queryObject.deleteTriple(params.dataset, params.resourceURI, params.propertyURI, params.objectValue, params.valueType);
+            rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+            //send request
+            rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+                callback(null, {});
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {});
+            });
+        }
+    }
 };
