@@ -68,10 +68,10 @@ export default {
             rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
-                callback(null, {});
+                callback(null, {category: params.category});
             }).catch(function (err) {
                 console.log(err);
-                callback(null, {});
+                callback(null, {category: params.category});
             });
         }
     }

@@ -21,6 +21,7 @@ class Property extends React.Component {
     }
     handleDeleteIndividualObject(propertyURI, objectValue, valueType){
         this.context.executeAction(deleteIndividualObject, {
+          category: (this.props.config? (this.props.config.category? this.props.config.category[0]: ''): ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
           propertyURI: propertyURI,

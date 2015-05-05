@@ -10,11 +10,11 @@ export default {
     //if enabled, will categorize properties in different tabs based on propertyCategories
     usePropertyCategories: 0,
     propertyCategories: [],
-    //config for property components
+    //[Optional] config for property components
     propertiesConfig: {
         'http://purl.org/dc/terms/title': {
             category: ['general'],
-            hint: ['The title of dataset'],
+            hint: ['The title of dataset.'],
             defaultOptions: [
 
             ],
@@ -25,8 +25,10 @@ export default {
             editor: ['BasicIndividualInput']
         },
         'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
+            //it will not affect the sub properties in detail
             isHidden: 1,
-            category: ['general']
+            category: ['general'],
+            hint: ['Type of the entity.']
         },
         'http://purl.org/dc/terms/format': {
             allowNewValue: 1,
@@ -42,6 +44,16 @@ export default {
             category: ['general'],
             hint: ['An entity, such as a person, organisation, or service, that is responsible for making contributions to the dataset. The contributor should be described using a URI if available, rather than just providing the name as a literal.'],
             extendedViewer: ['BasicIndividualDetailView']
+        },
+        'http://purl.org/dc/terms/creator': {
+            allowNewValue: 1,
+            allowExtension: 1,
+            category: ['general'],
+            hint: ['An entity, such as a person, organisation, or service, that is responsible for making contributions to the dataset. The contributor should be described using a URI if available, rather than just providing the name as a literal.'],
+            extendedViewer: ['BasicIndividualDetailView']
+        },
+        'http://purl.org/dc/terms/language': {
+            allowNewValue: 1
         }
     }
 };
