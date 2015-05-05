@@ -9,14 +9,31 @@ class Property extends React.Component {
     componentDidMount() {
         let currentComp = this.refs.property.getDOMNode();
     }
-    handleDeleteIndividualObject(propertyURI, objectValue, valueType){
-        this.context.executeAction(deleteIndividualObject, {
-          dataset: this.props.graphName,
-          resourceURI: this.props.resource,
-          propertyURI: propertyURI,
-          objectValue: objectValue,
-          valueType: valueType
+    //considers 0 elements
+    calculateValueCount (arr){
+        var count = 0;
+        arr.forEach(function(v, i) {
+            if(arr[i]){
+                count++;
+            }
         });
+        return count;
+    }
+    handleDeleteIndividualObject(propertyURI, objectValue, valueType){
+        //do not allow to delete a value if it is the last value of the property
+        //todo: prevent this state by hiding the delete button in this condition
+        if(this.calculateValueCount(this.props.spec.instances)>1){
+            this.context.executeAction(deleteIndividualObject, {
+              dataset: this.props.graphName,
+              resourceURI: this.props.resource,
+              propertyURI: propertyURI,
+              objectValue: objectValue,
+              valueType: valueType
+            });
+        }else{
+            //alert('You can not remove this value! this is the last value of the "'+this.props.spec.property+'" property. Please add another value to the property. Then, you will be able to remove the selected value.');
+            console.log('delete not possible!');
+        }
     }
     render() {
         let self = this;
@@ -36,8 +53,11 @@ class Property extends React.Component {
         switch(this.props.config? (this.props.config.reactorType? this.props.config.reactorType[0]:'') : ''){
             case 'IndividualObjectReactor':
                 list = this.props.spec.instances.map(function(node, index) {
+                    if(!node){
+                        return undefined; // stop processing this iteration
+                    }
                     return (
-                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource}/>
+                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} onDelete={self.handleDeleteIndividualObject.bind(self, self.props.spec.propertyURI)}/>
                     );
                 });
             break;
@@ -46,6 +66,9 @@ class Property extends React.Component {
             break;
             default:
                 list = this.props.spec.instances.map(function(node, index) {
+                    if(!node){
+                        return undefined; // stop processing this iteration
+                    }
                     return (
                         <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} onDelete={self.handleDeleteIndividualObject.bind(self, self.props.spec.propertyURI)}/>
                     );

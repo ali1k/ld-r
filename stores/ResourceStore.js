@@ -1,4 +1,6 @@
 import {BaseStore} from 'fluxible/addons';
+import ResourceStoreUtil from './utils/ResourceStoreUtil';
+let utilObject = new ResourceStoreUtil();
 
 class ResourceStore extends BaseStore {
     constructor(dispatcher) {
@@ -12,7 +14,8 @@ class ResourceStore extends BaseStore {
         this.graphName = payload.graphName;
         this.resourceURI = payload.resourceURI;
         this.currentCategory = payload.currentCategory;
-        this.properties = payload.properties;
+        //this.properties = payload.properties;
+        this.properties = utilObject.preservePropertiesOrder(this.properties, payload.properties);
         this.emitChange();
     }
     getProperties() {
