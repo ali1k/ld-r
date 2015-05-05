@@ -72,7 +72,7 @@ class IndividualObjectReactor extends React.Component {
             undoDIV = <div title="undo" onClick={this.handleUndo.bind(this)} className="medium ui circular basic icon button">
                             <i className="undo large green icon link "></i>
                       </div>;
-            if(this.props.config && this.props.config.allowNewValue){
+            if(this.props.config && this.props.config.allowNewValue && !this.props.isOnlyChild){
                 deleteDIV = <div title="delete" onClick={this.handleDelete.bind(this)} className="medium ui circular basic icon button">
                                 <i className="minus square large red icon link "></i>
                           </div>;

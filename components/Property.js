@@ -20,20 +20,13 @@ class Property extends React.Component {
         return count;
     }
     handleDeleteIndividualObject(propertyURI, objectValue, valueType){
-        //do not allow to delete a value if it is the last value of the property
-        //todo: prevent this state by hiding the delete button in this condition
-        if(this.calculateValueCount(this.props.spec.instances)>1){
-            this.context.executeAction(deleteIndividualObject, {
-              dataset: this.props.graphName,
-              resourceURI: this.props.resource,
-              propertyURI: propertyURI,
-              objectValue: objectValue,
-              valueType: valueType
-            });
-        }else{
-            //alert('You can not remove this value! this is the last value of the "'+this.props.spec.property+'" property. Please add another value to the property. Then, you will be able to remove the selected value.');
-            console.log('delete not possible!');
-        }
+        this.context.executeAction(deleteIndividualObject, {
+          dataset: this.props.graphName,
+          resourceURI: this.props.resource,
+          propertyURI: propertyURI,
+          objectValue: objectValue,
+          valueType: valueType
+        });
     }
     render() {
         let self = this;
@@ -52,12 +45,14 @@ class Property extends React.Component {
         //dispatch to the right reactor
         switch(this.props.config? (this.props.config.reactorType? this.props.config.reactorType[0]:'') : ''){
             case 'IndividualObjectReactor':
+                //check if it is the only value of a property -> used to hide delete button
+                let isOnlyChild = (this.calculateValueCount(this.props.spec.instances) === 1);
                 list = this.props.spec.instances.map(function(node, index) {
                     if(!node){
                         return undefined; // stop processing this iteration
                     }
                     return (
-                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} onDelete={self.handleDeleteIndividualObject.bind(self, self.props.spec.propertyURI)}/>
+                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self, self.props.spec.propertyURI)}/>
                     );
                 });
             break;
@@ -65,12 +60,13 @@ class Property extends React.Component {
                 list = <AggregateObjectReactor readOnly={self.props.readOnly} spec={this.props.spec} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource}/>;
             break;
             default:
+                let isOnlyChild = (this.calculateValueCount(this.props.spec.instances) === 1);
                 list = this.props.spec.instances.map(function(node, index) {
                     if(!node){
                         return undefined; // stop processing this iteration
                     }
                     return (
-                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} onDelete={self.handleDeleteIndividualObject.bind(self, self.props.spec.propertyURI)}/>
+                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self, self.props.spec.propertyURI)}/>
                     );
                 });
         }
