@@ -14,7 +14,7 @@ export default {
     propertiesConfig: {
         'http://purl.org/dc/terms/title': {
             category: ['general'],
-            hint: [''],
+            hint: ['The title of dataset'],
             defaultOptions: [
 
             ],
@@ -40,6 +40,7 @@ export default {
             allowNewValue: 1,
             allowExtension: 1,
             category: ['general'],
+            hint: ['An entity, such as a person, organisation, or service, that is responsible for making contributions to the dataset. The contributor should be described using a URI if available, rather than just providing the name as a literal.'],
             extendedViewer: ['BasicIndividualDetailView']
         }
     }

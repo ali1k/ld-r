@@ -3,9 +3,21 @@ import IndividualObjectReactor from './IndividualObjectReactor';
 import AggregateObjectReactor from './AggregateObjectReactor';
 
 class Property extends React.Component {
+    componentDidMount() {
+        let currentComp = this.refs.property.getDOMNode();
+        //enable hints
+        /*global $*/
+        $(currentComp).find('.hint')
+        .popup({
+          hoverable: true
+        });
+    }
     render() {
         let self = this;
-        let newValueDIV;
+        let hintDIV, newValueDIV;
+        if(this.props.config && this.props.config.hint){
+            hintDIV = <a className="hint" data-content={this.props.config.hint[0]}> <i className="item circle info icon link"></i> </a>;
+        }
         if(this.props.config && this.props.config.allowNewValue && !this.props.readOnly){
             newValueDIV = <div className="ui list">
                                 <div className="item">
@@ -37,14 +49,14 @@ class Property extends React.Component {
                 });
         }
         return (
-            <div className="property item">
+            <div className="property item" ref='property'>
                 <div className="ui horizontal list">
                     <div className="item">
                         <h3>
                             <a href={this.props.spec.propertyURI} target="_blank"> {this.props.spec.property} </a>
+                            {hintDIV}
                         </h3>
                     </div>
-                    <i className="item circle info icon link"></i>
                 </div>
                 <div className="ui dividing header"></div>
                 <div className="property-objects">

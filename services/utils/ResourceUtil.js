@@ -60,8 +60,8 @@ class ResourceUtil{
         var output=[];
         if(parsed.results.bindings.length){
           parsed.results.bindings.forEach(function(el) {
-            output.push({property: self.getPropertyLabel(el.p.value), propertyURI: el.p.value, valueType: el.o.type, dataType:(el.o.type==='typed-literal'?el.o.datatype:''), value: el.o.value});
-          });
+            output.push({spec:{property: self.getPropertyLabel(el.p.value), propertyURI: el.p.value, valueType: el.o.type, dataType:(el.o.type==='typed-literal'?el.o.datatype:''), value: el.o.value}, config: propertiesConfig[el.p.value]});
+        });
           return output;
         }
     }
