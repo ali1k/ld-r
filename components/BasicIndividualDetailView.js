@@ -48,7 +48,7 @@ class BasicIndividualDetailView extends React.Component {
             );
         });
         return (
-            <div ref="detail_properties">
+            <div ref="detailProperties">
                 <div className="ui attached secondary segment">
                     {outputDIV}
                 </div>
