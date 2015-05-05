@@ -13,8 +13,8 @@ class Property extends React.Component {
         if(this.props.config && this.props.config.allowNewValue && !this.props.readOnly){
             newValueDIV = <div className="ui list">
                                 <div className="item">
-                                    <div className="medium ui basic icon labeled button">
-                                        <i className="plus square large blue icon link "></i> &nbsp; Add another <strong> {this.props.spec.property} </strong>
+                                    <div className="medium ui basic icon labeled circular button">
+                                        <i className="plus square large blue icon "></i> &nbsp; Add another <strong> {this.props.spec.property} </strong>
                                     </div>
                                 </div>
 
