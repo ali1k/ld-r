@@ -13,7 +13,11 @@ class PropertyHeader extends React.Component {
     }
     render() {
         let outputDIV, hintDIV, titleDIV;
-        titleDIV = <a href={this.props.spec.propertyURI} target="_blank"> {this.props.spec.property} </a>;
+        let label = this.props.spec.property;
+        if(this.props.config && this.props.config.label){
+            label = this.props.config.label;
+        }
+        titleDIV = <a href={this.props.spec.propertyURI} target="_blank"> {label} </a>;
         if(this.props.config && this.props.config.hint){
             hintDIV = <a className="hint" data-content={this.props.config.hint[0]}> <i className="item circle info icon link"></i> </a>;
         }
