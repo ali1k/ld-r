@@ -9,24 +9,41 @@ import {connectToStores} from 'fluxible/addons';
 class IndividualObjectReactor extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {objectValue: this.props.spec.value, inEditMode: this.props.inEditMode? 1 : 0, readOnly: this.props.readOnly, isExtendedView: 0};
+        this.state = {objectValue: this.props.spec.value, detailData: {}, inEditMode: this.props.inEditMode? 1 : 0, readOnly: this.props.readOnly, isExtendedView: 0};
     }
     handleEdit(){
+        //check if it is extended
+        if(this.props.spec.extended && !this.state.isExtendedView){
+            this.context.executeAction(loadObjectProperties, {
+              dataset: this.props.graphName,
+              objectURI: this.props.spec.value
+            });
+            this.setState({isExtendedView: 1});
+        }
         this.setState({inEditMode: 1});
     }
     handleDataEdit(value){
         this.setState({objectValue: value});
     }
+    handleDetailDataEdit(detailData){
+        this.setState({detailData: detailData});
+    }
     handleSave(){
         if(this.props.isNewValue){
             this.props.onCreate(this.state.objectValue, this.props.spec.valueType);
         }else{
-            //update only in case of change
-            if(this.props.spec.value !== this.state.objectValue){
-                this.props.onUpdate(this.props.spec.value, this.state.objectValue, this.props.spec.valueType);
+            //check if it is extended
+            if(this.props.spec.extended){
+                this.props.onDetailUpdate(this.props.spec.value, this.state.objectValue, this.props.spec.valueType, this.state.detailData);
+                this.setState({inEditMode: 0, isExtendedView: 0});
+            }else{
+                //update only in case of change
+                if(this.props.spec.value !== this.state.objectValue){
+                    this.props.onUpdate(this.props.spec.value, this.state.objectValue, this.props.spec.valueType);
+                }
+                this.setState({inEditMode: 0});
             }
         }
-        this.setState({inEditMode: 0});
     }
     handleDelete(){
         this.props.onDelete(this.props.spec.value, this.props.spec.valueType);
@@ -66,10 +83,10 @@ class IndividualObjectReactor extends React.Component {
         }
         switch(this.props.config? (this.props.config.dataEditType? this.props.config.dataEditType[0]:'') : ''){
             case 'IndividualDataEdit':
-                dataEditType = <IndividualDataEdit spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
+                dataEditType = <IndividualDataEdit property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)}/>;
             break;
             default:
-                dataEditType = <IndividualDataEdit spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
+                dataEditType = <IndividualDataEdit property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)}/>;
         }
         let editDIV, saveDIV, undoDIV, detailDIV, deleteDIV;
         //disable edit in readOnly mode

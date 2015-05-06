@@ -28,6 +28,7 @@ export default {
             //it will not affect the sub properties in detail
             isHidden: 1,
             category: ['general'],
+            label: ['Type'],
             hint: ['Type of the entity.']
         },
         'http://purl.org/dc/terms/format': {
@@ -56,6 +57,11 @@ export default {
             extendedViewer: ['BasicIndividualDetailView']
         },
         'http://purl.org/dc/terms/language': {
+            allowNewValue: 1
+        },
+        'http://purl.org/dc/terms/subject': {
+            category: ['general'],
+            label: ['Keywords'],
             allowNewValue: 1
         }
     }

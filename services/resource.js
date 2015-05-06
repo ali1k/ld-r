@@ -84,6 +84,16 @@ export default {
                 console.log(err);
                 callback(null, {category: params.category});
             });
+        } else if(resource === 'resource.individualObjectDetail'){
+            query = queryObject.getPrefixes() + queryObject.updateObjectTriples(params.dataset, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.detailData);
+            rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+            //send request
+            rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+                callback(null, {category: params.category});
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {category: params.category});
+            });
         }
     },
     delete: function(req, resource, params, config, callback) {

@@ -61,5 +61,14 @@ class ResourceQuery{
         this.query = this.deleteTriple(graphName, resourceURI, propertyURI, oldObjectValue, valueType) + this.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType);
         return this.query;
     }
+    updateObjectTriples (graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, detailData) {
+        let self=this;
+        self.query = self.deleteTriple(graphName, resourceURI, propertyURI, oldObjectValue, valueType) + self.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType) ;
+        for (let propURI in detailData) {
+            self.query = self.query + self.deleteTriple(graphName, oldObjectValue, propURI, '', detailData[propURI].valueType);
+            self.query = self.query + self.addTriple(graphName, newObjectValue, propURI, detailData[propURI].value, detailData[propURI].valueType);
+        }
+        return self.query;
+    }
 }
 export default ResourceQuery;
