@@ -95,11 +95,11 @@ class IndividualObjectReactor extends React.Component {
                             <i className="edit large blue icon link "></i>
                       </div>;
             saveDIV = <div title="save" onClick={this.handleSave.bind(this)} className="medium ui circular basic icon button">
-                            <i className="save large blue icon link "></i>
+                            <i className="save large green icon link "></i>
                       </div>;
             if(!this.props.isNewValue){
                 undoDIV = <div title="undo" onClick={this.handleUndo.bind(this)} className="medium ui circular basic icon button">
-                                <i className="undo large green icon link "></i>
+                                <i className="undo large blue icon link "></i>
                           </div>;
             }
             if(this.props.config && this.props.config.allowNewValue && !this.props.isOnlyChild){
@@ -123,7 +123,7 @@ class IndividualObjectReactor extends React.Component {
             if(this.props.config && this.props.config.allowExtension && !this.state.readOnly){
 
                 detailDIV = <div title="add details" onClick={this.handleAddDetails.bind(this)} className="medium ui circular basic icon button">
-                                <i className="add user large blue icon link "> </i>
+                                <i className="add circle large blue icon link "> </i>
                             </div>;
             }
         }

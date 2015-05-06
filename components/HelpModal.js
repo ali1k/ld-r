@@ -29,14 +29,14 @@ class HelpModal extends React.Component {
                         </div>
                       </div>
                       <div className="item">
-                        <i className="big blue save icon"></i>
+                        <i className="big green save icon"></i>
                         <div className="content">
                           <a className="header">Save value</a>
                           <div className="description">Clicking on this icon will save the inserted value for property.</div>
                         </div>
                       </div>
                       <div className="item">
-                        <i className="big green undo icon"></i>
+                        <i className="big blue undo icon"></i>
                         <div className="content">
                           <a className="header">Undo value</a>
                           <div className="description">Clicking on this icon will undo the value of a property.</div>
@@ -61,6 +61,13 @@ class HelpModal extends React.Component {
                         <div className="content">
                           <a className="header">Hide details</a>
                           <div className="description"> Clicking on this icon hides the sub-properties of a value (if existed).</div>
+                        </div>
+                      </div>
+                      <div className="item">
+                        <i className="big blue icon add circle"></i>
+                        <div className="content">
+                          <a className="header">Add details</a>
+                          <div className="description"> If a property value allows value extension, clicking on this icon will enable users to add more details on the value.</div>
                         </div>
                       </div>
                       <div className="item">

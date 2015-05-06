@@ -37,7 +37,7 @@ class IndividualDataEdit extends React.Component {
             output = editor;
         }
         return (
-            <div className="ui secondary segment">
+            <div className="ui">
                 {output}
             </div>
         );
