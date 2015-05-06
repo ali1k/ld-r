@@ -46,8 +46,8 @@ export default {
             //predicate Category
             let category;
             category = payload.get('params').get('pcategory');
-            if (!category) {
-                category = 'default';
+            if(!category){
+                category = 0;
             }
             context.executeAction(loadResource, { dataset: decodeURIComponent(payload.get('params').get('did')), resource: decodeURIComponent(payload.get('params').get('rid')), category: category}, done);
         }

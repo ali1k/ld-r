@@ -7,7 +7,7 @@ class ResourceStore extends BaseStore {
         super(dispatcher);
         this.properties = [];
         this.graphName = '';
-        this.currentCategory = 'default';
+        this.currentCategory = 0;
         this.resourceURI = '';
     }
     updatePropertyList(payload) {

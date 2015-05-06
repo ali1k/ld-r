@@ -15,19 +15,23 @@ class Resource extends React.Component {
                 );
             }
         });
-        let mainDIV, tabsDIV, tabsContentDIV;
+        let currentCategory, mainDIV, tabsDIV, tabsContentDIV;
         //categorize properties in different tabs
         if(usePropertyCategories){
+            currentCategory = this.props.ResourceStore.currentCategory;
+            if(!currentCategory){
+                currentCategory = propertyCategories[0];
+            }
             tabsDIV = propertyCategories.map(function(node, index) {
                 return (
                     <NavLink key={index} routeName="resource" href={'/dataset/'+ encodeURIComponent(self.props.ResourceStore.graphName) + '/resource/' + encodeURIComponent(self.props.ResourceStore.resourceURI) + '/' + node}>
-                      <div className={(node === self.props.ResourceStore.currentCategory? 'item link active': 'item link')}> {node} </div>
+                      <div className={(node === currentCategory? 'item link active': 'item link')}> {node} </div>
                     </NavLink>
                 );
             });
             tabsContentDIV = propertyCategories.map(function(node, index) {
                 return (
-                    <div key={index} className={(node === self.props.ResourceStore.currentCategory? 'ui bottom attached tab segment active': 'ui bottom attached tab segment')}>
+                    <div key={index} className={(node === currentCategory? 'ui bottom attached tab segment active': 'ui bottom attached tab segment')}>
                         <div className="ui grid">
                             <div className="column ui list">
                                 {list}
