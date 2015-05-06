@@ -32,7 +32,7 @@ export default {
             let graphName;
             graphName = payload.get('params').get('id');
             if (!graphName) {
-                graphName = 'default';
+                graphName = 0;
             }
             context.executeAction(loadDataset, { id: graphName}, done);
         }

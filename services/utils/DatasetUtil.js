@@ -3,13 +3,19 @@ class DatasetUtil{
     constructor() {
 
     }
-    parseResourcesByType(body) {
+    parseResourcesByType(body, graphName) {
       let output=[];
       let parsed = JSON.parse(body);
       if(parsed.results.bindings.length){
-        parsed.results.bindings.forEach(function(el) {
-          output.push(el.resource.value);
-        });
+          if(String(graphName)===''){
+              parsed.results.bindings.forEach(function(el) {
+                output.push( {v: el.resource.value, g: el.graphName.value});
+              });
+          }else{
+              parsed.results.bindings.forEach(function(el) {
+                output.push( {v: el.resource.value, g: graphName});
+              });
+          }
       }
       return output;
     }

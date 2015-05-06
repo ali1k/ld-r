@@ -11,16 +11,30 @@ class DatasetQuery{
         this.query='';
     }
     getResourcesByType(graphName, type) {
-        /*jshint multistr: true */
-        this.query = '\
-        SELECT DISTINCT ?resource WHERE { \
-          { \
-            GRAPH <'+ graphName +'>  { \
-              ?resource a '+ type +' . \
-            } \
-          } \
-        } ORDER BY ASC(?resource) \
-        ';
+        //go to default graph if no graph name is given
+        if(String(graphName)!==''){
+            /*jshint multistr: true */
+            this.query = '\
+            SELECT DISTINCT ?resource WHERE {\
+                { GRAPH <'+ graphName +'> \
+                    { \
+                    ?resource a '+ type +' . \
+                    } \
+                } \
+            } ORDER BY ASC(?resource) LIMIT 100 \
+            ';
+        }else{
+            /*jshint multistr: true */
+            this.query = '\
+            SELECT DISTINCT ?resource ?graphName WHERE { \
+                { GRAPH ?graphName \
+                    { \
+                    ?resource a '+ type +' . \
+                    }\
+                } \
+            } ORDER BY ASC(?resource) LIMIT 100 \
+            ';
+        }
         return this.prefixes + this.query;
     }
 }

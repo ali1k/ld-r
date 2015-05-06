@@ -22,7 +22,7 @@ export default {
     read: (req, resource, params, config, callback) => {
         if (resource === 'dataset.resourcesByType') {
             //SPARQL QUERY
-            graphName = (params.id==='default'? defaultGraphName: params.id);
+            graphName = (params.id? params.id: defaultGraphName);
             query = queryObject.getResourcesByType(graphName, resourceFocusType);
             //build http uri
             rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
@@ -30,7 +30,7 @@ export default {
             rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
                 callback(null, {
                     graphName: graphName,
-                    resources: utilObject.parseResourcesByType(res)
+                    resources: utilObject.parseResourcesByType(res, graphName)
                 });
             }).catch(function (err) {
                 console.log(err);

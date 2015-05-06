@@ -13,8 +13,8 @@ class Dataset extends React.Component {
             list = this.props.DatasetStore.resources.map((node, index) => {
                 return (
                     <div className="item active" key={index}>
-                        <NavLink routeName="resource" className="ui label" href={'/dataset/'+ encodeURIComponent(graphName) +'/resource/' + encodeURIComponent(node)} >
-                            {node}
+                        <NavLink routeName="resource" className="ui label" href={'/dataset/'+ encodeURIComponent(node.g) +'/resource/' + encodeURIComponent(node.v)} >
+                            {node.v}
                         </NavLink>
                     </div>
                 );
