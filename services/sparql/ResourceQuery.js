@@ -13,26 +13,19 @@ class ResourceQuery{
     getPrefixes() {
         return this.prefixes;
     }
-    prepareNamedGraph(graphName){
-        let graphSt='FROM <'+ graphName +'>';
-        //go to default graph if no graph name is given
-        if(String(graphName)===''){
-            graphSt = '';
-        }
-        return graphSt;
-    }
     getProperties(graphName, resourceURI) {
         /*jshint multistr: true */
         this.query = '\
-        SELECT ?p ?o (count(?extendedVal) AS ?hasExtendedValue) '+ this.prepareNamedGraph(graphName) +' WHERE { \
+        SELECT ?p ?o (count(?extendedVal) AS ?hasExtendedValue) FROM <'+ graphName +'> WHERE { \
         <'+ resourceURI + '> ?p ?o . \
         OPTIONAL {?o ?uri ?extendedVal .} \
       } ORDER BY ?p ?o';
       return this.query;
     }
     getObjectProperties(graphName, objectURI) {
+        /*jshint multistr: true */
         this.query = '\
-        SELECT ?p ?o '+ this.prepareNamedGraph(graphName) +' WHERE { \
+        SELECT ?p ?o FROM <'+ graphName +'> WHERE { \
         <'+ objectURI + '> ?p ?o .\
         } ORDER BY ?p ?o';
       return this.query;
