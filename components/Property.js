@@ -13,9 +13,6 @@ class Property extends React.Component {
         super(props);
         this.state = {inNewValueMode: 0};
     }
-    componentDidMount() {
-        let currentComp = this.refs.property.getDOMNode();
-    }
     //considers 0 elements
     calculateValueCount (instances){
         let count = 0;
@@ -89,14 +86,15 @@ class Property extends React.Component {
     }
     render() {
         let self = this;
-        let newValueDIV, defaultValueDIV;
+        let newValueDIV, defaultValueDIV, propLabel;
         if(this.props.config && this.props.config.allowNewValue && !this.props.readOnly){
+            propLabel = this.props.config.label? this.props.config.label: this.props.spec.property;
             if(this.state.inNewValueMode){
                 defaultValueDIV = <IndividualObjectReactor isNewValue="1" inEditMode="1" key="defaultValue" spec={this.simulateDefaultValue(this.props.spec.instances, 'default')} config={this.props.config} graphName={this.props.graphName} resource={this.props.resource} onCreate={this.handleCreateIndividualObject.bind(this, this.props.spec.propertyURI)}/>;
                 newValueDIV = <div className="ui list">
                                         <div className="item">
                                             <div onClick={this.handleCancelNewIndividualObject.bind(this)} className="medium ui basic icon labeled button">
-                                                <i className="cancel square large red icon "></i> &nbsp; Cancel adding new <strong> {this.props.spec.property} </strong>
+                                                <i className="cancel square large red icon "></i> &nbsp; Cancel adding new <strong> {propLabel} </strong>
                                             </div>
                                         </div>
 
@@ -106,7 +104,7 @@ class Property extends React.Component {
                 newValueDIV = <div className="ui list">
                                     <div className="item">
                                         <div onClick={this.handleNewIndividualObject.bind(this)} className="medium ui basic icon labeled button">
-                                            <i className="plus square large blue icon "></i> &nbsp; Add another <strong> {this.props.spec.property} </strong>
+                                            <i className="plus square large blue icon "></i> &nbsp; Add another <strong> {propLabel} </strong>
                                         </div>
                                     </div>
 
