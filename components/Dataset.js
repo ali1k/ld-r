@@ -24,7 +24,7 @@ class Dataset extends React.Component {
             <div className="ui page grid" ref="dataset">
                 <div className="ui column">
                     <div className="ui segment">
-                        <h3> Resources</h3>
+                        <h3> Resources of type "{this.props.DatasetStore.resourceFocusType.join()}"</h3>
                         <div className="ui divided link list">
                             {list}
                         </div>

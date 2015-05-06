@@ -30,11 +30,12 @@ export default {
             rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
                 callback(null, {
                     graphName: graphName,
+                    resourceFocusType: resourceFocusType,
                     resources: utilObject.parseResourcesByType(res, graphName)
                 });
             }).catch(function (err) {
                 console.log(err);
-                callback(null, {graphName: graphName, resources: []});
+                callback(null, {graphName: graphName, resourceFocusType: resourceFocusType, resources: []});
             });
         }
 

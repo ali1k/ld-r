@@ -5,10 +5,12 @@ class DatasetStore extends BaseStore {
         super(dispatcher);
         this.resources = [];
         this.graphName = '';
+        this.resourceFocusType = '';
     }
     updateResourceList(payload) {
         this.graphName = payload.graphName;
         this.resources = payload.resources;
+        this.resourceFocusType = payload.resourceFocusType;
         this.emitChange();
     }
     getResources() {
@@ -17,10 +19,14 @@ class DatasetStore extends BaseStore {
     getGraphName() {
         return this.graphName;
     }
+    getResourceFocusType() {
+        return this.resourceFocusType;
+    }
     getState() {
         return {
             graphName: this.graphName,
-            resources: this.resources
+            resources: this.resources,
+            resourceFocusType: this.resourceFocusType
         };
     }
     dehydrate() {
@@ -29,6 +35,7 @@ class DatasetStore extends BaseStore {
     rehydrate(state) {
         this.resources = state.resources;
         this.graphName = state.graphName;
+        this.resourceFocusType = state.resourceFocusType;
     }
 }
 
