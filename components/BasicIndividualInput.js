@@ -16,6 +16,16 @@ class BasicIndividualInput extends React.Component {
             React.findDOMNode(this.refs.basicIndividualInput).focus();
         }
     }
+    handleKeyDown(evt) {
+        if(this.props.allowActionByKey){
+            switch (evt.keyCode) {
+                //case 9: // Tab
+                case 13: // Enter
+                    this.props.onEnterPress();
+                    break;
+            }
+        }
+    }
     getRandomNumber() {
         return Math.round(+new Date() / 1000);
     }
@@ -33,7 +43,7 @@ class BasicIndividualInput extends React.Component {
     render() {
         return (
             <div className="ui">
-                <input ref="basicIndividualInput" type="text" value={this.state.value} onChange={this.handleChange.bind(this)} />
+                <input ref="basicIndividualInput" type="text" value={this.state.value} onChange={this.handleChange.bind(this)} onKeyDown={this.handleKeyDown.bind(this)}/>
             </div>
         );
     }

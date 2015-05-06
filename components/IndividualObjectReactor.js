@@ -118,10 +118,10 @@ class IndividualObjectReactor extends React.Component {
         }
         switch(this.props.config? (this.props.config.dataEditType? this.props.config.dataEditType[0]:'') : ''){
             case 'IndividualDataEdit':
-                dataEditType = <IndividualDataEdit isDefault="0" property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)}/>;
+                dataEditType = <IndividualDataEdit isDefault="0" property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)} onEnterPress={this.handleSave.bind(this)}/>;
             break;
             default:
-                dataEditType = <IndividualDataEdit isDefault="0" property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)}/>;
+                dataEditType = <IndividualDataEdit isDefault="0" property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)} onEnterPress={this.handleSave.bind(this)}/>;
         }
         let editDIV, saveDIV, undoDIV, detailDIV, deleteDIV;
         //disable edit in readOnly mode

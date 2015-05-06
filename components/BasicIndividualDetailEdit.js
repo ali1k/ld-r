@@ -17,6 +17,9 @@ class BasicIndividualDetailEdit extends React.Component {
         this.state[propertyURI] = {value: value, valueType: valueType, dataType: dataType};
         this.props.onDetailDataEdit(this.state);
     }
+    handleEnterPress(){
+        this.props.onEnterPress();
+    }
     render() {
         let self = this;
         let list = this.props.spec.extendedViewData.map(function(node, index) {
@@ -44,7 +47,7 @@ class BasicIndividualDetailEdit extends React.Component {
         return (
             <div ref="detailPropertiesEdit">
                 <div className="ui attached secondary segment">
-                <BasicIndividualInput spec={{value: this.props.spec.value, valueType: this.props.spec. valueType, dataType: this.props.spec.dataType}} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>
+                <BasicIndividualInput spec={{value: this.props.spec.value, valueType: this.props.spec. valueType, dataType: this.props.spec.dataType}} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onEnterPress={this.handleEnterPress.bind(this)} allowActionByKey="1"/>
                 </div>
                 <div className="ui attached primary segment">
                     <div className="ui list">
