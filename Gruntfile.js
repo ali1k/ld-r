@@ -11,7 +11,7 @@ module.exports = function (grunt) {
             app: {
                 script: './start.js',
                 options: {
-                    ignore: ['build/**'],
+                    ignore: ['build/**', 'bower_components/**', 'npm_modules/**'],
                     ext: 'js'
                 }
             }
@@ -30,4 +30,3 @@ module.exports = function (grunt) {
     // tasks
     grunt.registerTask('default', ['clean', 'concurrent:dev']);
 };
-
