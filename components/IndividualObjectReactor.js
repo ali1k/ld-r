@@ -126,30 +126,30 @@ class IndividualObjectReactor extends React.Component {
         let editDIV, saveDIV, undoDIV, detailDIV, deleteDIV;
         //disable edit in readOnly mode
         if(!this.state.readOnly){
-            editDIV = <div title="edit" onClick={this.handleEdit.bind(this)} className="medium ui circular basic icon button">
+            editDIV = <div ref="edit" title="edit" onClick={this.handleEdit.bind(this)} className="medium ui circular basic icon button">
                             <i className="edit large blue icon link "></i>
                       </div>;
-            saveDIV = <div title="save" onClick={this.handleSave.bind(this)} className="medium ui circular basic icon button">
+            saveDIV = <div ref="save" title="save" onClick={this.handleSave.bind(this)} className="medium ui circular basic icon button">
                             <i className="save large green icon link "></i>
                       </div>;
             if(!this.props.isNewValue){
-                undoDIV = <div title="undo" onClick={this.handleUndo.bind(this)} className="medium ui circular basic icon button">
+                undoDIV = <div ref="undo" title="undo" onClick={this.handleUndo.bind(this)} className="medium ui circular basic icon button">
                                 <i className="undo large blue icon link "></i>
                           </div>;
             }
             if(this.props.config && this.props.config.allowNewValue && !this.props.isOnlyChild){
-                deleteDIV = <div title="delete" onClick={this.handleDelete.bind(this)} className="medium ui circular basic icon button">
+                deleteDIV = <div ref="delete" title="delete" onClick={this.handleDelete.bind(this)} className="medium ui circular basic icon button">
                                 <i className="minus square large red icon link "></i>
                           </div>;
             }
         }
         if(this.props.spec.extended){
             if(this.state.isExtendedView){
-                detailDIV = <div title="show details" onClick={this.handleHideDetails.bind(this)} className="medium ui circular basic icon button">
+                detailDIV = <div ref="hideDetails" title="hide details" onClick={this.handleHideDetails.bind(this)} className="medium ui circular basic icon button">
                                 <i className="hide large blue icon link "> </i>
                             </div>;
             }else{
-                detailDIV = <div title="show details" onClick={this.handleShowDetails.bind(this)} className="medium ui circular basic icon button">
+                detailDIV = <div ref="showDetails" title="show details" onClick={this.handleShowDetails.bind(this)} className="medium ui circular basic icon button">
                                 <i className="unhide large blue icon link "> </i>
                             </div>;
             }
@@ -157,7 +157,7 @@ class IndividualObjectReactor extends React.Component {
             //show add detail icon if enabled
             if(this.props.config && this.props.config.allowExtension && !this.state.readOnly){
 
-                detailDIV = <div title="add details" onClick={this.handleAddDetails.bind(this)} className="medium ui circular basic icon button">
+                detailDIV = <div ref="addDetails" title="add details" onClick={this.handleAddDetails.bind(this)} className="medium ui circular basic icon button">
                                 <i className="add circle large blue icon link "> </i>
                             </div>;
             }

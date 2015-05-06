@@ -1,9 +1,6 @@
 'use strict';
-import {usePropertyCategories, propertiesConfig} from '../../configs/reactor';
+import {usePropertyCategories, propertyCategories, propertiesConfig} from '../../configs/reactor';
 class ResourceUtil{
-    constructor() {
-
-    }
     getPropertyLabel(uri) {
         var property='';
         var tmp=uri;
@@ -20,8 +17,12 @@ class ResourceUtil{
         let filterByCategory=0, self=this;
         let parsed = JSON.parse(body);
         let output=[], propIndex={}, finalOutput=[];
-        if(usePropertyCategories && category && category !== 'default'){
+        if(usePropertyCategories){
             //allow filter by category
+            if(!category){
+                //get first category as default
+                category = propertyCategories[0];
+            }
             filterByCategory=1;
         }
         if(parsed.head.vars[0]=== 'callret-0'){

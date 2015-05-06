@@ -39,7 +39,7 @@ export default {
                 });
             }).catch(function (err) {
                 console.log(err);
-                callback(null, {graphName: graphName, resourceURI: resourceURI, currentCategory: 'default', properties: []});
+                callback(null, {graphName: graphName, resourceURI: resourceURI, currentCategory: 0, properties: []});
             });
         } else if (resource === 'resource.objectProperties') {
             graphName = params.dataset;

@@ -40,7 +40,7 @@ class IndividualDataEdit extends React.Component {
             output = editor;
         }
         return (
-            <div className="ui">
+            <div className="ui" ref="individualDataEdit">
                 {output}
             </div>
         );

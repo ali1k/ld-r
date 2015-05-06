@@ -27,7 +27,7 @@ class IndividualDataView extends React.Component {
             output = viewer;
         }
         return (
-            <div className="ui secondary segment">
+            <div className="ui secondary segment" ref="individualDataView">
                 {output}
             </div>
         );

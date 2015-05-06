@@ -9,7 +9,7 @@ class BasicIndividualView extends React.Component {
             outputDIV = <span> {this.props.spec.value} </span>;
         }
         return (
-            <div className="ui">
+            <div className="ui" ref="basicIndividualView">
                 {outputDIV}
             </div>
         );
