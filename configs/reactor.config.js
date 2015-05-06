@@ -46,7 +46,42 @@ export default {
             category: ['general'],
             label: ['Contributor'],
             hint: ['An entity, such as a person, organisation, or service, that is responsible for making contributions to the dataset. The contributor should be described using a URI if available, rather than just providing the name as a literal.'],
-            extendedViewer: ['BasicIndividualDetailView']
+            extendedViewer: ['BasicIndividualDetailView'],
+            extensions: [
+                {
+                    spec: {
+                        propertyURI: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+                        value: 'http://xmlns.com/foaf/0.1/Person',
+                        valueType: 'uri'
+                    },
+                    config: {
+                        hint: ['Type of the entity'],
+                        label: ['Type']
+                    }
+                },
+                {
+                    spec: {
+                        propertyURI: 'http://www.w3.org/2000/01/rdf-schema#label',
+                        value: 'Label',
+                        valueType: 'literal'
+                    },
+                    config: {
+                        hint: ['A descriptor label for the URI'],
+                        label: ['Label']
+                    }
+                },
+                {
+                    spec: {
+                        propertyURI: 'http://xmlns.com/foaf/0.1/mbox',
+                        value: 'email address',
+                        valueType: 'literal'
+                    },
+                    config: {
+                        hint: ['A corresponding email address'],
+                        label: ['Email']
+                    }
+                }
+            ]
         },
         'http://purl.org/dc/terms/creator': {
             allowNewValue: 1,

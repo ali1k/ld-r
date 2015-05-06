@@ -22,6 +22,9 @@ class IndividualObjectReactor extends React.Component {
         }
         this.setState({inEditMode: 1});
     }
+    handleAddDetails(){
+        this.setState({inEditMode: 1, isExtendedView: 1});
+    }
     handleDataEdit(value){
         this.setState({objectValue: value});
     }
@@ -33,8 +36,11 @@ class IndividualObjectReactor extends React.Component {
             this.props.onCreate(this.state.objectValue, this.props.spec.valueType);
         }else{
             //check if it is extended
-            if(this.props.spec.extended){
+            if(this.props.spec.extended || this.state.isExtendedView){
                 this.props.onDetailUpdate(this.props.spec.value, this.state.objectValue, this.props.spec.valueType, this.state.detailData);
+                if(this.state.isExtendedView){
+                    this.props.spec.extended = 1;
+                }
                 this.setState({inEditMode: 0, isExtendedView: 0});
             }else{
                 //update only in case of change
@@ -49,7 +55,7 @@ class IndividualObjectReactor extends React.Component {
         this.props.onDelete(this.props.spec.value, this.props.spec.valueType);
     }
     handleUndo(){
-        this.setState({objectValue: this.props.spec.value, inEditMode: 0});
+        this.setState({objectValue: this.props.spec.value, inEditMode: 0, isExtendedView: 0});
     }
     handleShowDetails(){
         this.context.executeAction(loadObjectProperties, {
@@ -61,17 +67,46 @@ class IndividualObjectReactor extends React.Component {
     handleHideDetails(){
         this.setState({isExtendedView: 0});
     }
-    handleAddDetails(){
-        this.setState({inEditMode: 0});
-    }
     render() {
         //add object Properties only to the relevant ones
-        if(this.props.spec.extended){
-            if(this.state.isExtendedView){
+        if(this.state.isExtendedView){
+            if(this.props.spec.extended){
                 this.props.spec.extendedViewData = this.props.IndividualObjectStore.objectProperties[this.props.spec.value];
             }else{
-                this.props.spec.extendedViewData = 0;
+                //add details situation
+                if(this.props.config && this.props.config.extensions){
+                    //get from config
+                    this.props.spec.extendedViewData = this.props.config.extensions;
+                }else{
+                    //use default
+                    this.props.spec.extendedViewData = [
+                        {
+                            spec: {
+                                propertyURI: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+                                value: 'http://xmlns.com/foaf/0.1/Person',
+                                valueType: 'uri'
+                            },
+                            config: {
+                                hint: ['Type of the entity'],
+                                label: ['Type']
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'http://www.w3.org/2000/01/rdf-schema#label',
+                                value: 'Label',
+                                valueType: 'literal'
+                            },
+                            config: {
+                                hint: ['A descriptor label for the URI'],
+                                label: ['Label']
+                            }
+                        }
+                    ];
+                }
             }
+        }else{
+            this.props.spec.extendedViewData = 0;
         }
         let dataViewType, dataEditType;
         switch(this.props.config? (this.props.config.dataViewType? this.props.config.dataViewType[0]:'') : ''){
@@ -83,10 +118,10 @@ class IndividualObjectReactor extends React.Component {
         }
         switch(this.props.config? (this.props.config.dataEditType? this.props.config.dataEditType[0]:'') : ''){
             case 'IndividualDataEdit':
-                dataEditType = <IndividualDataEdit property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)}/>;
+                dataEditType = <IndividualDataEdit isDefault="0" property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)}/>;
             break;
             default:
-                dataEditType = <IndividualDataEdit property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)}/>;
+                dataEditType = <IndividualDataEdit isDefault="0" property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)}/>;
         }
         let editDIV, saveDIV, undoDIV, detailDIV, deleteDIV;
         //disable edit in readOnly mode
