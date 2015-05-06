@@ -11,6 +11,11 @@ class BasicTextareaInput extends React.Component {
         this.props.onDataEdit(v);
         this.state = {value: v};
     }
+    componentDidMount() {
+        if(!this.props.noFocus){
+            React.findDOMNode(this.refs.basicTextareaInput).focus();
+        }
+    }
     getRandomNumber() {
         return Math.round(+new Date() / 1000);
     }
@@ -28,7 +33,7 @@ class BasicTextareaInput extends React.Component {
     render() {
         return (
             <div className="ui">
-                <textarea value={this.state.value} onChange={this.handleChange.bind(this)}></textarea>
+                <textarea ref="basicTextareaInput" value={this.state.value} onChange={this.handleChange.bind(this)}></textarea>
             </div>
         );
     }

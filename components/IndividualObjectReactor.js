@@ -165,7 +165,7 @@ class IndividualObjectReactor extends React.Component {
         if (this.state.inEditMode) {
             //edit mode
             return (
-                <div className="ui list">
+                <div className="ui list" ref="individualObjectReactor">
                     <div className="item">
                         <div className="ui form grid">
                                 <div className="twelve wide column field">
@@ -182,7 +182,7 @@ class IndividualObjectReactor extends React.Component {
         }else{
             //view mode
             return (
-                <div className="ui list">
+                <div className="ui list" ref="individualObjectReactor">
                     <div className="item">
                         <div className="ui form grid">
                                 <div className="twelve wide column field">
