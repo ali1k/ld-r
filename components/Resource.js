@@ -9,10 +9,6 @@ class Resource extends React.Component {
     constructor(props) {
         super(props);
     }
-    componentWillUnmount() {
-        //Perform any necessary cleanup
-        //console.log('unmounted');
-    }
     render() {
         let self = this;
         let list = this.props.ResourceStore.properties.map(function(node, index) {

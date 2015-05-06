@@ -5,18 +5,21 @@ let utilObject = new ResourceStoreUtil();
 class ResourceStore extends BaseStore {
     constructor(dispatcher) {
         super(dispatcher);
-        this.properties = [];
-        this.graphName = '';
-        this.currentCategory = 0;
-        this.resourceURI = '';
+        this.cleanResource();
     }
     updatePropertyList(payload) {
         this.graphName = payload.graphName;
         this.resourceURI = payload.resourceURI;
         this.currentCategory = payload.currentCategory;
-        //this.properties = payload.properties;
+        // this.properties = payload.properties;
         this.properties = utilObject.preservePropertiesOrder(this.properties, payload.properties);
         this.emitChange();
+    }
+    cleanResource() {
+        this.properties = [];
+        this.graphName = '';
+        this.currentCategory = 0;
+        this.resourceURI = '';
     }
     getProperties() {
         return this.properties;
@@ -51,7 +54,8 @@ class ResourceStore extends BaseStore {
 
 ResourceStore.storeName = 'ResourceStore'; // PR open in dispatchr to remove this need
 ResourceStore.handlers = {
-    'LOAD_RESOURCE_SUCCESS': 'updatePropertyList'
+    'LOAD_RESOURCE_SUCCESS': 'updatePropertyList',
+    'CLEAN_RESOURCE_SUCCESS': 'cleanResource'
 };
 
 export default ResourceStore;
