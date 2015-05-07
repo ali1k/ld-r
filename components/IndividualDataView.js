@@ -4,6 +4,7 @@ import BasicIndividualDetailView from './BasicIndividualDetailView';
 import BasicDBpediaView from './BasicDBpediaView';
 import BasicLinkedIndividualView from './BasicLinkedIndividualView';
 import LanguageView from './LanguageView';
+import BasicOptionView from './BasicOptionView';
 
 class IndividualDataView extends React.Component {
     render() {
@@ -32,6 +33,9 @@ class IndividualDataView extends React.Component {
                 break;
                 case 'LanguageView':
                     viewer = <LanguageView spec={this.props.spec} config={this.props.config}/>;
+                break;
+                case 'BasicOptionView':
+                    viewer = <BasicOptionView spec={this.props.spec} config={this.props.config}/>;
                 break;
                 default:
                     viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;

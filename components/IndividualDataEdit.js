@@ -4,6 +4,7 @@ import BasicTextareaInput from './BasicTextareaInput';
 import BasicIndividualDetailEdit from './BasicIndividualDetailEdit';
 import DBpediaInput from './DBpediaInput';
 import LanguageInput from './LanguageInput';
+import BasicOptionInput from './BasicOptionInput';
 
 class IndividualDataEdit extends React.Component {
     handleDataEdit(value){
@@ -41,6 +42,9 @@ class IndividualDataEdit extends React.Component {
                 break;
                 case 'LanguageInput':
                     editor = <LanguageInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
+                break;
+                case 'BasicOptionInput':
+                    editor = <BasicOptionInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
                 break;
                 default:
                     editor = <BasicIndividualInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;

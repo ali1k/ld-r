@@ -15,9 +15,6 @@ export default {
         'http://purl.org/dc/terms/title': {
             category: ['general'],
             hint: ['The title of dataset.'],
-            defaultOptions: [
-
-            ],
             reactorType: ['IndividualObjectReactor'],
             dataViewType: ['IndividualDataView'],
             viewer: ['BasicIndividualView'],
@@ -40,6 +37,23 @@ export default {
             category: ['general'],
             viewer: ['LanguageView'],
             editor: ['LanguageInput']
+        },
+        'http://purl.org/dc/terms/license': {
+            category: ['general'],
+            label: ['License'],
+            allowNewValue: 1,
+            viewer: ['BasicOptionView'],
+            editor: ['BasicOptionInput'],
+            options: [
+                {label: 'pddl', value: 'http://www.opendatacommons.org/licenses/pddl/'},
+                {label: 'by', value: 'http://www.opendatacommons.org/licenses/by/'},
+                {label: 'odbl', value: 'http://www.opendatacommons.org/licenses/odbl/'},
+                {label: 'zero', value: 'http://creativecommons.org/publicdomain/zero/1.0/'},
+                {label: 'by-sa', value: 'http://creativecommons.org/licenses/by-sa/3.0/'},
+                {label: 'fdl', value: 'http://www.gnu.org/copyleft/fdl.html'},
+                {label: 'prov', value: 'http://www.w3.org/ns/prov'}
+            ],
+            defaultValue: ['http://creativecommons.org/licenses/by-sa/3.0/']
         },
         'http://purl.org/dc/terms/description': {
             category: ['general'],
