@@ -111,10 +111,10 @@ class IndividualObjectReactor extends React.Component {
         let dataViewType, dataEditType;
         switch(this.props.config? (this.props.config.dataViewType? this.props.config.dataViewType[0]:'') : ''){
             case 'IndividualDataView':
-                dataViewType = <IndividualDataView spec={this.props.spec} config={this.props.config}/>;
+                dataViewType = <IndividualDataView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
             break;
             default:
-                dataViewType = <IndividualDataView spec={this.props.spec} config={this.props.config}/>;
+                dataViewType = <IndividualDataView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
         }
         switch(this.props.config? (this.props.config.dataEditType? this.props.config.dataEditType[0]:'') : ''){
             case 'IndividualDataEdit':

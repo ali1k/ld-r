@@ -2,6 +2,7 @@ import React from 'react';
 import BasicIndividualView from './BasicIndividualView';
 import BasicIndividualDetailView from './BasicIndividualDetailView';
 import BasicDBpediaView from './BasicDBpediaView';
+import BasicLinkedIndividualView from './BasicLinkedIndividualView';
 
 class IndividualDataView extends React.Component {
     render() {
@@ -21,6 +22,9 @@ class IndividualDataView extends React.Component {
             switch(this.props.config? (this.props.config.viewer? this.props.config.viewer[0]:'') : ''){
                 case 'BasicIndividualView':
                     viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
+                break;
+                case 'BasicLinkedIndividualView':
+                    viewer = <BasicLinkedIndividualView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
                 break;
                 case 'BasicDBpediaView':
                     viewer = <BasicDBpediaView asWikipedia="1" spec={this.props.spec} config={this.props.config}/>;
