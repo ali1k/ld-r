@@ -3,6 +3,7 @@ import BasicIndividualView from './BasicIndividualView';
 import BasicIndividualDetailView from './BasicIndividualDetailView';
 import BasicDBpediaView from './BasicDBpediaView';
 import BasicLinkedIndividualView from './BasicLinkedIndividualView';
+import LanguageView from './LanguageView';
 
 class IndividualDataView extends React.Component {
     render() {
@@ -28,6 +29,9 @@ class IndividualDataView extends React.Component {
                 break;
                 case 'BasicDBpediaView':
                     viewer = <BasicDBpediaView asWikipedia="1" spec={this.props.spec} config={this.props.config}/>;
+                break;
+                case 'LanguageView':
+                    viewer = <LanguageView spec={this.props.spec} config={this.props.config}/>;
                 break;
                 default:
                     viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;

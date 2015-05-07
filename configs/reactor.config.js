@@ -38,6 +38,7 @@ export default {
         'http://purl.org/dc/terms/language': {
             allowNewValue: 1,
             category: ['general'],
+            viewer: ['LanguageView'],
             editor: ['LanguageInput']
         },
         'http://purl.org/dc/terms/description': {
