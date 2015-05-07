@@ -19,7 +19,11 @@ class LanguageInput extends React.Component {
     }
 
     createDefaultValue(valueType, dataType) {
-        return 'http://id.loc.gov/vocabulary/iso639-1/en';
+        if(this.props.config && this.props.config.defaultValue){
+            return this.props.config.defaultValue[0];
+        }else{
+            return 'http://id.loc.gov/vocabulary/iso639-1/en';
+        }
     }
     handleChange(event) {
         this.props.onDataEdit(event.target.value);

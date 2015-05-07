@@ -34,7 +34,11 @@ class DBpediaInput extends React.Component {
         return Math.round(+new Date() / 1000);
     }
     createDefaultValue(valueType, dataType) {
-        return '';
+        if(this.props.config && this.props.config.defaultValue){
+            return this.props.config.defaultValue[0];
+        }else{
+            return '';
+        }
     }
     addSuggestion(uri) {
         let self = this;

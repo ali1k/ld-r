@@ -20,10 +20,14 @@ class BasicTextareaInput extends React.Component {
         return Math.round(+new Date() / 1000);
     }
     createDefaultValue(valueType, dataType) {
-        if(valueType === 'uri'){
-            return 'http://example.com/' + this.getRandomNumber();
+        if(this.props.config && this.props.config.defaultValue){
+            return this.props.config.defaultValue[0];
         }else{
-            return 'exampleValue' + this.getRandomNumber();
+            if(valueType === 'uri'){
+                return 'http://example.com/' + this.getRandomNumber();
+            }else{
+                return 'exampleValue' + this.getRandomNumber();
+            }
         }
     }
     handleChange(event) {

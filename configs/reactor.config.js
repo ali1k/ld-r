@@ -36,7 +36,8 @@ export default {
             allowNewValue: 1,
             category: ['general'],
             viewer: ['LanguageView'],
-            editor: ['LanguageInput']
+            editor: ['LanguageInput'],
+            defaultValue: ['http://id.loc.gov/vocabulary/iso639-1/en']
         },
         'http://purl.org/dc/terms/license': {
             category: ['general'],
