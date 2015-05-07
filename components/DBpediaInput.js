@@ -81,7 +81,7 @@ class DBpediaInput extends React.Component {
             );
         });
         return (
-            <div className="ui search left icon input" ref="dbpediaLookup">
+            <div className="ui fluid search left icon input" ref="dbpediaLookup">
                 <input ref="basicIndividualInput" type="text" placeholder={placeHolder} value={this.state.value} onChange={this.handleChange.bind(this)} onKeyDown={this.handleKeyDown.bind(this)}/>
                 <i className="search icon"></i>
                 <div className="transition results"> {suggestions} </div>
