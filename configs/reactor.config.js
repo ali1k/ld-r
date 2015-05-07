@@ -97,7 +97,9 @@ export default {
         'http://purl.org/dc/terms/subject': {
             category: ['general'],
             label: ['Keywords'],
-            allowNewValue: 1
+            allowNewValue: 1,
+            editor: ['DBpediaInput'],
+            viewer: ['BasicDBpediaView']
         }
     }
 };

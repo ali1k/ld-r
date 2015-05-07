@@ -66,6 +66,10 @@ class DBpediaInput extends React.Component {
     }
     render() {
         let self = this;
+        let placeHolder = ' Search and choose from DBpedia';
+        if(this.props.asWikipedia){
+            placeHolder = ' Search and choose from Wikipedia';
+        }
         let suggestions = this.props.DBpediaStore.suggestions.map(function(node, index) {
             return (
                 <a className="result" key={'suggestion_'+index} onClick={self.addSuggestion.bind(self, node.uri)}>
@@ -78,7 +82,7 @@ class DBpediaInput extends React.Component {
         });
         return (
             <div className="ui search left icon input" ref="dbpediaLookup">
-                <input ref="basicIndividualInput" type="text" placeholder="Search in DBpedia..." value={this.state.value} onChange={this.handleChange.bind(this)} onKeyDown={this.handleKeyDown.bind(this)}/>
+                <input ref="basicIndividualInput" type="text" placeholder={placeHolder} value={this.state.value} onChange={this.handleChange.bind(this)} onKeyDown={this.handleKeyDown.bind(this)}/>
                 <i className="search icon"></i>
                 <div className="transition results"> {suggestions} </div>
             </div>
