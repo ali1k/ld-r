@@ -35,6 +35,11 @@ export default {
             allowNewValue: 1,
             category: ['structural']
         },
+        'http://purl.org/dc/terms/language': {
+            allowNewValue: 1,
+            category: ['general'],
+            editor: ['LanguageInput']
+        },
         'http://purl.org/dc/terms/description': {
             category: ['general'],
             label: ['Description'],
@@ -90,9 +95,6 @@ export default {
             label: ['Creator'],
             hint: ['An entity, such as a person, organisation, or service, that is responsible for making contributions to the dataset. The contributor should be described using a URI if available, rather than just providing the name as a literal.'],
             extendedViewer: ['BasicIndividualDetailView']
-        },
-        'http://purl.org/dc/terms/language': {
-            allowNewValue: 1
         },
         'http://purl.org/dc/terms/subject': {
             category: ['general'],
