@@ -67,6 +67,8 @@ export default {
             category: ['general'],
             label: ['Contributor'],
             hint: ['An entity, such as a person, organisation, or service, that is responsible for making contributions to the dataset. The contributor should be described using a URI if available, rather than just providing the name as a literal.'],
+            editor: ['DBpediaInput'],
+            viewer: ['BasicDBpediaView'],
             extendedViewer: ['BasicIndividualDetailView'],
             extensions: [
                 {
