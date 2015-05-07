@@ -46,13 +46,12 @@ export default {
             viewer: ['BasicOptionView'],
             editor: ['BasicOptionInput'],
             options: [
-                {label: 'pddl', value: 'http://www.opendatacommons.org/licenses/pddl/'},
-                {label: 'by', value: 'http://www.opendatacommons.org/licenses/by/'},
-                {label: 'odbl', value: 'http://www.opendatacommons.org/licenses/odbl/'},
-                {label: 'zero', value: 'http://creativecommons.org/publicdomain/zero/1.0/'},
-                {label: 'by-sa', value: 'http://creativecommons.org/licenses/by-sa/3.0/'},
-                {label: 'fdl', value: 'http://www.gnu.org/copyleft/fdl.html'},
-                {label: 'prov', value: 'http://www.w3.org/ns/prov'}
+                {label: 'Open Data Commons Public Domain Dedication and License (PDDL)', value: 'http://www.opendatacommons.org/licenses/pddl/'},
+                {label: 'Open Data Commons Attribution License', value: 'http://www.opendatacommons.org/licenses/by/'},
+                {label: 'Open Data Commons Open Database License (ODbL)', value: 'http://www.opendatacommons.org/licenses/odbl/'},
+                {label: 'Creative Commons Public Domain Dedication', value: 'http://creativecommons.org/publicdomain/zero/1.0/'},
+                {label: 'Creative Commons Attribution-ShareAlike', value: 'http://creativecommons.org/licenses/by-sa/3.0/'},
+                {label: 'GNU Free Documentation License', value: 'http://www.gnu.org/copyleft/fdl.html'}
             ],
             defaultValue: ['http://creativecommons.org/licenses/by-sa/3.0/'],
             allowUserDefinedValue: 1
