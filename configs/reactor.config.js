@@ -54,7 +54,8 @@ export default {
                 {label: 'fdl', value: 'http://www.gnu.org/copyleft/fdl.html'},
                 {label: 'prov', value: 'http://www.w3.org/ns/prov'}
             ],
-            defaultValue: ['http://creativecommons.org/licenses/by-sa/3.0/']
+            defaultValue: ['http://creativecommons.org/licenses/by-sa/3.0/'],
+            allowUserDefinedValue: 1
         },
         'http://purl.org/dc/terms/description': {
             category: ['general'],

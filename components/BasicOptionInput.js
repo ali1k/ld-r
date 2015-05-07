@@ -1,4 +1,5 @@
 import React from 'react';
+import BasicIndividualInput from './BasicIndividualInput';
 
 class BasicOptionInput extends React.Component {
     constructor(props) {
@@ -9,7 +10,7 @@ class BasicOptionInput extends React.Component {
         }
         //to initialize value in Property state
         this.props.onDataEdit(v);
-        this.state = {value: v};
+        this.state = {value: v, userDefinedMode: 0};
     }
     componentDidMount() {
         if(!this.props.noFocus){
@@ -21,8 +22,19 @@ class BasicOptionInput extends React.Component {
         return this.props.config.defaultValue? this.props.config.defaultValue[0]: '';
     }
     handleChange(event) {
-        this.props.onDataEdit(event.target.value);
-        this.setState({value: event.target.value});
+        if(event.target.value === 'other'){
+            this.setState({userDefinedMode: 1});
+
+        }else{
+            this.props.onDataEdit(event.target.value);
+            this.setState({value: event.target.value});
+        }
+    }
+    handleDataEdit(value){
+        this.props.onDataEdit(value);
+    }
+    handleEnterPress(){
+        this.props.onEnterPress();
     }
     buildOptions() {
         let optionsList;
@@ -36,14 +48,21 @@ class BasicOptionInput extends React.Component {
         return optionsList;
     }
     render() {
-        let optionList = this.buildOptions();
+        let output;
+        if(this.state.userDefinedMode){
+            output = <BasicIndividualInput placeholder="Enter the URL for your option..." spec={{value: '', valueType: this.props.spec.valueType, dataType: this.props.spec.dataType}} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onEnterPress={this.handleEnterPress.bind(this)} allowActionByKey="1"/>;
+        }else{
+            let optionList = this.buildOptions();
+            output = <div className="field">
+                                <select className="ui search dropdown" ref="basicInputSelect" value={this.state.value} onChange={this.handleChange.bind(this)}>
+                                    {optionList}
+                                    {(this.props.config.allowUserDefinedValue? <option value="other"> **Other** </option>: '' )}
+                                </select>
+                     </div>;
+        }
         return (
             <div className="content ui form" ref="basicOptionInput">
-                <div className="field">
-                    <select className="ui search dropdown" ref="basicInputSelect" value={this.state.value} onChange={this.handleChange.bind(this)}>
-                        {optionList}
-                    </select>
-                </div>
+                {output}
             </div>
         );
     }

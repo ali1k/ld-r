@@ -47,7 +47,7 @@ class BasicIndividualDetailEdit extends React.Component {
         return (
             <div ref="detailPropertiesEdit">
                 <div className="ui attached secondary segment">
-                <BasicIndividualInput spec={{value: this.props.spec.value, valueType: this.props.spec. valueType, dataType: this.props.spec.dataType}} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onEnterPress={this.handleEnterPress.bind(this)} allowActionByKey="1"/>
+                <BasicIndividualInput spec={{value: this.props.spec.value, valueType: this.props.spec.valueType, dataType: this.props.spec.dataType}} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onEnterPress={this.handleEnterPress.bind(this)} allowActionByKey="1"/>
                 </div>
                 <div className="ui attached primary segment">
                     <div className="ui list">
