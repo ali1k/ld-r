@@ -43,8 +43,6 @@ export default {
             category: ['general'],
             label: ['License'],
             allowNewValue: 1,
-            viewer: ['BasicOptionView'],
-            editor: ['BasicOptionInput'],
             options: [
                 {label: 'Open Data Commons Public Domain Dedication and License (PDDL)', value: 'http://www.opendatacommons.org/licenses/pddl/'},
                 {label: 'Open Data Commons Attribution License', value: 'http://www.opendatacommons.org/licenses/by/'},
@@ -54,7 +52,11 @@ export default {
                 {label: 'GNU Free Documentation License', value: 'http://www.gnu.org/copyleft/fdl.html'}
             ],
             defaultValue: ['http://creativecommons.org/licenses/by-sa/3.0/'],
-            allowUserDefinedValue: 1
+            allowUserDefinedValue: 1,
+            reactorType: ['AggregateObjectReactor'],
+            dataViewType: ['AggregateDataView'],
+            viewer: ['BasicAggregateView'],
+            editor: ['BasicOptionInput']
         },
         'http://purl.org/dc/terms/description': {
             category: ['general'],
