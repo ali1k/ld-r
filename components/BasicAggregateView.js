@@ -8,10 +8,10 @@ class BasicAggregateView extends React.Component {
             if(!node){
                 return undefined; // stop processing this iteration
             }
-            return (<div key={index} className="item ui secondary segment"><BasicIndividualView spec={node} config={self.props.config}/></div>);
+            return (<div key={index} className="item"><BasicIndividualView spec={node} config={self.props.config}/></div>);
         });
         return (
-            <div className="ui horizontal list" ref="basicAggregateView">
+            <div className="ui divided horizontal list" ref="basicAggregateView">
                 {list}
             </div>
         );

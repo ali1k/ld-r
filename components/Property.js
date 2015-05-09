@@ -112,11 +112,11 @@ class Property extends React.Component {
             }
         }
         let list;
+        //check if it is the only value of a property -> used to hide delete button
+        let isOnlyChild = (this.calculateValueCount(this.props.spec.instances) === 1);
         //dispatch to the right reactor
         switch(this.props.config? (this.props.config.reactorType? this.props.config.reactorType[0]:'') : ''){
             case 'IndividualObjectReactor':
-                //check if it is the only value of a property -> used to hide delete button
-                let isOnlyChild = (this.calculateValueCount(this.props.spec.instances) === 1);
                 list = this.props.spec.instances.map(function(node, index) {
                     if(!node){
                         return undefined; // stop processing this iteration
@@ -127,10 +127,9 @@ class Property extends React.Component {
                 });
             break;
             case 'AggregateObjectReactor':
-                list = <AggregateObjectReactor readOnly={self.props.readOnly} spec={this.props.spec} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource}/>;
+                list = <AggregateObjectReactor isOnlyChild={isOnlyChild} readOnly={self.props.readOnly} spec={this.props.spec} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} onIndividualDelete={self.handleDeleteIndividualObject.bind(self, self.props.spec.propertyURI)} onIndividualUpdate={self.handleUpdateIndividualObject.bind(self, self.props.spec.propertyURI)} onIndividualDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self, self.props.spec.propertyURI)}/>;
             break;
             default:
-                let isOnlyChild = (this.calculateValueCount(this.props.spec.instances) === 1);
                 list = this.props.spec.instances.map(function(node, index) {
                     if(!node){
                         return undefined; // stop processing this iteration

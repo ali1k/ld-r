@@ -5,7 +5,7 @@ class AggregateDataView extends React.Component {
     render() {
         let viewer;
         switch(this.props.config? (this.props.config.viewer? this.props.config.viewer[0]:'') : ''){
-            case 'BasicIndividualView':
+            case 'BasicAggregateView':
                 viewer = <BasicAggregateView spec={this.props.spec} config={this.props.config}/>;
             break;
             default:

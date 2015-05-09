@@ -54,9 +54,10 @@ export default {
             defaultValue: ['http://creativecommons.org/licenses/by-sa/3.0/'],
             allowUserDefinedValue: 1,
             reactorType: ['AggregateObjectReactor'],
+            dataEditType: ['IndividualDataEdit'],
+            editor: ['BasicOptionInput'],
             dataViewType: ['AggregateDataView'],
-            viewer: ['BasicAggregateView'],
-            editor: ['BasicOptionInput']
+            viewer: ['BasicAggregateView']
         },
         'http://purl.org/dc/terms/description': {
             category: ['general'],
