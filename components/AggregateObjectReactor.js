@@ -17,20 +17,19 @@ class AggregateObjectReactor extends React.Component {
     handleUndo(){
         this.setState({inEditMode: 0});
     }
-    handleDeleteIndividualObject(propertyURI, objectValue, valueType){
-
-    }
-    handleUpdateIndividualObject(propertyURI, oldObjectValue, newObjectValue, valueType){
-
-    }
-    handleDetailUpdateIndividualObject(propertyURI, oldObjectValue, newObjectValue, valueType, detailData){
-
-    }
     render() {
         let isIndividual = false;
-        let dataViewType, dataEditType, self = this;
+        let dataViewType, dataViewTypeConfig = '', dataEditType, dataEditTypeConfig = '', self = this;
+        if(this.props.config){
+            if(this.props.config.dataEditType){
+                dataEditTypeConfig = this.props.config.dataEditType[0];
+            }
+            if(this.props.config.dataViewType){
+                dataViewTypeConfig = this.props.config.dataViewType[0];
+            }
+        }
         if (this.state.inEditMode) {
-            switch(this.props.config? (this.props.config.dataEditType? this.props.config.dataEditType[0]:'') : ''){
+            switch(dataEditTypeConfig){
                 case 'AggregateDataEdit':
                     dataEditType = <AggregateDataEdit isDefault={false} property={this.props.property} spec={this.props.spec} config={this.props.config}/>;
                 break;
@@ -42,7 +41,7 @@ class AggregateObjectReactor extends React.Component {
                             return undefined; // stop processing this iteration
                         }
                         return (
-                            <IndividualObjectReactor key={index} inEditMode={true} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} AggregateNature={true} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
+                            <IndividualObjectReactor key={index} inEditMode={true} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
                         );
                     });
                 break;
@@ -50,7 +49,7 @@ class AggregateObjectReactor extends React.Component {
                     dataEditType = <AggregateDataEdit isDefault={false} property={this.props.property} spec={this.props.spec} config={this.props.config}/>;
             }
         }else{
-            switch(this.props.config? (this.props.config.dataViewType? this.props.config.dataViewType[0]:'') : ''){
+            switch(dataViewTypeConfig){
                 case 'AggregateDataView':
                     dataViewType = <AggregateDataView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
                 break;
@@ -62,7 +61,7 @@ class AggregateObjectReactor extends React.Component {
                             return undefined; // stop processing this iteration
                         }
                         return (
-                            <IndividualObjectReactor key={index} inEditMode={false} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} AggregateNature={true} property={self.props.spec.propertyURI} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
+                            <IndividualObjectReactor key={index} inEditMode={false} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
                         );
                     });
                 break;

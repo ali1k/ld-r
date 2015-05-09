@@ -3,8 +3,13 @@ import BasicAggregateInput from './BasicAggregateInput';
 
 class AggregateDataEdit extends React.Component {
     render() {
-        let editor;
-        switch(this.props.config? (this.props.config.editor? this.props.config.editor[0]:'') : ''){
+        let editor, editorConfig = '';
+        if(this.props.config){
+            if(this.props.config.editor){
+                editorConfig = this.props.config.editor[0];
+            }
+        }
+        switch(editorConfig){
             case 'BasicAggregateEdit':
                 editor = <BasicAggregateInput spec={this.props.spec} config={this.props.config}/>;
             break;

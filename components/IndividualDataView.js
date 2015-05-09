@@ -8,10 +8,22 @@ import BasicOptionView from './BasicOptionView';
 
 class IndividualDataView extends React.Component {
     render() {
-        let viewer, extendedViewer, output;
+        let viewer, viewerConfig = '', extendedViewer, extendedViewerConfig = '', output;
+        if(this.props.config){
+            if(this.props.config.extendedViewer){
+                extendedViewerConfig = this.props.config.extendedViewer[0];
+            }
+            if(this.props.config.viewer){
+                viewerConfig = this.props.config.viewer[0];
+                //in case of Aggregate nature, can consider viewerI
+                if(this.props.config.reactorType && this.props.config.reactorType[0]==='AggregateObjectReactor' && this.props.config.viewerI){
+                    viewerConfig = this.props.config.viewerI[0];
+                }
+            }
+        }
         if(this.props.spec.extendedViewData){
             //go to extended view
-            switch(this.props.config? (this.props.config.extendedViewer? this.props.config.extendedViewer[0]:'') : ''){
+            switch(extendedViewerConfig){
                 case 'BasicIndividualDetailView':
                     extendedViewer = <BasicIndividualDetailView spec={this.props.spec} config={this.props.config}/>;
                 break;
@@ -21,7 +33,7 @@ class IndividualDataView extends React.Component {
             output = extendedViewer;
         }else{
             //go to normal view
-            switch(this.props.config? (this.props.config.viewer? this.props.config.viewer[0]:'') : ''){
+            switch(viewerConfig){
                 case 'BasicIndividualView':
                     viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
                 break;

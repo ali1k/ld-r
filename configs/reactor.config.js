@@ -53,11 +53,8 @@ export default {
             ],
             defaultValue: ['http://creativecommons.org/licenses/by-sa/3.0/'],
             allowUserDefinedValue: 1,
-            reactorType: ['AggregateObjectReactor'],
-            dataEditType: ['IndividualDataEdit'],
             editor: ['BasicOptionInput'],
-            dataViewType: ['AggregateDataView'],
-            viewer: ['BasicAggregateView']
+            viewer: ['BasicOptionView']
         },
         'http://purl.org/dc/terms/description': {
             category: ['general'],
@@ -121,8 +118,11 @@ export default {
             category: ['general'],
             label: ['Keywords'],
             allowNewValue: 1,
+            reactorType: ['AggregateObjectReactor'],
             editor: ['DBpediaInput'],
-            viewer: ['BasicDBpediaView']
+            dataViewType: ['AggregateDataView'],
+            viewer: ['BasicAggregateView'],
+            viewerI: ['BasicDBpediaView']
         }
     }
 };

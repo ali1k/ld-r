@@ -108,9 +108,17 @@ class IndividualObjectReactor extends React.Component {
         }else{
             this.props.spec.extendedViewData = 0;
         }
-        let dataViewType, dataEditType;
+        let dataViewType, dataViewTypeConfig = '', dataEditType, dataEditTypeConfig = '';
+        if(this.props.config){
+            if(this.props.config.dataEditType){
+                dataEditTypeConfig = this.props.config.dataEditType[0];
+            }
+            if(this.props.config.dataViewType){
+                dataViewTypeConfig = this.props.config.dataViewType[0];
+            }
+        }
         if (this.state.inEditMode) {
-            switch(this.props.config? (this.props.config.dataEditType? this.props.config.dataEditType[0]:'') : ''){
+            switch(dataEditTypeConfig){
                 case 'IndividualDataEdit':
                     dataEditType = <IndividualDataEdit isDefault={false} property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)} onEnterPress={this.handleSave.bind(this)}/>;
                 break;
@@ -118,7 +126,7 @@ class IndividualObjectReactor extends React.Component {
                     dataEditType = <IndividualDataEdit isDefault={false} property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)} onEnterPress={this.handleSave.bind(this)}/>;
             }
         }else{
-            switch(this.props.config? (this.props.config.dataViewType? this.props.config.dataViewType[0]:'') : ''){
+            switch(dataViewTypeConfig){
                 case 'IndividualDataView':
                     dataViewType = <IndividualDataView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
                 break;

@@ -17,10 +17,22 @@ class IndividualDataEdit extends React.Component {
         this.props.onEnterPress();
     }
     render() {
-        let editor, extendedEditor, output;
+        let editor, editorConfig = '', extendedEditor, extendedEditorConfig = '', output;
+        if(this.props.config){
+            if(this.props.config.extendedEditor){
+                extendedEditorConfig = this.props.config.extendedEditor[0];
+            }
+            if(this.props.config.editor){
+                editorConfig = this.props.config.editor[0];
+                //in case of Aggregate nature, can consider editorI
+                if(this.props.config.reactorType && this.props.config.reactorType[0]==='AggregateObjectReactor' && this.props.config.editorI){
+                    editorConfig = this.props.config.editorI[0];
+                }
+            }
+        }
         if(this.props.spec.extendedViewData){
             //go to extended edit
-            switch(this.props.config? (this.props.config.extendedEditor? this.props.config.extendedEditor[0]:'') : ''){
+            switch(extendedEditorConfig){
                 case 'BasicIndividualDetailEdit':
                     extendedEditor = <BasicIndividualDetailEdit spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)} onEnterPress={this.handleEnterPress.bind(this)}/>;
                 break;
@@ -30,7 +42,7 @@ class IndividualDataEdit extends React.Component {
             output = extendedEditor;
         }else{
             //go to normal edit
-            switch(this.props.config? (this.props.config.editor? this.props.config.editor[0]:'') : ''){
+            switch(editorConfig){
                 case 'BasicIndividualInput':
                     editor = <BasicIndividualInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;
                 break;
