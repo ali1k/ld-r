@@ -35,6 +35,9 @@ class Property extends React.Component {
         return t;
     }
     handleDeleteIndividualObject(propertyURI, objectValue, valueType){
+        if(!objectValue){
+            return null;
+        }
         this.context.executeAction(deleteIndividualObject, {
           category: (this.props.config? (this.props.config.category? this.props.config.category[0]: ''): ''),
           dataset: this.props.graphName,
@@ -45,6 +48,9 @@ class Property extends React.Component {
         });
     }
     handleCreateIndividualObject(propertyURI, objectValue, valueType){
+        if(!objectValue){
+            return null;
+        }
         this.context.executeAction(createIndividualObject, {
           category: (this.props.config? (this.props.config.category? this.props.config.category[0]: ''): ''),
           dataset: this.props.graphName,
@@ -56,6 +62,9 @@ class Property extends React.Component {
         this.setState({inNewValueMode: 0});
     }
     handleUpdateIndividualObject(propertyURI, oldObjectValue, newObjectValue, valueType){
+        if(!newObjectValue){
+            return null;
+        }
         this.context.executeAction(updateIndividualObject, {
           category: (this.props.config? (this.props.config.category? this.props.config.category[0]: ''): ''),
           dataset: this.props.graphName,
