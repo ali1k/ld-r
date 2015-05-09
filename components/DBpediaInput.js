@@ -42,6 +42,8 @@ class DBpediaInput extends React.Component {
     }
     addSuggestion(uri) {
         let self = this;
+        this.setState({value: uri});
+        this.emptySuggesstions();
         this.props.onDataEdit(uri);
         //simulate pressing enter
         setTimeout(function(){
@@ -49,12 +51,17 @@ class DBpediaInput extends React.Component {
         }, 150);
 
     }
-    handleChange(event) {
+    emptySuggesstions() {
         let currentComp = this.refs.dbpediaLookup.getDOMNode();
+        /*global $*/
+        $(currentComp).find('.transition').removeClass('visible');
+        this.props.DBpediaStore.suggestions = [];
+    }
+    handleChange(event) {
         let term = event.target.value;
+        let currentComp = this.refs.dbpediaLookup.getDOMNode();
         this.setState({value: term});
         this.props.onDataEdit(term);
-
         //handle autocomplete here
         if(term.length>2){
             /*global $*/
@@ -63,9 +70,7 @@ class DBpediaInput extends React.Component {
             query: term
           });
         }else{
-            /*global $*/
-            $(currentComp).find('.transition').removeClass('visible');
-            this.props.DBpediaStore.suggestions = [];
+            this.emptySuggesstions();
         }
     }
     render() {

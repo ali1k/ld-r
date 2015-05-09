@@ -2,7 +2,15 @@ import React from 'react';
 import IndividualDataEdit from './IndividualDataEdit';
 
 class BasicAggregateInput extends React.Component {
-    handleDataEdit(value){
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+    handleDataEdit(key, oldValue, valueType, newValue){
+        this.state[key] = {oldValue: oldValue, newValue: newValue, valueType: valueType};
+        this.props.onAggDataEdit(this.state);
+    }
+    handleEnterPress(){
 
     }
     render() {
@@ -12,7 +20,7 @@ class BasicAggregateInput extends React.Component {
                 return undefined; // stop processing this iteration
             }
             return (
-                <IndividualDataEdit key={index} spec={node} config={self.props.config} graphName={self.props.graphName} onDataEdit={self.handleDataEdit.bind(this)}/>
+                <IndividualDataEdit key={index} spec={node} config={self.props.config} graphName={self.props.graphName} onDataEdit={self.handleDataEdit.bind(self, index, node.value, node.valueType)} onEnterPress={self.handleEnterPress.bind(this)}/>
             );
         });
         return (

@@ -2,6 +2,9 @@ import React from 'react';
 import BasicAggregateInput from './BasicAggregateInput';
 
 class AggregateDataEdit extends React.Component {
+    handleAggDataEdit(changes){
+        this.props.onAggDataEdit(changes);
+    }
     render() {
         let editor, editorConfig = '';
         if(this.props.config){
@@ -11,10 +14,10 @@ class AggregateDataEdit extends React.Component {
         }
         switch(editorConfig){
             case 'BasicAggregateEdit':
-                editor = <BasicAggregateInput spec={this.props.spec} config={this.props.config}/>;
+                editor = <BasicAggregateInput spec={this.props.spec} config={this.props.config} onAggDataEdit={this.handleAggDataEdit.bind(this)}/>;
             break;
             default:
-                editor = <BasicAggregateInput spec={this.props.spec} config={this.props.config}/>;
+                editor = <BasicAggregateInput spec={this.props.spec} config={this.props.config} onAggDataEdit={this.handleAggDataEdit.bind(this)}/>;
         }
         return (
             <div className="ui" ref="aggregateDataEdit">

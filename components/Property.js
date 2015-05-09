@@ -7,6 +7,7 @@ import deleteIndividualObject from '../actions/deleteIndividualObject';
 import createIndividualObject from '../actions/createIndividualObject';
 import updateIndividualObject from '../actions/updateIndividualObject';
 import updateIndividualObjectDetail from '../actions/updateIndividualObjectDetail';
+import updateAggObject from '../actions/updateAggObject';
 
 class Property extends React.Component {
     constructor(props) {
@@ -75,6 +76,18 @@ class Property extends React.Component {
           valueType: valueType
         });
     }
+    handleUpdateAggObject(propertyURI, changes){
+        if(!changes.length){
+            return null;
+        }
+        this.context.executeAction(updateAggObject, {
+          category: (this.props.config? (this.props.config.category? this.props.config.category[0]: ''): ''),
+          dataset: this.props.graphName,
+          resourceURI: this.props.resource,
+          propertyURI: propertyURI,
+          changes: changes
+        });
+    }
     handleDetailUpdateIndividualObject(propertyURI, oldObjectValue, newObjectValue, valueType, detailData){
         this.context.executeAction(updateIndividualObjectDetail, {
           category: (this.props.config? (this.props.config.category? this.props.config.category[0]: ''): ''),
@@ -99,7 +112,7 @@ class Property extends React.Component {
         if(this.props.config && this.props.config.allowNewValue && !this.props.readOnly){
             propLabel = this.props.config.label? this.props.config.label: this.props.spec.property;
             if(this.state.inNewValueMode){
-                defaultValueDIV = <IndividualObjectReactor isNewValue="1" inEditMode="1" key="defaultValue" spec={this.simulateDefaultValue(this.props.spec.instances, 'default')} config={this.props.config} graphName={this.props.graphName} resource={this.props.resource} onCreate={this.handleCreateIndividualObject.bind(this, this.props.spec.propertyURI)}/>;
+                defaultValueDIV = <IndividualObjectReactor isNewValue={true} inEditMode={true} key="defaultValue" spec={this.simulateDefaultValue(this.props.spec.instances, 'default')} config={this.props.config} graphName={this.props.graphName} resource={this.props.resource} onCreate={this.handleCreateIndividualObject.bind(this, this.props.spec.propertyURI)}/>;
                 newValueDIV = <div className="ui list">
                                         <div className="item">
                                             <div onClick={this.handleCancelNewIndividualObject.bind(this)} className="medium ui basic icon labeled button">
@@ -136,7 +149,7 @@ class Property extends React.Component {
                 });
             break;
             case 'AggregateObjectReactor':
-                list = <AggregateObjectReactor isOnlyChild={isOnlyChild} readOnly={self.props.readOnly} spec={this.props.spec} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} onIndividualDelete={self.handleDeleteIndividualObject.bind(self, self.props.spec.propertyURI)} onIndividualUpdate={self.handleUpdateIndividualObject.bind(self, self.props.spec.propertyURI)} onIndividualDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self, self.props.spec.propertyURI)}/>;
+                list = <AggregateObjectReactor isOnlyChild={isOnlyChild} readOnly={self.props.readOnly} spec={this.props.spec} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} onIndividualDelete={self.handleDeleteIndividualObject.bind(self, self.props.spec.propertyURI)} onIndividualUpdate={self.handleUpdateIndividualObject.bind(self, self.props.spec.propertyURI)} onIndividualDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self, self.props.spec.propertyURI)} onUpdate={self.handleUpdateAggObject.bind(self, self.props.spec.propertyURI)}/>;
             break;
             default:
                 list = this.props.spec.instances.map(function(node, index) {

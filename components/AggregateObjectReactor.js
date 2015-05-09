@@ -6,16 +6,31 @@ import AggregateDataEdit from './AggregateDataEdit';
 class AggregateObjectReactor extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {inEditMode: this.props.inEditMode? 1 : 0, readOnly: this.props.readOnly};
+        this.state = {changes: {}, inEditMode: this.props.inEditMode? 1 : 0, readOnly: this.props.readOnly};
     }
     handleEdit(){
         this.setState({inEditMode: 1});
     }
     handleSave(){
+        let changes = this.prepareAggData(this.state.changes);
+        this.props.onUpdate(changes);
         this.setState({inEditMode: 0});
     }
     handleUndo(){
         this.setState({inEditMode: 0});
+    }
+    handleAggDataEdit(changes){
+        this.setState({changes: changes});
+    }
+    //filters unchanged data
+    prepareAggData(changes){
+        let cleaned = [];
+        for (let prop in changes) {
+            if(changes[prop].oldValue !== changes[prop].newValue){
+                cleaned.push(changes[prop]);
+            }
+        }
+        return cleaned;
     }
     render() {
         let isIndividual = false;
@@ -31,7 +46,7 @@ class AggregateObjectReactor extends React.Component {
         if (this.state.inEditMode) {
             switch(dataEditTypeConfig){
                 case 'AggregateDataEdit':
-                    dataEditType = <AggregateDataEdit isDefault={false} property={this.props.property} spec={this.props.spec} config={this.props.config}/>;
+                    dataEditType = <AggregateDataEdit isDefault={false} property={this.props.property} spec={this.props.spec} config={this.props.config} onAggDataEdit={this.handleAggDataEdit.bind(this)}/>;
                 break;
                 //still can use IndividualDataEdit on each instance
                 case 'IndividualDataEdit':
@@ -46,7 +61,7 @@ class AggregateObjectReactor extends React.Component {
                     });
                 break;
                 default:
-                    dataEditType = <AggregateDataEdit isDefault={false} property={this.props.property} spec={this.props.spec} config={this.props.config}/>;
+                    dataEditType = <AggregateDataEdit isDefault={false} property={this.props.property} spec={this.props.spec} config={this.props.config} onAggDataEdit={this.handleAggDataEdit.bind(this)}/>;
             }
         }else{
             switch(dataViewTypeConfig){
