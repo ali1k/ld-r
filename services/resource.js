@@ -117,6 +117,16 @@ export default {
                 console.log(err);
                 callback(null, {category: params.category});
             });
+        } else if(resource === 'resource.aggObject') {
+            query = queryObject.getPrefixes() + queryObject.deleteTriples(params.dataset, params.resourceURI, params.propertyURI, params.changes);
+            rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+            //send request
+            rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+                callback(null, {category: params.category});
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {category: params.category});
+            });
         }
     }
 };

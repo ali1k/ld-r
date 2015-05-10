@@ -43,7 +43,7 @@ class HelpModal extends React.Component {
                         </div>
                       </div>
                       <div className="item">
-                        <i className="big red minus square icon"></i>
+                        <i className="big red trash outline icon"></i>
                         <div className="content">
                           <a className="header">Delete a value</a>
                           <div className="description"> If a property has multiple values, you can use this icon to delete a value.</div>

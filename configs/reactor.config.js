@@ -119,10 +119,35 @@ export default {
             label: ['Keywords'],
             allowNewValue: 1,
             reactorType: ['AggregateObjectReactor'],
-            editor: ['DBpediaInput'],
+            dataEditType: ['AggregateDataEdit'],
+            editor: ['BasicAggregateInput'],
+            editorI: ['DBpediaInput'],
             dataViewType: ['AggregateDataView'],
             viewer: ['BasicAggregateView'],
             viewerI: ['BasicDBpediaView']
+        },
+        'http://purl.org/dc/terms/temporal': {
+            label: ['Time coverage'],
+            category: ['general'],
+            hint: ['Time coverage of the data itself but not of the data collection. For example we collect pictures in 2015 about the war. However, the pictures themselves could have been taken from 1939 to 1945. So the time coverage is 1939-1945.']
+        },
+        'http://purl.org/dc/terms/spatial': {
+            label: ['Geographical coverage'],
+            category: ['structural'],
+            hint: ['The geographical area covered by the dataset.The same metadata could also be used to document the geographical area covered by an entity contained in the dataset in particular. For example we could say that the dataset covers all Eu countries or covers only France and Italy.'],
+            allowNewValue: 1,
+            editor: ['DBpediaInput'],
+            viewer: ['BasicDBpediaView']
+        },
+        'http://rdf-vocabulary.ddialliance.org/discovery#startDate': {
+            label: ['Start date'],
+            category: ['general'],
+            hint: ['Start date of the time coverage.']
+        },
+        'http://rdf-vocabulary.ddialliance.org/discovery#endDate': {
+            label: ['End date'],
+            category: ['general'],
+            hint: ['End date of the time coverage.']
         }
     }
 };
