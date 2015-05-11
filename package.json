@@ -2,7 +2,7 @@
   "name": "linked-data-reactor",
   "version": "0.1.0",
   "description": "Reactive Linked Data Components",
-  "private": true,
+  "private": false,
   "scripts": {
     "dev": "grunt",
     "lint": "eslint ./*.js ./**/*.js"
