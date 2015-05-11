@@ -2,9 +2,9 @@ import React from 'react';
 import BasicIndividualInput from './BasicIndividualInput';
 import BasicTextareaInput from './BasicTextareaInput';
 import BasicIndividualDetailEdit from './BasicIndividualDetailEdit';
-import DBpediaInput from './DBpediaInput';
-import LanguageInput from './LanguageInput';
 import BasicOptionInput from './BasicOptionInput';
+import DBpediaInput from './DBpediaInput';
+import LanguageInput from './more/LanguageInput';
 
 class IndividualDataEdit extends React.Component {
     handleDataEdit(value){

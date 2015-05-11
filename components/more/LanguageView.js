@@ -1,5 +1,5 @@
 import React from 'react';
-import {list} from '../data/languages';
+import {list} from '../../data/languages';
 
 class LanguageView extends React.Component {
     getCodefromURI(uri) {

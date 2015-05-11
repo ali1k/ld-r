@@ -3,8 +3,8 @@ import BasicIndividualView from './BasicIndividualView';
 import BasicIndividualDetailView from './BasicIndividualDetailView';
 import BasicDBpediaView from './BasicDBpediaView';
 import BasicLinkedIndividualView from './BasicLinkedIndividualView';
-import LanguageView from './LanguageView';
 import BasicOptionView from './BasicOptionView';
+import LanguageView from './more/LanguageView';
 
 class IndividualDataView extends React.Component {
     render() {
