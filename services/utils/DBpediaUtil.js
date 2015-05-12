@@ -19,5 +19,16 @@ class DBpediaUtil{
       });
       return output;
     }
+    parseDBpediaCoordinates(body) {
+      let output=[];
+      let desc='',parsed = JSON.parse(body);
+      if(!parsed){
+        return output;
+      }
+      parsed.results.bindings.forEach(function(el, key) {
+        output.push({position: {lat: parseFloat(el.lat.value), lng: parseFloat(el.long.value)}, key: el.s.value});
+      });
+      return output;
+    }
 }
 export default DBpediaUtil;

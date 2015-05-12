@@ -12,6 +12,7 @@ class DefaultHTMLLayout extends React.Component {
                 <meta name="viewport" content="width=device-width, user-scalable=no" />
                 <link href="/bower_components/semantic-ui/dist/semantic.min.css" rel="stylesheet" type="text/css" />
                 <link href="/bower_components/animate.css/animate.min.css" rel="stylesheet" type="text/css" />
+                <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
             </head>
             <body>
                 <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>

@@ -19,6 +19,7 @@
     "fluxible-plugin-fetchr": "^0.3.0",
     "fluxible-router": "^0.1.1",
     "react": "^0.13.0",
+    "react-google-maps": "^1.1.2",
     "request-promise": "^0.4.2",
     "serialize-javascript": "^1.0.0",
     "serve-favicon": "^2.2.0"

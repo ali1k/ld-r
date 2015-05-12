@@ -1,5 +1,7 @@
 import React from 'react';
 import BasicAggregateView from './BasicAggregateView';
+import DBpediaGoogleMapView from './more/DBpediaGoogleMapView';
+
 
 class AggregateDataView extends React.Component {
     render() {
@@ -12,6 +14,9 @@ class AggregateDataView extends React.Component {
         switch(viewerConfig){
             case 'BasicAggregateView':
                 viewer = <BasicAggregateView spec={this.props.spec} config={this.props.config}/>;
+            break;
+            case 'DBpediaGoogleMapView':
+                viewer = <DBpediaGoogleMapView spec={this.props.spec} config={this.props.config}/>;
             break;
             default:
                 viewer = <BasicAggregateView spec={this.props.spec} config={this.props.config}/>;

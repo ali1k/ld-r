@@ -9,6 +9,7 @@ import DatasetStore from './stores/DatasetStore';
 import ResourceStore from './stores/ResourceStore';
 import IndividualObjectStore from './stores/IndividualObjectStore';
 import DBpediaStore from './stores/DBpediaStore';
+import DBpediaGMapStore from './stores/DBpediaGMapStore';
 
 let app = new Fluxible({
     component: Application,
@@ -18,7 +19,8 @@ let app = new Fluxible({
         DatasetStore,
         ResourceStore,
         IndividualObjectStore,
-        DBpediaStore
+        DBpediaStore,
+        DBpediaGMapStore
     ]
 });
 

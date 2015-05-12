@@ -115,7 +115,7 @@ export default {
             extendedViewer: ['BasicIndividualDetailView']
         },
         'http://purl.org/dc/terms/subject': {
-            category: ['general'],
+            category: ['structural'],
             label: ['Keywords'],
             allowNewValue: 1,
             reactorType: ['AggregateObjectReactor'],
@@ -136,8 +136,11 @@ export default {
             category: ['structural'],
             hint: ['The geographical area covered by the dataset.The same metadata could also be used to document the geographical area covered by an entity contained in the dataset in particular. For example we could say that the dataset covers all Eu countries or covers only France and Italy.'],
             allowNewValue: 1,
-            editor: ['DBpediaInput'],
-            viewer: ['BasicDBpediaView']
+            reactorType: ['AggregateObjectReactor'],
+            dataViewType: ['AggregateDataView'],
+            viewer: ['DBpediaGoogleMapView'],
+            viewerI: ['BasicDBpediaView'],
+            editor: ['DBpediaInput']
         },
         'http://rdf-vocabulary.ddialliance.org/discovery#startDate': {
             label: ['Start date'],

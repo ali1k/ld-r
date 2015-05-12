@@ -2,8 +2,12 @@
 import {dbpediaLookupService} from '../configs/general';
 import rp from 'request-promise';
 import DBpediaUtil from './utils/DBpediaUtil';
+import DBpediaQuery from './sparql/DBpediaQuery';
+const DBpediaEndpoint = 'http://dbpedia.org/sparql';
+const outputFormat = 'application/sparql-results+json';
 let query;
 let utilObject = new DBpediaUtil();
+let queryObject = new DBpediaQuery();
 
 export default {
     // Name is the resource. Required.
@@ -22,8 +26,17 @@ export default {
                 callback(null, {suggestions: []});
             });
         /////////////////////////////////////////////
-        } else if (resource === 'dbpedia.annotate') {
-            console.log('ToDo!');
+        } else if (resource === 'dbpedia.coordinates') {
+            let rpPath, uris = params.uris;
+            query = queryObject.getPrefixes() + queryObject.getCoordinates(uris);
+            // console.log(query);
+            rpPath = DBpediaEndpoint+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+            rp.get({uri: rpPath}).then(function(res){
+                callback(null, {coordinates: utilObject.parseDBpediaCoordinates(res)});
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {coordinates: []});
+            });
           /////////////////////////////////////////////
         }
     }
