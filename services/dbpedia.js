@@ -4,6 +4,7 @@ import rp from 'request-promise';
 import DBpediaUtil from './utils/DBpediaUtil';
 import DBpediaQuery from './sparql/DBpediaQuery';
 const DBpediaEndpoint = 'http://dbpedia.org/sparql';
+const DBpediaLiveEndpoint = 'http://live.dbpedia.org/sparql';
 const outputFormat = 'application/sparql-results+json';
 let query;
 let utilObject = new DBpediaUtil();
@@ -33,9 +34,15 @@ export default {
             rpPath = DBpediaEndpoint+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
             rp.get({uri: rpPath}).then(function(res){
                 callback(null, {coordinates: utilObject.parseDBpediaCoordinates(res)});
-            }).catch(function (err) {
-                console.log(err);
-                callback(null, {coordinates: []});
+            }).catch(function () {
+                //last chance: try DBpedia live endpoint!
+                rpPath = DBpediaLiveEndpoint+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+                rp.get({uri: rpPath}).then(function(res){
+                    callback(null, {coordinates: utilObject.parseDBpediaCoordinates(res)});
+                }).catch(function (err) {
+                    console.log(err);
+                    callback(null, {coordinates: []});
+                });
             });
           /////////////////////////////////////////////
         }
