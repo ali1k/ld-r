@@ -9,6 +9,9 @@ class DBpediaGMapStore extends BaseStore {
         this.coordinates = payload.coordinates;
         this.emitChange();
     }
+    cleanMap() {
+        this.coordinates = [];
+    }
     getState() {
         return {
             coordinates: this.coordinates
@@ -24,7 +27,8 @@ class DBpediaGMapStore extends BaseStore {
 
 DBpediaGMapStore.storeName = 'DBpediaGMapStore'; // PR open in dispatchr to remove this need
 DBpediaGMapStore.handlers = {
-    'FIND_COORDINATES_SUCCESS': 'handleCoordinates'
+    'FIND_COORDINATES_SUCCESS': 'handleCoordinates',
+    'CLEAN_GMAP_SUCCESS': 'cleanMap'
 };
 
 export default DBpediaGMapStore;

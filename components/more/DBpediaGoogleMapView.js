@@ -25,7 +25,7 @@ class DBpediaGoogleMapView extends React.Component {
     componentDidUpdate(prevProps) {
         let newProps = this.props;
         let uris = this.prepareURIs(newProps.spec.instances);
-        if (newProps.DBpediaGMapStore.coordinates.length===0 || (prevProps.spec.instances.length !== newProps.spec.instances.length)) {
+        if (prevProps.spec.instances.length !== newProps.spec.instances.length) {
             this.context.executeAction(getCoordinates, {uris: uris});
         }
     }
