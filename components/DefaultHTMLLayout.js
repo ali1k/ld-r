@@ -25,7 +25,7 @@ class DefaultHTMLLayout extends React.Component {
             <script src="/bower_components/semantic-ui/dist/components/checkbox.min.js"></script>
             <script src="/bower_components/semantic-ui/dist/components/dimmer.min.js"></script>
             <script src="/bower_components/semantic-ui/dist/components/modal.min.js"></script>
-            <script src="/public/js/main.js"></script>
+            <script src="/public/js/main.min.js"></script>
             </html>
         );
     }

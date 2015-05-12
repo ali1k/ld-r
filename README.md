@@ -15,9 +15,12 @@ Save `configs/reactor.config.js` as `reactor.js` and fill in the appropriate set
 
 `bower install`
 
-`grunt`
+`npm run dev`
 
 for debug mode:
 `PORT=4000 DEBUG=* grunt`
+
+for production
+`npm run build`
 
 check server at `localhost:4000`

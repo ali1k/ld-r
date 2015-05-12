@@ -1,9 +1,10 @@
 {
   "name": "linked-data-reactor",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Reactive Linked Data Components",
   "private": false,
   "scripts": {
+    "build": "grunt build && node start.js",
     "dev": "grunt",
     "lint": "eslint ./*.js ./**/*.js"
   },
@@ -34,6 +35,7 @@
     "grunt-concurrent": "~1.0.0",
     "grunt-contrib-clean": "~0.6.0",
     "grunt-contrib-jshint": "^0.11.2",
+    "grunt-contrib-uglify": "^0.9.1",
     "grunt-nodemon": "^0.4.0",
     "grunt-webpack": "^1.0.8",
     "jscs": "^1.9.0",

@@ -17,7 +17,18 @@ module.exports = function (grunt) {
             }
         },
         webpack: {
-            dev: require('./webpack.config')
+            build: require('./webpack.config').build,
+            dev: require('./webpack.config').dev
+        },
+        uglify: {
+          options: {
+            mangle: false
+          },
+          myTarget: {
+            files: {
+              'build/js/main.min.js': ['build/js/main.js']
+            }
+          }
         }
     });
 
@@ -26,7 +37,10 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-webpack');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
 
     // tasks
+    grunt.registerTask('build', ['clean', 'webpack:build', 'uglify']);
     grunt.registerTask('default', ['clean', 'concurrent:dev']);
+    grunt.registerTask('compress', ['uglify']);
 };
