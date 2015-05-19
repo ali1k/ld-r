@@ -9,9 +9,6 @@ class IndividualObjectStore extends BaseStore {
         this.objectProperties[payload.objectURI] = payload.properties;
         this.emitChange();
     }
-    getObjectProperties() {
-        return this.objectProperties;
-    }
     getState() {
         return {
             objectProperties: this.objectProperties

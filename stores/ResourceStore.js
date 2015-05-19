@@ -21,18 +21,6 @@ class ResourceStore extends BaseStore {
         this.currentCategory = 0;
         this.resourceURI = '';
     }
-    getProperties() {
-        return this.properties;
-    }
-    getGraphName() {
-        return this.graphName;
-    }
-    getResourceURI() {
-        return this.resourceURI;
-    }
-    getCurrentCategory() {
-        return this.currentCategory;
-    }
     getState() {
         return {
             graphName: this.graphName,

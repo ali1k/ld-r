@@ -9,9 +9,6 @@ class DBpediaStore extends BaseStore {
         this.suggestions = payload.suggestions;
         this.emitChange();
     }
-    getSuggestions() {
-        return this.suggestions;
-    }
     getState() {
         return {
             suggestions: this.suggestions

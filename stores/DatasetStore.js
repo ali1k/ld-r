@@ -13,15 +13,6 @@ class DatasetStore extends BaseStore {
         this.resourceFocusType = payload.resourceFocusType;
         this.emitChange();
     }
-    getResources() {
-        return this.resources;
-    }
-    getGraphName() {
-        return this.graphName;
-    }
-    getResourceFocusType() {
-        return this.resourceFocusType;
-    }
     getState() {
         return {
             graphName: this.graphName,
