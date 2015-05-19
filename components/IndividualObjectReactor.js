@@ -9,7 +9,7 @@ import {connectToStores} from 'fluxible/addons';
 class IndividualObjectReactor extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {objectValue: this.props.spec.value, detailData: {}, inEditMode: this.props.inEditMode, readOnly: this.props.readOnly, isExtendedView: 0};
+        this.state = {objectValue: this.props.spec.value, detailData: {}, inEditMode: this.props.inEditMode, isExtendedView: 0};
     }
     handleEdit(){
         //check if it is extended
@@ -136,7 +136,7 @@ class IndividualObjectReactor extends React.Component {
         }
         let editDIV, saveDIV, undoDIV, detailDIV, deleteDIV;
         //disable edit in readOnly mode
-        if(!this.state.readOnly){
+        if(!this.props.readOnly){
             editDIV = <div ref="edit" title="edit" onClick={this.handleEdit.bind(this)} className="medium ui circular basic icon button">
                             <i className="edit large blue icon link "></i>
                       </div>;
@@ -166,7 +166,7 @@ class IndividualObjectReactor extends React.Component {
             }
         }else{
             //show add detail icon if enabled
-            if(this.props.config && this.props.config.allowExtension && !this.state.readOnly){
+            if(this.props.config && this.props.config.allowExtension && !this.props.readOnly){
 
                 detailDIV = <div ref="addDetails" title="add details" onClick={this.handleAddDetails.bind(this)} className="medium ui circular basic icon button">
                                 <i className="add circle large blue icon link "> </i>

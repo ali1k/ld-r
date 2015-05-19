@@ -6,7 +6,7 @@ import AggregateDataEdit from './AggregateDataEdit';
 class AggregateObjectReactor extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {changes: {}, inEditMode: this.props.inEditMode? 1 : 0, readOnly: this.props.readOnly, showDelete: false};
+        this.state = {changes: {}, inEditMode: this.props.inEditMode? 1 : 0, showDelete: false};
     }
     handleEdit(){
         //disable new mode
@@ -121,7 +121,7 @@ class AggregateObjectReactor extends React.Component {
             }
         }
         let editDIV, saveDIV, undoDIV, deleteDIV;
-        if(!this.state.readOnly){
+        if(!this.props.readOnly){
             editDIV = <div ref="edit" title="edit" onClick={this.handleEdit.bind(this)} className="medium ui circular basic icon button">
                             <i className="edit large blue icon link "></i>
                       </div>;
