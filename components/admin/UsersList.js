@@ -20,8 +20,6 @@ class UsersList extends React.Component {
                 </div>
               </div>
           )
-      }else{
-
       }
       if(this.props.UserStore.users){
         list = this.props.UserStore.users.map(function(node, index) {
@@ -30,13 +28,16 @@ class UsersList extends React.Component {
             }else{
                 dbClass='yellow user icon'
             }
-          return (
-            <div className="item animated fadeIn" key={index}>
-                <NavLink routeName="resource" href={'/dataset/'+ encodeURIComponent(currentComponent.props.UserStore.graphName) +'/resource/' + encodeURIComponent(node.v)} >
-                <div className="content"> <i className={dbClass}></i> {node.title} </div>
-              </NavLink>
-            </div>
-          )
+            //do not show current super user to edit himself
+            if(node.v !== user.id){
+                return (
+                  <div className="item animated fadeIn" key={index}>
+                      <NavLink routeName="resource" href={'/dataset/'+ encodeURIComponent(currentComponent.props.UserStore.graphName) +'/resource/' + encodeURIComponent(node.v)} >
+                      <div className="content"> <i className={dbClass}></i> {node.title} </div>
+                    </NavLink>
+                  </div>
+                )
+            }
         });
       }else{
         list=<div className="ui warning message"><div className="header"> Sorry! No user found!</div></div>
