@@ -1,0 +1,87 @@
+<html>
+	<head>
+		<meta charSet="utf-8" />
+		<meta name="viewport" content="width=device-width, user-scalable=no" />
+		<link href="/bower_components/semantic-ui/dist/semantic.min.css" rel="stylesheet" type="text/css" />
+		<title>LD-Reactor| User Registration Page</title>
+	</head>
+	<body>
+		<div>
+			<nav  class="ui blue menu inverted navbar page grid">
+					<div class="ui item active brand">
+						<a href="/">LD-Reactor</a>
+					</div>
+			</nav>
+		</div>
+		<div class="ui page grid">
+			<div class="row">
+				<div class="ui wide column">
+					{{#errorMsg}}<br/><div class="ui warning message"><div class="header"> {{errorMsg}} </div></div>{{/errorMsg}}
+					<div class="ui form">
+						<div class="fields">
+							<br/>
+							<div class="twelve wide field ui header center aligned">Register as a new user</div>
+							<div class="description">
+								<form action="/register" method="post">
+									<div class="twelve wide field required">
+
+									</div>
+									<div class="twelve wide field required">
+										<label>First Name</label>
+										<div class="ui icon input">
+											<input type="text" placeholder="First Name" name="firstname" value="{{data.firstname}}"/>
+										</div>
+									</div>
+									<div class="twelve wide field required">
+										<label>Last Name</label>
+										<div class="ui icon input">
+											<input type="text" placeholder="Last Name" name="lastname" value="{{data.lastname}}"/>
+										</div>
+									</div>
+									<div class="twelve wide field required">
+										<label>Organization</label>
+										<div class="ui icon input">
+											<input type="text" placeholder="Organization" name="organization" value="{{data.organization}}"/>
+										</div>
+									</div>
+									<div class="twelve wide field required">
+										<label>Email Address</label>
+										<div class="ui icon input">
+											<input type="text" placeholder="Email" name="email" value="{{data.email}}"/>
+											<i class="at icon"></i>
+										</div>
+									</div>
+									<div class="twelve wide field required">
+										<label>Username</label>
+										<div class="ui icon input">
+											<input type="text" placeholder="Username" name="username" value="{{data.username}}"/>
+											<i class="user icon"></i>
+										</div>
+									</div>
+									<div class="twelve wide field required">
+										<label>Password</label>
+										<div class="ui icon input">
+											<input type="password" name="password">
+											<i class="lock icon"></i>
+										</div>
+									</div>
+									<div class="twelve wide field required">
+										<label>Confirm Password</label>
+										<div class="ui icon input">
+											<input type="password" name="cpassword">
+											<i class="lock icon"></i>
+										</div>
+									</div>
+									<div class="field">
+										<input class="ui submit button" type="submit" value="Register"/>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+</html>

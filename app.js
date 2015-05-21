@@ -1,7 +1,7 @@
 import React from 'react';
 import Fluxible from 'fluxible';
 import fetchrPlugin from 'fluxible-plugin-fetchr';
-
+import authPlugin from './plugins/authentication';
 import Application from './components/Application';
 import RouteStore from './stores/RouteStore';
 import ApplicationStore from './stores/ApplicationStore';
@@ -27,5 +27,6 @@ let app = new Fluxible({
 app.plug(fetchrPlugin({
     xhrPath: '/api' // Path for XHR to be served from
 }));
+app.plug(authPlugin({}));
 
 module.exports = app;

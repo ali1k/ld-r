@@ -35,7 +35,8 @@ class Application extends React.Component {
 
 Application.contextTypes = {
     getStore: React.PropTypes.func,
-    executeAction: React.PropTypes.func
+    executeAction: React.PropTypes.func,
+    getUser: React.PropTypes.func
 };
 
 Application = connectToStores(Application, [ApplicationStore], function (stores, props) {
@@ -46,6 +47,8 @@ Application = connectToStores(Application, [ApplicationStore], function (stores,
 
 Application = handleHistory(Application, {enableScroll: false});
 
-Application = provideContext(Application);
+Application = provideContext(Application, { //jshint ignore:line
+    getUser: React.PropTypes.func
+});
 
 export default Application;

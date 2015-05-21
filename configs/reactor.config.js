@@ -7,6 +7,14 @@ export default {
     resourceFocusType: ['void:Dataset'],
     //only allow to view data -> disable edit
     readOnly: 0,
+    //will withdraw access if not logged in
+    enableAuthentication: 1,
+    //graph that stores users data, must be loaded beforehand
+    authGraphName: ['https://github.com/ali1k/ld-reactor/blob/master/plugins/authentication/schema/users.ttl#'],
+    //used when creating random resources
+    dynamicResourceDomain: ['http://example.org'],
+    //will allow super users to confirm and activate regiastered users
+    enableUserConfirmation: 1,
     //will put all update actions in log folder
     enableLogs: 0,
     //[Optional] config for property components

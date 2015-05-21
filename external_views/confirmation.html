@@ -1,0 +1,37 @@
+<html>
+	<head>
+		<meta charSet="utf-8" />
+		<meta name="viewport" content="width=device-width, user-scalable=no" />
+		<link href="/bower_components/semantic-ui/dist/semantic.min.css" rel="stylesheet" type="text/css" />
+		<title>LD-Reactor | Registration Confirmation</title>
+	</head>
+	<body>
+		<div>
+			<nav  class="ui blue menu inverted navbar page grid">
+					<div class="ui item active brand">
+						<a href="/">LD-Reactor</a>
+					</div>
+			</nav>
+		</div>
+		<div class="ui page grid">
+			<div class="row">
+				<div class="ui cards wide column">
+					<br/>
+					<div class="ui segment">
+						<div class="ui big success message">
+						  <div class="header">
+						    Your initial registration was successful.
+						  </div>
+						{{#needsConfirmation}}
+						<p>You can log in to the LD-Reactor <b>after</b> we activated your account.</p>
+						<p>Please be patient until we identify & activate your account!</p>
+						{{/needsConfirmation}}
+							<a href="/login" class="ui primary button"> Log-in</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+</html>

@@ -4,7 +4,6 @@
  * based on the URL. Once completed, the store state is dehydrated
  * and the application is rendered via React.
  */
-
 import express from 'express';
 import csrf from 'csurf';
 import bodyParser from 'body-parser';
@@ -13,6 +12,11 @@ import favicon from 'serve-favicon';
 import path from 'path';
 import serialize from 'serialize-javascript';
 import {navigateAction} from 'fluxible-router';
+//required for authentication
+import handleAuthentication from './plugins/authentication/handleAuth';
+import {enableAuthentication} from './configs/reactor';
+import session from 'express-session';
+import hogan from 'hogan-express';
 import debugLib from 'debug';
 import React from 'react';
 import generalConfig from './configs/general';
@@ -26,9 +30,26 @@ const server = express();
 // we need this because "cookie" is true in csrfProtection
 server.use(cookieParser());
 server.use(bodyParser.json());
-server.use(csrf({cookie: true}));
+server.use(bodyParser.urlencoded({ extended: false }));
+server.use(session({
+    secret: 'LD reactor',
+    resave: false,
+    saveUninitialized: false
+}));
+// server.use(csrf({cookie: true}));
+//for authentication: this part is external to the flux architecture
+if(enableAuthentication){
+    handleAuthentication(server);
+}
 server.set('state namespace', 'App');
 server.use(favicon(path.join(__dirname, '/favicon.ico')));
+//--------used for views external to fluxible
+server.set('views', path.join(__dirname, '/external_views'));
+server.set('view engine', 'html');
+server.set('view options', { layout: false });
+//server.enable('view cache');
+server.engine('html', hogan);
+//------------------
 server.use('/public', express.static(path.join(__dirname, '/build')));
 server.use('/bower_components', express.static(path.join(__dirname, '/bower_components')));
 server.use('/assets', express.static(path.join(__dirname, '/assets')));
@@ -42,11 +63,20 @@ fetchrPlugin.registerService(require('./services/resource'));
 server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
 
 server.use((req, res, next) => {
-    let context = app.createContext({
-        req: req, // The fetchr plugin depends on this
-        xhrContext: {
-            _csrf: req.csrfToken() // Make sure all XHR requests have the CSRF token
+    //check user credentials
+    //stop fluxible rendering if not authorized
+    if(enableAuthentication){
+        if(!req.isAuthenticated()){
+            //store referrer in session
+            req.session.redirectTo = req.url;
+            return res.redirect('/login');
         }
+    }
+    let context = app.createContext({
+        req: req // The fetchr plugin depends on this
+        // xhrContext: {
+        //     _csrf: req.csrfToken() // Make sure all XHR requests have the CSRF token
+        // }
     });
 
     debug('Executing navigate action');
