@@ -19,6 +19,7 @@ class Nav extends React.Component {
                             {user.accountName} <i className="dropdown icon"></i>
                             <div className="menu">
                                 <a href="/profile" className="item">Profile</a>
+                                {parseInt(user.isSuperUser)? <a href="/users" className="item">Users List</a> : ''}
                                 <a href="/logout" className="item">Logout</a>
                             </div>
                         </div>;

@@ -1,5 +1,6 @@
 import loadDataset from '../actions/loadDataset';
 import loadResource from '../actions/loadResource';
+import loadUsersList from '../actions/loadUsersList';
 
 export default {
     home: {
@@ -50,6 +51,15 @@ export default {
                 category = 0;
             }
             context.executeAction(loadResource, { dataset: decodeURIComponent(payload.get('params').get('did')), resource: decodeURIComponent(payload.get('params').get('rid')), category: category}, done);
+        }
+    },
+    users: {
+        path: '/users',
+        method: 'get',
+        handler: require('../components/admin/UsersList'),
+        label: 'Users List',
+        action: (context, payload, done) => {
+            context.executeAction(loadUsersList, {}, done);
         }
     }
 };
