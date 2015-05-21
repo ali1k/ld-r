@@ -180,6 +180,10 @@ export default {
                     label: ['Editor of Resource'],
                     allowNewValue: 1
                 },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfProperty': {
+                    label: ['Editor of Property'],
+                    allowNewValue: 1
+                },
                 'http://xmlns.com/foaf/0.1/organization': {
                     label: ['Organization'],
                     allowNewValue: 1,

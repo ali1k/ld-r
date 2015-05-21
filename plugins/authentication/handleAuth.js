@@ -102,7 +102,7 @@ module.exports = function handleAuthentication(server) {
                          PREFIX ldReactor: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
                          PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
                          INSERT DATA INTO <'+ reactorConfig.authGraphName[0] +'> { \
-                         <'+ resourceURI + '> a foaf:Person; foaf:firstName "'+req.body.firstname+'"; foaf:lastName "'+req.body.lastname+'"; foaf:organization "'+req.body.organization+'"; foaf:mbox <'+req.body.email+'>; foaf:accountName "'+req.body.username+'"; ldReactor:password "'+passwordHash.generate(req.body.password)+'"; ldReactor:isActive "'+isActive+'"^^xsd:Integer; ldReactor:isSuperUser "0"^^xsd:Integer; ldReactor:editorOfGraph <http://exampleGraph.org>; ldReactor:editorOfResource <http://exampleResource.org>. }';
+                         <'+ resourceURI + '> a foaf:Person; foaf:firstName "'+req.body.firstname+'"; foaf:lastName "'+req.body.lastname+'"; foaf:organization "'+req.body.organization+'"; foaf:mbox <'+req.body.email+'>; foaf:accountName "'+req.body.username+'"; ldReactor:password "'+passwordHash.generate(req.body.password)+'"; ldReactor:isActive "'+isActive+'"^^xsd:Integer; ldReactor:isSuperUser "0"^^xsd:Integer; ldReactor:editorOfGraph <http://exampleGraph.org>; ldReactor:editorOfResource <http://exampleResource.org>; ldReactor:editorOfProperty <http://exampleProperty.org>. }';
                         //  console.log(query);
                          rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
 
