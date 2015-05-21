@@ -169,8 +169,24 @@ export default {
         },
         //for each graph name, you can define custom configs.
         //if no custom config is defined for a specific graph, the default config will be used.
-        'users': {
-
+        'https://github.com/ali1k/ld-reactor/blob/master/plugins/authentication/schema/users.ttl#': {
+            useCategories: 0,
+            config: {
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfGraph': {
+                    label: ['Editor of Graph'],
+                    allowNewValue: 1
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource': {
+                    label: ['Editor of Resource'],
+                    allowNewValue: 1
+                },
+                'http://xmlns.com/foaf/0.1/organization': {
+                    label: ['Organization'],
+                    allowNewValue: 1,
+                    viewer: ['BasicDBpediaView'],
+                    editor: ['DBpediaInput']
+                }
+            }
         }
     }
 };
