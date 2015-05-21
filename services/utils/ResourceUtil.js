@@ -1,5 +1,5 @@
 'use strict';
-import {usePropertyCategories, propertyCategories, propertiesConfig} from '../../configs/reactor';
+import {propertiesConfig} from '../../configs/reactor';
 class ResourceUtil{
     getPropertyLabel(uri) {
         var property='';
@@ -13,15 +13,22 @@ class ResourceUtil{
         }
         return property;
     }
-    parseProperties(body, category) {
+    parseProperties(body, graphName, category) {
+        let selectedConfig;
+        //first check if there is a specific config for the property on the selected graphName
+        selectedConfig = propertiesConfig[graphName];
+        //if no specific config is found, get the generic config
+        if(!selectedConfig){
+            selectedConfig = propertiesConfig.generic;
+        }
         let filterByCategory=0, self=this;
         let parsed = JSON.parse(body);
         let output=[], propIndex={}, finalOutput=[];
-        if(usePropertyCategories){
+        if(selectedConfig.useCategories){
             //allow filter by category
             if(!category){
                 //get first category as default
-                category = propertyCategories[0];
+                category = selectedConfig.categories[0];
             }
             filterByCategory=1;
         }
@@ -31,7 +38,7 @@ class ResourceUtil{
         }else{
           parsed.results.bindings.forEach(function(el) {
             if(filterByCategory){
-                if(!propertiesConfig[el.p.value] || !propertiesConfig[el.p.value].category || category !== propertiesConfig[el.p.value].category[0]){
+                if(!selectedConfig.config[el.p.value] || !selectedConfig.config[el.p.value].category || category !== selectedConfig.config[el.p.value].category[0]){
                     //skip property
                     return;
                 }

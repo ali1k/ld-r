@@ -19,6 +19,7 @@
     "fluxible": "^0.4.9",
     "fluxible-plugin-fetchr": "^0.3.0",
     "fluxible-router": "^0.1.4",
+    "log": "^1.4.0",
     "react": "^0.13.3",
     "react-google-maps": "^1.2.0",
     "request-promise": "^0.4.2",

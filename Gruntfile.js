@@ -1,6 +1,9 @@
 module.exports = function (grunt) {
     grunt.initConfig({
-        clean: ['build'],
+        clean: {
+            build: ['build'],
+            logs: ['logs/*']
+        },
         concurrent: {
             dev: ['nodemon:app', 'webpack:dev'],
             options: {
@@ -40,7 +43,8 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
     // tasks
-    grunt.registerTask('build', ['clean', 'webpack:build', 'uglify']);
-    grunt.registerTask('default', ['clean', 'concurrent:dev']);
+    grunt.registerTask('build', ['clean:build', 'webpack:build', 'uglify']);
+    grunt.registerTask('default', ['clean:build', 'concurrent:dev']);
     grunt.registerTask('compress', ['uglify']);
+    grunt.registerTask('clogs', ['clean:logs']);
 };

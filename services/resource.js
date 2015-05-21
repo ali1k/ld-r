@@ -1,9 +1,22 @@
 'use strict';
 import {sparqlEndpoint} from '../configs/general';
-import {defaultGraphName, resourceFocusType} from '../configs/reactor';
+import {defaultGraphName, resourceFocusType, enableLogs} from '../configs/reactor';
 import ResourceQuery from './sparql/ResourceQuery';
 import ResourceUtil from './utils/ResourceUtil';
 import rp from 'request-promise';
+import fs from 'fs';
+import Log from 'log';
+/*-------------log updates-------------*/
+let log;
+if(enableLogs){
+    let currentDate = new Date().toDateString().replace(/\s/g, '-');
+    let logPath = './logs/'+currentDate+'.log';
+    if (fs.existsSync(logPath)) {
+        //create a new file when restarting the server
+        logPath = './logs/'+currentDate+'_'+Date.now() +'.log';
+    }
+    log = new Log('debug', fs.createWriteStream(logPath));
+}
 /*-------------config-------------*/
 const httpOptions = {
   host: sparqlEndpoint[0].host,
@@ -35,10 +48,13 @@ export default {
                     graphName: graphName,
                     resourceURI: resourceURI,
                     currentCategory: category,
-                    properties: utilObject.parseProperties(res, category)
+                    properties: utilObject.parseProperties(res, graphName, category)
                 });
             }).catch(function (err) {
                 console.log(err);
+                if(enableLogs){
+                    log.error('\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
+                }
                 callback(null, {graphName: graphName, resourceURI: resourceURI, currentCategory: 0, properties: []});
             });
         } else if (resource === 'resource.objectProperties') {
@@ -54,6 +70,9 @@ export default {
                 });
             }).catch(function (err) {
                 console.log(err);
+                if(enableLogs){
+                    log.error('\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
+                }
                 callback(null, {objectURI: objectURI, properties: []});
             });
         }
@@ -66,9 +85,15 @@ export default {
              rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
              //send request
              rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+                 if(enableLogs){
+                     log.info('\n Query: \n'+query);
+                 }
                  callback(null, {category: params.category});
              }).catch(function (err) {
                  console.log(err);
+                 if(enableLogs){
+                     log.error('\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
+                 }
                  callback(null, {category: params.category});
              });
          }
@@ -79,9 +104,15 @@ export default {
             rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+                if(enableLogs){
+                    log.info('\n Query: \n'+query);
+                }
                 callback(null, {category: params.category});
             }).catch(function (err) {
                 console.log(err);
+                if(enableLogs){
+                    log.error('\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
+                }
                 callback(null, {category: params.category});
             });
         } else if(resource === 'resource.individualObjectDetail'){
@@ -89,9 +120,15 @@ export default {
             rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+                if(enableLogs){
+                    log.info('\n Query: \n'+query);
+                }
                 callback(null, {category: params.category});
             }).catch(function (err) {
                 console.log(err);
+                if(enableLogs){
+                    log.error('\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
+                }
                 callback(null, {category: params.category});
             });
         } else if(resource === 'resource.aggObject'){
@@ -99,9 +136,15 @@ export default {
             rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+                if(enableLogs){
+                    log.info('\n Query: \n'+query);
+                }
                 callback(null, {category: params.category});
             }).catch(function (err) {
                 console.log(err);
+                if(enableLogs){
+                    log.error('\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
+                }
                 callback(null, {category: params.category});
             });
         }
@@ -112,9 +155,15 @@ export default {
             rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+                if(enableLogs){
+                    log.info('\n Query: \n'+query);
+                }
                 callback(null, {category: params.category});
             }).catch(function (err) {
                 console.log(err);
+                if(enableLogs){
+                    log.error('\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
+                }
                 callback(null, {category: params.category});
             });
         } else if(resource === 'resource.aggObject') {
@@ -122,9 +171,15 @@ export default {
             rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+                if(enableLogs){
+                    log.info('\n Query: \n'+query);
+                }
                 callback(null, {category: params.category});
             }).catch(function (err) {
                 console.log(err);
+                if(enableLogs){
+                    log.error('\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
+                }
                 callback(null, {category: params.category});
             });
         }

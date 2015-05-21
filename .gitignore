@@ -2,7 +2,7 @@ node_modules
 bower_components
 build
 *.log
-logs
+logs/*.log
 test.js
 configs/general.js
 configs/reactor.js
