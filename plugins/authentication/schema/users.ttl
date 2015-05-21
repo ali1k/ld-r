@@ -21,3 +21,13 @@
       ldReactor:password "sha1$8b1159fb$1$c933edf77baaa6f6b7558b6b80178bfcb5a6c917";
       ldReactor:isActive "1"^^xsd:Integer;
       ldReactor:isSuperUser "1"^^xsd:Integer .
+
+#non-super users will have the following access level properties:
+#ldReactor:editorOfGraph
+#ldReactor:editorOfResource
+#ldReactor:editorOfProperty -> blank node
+#                               ldReactor: resource
+#                               ldReactor: property
+#authorization starts from graph level and finishes at property level. i.e. if you give user permission to edit a graph, by default all resources and all property of the resources can be edited. If you restrict user permission to resource level, by default all the properties of the resource can be edited. If you restrict user permission to property level, you also need to specify the resource under which the property can be edited.
+#we make a simplification here: resources should be consistent within different graph names. It means, if you give a user permission to edit a resource, no matter under which graph it is, user always have permission to edit it. Therefore, you do not need to specify graph names for resources.
+#caveat: superUser has access to all graphs, resources and properties!

@@ -94,7 +94,11 @@ module.exports = function handleAuthentication(server) {
                      if(parsed.results.bindings[0].exists.value ==='0'){
                          //register as new user
                          console.log('start registration');
-                         var resourceURI = reactorConfig.dynamicResourceDomain + '/user/' + Math.round(+new Date() / 1000);
+                         var rnd = Math.round(+new Date() / 1000);
+                         var resourceURI = reactorConfig.dynamicResourceDomain + '/user/' + rnd;
+                         var dresourceURI = reactorConfig.dynamicResourceDomain + '/resource/' + rnd;
+                         var dgraphURI = reactorConfig.dynamicResourceDomain + '/graph/' + rnd;
+                         var blanknode = reactorConfig.dynamicResourceDomain + '/editorship/' + rnd;
                          var tmpE= [];
                          var isActive = reactorConfig.enableUserConfirmation;
                          /*jshint multistr: true */
@@ -102,7 +106,20 @@ module.exports = function handleAuthentication(server) {
                          PREFIX ldReactor: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
                          PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
                          INSERT DATA INTO <'+ reactorConfig.authGraphName[0] +'> { \
-                         <'+ resourceURI + '> a foaf:Person; foaf:firstName "'+req.body.firstname+'"; foaf:lastName "'+req.body.lastname+'"; foaf:organization "'+req.body.organization+'"; foaf:mbox <'+req.body.email+'>; foaf:accountName "'+req.body.username+'"; ldReactor:password "'+passwordHash.generate(req.body.password)+'"; ldReactor:isActive "'+isActive+'"^^xsd:Integer; ldReactor:isSuperUser "0"^^xsd:Integer; ldReactor:editorOfGraph <http://exampleGraph.org>; ldReactor:editorOfResource <http://exampleResource.org>; ldReactor:editorOfProperty <http://exampleProperty.org>. }';
+                         <'+ resourceURI + '> a foaf:Person; foaf:firstName "'+req.body.firstname+'"; foaf:lastName "'+req.body.lastname+'"; foaf:organization "'+req.body.organization+'"; foaf:mbox <'+req.body.email+'>; foaf:accountName "'+req.body.username+'"; ldReactor:password "'+passwordHash.generate(req.body.password)+'"; ldReactor:isActive "'+isActive+'"^^xsd:Integer; ldReactor:isSuperUser "0"^^xsd:Integer; ldReactor:editorOfGraph <'+dgraphURI+'>; ldReactor:editorOfResource <'+dresourceURI+'>; ldReactor:editorOfProperty <'+blanknode+'1>;ldReactor:editorOfProperty <'+blanknode+'2>; ldReactor:editorOfProperty <'+blanknode+'3>; ldReactor:editorOfProperty <'+blanknode+'4>.}; \
+                         INSERT DATA INTO <'+ reactorConfig.authGraphName[0] +'> { \
+                             <'+blanknode+'1> ldReactor:resource <'+resourceURI+'> ; ldReactor:property foaf:firstName . \
+                         }; \
+                         INSERT DATA INTO <'+ reactorConfig.authGraphName[0] +'> { \
+                             <'+blanknode+'2> ldReactor:resource <'+resourceURI+'> ; ldReactor:property foaf:lastName . \
+                         }; \
+                         INSERT DATA INTO <'+ reactorConfig.authGraphName[0] +'> { \
+                             <'+blanknode+'3> ldReactor:resource <'+resourceURI+'> ; ldReactor:property foaf:organization . \
+                         }; \
+                         INSERT DATA INTO <'+ reactorConfig.authGraphName[0] +'> { \
+                             <'+blanknode+'4> ldReactor:resource <'+resourceURI+'> ; ldReactor:property foaf:password . \
+                         }; \
+                         ';
                         //  console.log(query);
                          rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
 

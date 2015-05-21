@@ -182,7 +182,32 @@ export default {
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfProperty': {
                     label: ['Editor of Property'],
-                    allowNewValue: 1
+                    allowNewValue: 1,
+                    allowExtension: 1,
+                    extensions: [
+                        {
+                            spec: {
+                                propertyURI: 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resource',
+                                value: 'http://exampleResource.org',
+                                valueType: 'uri'
+                            },
+                            config: {
+                                hint: ['Resource URI under which the property is exposed.'],
+                                label: ['Resource']
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#property',
+                                value: 'http://exampleProperty.org',
+                                valueType: 'uri'
+                            },
+                            config: {
+                                hint: ['Property URI'],
+                                label: ['Property']
+                            }
+                        }
+                    ]
                 },
                 'http://xmlns.com/foaf/0.1/organization': {
                     label: ['Organization'],
