@@ -15,10 +15,12 @@ class DatasetQuery{
         if(String(graphName)!==''){
             /*jshint multistr: true */
             this.query = '\
-            SELECT DISTINCT ?resource WHERE {\
+            SELECT DISTINCT ?resource ?label ?title WHERE {\
                 { GRAPH <'+ graphName +'> \
                     { \
                     ?resource a '+ type +' . \
+                    OPTIONAL {?resource dcterms:title ?title .} \
+                    OPTIONAL {?resource rdfs:label ?label .} \
                     } \
                 } \
             } ORDER BY ASC(?resource) LIMIT 100 \
@@ -26,10 +28,12 @@ class DatasetQuery{
         }else{
             /*jshint multistr: true */
             this.query = '\
-            SELECT DISTINCT ?resource ?graphName WHERE { \
+            SELECT DISTINCT ?resource ?label ?title ?graphName WHERE { \
                 { GRAPH ?graphName \
                     { \
                     ?resource a '+ type +' . \
+                    OPTIONAL {?resource dcterms:title ?title .} \
+                    OPTIONAL {?resource rdfs:label ?label .} \
                     }\
                 } \
             } ORDER BY ASC(?resource) LIMIT 100 \
