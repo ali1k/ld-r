@@ -45,6 +45,9 @@ module.exports = function handleAuthentication(server) {
         req.logout();
         res.redirect('/');
     });
+    server.get('/profile/:id', function(req, res) {
+        res.redirect('/dataset/' + encodeURIComponent(reactorConfig.authGraphName)+'/resource/'+ encodeURIComponent(req.params.id));
+    });
     server.get('/confirmation', function(req, res) {
         if(!req.isAuthenticated()){
             res.render('confirmation', {needsConfirmation: reactorConfig.enableUserConfirmation});

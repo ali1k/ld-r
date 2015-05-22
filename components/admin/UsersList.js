@@ -46,7 +46,7 @@ class UsersList extends React.Component {
           <div className="ui page grid">
             <div className="row">
               <div className="column">
-                <h1 className="ui header">Users</h1>
+                <h1 className="ui header">Registered Users</h1>
                   <div className="ui segment">
                     <div className="ui huge divided animated list">
                       {list}

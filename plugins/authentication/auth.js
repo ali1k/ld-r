@@ -26,12 +26,13 @@ module.exports = {
       var self=this;
       /*jshint multistr: true */
       var query = '\
-      PREFIX risis: <http://risis.eu/> \
+      PREFIX ldReactor: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
       PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-      SELECT ?p ?o FROM <'+ reactorConfig.authGraphName[0] +'> WHERE { \
+      SELECT ?p ?o ?pr ?pp FROM <'+ reactorConfig.authGraphName[0] +'> WHERE { \
         { \
             <'+id+'> a foaf:Person . \
             <'+id+'> ?p ?o . \
+            OPTIONAL {?o ldReactor:resource ?pr . ?o ldReactor:property ?pp .} \
         } \
       } \
       ';
@@ -42,6 +43,7 @@ module.exports = {
           var user={};
           user.editorOfGraph=[];
           user.editorOfResource=[];
+          user.editorOfProperty=[];
           if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
                 if(self.getPropertyLabel(el.p.value)==='editorOfGraph'){
@@ -50,12 +52,19 @@ module.exports = {
                     if(self.getPropertyLabel(el.p.value)==='editorOfResource'){
                         user.editorOfResource.push(el.o.value);
                     }else{
-                        user[self.getPropertyLabel(el.p.value)] = el.o.value;
+                        if(self.getPropertyLabel(el.p.value)==='editorOfProperty'){
+                            if(el.pp && el.pr){
+                                user.editorOfProperty.push({p: el.pp.value,r: el.pr.value})
+                            }
+                        }else{
+                            user[self.getPropertyLabel(el.p.value)] = el.o.value;
+                        }
                     }
                 }
             });
             //to not show password in session
             delete user.password;
+            user.graphName = reactorConfig.authGraphName[0];
             user.id = id;
             return fn(null, user);
           }
@@ -68,7 +77,7 @@ module.exports = {
       var self=this;
       /*jshint multistr: true */
       var query = '\
-      PREFIX risis: <http://risis.eu/> \
+      PREFIX ldReactor: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
       PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
       SELECT ?s ?p ?o FROM <'+ reactorConfig.authGraphName[0] +'> WHERE { \
         { \
@@ -83,23 +92,12 @@ module.exports = {
       rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
           var parsed = JSON.parse(res);
           var user={};
-          user.editorOfGraph=[];
-          user.editorOfResource=[];
           if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
-                if(self.getPropertyLabel(el.p.value)==='editorOfGraph'){
-                    user.editorOfGraph.push(el.o.value);
-                }else{
-                    if(self.getPropertyLabel(el.p.value)==='editorOfResource'){
-                        user.editorOfResource.push(el.o.value);
-                    }else{
-                        user[self.getPropertyLabel(el.p.value)] = el.o.value;
-                    }
-                }
+                user[self.getPropertyLabel(el.p.value)] = el.o.value;
             });
             user.id = parsed.results.bindings[0].s.value;
             // console.log(user);
-            //success login
             return fn(null, user);
           }
       }).catch(function (err) {
