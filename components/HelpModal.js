@@ -84,6 +84,12 @@ class HelpModal extends React.Component {
                           <div className="description"> Clicking on this icon cancels adding new values to a property.</div>
                         </div>
                       </div>
+                      <div className="item">
+                        <div className="content">
+                            <a className="header"> Resource </a>
+                          <div className="description"> <i className="big icon yellow diamond square"></i> Read Only Access <i className="big icon green diamond square"></i> Write Access <i className="big icon orange diamond square"></i> Partial Write Access </div>
+                        </div>
+                      </div>
                     </div>
                 </div>
               </div>
