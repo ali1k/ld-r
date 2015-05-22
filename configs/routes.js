@@ -1,15 +1,16 @@
 import loadDataset from '../actions/loadDataset';
 import loadResource from '../actions/loadResource';
 import loadUsersList from '../actions/loadUsersList';
+import {appFullTitle, appShortTitle} from '../configs/general';
 
 export default {
     home: {
         path: '/',
         method: 'get',
         handler: require('../components/Home'),
-        label: 'LD-Reactor',
+        label: appShortTitle,
         action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Linked Data Reactor | Home'});
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Home'});
             done();
         }
     },
@@ -19,7 +20,7 @@ export default {
         handler: require('../components/About'),
         label: 'About',
         action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: 'Linked Data Reactor | About'});
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | About'});
             done();
         }
     },

@@ -1,3 +1,5 @@
+import {appFullTitle} from '../configs/general';
+
 export default function loadDataset(context, payload, done) {
     context.service.read('dataset.resourcesByType', payload, {}, function (err, res) {
         if (err) {
@@ -6,7 +8,7 @@ export default function loadDataset(context, payload, done) {
             context.dispatch('LOAD_DATASET_SUCCESS', res);
         }
         context.dispatch('UPDATE_PAGE_TITLE', {
-            pageTitle: ('Linked Data Reactor | Dataset | ' + payload.id) || ''
+            pageTitle: (appFullTitle + ' | Dataset | ' + payload.id) || ''
         });
         done();
     });

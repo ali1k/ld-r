@@ -1,3 +1,4 @@
+import {appFullTitle} from '../configs/general';
 export default function loadResource(context, payload, done) {
     context.service.read('resource.properties', payload, {}, function (err, res) {
         if (err) {
@@ -8,7 +9,7 @@ export default function loadResource(context, payload, done) {
             context.dispatch('LOAD_RESOURCE_SUCCESS', res);
         }
         context.dispatch('UPDATE_PAGE_TITLE', {
-            pageTitle: ('Linked Data Reactor | Dataset | ' + decodeURIComponent(payload.dataset) + ' | Resource | '+ decodeURIComponent(payload.resource) + ' | Category | '+payload.category) || ''
+            pageTitle: (appFullTitle + ' | Dataset | ' + decodeURIComponent(payload.dataset) + ' | Resource | '+ decodeURIComponent(payload.resource) + ' | Category | '+payload.category) || ''
         });
         done();
     });
