@@ -1,7 +1,7 @@
 'use strict';
 
 import {sparqlEndpoint} from '../configs/general';
-import {authGraphName} from '../configs/reactor';
+import {authGraphName, enableAuthentication} from '../configs/reactor';
 import AdminQuery from './sparql/AdminQuery';
 import AdminUtil from './utils/AdminUtil';
 import rp from 'request-promise';
@@ -11,6 +11,7 @@ const httpOptions = {
   port: sparqlEndpoint[0].port,
   path: sparqlEndpoint[0].path
 };
+let user;
 const outputFormat = 'application/sparql-results+json';
 const defaultGraphName = authGraphName;
 /*-----------------------------------*/
@@ -25,6 +26,15 @@ export default {
         if (resource === 'admin.userslist') {
             //SPARQL QUERY
             graphName = (params.id? params.id: defaultGraphName);
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {graphName: graphName, users: []});
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
             query = queryObject.getUsers(graphName);
             //build http uri
             rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);

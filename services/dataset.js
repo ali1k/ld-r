@@ -1,6 +1,6 @@
 'use strict';
 import {sparqlEndpoint} from '../configs/general';
-import {defaultGraphName, resourceFocusType} from '../configs/reactor';
+import {defaultGraphName, resourceFocusType, enableAuthentication} from '../configs/reactor';
 import DatasetQuery from './sparql/DatasetQuery';
 import DatasetUtil from './utils/DatasetUtil';
 import rp from 'request-promise';
@@ -11,6 +11,7 @@ const httpOptions = {
   path: sparqlEndpoint[0].path
 };
 const outputFormat = 'application/sparql-results+json';
+let user;
 /*-----------------------------------*/
 let rpPath, graphName, query, queryObject, utilObject;
 queryObject = new DatasetQuery();
@@ -23,6 +24,16 @@ export default {
         if (resource === 'dataset.resourcesByType') {
             //SPARQL QUERY
             graphName = (params.id? params.id: defaultGraphName);
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {graphName: graphName, resourceFocusType: resourceFocusType, resources: []});
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
             query = queryObject.getResourcesByType(graphName, resourceFocusType);
             //build http uri
             rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
