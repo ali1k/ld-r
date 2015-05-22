@@ -6,7 +6,14 @@ import {NavLink} from 'fluxible-router';
 
 class Dataset extends React.Component {
     includesProperty(list, resource) {
-        return false;
+        let out = false;
+        list.forEach(function(el) {
+            if (el.r === resource){
+                out = true;
+                return out;
+            }
+        });
+        return out;
     }
     checkAccess(user, graph, resource) {
         if(enableAuthentication) {

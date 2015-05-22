@@ -120,7 +120,7 @@ module.exports = function handleAuthentication(server) {
                              <'+blanknode+'3> ldReactor:resource <'+resourceURI+'> ; ldReactor:property foaf:organization . \
                          }; \
                          INSERT DATA INTO <'+ reactorConfig.authGraphName[0] +'> { \
-                             <'+blanknode+'4> ldReactor:resource <'+resourceURI+'> ; ldReactor:property foaf:password . \
+                             <'+blanknode+'4> ldReactor:resource <'+resourceURI+'> ; ldReactor:property ldReactor:password . \
                          }; \
                          ';
                         //  console.log(query);
