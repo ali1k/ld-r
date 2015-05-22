@@ -39,24 +39,24 @@ class Dataset extends React.Component {
         let self = this;
         let user = this.context.getUser();
         let graphName = this.props.DatasetStore.graphName;
-        let userAccess, title, list, dbClass = 'yellow fork icon';
+        let userAccess, title, list, dbClass = 'yellow diamond icon';
         if(!this.props.DatasetStore.resources.length){
             list = <div className="ui warning message"><div className="header"> There was no resource in the selected dataset! Either add resources to your dataset or go to another dataset which has resources...</div></div>;
         }else{
             list = this.props.DatasetStore.resources.map((node, index) => {
                 title = node.title ? node.title : (node.label? node.label : node.v);
                 if(!enableAuthentication) {
-                    dbClass = 'green fork icon';
+                    dbClass = 'green diamond icon';
                 }else{
                     userAccess = self.checkAccess(user, node.g, node.v);
                     if(userAccess.access){
                         if(userAccess.type === 'full'){
-                            dbClass = 'green fork icon';
+                            dbClass = 'green diamond icon';
                         }else{
-                            dbClass = 'orange fork icon';
+                            dbClass = 'orange diamond icon';
                         }
                     }else{
-                        dbClass = 'yellow fork icon';
+                        dbClass = 'yellow diamond icon';
                     }
                 }
                 return (
