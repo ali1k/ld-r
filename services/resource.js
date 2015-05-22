@@ -1,6 +1,6 @@
 'use strict';
 import {sparqlEndpoint} from '../configs/general';
-import {defaultGraphName, resourceFocusType, enableLogs, enableAuthentication} from '../configs/reactor';
+import {defaultGraphName, resourceFocusType, enableLogs, enableAuthentication, authGraphName} from '../configs/reactor';
 import ResourceQuery from './sparql/ResourceQuery';
 import ResourceUtil from './utils/ResourceUtil';
 import rp from 'request-promise';
@@ -55,11 +55,17 @@ export default {
             rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+                //exceptional case for user properties: we hide some admin props from normal users
+                let props = utilObject.parseProperties(res, graphName, category);
+                if(graphName === authGraphName[0] && !parseInt(user.isSuperUser)){
+                    props = utilObject.deleteAdminProperties(props);
+                }
+                //------------------------------------
                 callback(null, {
                     graphName: graphName,
                     resourceURI: resourceURI,
                     currentCategory: category,
-                    properties: utilObject.parseProperties(res, graphName, category)
+                    properties: props
                 });
             }).catch(function (err) {
                 console.log(err);
