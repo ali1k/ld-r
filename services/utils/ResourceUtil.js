@@ -73,5 +73,36 @@ class ResourceUtil{
           return output;
         }
     }
+    //------ permission check functions---------------
+    includesProperty(list, resource, property) {
+        let out = false;
+        list.forEach(function(el) {
+            if (el.r === resource && el.p === property){
+                out = true;
+                return out;
+            }
+        });
+        return out;
+    }
+    checkAccess(user, graph, resource, property) {
+        if(parseInt(user.isSuperUser)){
+            return {access: true, type: 'full'};
+        }else{
+            if(graph && user.editorOfGraph.indexOf(graph) !==-1){
+                return {access: true, type: 'full'};
+            }else{
+                if(resource && user.editorOfResource.indexOf(resource) !==-1){
+                    return {access: true, type: 'full'};
+                }else{
+                    if(property && this.includesProperty(user.editorOfProperty, resource, property)){
+                        return {access: true, type: 'partial'};
+                    }else{
+                        return {access: false};
+                    }
+                }
+            }
+        }
+    }
+    //--------------------------------------------------------
 }
 export default ResourceUtil;

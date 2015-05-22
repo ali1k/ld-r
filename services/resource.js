@@ -8,7 +8,7 @@ import fs from 'fs';
 import Log from 'log';
 /*-------------log updates-------------*/
 let log;
-let user;
+let user, accessLevel;
 if(enableLogs){
     let currentDate = new Date().toDateString().replace(/\s/g, '-');
     let logPath = './logs/'+currentDate+'.log';
@@ -107,7 +107,13 @@ export default {
                  if(!req.user){
                      callback(null, {category: params.category});
                  }else{
+                     //check if user permitted to do the update action
                      user = req.user;
+                     accessLevel = utilObject.checkAccess(user, params.dataset, params.resourceURI, params.propertyURI);
+                     if(!accessLevel.access){
+                         //action not allowed!
+                         callback(null, {category: params.category});
+                     }
                  }
              }else{
                  user = {accountName: 'open'};
@@ -137,6 +143,11 @@ export default {
                     callback(null, {category: params.category});
                 }else{
                     user = req.user;
+                    accessLevel = utilObject.checkAccess(user, params.dataset, params.resourceURI, params.propertyURI);
+                    if(!accessLevel.access){
+                        //action not allowed!
+                        callback(null, {category: params.category});
+                    }
                 }
             }else{
                 user = {accountName: 'open'};
@@ -163,6 +174,11 @@ export default {
                     callback(null, {category: params.category});
                 }else{
                     user = req.user;
+                    accessLevel = utilObject.checkAccess(user, params.dataset, params.resourceURI, params.propertyURI);
+                    if(!accessLevel.access){
+                        //action not allowed!
+                        callback(null, {category: params.category});
+                    }
                 }
             }else{
                 user = {accountName: 'open'};
@@ -189,6 +205,11 @@ export default {
                     callback(null, {category: params.category});
                 }else{
                     user = req.user;
+                    accessLevel = utilObject.checkAccess(user, params.dataset, params.resourceURI, params.propertyURI);
+                    if(!accessLevel.access){
+                        //action not allowed!
+                        callback(null, {category: params.category});
+                    }
                 }
             }else{
                 user = {accountName: 'open'};
@@ -218,6 +239,11 @@ export default {
                     callback(null, {category: params.category});
                 }else{
                     user = req.user;
+                    accessLevel = utilObject.checkAccess(user, params.dataset, params.resourceURI, params.propertyURI);
+                    if(!accessLevel.access){
+                        //action not allowed!
+                        callback(null, {category: params.category});
+                    }
                 }
             }else{
                 user = {accountName: 'open'};
@@ -244,6 +270,11 @@ export default {
                     callback(null, {category: params.category});
                 }else{
                     user = req.user;
+                    accessLevel = utilObject.checkAccess(user, params.dataset, params.resourceURI, params.propertyURI);
+                    if(!accessLevel.access){
+                        //action not allowed!
+                        callback(null, {category: params.category});
+                    }
                 }
             }else{
                 user = {accountName: 'open'};

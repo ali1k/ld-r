@@ -4,6 +4,7 @@ import BasicTextareaInput from './BasicTextareaInput';
 import BasicIndividualDetailEdit from './BasicIndividualDetailEdit';
 import BasicOptionInput from './BasicOptionInput';
 import DBpediaInput from './DBpediaInput';
+import PasswordInput from './PasswordInput';
 import LanguageInput from './more/LanguageInput';
 
 class IndividualDataEdit extends React.Component {
@@ -48,6 +49,9 @@ class IndividualDataEdit extends React.Component {
                 break;
                 case 'BasicTextareaInput':
                     editor = <BasicTextareaInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
+                break;
+                case 'PasswordInput':
+                    editor = <PasswordInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;
                 break;
                 case 'DBpediaInput':
                     editor = <DBpediaInput asWikipedia="1" spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;

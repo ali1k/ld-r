@@ -4,6 +4,7 @@ import BasicIndividualDetailView from './BasicIndividualDetailView';
 import BasicDBpediaView from './BasicDBpediaView';
 import BasicLinkedIndividualView from './BasicLinkedIndividualView';
 import BasicOptionView from './BasicOptionView';
+import PasswordView from './PasswordView';
 import LanguageView from './more/LanguageView';
 
 class IndividualDataView extends React.Component {
@@ -39,6 +40,9 @@ class IndividualDataView extends React.Component {
                 break;
                 case 'BasicLinkedIndividualView':
                     viewer = <BasicLinkedIndividualView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
+                break;
+                case 'PasswordView':
+                    viewer = <PasswordView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
                 break;
                 case 'BasicDBpediaView':
                     viewer = <BasicDBpediaView asWikipedia="1" spec={this.props.spec} config={this.props.config}/>;

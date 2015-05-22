@@ -31,6 +31,10 @@ export default {
                     callback(null, {graphName: graphName, users: []});
                 }else{
                     user = req.user;
+                    //only super users have access to admin services
+                    if(!parseInt(user.isSuperUser)){
+                        callback(null, {graphName: graphName, users: []});
+                    }
                 }
             }else{
                 user = {accountName: 'open'};
