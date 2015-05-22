@@ -190,7 +190,9 @@ export default {
                     readOnly: 1
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#password': {
-                    label: ['Password']
+                    label: ['Password'],
+                    viewer: ['PasswordView'],
+                    editor: ['PasswordInput']
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfGraph': {
                     label: ['Editor of Graph'],
