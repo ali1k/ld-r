@@ -103,7 +103,7 @@ module.exports = function handleAuthentication(server) {
                          var dgraphURI = reactorConfig.dynamicResourceDomain + '/graph/' + rnd;
                          var blanknode = reactorConfig.dynamicResourceDomain + '/editorship/' + rnd;
                          var tmpE= [];
-                         var isActive = !reactorConfig.enableUserConfirmation;
+                         var isActive = reactorConfig.enableUserConfirmation? 0 : 1;
                          /*jshint multistr: true */
                          query = '\
                          PREFIX ldReactor: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \

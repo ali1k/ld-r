@@ -7,7 +7,7 @@ class UsersList extends React.Component {
     render() {
       let list, dbClass='yellow user icon', user = this.context.getUser();
       let currentComponent=this;
-      if(!user || user.isSuperUser!=='1'){
+      if(!user || !parseInt(user.isSuperUser)){
           return (
               <div className="ui page grid">
                 <div className="row">
@@ -23,7 +23,7 @@ class UsersList extends React.Component {
       }
       if(this.props.UserStore.users){
         list = this.props.UserStore.users.map(function(node, index) {
-            if(node.isActive==='1'){
+            if(parseInt(node.isActive)){
                 dbClass='green user icon'
             }else{
                 dbClass='yellow user icon'
