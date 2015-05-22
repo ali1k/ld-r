@@ -42,7 +42,7 @@ class BasicIndividualInput extends React.Component {
     }
     handleChange(event) {
         this.props.onDataEdit(event.target.value.trim());
-        this.setState({value: event.target.value.trim()});
+        this.setState({value: event.target.value});
     }
     render() {
         return (
