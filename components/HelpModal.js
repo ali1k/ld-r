@@ -87,7 +87,7 @@ class HelpModal extends React.Component {
                       <div className="item">
                         <div className="content">
                             <a className="header"> Resource </a>
-                          <div className="description"> <i className="big icon yellow diamond square"></i> Read Only Access <i className="big icon green diamond square"></i> Write Access <i className="big icon orange diamond square"></i> Partial Write Access </div>
+                          <div className="description"> <i className="big icon blue cube square"></i> Read Only Access <i className="big icon green cube square"></i> Write Access <i className="big icon yellow cube square"></i> Partial Write Access </div>
                         </div>
                       </div>
                     </div>
