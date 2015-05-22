@@ -14,7 +14,7 @@ export default {
     //used when creating random resources
     dynamicResourceDomain: ['http://example.org'],
     //will allow super users to confirm and activate regiastered users
-    enableUserConfirmation: 1,
+    enableUserConfirmation: 0,
     //will put all update actions in log folder
     enableLogs: 0,
     //[Optional] config for property components
@@ -172,6 +172,26 @@ export default {
         'https://github.com/ali1k/ld-reactor/blob/master/plugins/authentication/schema/users.ttl#': {
             useCategories: 0,
             config: {
+                'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
+                    isHidden: 1
+                },
+                'http://xmlns.com/foaf/0.1/accountName': {
+                    label: ['Username'],
+                    readOnly: 1
+                },
+                'http://xmlns.com/foaf/0.1/firstName': {
+                    label: ['First Name']
+                },
+                'http://xmlns.com/foaf/0.1/lastName': {
+                    label: ['Last Name']
+                },
+                'http://xmlns.com/foaf/0.1/mbox': {
+                    label: ['Email Address'],
+                    readOnly: 1
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#password': {
+                    label: ['Password']
+                },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfGraph': {
                     label: ['Editor of Graph'],
                     allowNewValue: 1

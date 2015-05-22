@@ -66,7 +66,7 @@ class Resource extends React.Component {
                     configReadOnly = true;
                 }else{
                     //the super user can edit all visible properties even readOnly ones!
-                    if(parseInt(user.isSuperUser)){
+                    if(user && parseInt(user.isSuperUser)){
                         configReadOnly = false;
                     }else{
                         //it property is readOnly from config
