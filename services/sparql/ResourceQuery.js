@@ -1,4 +1,6 @@
 'use strict';
+import validUrl from 'valid-url';
+
 class ResourceQuery{
     constructor() {
         /*jshint multistr: true */
@@ -36,7 +38,12 @@ class ResourceQuery{
       if(valueType==='uri'){
         newValue='<'+objectValue+'>';
       }else{
-        newValue='"""'+objectValue+'"""';
+          // automatically detect uris even in literal values
+          if(validUrl.is_web_uri(objectValue)){
+              newValue='<'+objectValue+'>';
+          }else{
+              newValue='"""'+objectValue+'"""';
+          }
       }
       /*jshint multistr: true */
       this.query = '\

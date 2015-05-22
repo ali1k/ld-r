@@ -29,7 +29,8 @@
     "react-google-maps": "^1.2.0",
     "request-promise": "^0.4.2",
     "serialize-javascript": "^1.0.0",
-    "serve-favicon": "^2.2.1"
+    "serve-favicon": "^2.2.1",
+    "valid-url": "^1.0.9"
   },
   "devDependencies": {
     "babel-eslint": "^3.0.1",
