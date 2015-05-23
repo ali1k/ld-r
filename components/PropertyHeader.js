@@ -23,25 +23,25 @@ class PropertyHeader extends React.Component {
         }
         switch(this.props.size){
             case '1':
-                outputDIV = <h1 ref="propertyHeader"> {titleDIV} {hintDIV} </h1>;
+                outputDIV = <h1> {titleDIV} {hintDIV} </h1>;
                 break;
             case '2':
-                outputDIV = <h2 ref="propertyHeader"> {titleDIV} {hintDIV} </h2>;
+                outputDIV = <h2> {titleDIV} {hintDIV} </h2>;
                 break;
             case '3':
-                outputDIV = <h3 ref="propertyHeader"> {titleDIV} {hintDIV} </h3>;
+                outputDIV = <h3> {titleDIV} {hintDIV} </h3>;
                 break;
             case '4':
-                outputDIV = <h4 ref="propertyHeader"> {titleDIV} {hintDIV} </h4>;
+                outputDIV = <h4> {titleDIV} {hintDIV} </h4>;
                 break;
             case '5':
-                outputDIV = <h5 ref="propertyHeader"> {titleDIV} {hintDIV} </h5>;
+                outputDIV = <h5> {titleDIV} {hintDIV} </h5>;
                 break;
             case '6':
-                outputDIV = <h6 ref="propertyHeader"> {titleDIV} {hintDIV} </h6>;
+                outputDIV = <h6> {titleDIV} {hintDIV} </h6>;
                 break;
             default:
-                outputDIV = <h3 ref="propertyHeader"> {titleDIV} {hintDIV} </h3>;
+                outputDIV = <h3> {titleDIV} {hintDIV} </h3>;
         }
         return (
             <span ref="propertyHeader">
