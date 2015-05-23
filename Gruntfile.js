@@ -14,7 +14,7 @@ module.exports = function (grunt) {
             app: {
                 script: './start.js',
                 options: {
-                    ignore: ['build/**', 'bower_components/**', 'npm_modules/**'],
+                    ignore: ['build/**', 'bower_components/**', 'npm_modules/**', '*.ttl', '*.md'],
                     ext: 'js'
                 }
             }
