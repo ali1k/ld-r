@@ -1,0 +1,6 @@
+#!/bin/bash
+cp configs/general.config.js configs/general.js
+cp configs/reactor.config.js configs/reactor.js
+bower install
+npm install
+npm run build

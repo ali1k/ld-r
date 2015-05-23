@@ -7,4 +7,4 @@
 - think about cross property values (in charts)
 - input validation & removing empty values
 - Faceted Browser
-- automatically check if a string is URL
+- export resources and named graphs
