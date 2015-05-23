@@ -20,8 +20,8 @@ class Nav extends React.Component {
             userMenu = <div className="ui right dropdown item">
                             {user.accountName} <i className="dropdown icon"></i>
                             <div className="menu">
-                                <NavLink className="item" routeName="resource" href={'/dataset/' + encodeURIComponent(user.graphName)+'/resource/'+ encodeURIComponent(user.id)}>Profile</NavLink>
-                                {parseInt(user.isSuperUser)? <NavLink className="item" routeName="users" href="/users">Users List</NavLink> : ''}
+                                <NavLink className="item" routeName="resource" href={'/dataset/' + encodeURIComponent(user.graphName) + '/resource/' + encodeURIComponent(user.id)}>Profile</NavLink>
+                                {parseInt(user.isSuperUser) ? <NavLink className="item" routeName="users" href="/users">Users List</NavLink> : ''}
                                 <a href="/logout" className="item">Logout</a>
                             </div>
                         </div>;

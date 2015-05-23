@@ -4,11 +4,11 @@ class BasicDBpediaView extends React.Component {
     getTitlefromURI(uri) {
         if(uri){
             var tmp = uri.split('/');
-            return tmp[tmp.length-1];
+            return tmp[tmp.length - 1];
         }
     }
     getWikipediaURI(uri){
-        return 'http://en.wikipedia.org/wiki/'+this.getTitlefromURI(uri);
+        return 'http://en.wikipedia.org/wiki/' + this.getTitlefromURI(uri);
     }
     isDBpediaURI(uri){
         if(uri.search('dbpedia.org') !== -1){

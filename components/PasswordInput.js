@@ -31,7 +31,7 @@ class PasswordInput extends React.Component {
     render() {
         return (
             <div className="ui">
-                <input ref="passwordInput" type="password" value={this.state.value} placeholder={(this.props.placeholder? this.props.placeholder: '' )} onChange={this.handleChange.bind(this)} onKeyDown={this.handleKeyDown.bind(this)}/>
+                <input ref="passwordInput" type="password" value={this.state.value} placeholder={(this.props.placeholder ? this.props.placeholder : '' )} onChange={this.handleChange.bind(this)} onKeyDown={this.handleKeyDown.bind(this)}/>
             </div>
         );
     }

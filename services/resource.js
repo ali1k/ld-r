@@ -11,10 +11,10 @@ let log;
 let user, accessLevel;
 if(enableLogs){
     let currentDate = new Date().toDateString().replace(/\s/g, '-');
-    let logPath = './logs/'+currentDate+'.log';
+    let logPath = './logs/' + currentDate + '.log';
     if (fs.existsSync(logPath)) {
         //create a new file when restarting the server
-        logPath = './logs/'+currentDate+'_'+Date.now() +'.log';
+        logPath = './logs/' + currentDate + '_' + Date.now() + '.log';
     }
     log = new Log('debug', fs.createWriteStream(logPath));
 }
@@ -52,9 +52,9 @@ export default {
             query = queryObject.getPrefixes() + queryObject.getProperties(graphName, resourceURI);
             // console.log(query);
             //build http uri
-            rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
-            rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
                 //exceptional case for user properties: we hide some admin props from normal users
                 let props = utilObject.parseProperties(res, graphName, category);
                 if(graphName === authGraphName[0] && !parseInt(user.isSuperUser)){
@@ -70,7 +70,7 @@ export default {
             }).catch(function (err) {
                 console.log(err);
                 if(enableLogs){
-                    log.error('\n User: '+ user.accountName +'\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
+                    log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 }
                 callback(null, {graphName: graphName, resourceURI: resourceURI, currentCategory: 0, properties: []});
             });
@@ -88,9 +88,9 @@ export default {
                 user = {accountName: 'open'};
             }
             query = queryObject.getPrefixes() + queryObject.getObjectProperties(graphName, objectURI);
-            rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
-            rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
                 callback(null, {
                     objectURI: objectURI,
                     properties: utilObject.parseObjectProperties(res)
@@ -98,7 +98,7 @@ export default {
             }).catch(function (err) {
                 console.log(err);
                 if(enableLogs){
-                    log.error('\n User: '+ user.accountName +'\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
+                    log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 }
                 callback(null, {objectURI: objectURI, properties: []});
             });
@@ -125,17 +125,17 @@ export default {
                  user = {accountName: 'open'};
              }
              query = queryObject.getPrefixes() + queryObject.addTriple(params.dataset, params.resourceURI, params.propertyURI, params.objectValue, params.valueType);
-             rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
              //send request
-             rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
                  if(enableLogs){
-                     log.info('\n User: '+ user.accountName +' \n Query: \n'+query);
+                     log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                  }
                  callback(null, {category: params.category});
              }).catch(function (err) {
                  console.log(err);
                  if(enableLogs){
-                     log.error('\n User: '+ user.accountName +'\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
+                     log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                  }
                  callback(null, {category: params.category});
              });
@@ -159,17 +159,17 @@ export default {
                 user = {accountName: 'open'};
             }
             query = queryObject.getPrefixes() + queryObject.updateTriple(params.dataset, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType);
-            rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
-            rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
                 if(enableLogs){
-                    log.info('\n User: '+ user.accountName +' \n Query: \n'+query);
+                    log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                 }
                 callback(null, {category: params.category});
             }).catch(function (err) {
                 console.log(err);
                 if(enableLogs){
-                    log.error('\n User: '+ user.accountName +'\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
+                    log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 }
                 callback(null, {category: params.category});
             });
@@ -190,17 +190,17 @@ export default {
                 user = {accountName: 'open'};
             }
             query = queryObject.getPrefixes() + queryObject.updateObjectTriples(params.dataset, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.detailData);
-            rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
-            rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
                 if(enableLogs){
-                    log.info('\n User: '+ user.accountName +' \n Query: \n'+query);
+                    log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                 }
                 callback(null, {category: params.category});
             }).catch(function (err) {
                 console.log(err);
                 if(enableLogs){
-                    log.error('\n User: '+ user.accountName +'\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
+                    log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 }
                 callback(null, {category: params.category});
             });
@@ -221,17 +221,17 @@ export default {
                 user = {accountName: 'open'};
             }
             query = queryObject.getPrefixes() + queryObject.updateTriples(params.dataset, params.resourceURI, params.propertyURI, params.changes);
-            rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
-            rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
                 if(enableLogs){
-                    log.info('\n User: '+ user.accountName +' \n Query: \n'+query);
+                    log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                 }
                 callback(null, {category: params.category});
             }).catch(function (err) {
                 console.log(err);
                 if(enableLogs){
-                    log.error('\n User: '+ user.accountName +'\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
+                    log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 }
                 callback(null, {category: params.category});
             });
@@ -255,17 +255,17 @@ export default {
                 user = {accountName: 'open'};
             }
             query = queryObject.getPrefixes() + queryObject.deleteTriple(params.dataset, params.resourceURI, params.propertyURI, params.objectValue, params.valueType);
-            rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
-            rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
                 if(enableLogs){
-                    log.info('\n User: '+ user.accountName +' \n Query: \n'+query);
+                    log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                 }
                 callback(null, {category: params.category});
             }).catch(function (err) {
                 console.log(err);
                 if(enableLogs){
-                    log.error('\n User: '+ user.accountName +'\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
+                    log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 }
                 callback(null, {category: params.category});
             });
@@ -286,17 +286,17 @@ export default {
                 user = {accountName: 'open'};
             }
             query = queryObject.getPrefixes() + queryObject.deleteTriples(params.dataset, params.resourceURI, params.propertyURI, params.changes);
-            rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
-            rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
                 if(enableLogs){
-                    log.info('\n User: '+ user.accountName +' \n Query: \n'+query);
+                    log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                 }
                 callback(null, {category: params.category});
             }).catch(function (err) {
                 console.log(err);
                 if(enableLogs){
-                    log.error('\n User: '+ user.accountName +'\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
+                    log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 }
                 callback(null, {category: params.category});
             });

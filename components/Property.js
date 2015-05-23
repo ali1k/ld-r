@@ -45,7 +45,7 @@ class Property extends React.Component {
             return null;
         }
         this.context.executeAction(deleteIndividualObject, {
-          category: (this.props.config? (this.props.config.category? this.props.config.category[0]: ''): ''),
+          category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
           propertyURI: propertyURI,
@@ -58,7 +58,7 @@ class Property extends React.Component {
             return null;
         }
         this.context.executeAction(deleteAggObject, {
-          category: (this.props.config? (this.props.config.category? this.props.config.category[0]: ''): ''),
+          category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
           propertyURI: propertyURI,
@@ -70,7 +70,7 @@ class Property extends React.Component {
             return null;
         }
         this.context.executeAction(createIndividualObject, {
-          category: (this.props.config? (this.props.config.category? this.props.config.category[0]: ''): ''),
+          category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
           propertyURI: propertyURI,
@@ -84,7 +84,7 @@ class Property extends React.Component {
             return null;
         }
         this.context.executeAction(updateIndividualObject, {
-          category: (this.props.config? (this.props.config.category? this.props.config.category[0]: ''): ''),
+          category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
           propertyURI: propertyURI,
@@ -98,7 +98,7 @@ class Property extends React.Component {
             return null;
         }
         this.context.executeAction(updateAggObject, {
-          category: (this.props.config? (this.props.config.category? this.props.config.category[0]: ''): ''),
+          category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
           propertyURI: propertyURI,
@@ -107,7 +107,7 @@ class Property extends React.Component {
     }
     handleDetailUpdateIndividualObject(propertyURI, oldObjectValue, newObjectValue, valueType, detailData){
         this.context.executeAction(updateIndividualObjectDetail, {
-          category: (this.props.config? (this.props.config.category? this.props.config.category[0]: ''): ''),
+          category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
           propertyURI: propertyURI,
@@ -127,7 +127,7 @@ class Property extends React.Component {
         let self = this;
         let newValueDIV, defaultValueDIV, propLabel;
         if(this.props.config && this.props.config.allowNewValue && !this.props.readOnly){
-            propLabel = this.props.config.label? this.props.config.label: this.props.spec.property;
+            propLabel = this.props.config.label ? this.props.config.label : this.props.spec.property;
             if(this.state.inNewValueMode){
                 defaultValueDIV = <IndividualObjectReactor isNewValue={true} inEditMode={true} key="defaultValue" spec={this.simulateDefaultValue(this.props.spec.instances, 'default')} config={this.props.config} graphName={this.props.graphName} resource={this.props.resource} onCreate={this.handleCreateIndividualObject.bind(this, this.props.spec.propertyURI)}/>;
                 newValueDIV = <div className="ui list">
@@ -195,7 +195,7 @@ class Property extends React.Component {
                     {list}
                 </div>
                 {defaultValueDIV}
-                {(this.state.showNewInsert? newValueDIV: '')}
+                {(this.state.showNewInsert ? newValueDIV : '')}
             </div>
         );
     }

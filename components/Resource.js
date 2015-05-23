@@ -25,10 +25,10 @@ class Resource extends React.Component {
                 if(parseInt(user.isSuperUser)){
                     return {access: true, type: 'full'};
                 }else{
-                    if(graph && user.editorOfGraph.indexOf(graph) !==-1){
+                    if(graph && user.editorOfGraph.indexOf(graph) !== -1){
                         return {access: true, type: 'full'};
                     }else{
-                        if(resource && user.editorOfResource.indexOf(resource) !==-1){
+                        if(resource && user.editorOfResource.indexOf(resource) !== -1){
                             return {access: true, type: 'full'};
                         }else{
                             if(property && this.includesProperty(user.editorOfProperty, resource, property)){
@@ -107,14 +107,14 @@ class Resource extends React.Component {
             }
             tabsDIV = selectedConfig.categories.map(function(node, index) {
                 return (
-                    <NavLink key={index} routeName="resource" href={'/dataset/'+ encodeURIComponent(self.props.ResourceStore.graphName) + '/resource/' + encodeURIComponent(self.props.ResourceStore.resourceURI) + '/' + node}>
-                      <div className={(node === currentCategory? 'item link active': 'item link')}> {node} </div>
+                    <NavLink key={index} routeName="resource" href={'/dataset/' + encodeURIComponent(self.props.ResourceStore.graphName) + '/resource/' + encodeURIComponent(self.props.ResourceStore.resourceURI) + '/' + node}>
+                      <div className={(node === currentCategory ? 'item link active' : 'item link')}> {node} </div>
                     </NavLink>
                 );
             });
             tabsContentDIV = selectedConfig.categories.map(function(node, index) {
                 return (
-                    <div key={index} className={(node === currentCategory? 'ui bottom attached tab segment active': 'ui bottom attached tab segment')}>
+                    <div key={index} className={(node === currentCategory ? 'ui bottom attached tab segment active' : 'ui bottom attached tab segment')}>
                         <div className="ui grid">
                             <div className="column ui list">
                                 {list}

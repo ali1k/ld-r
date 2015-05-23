@@ -17,7 +17,7 @@ class IndividualDataView extends React.Component {
             if(this.props.config.viewer){
                 viewerConfig = this.props.config.viewer[0];
                 //in case of Aggregate nature, can consider viewerI
-                if(this.props.config.reactorType && this.props.config.reactorType[0]==='AggregateObjectReactor' && this.props.config.viewerI){
+                if(this.props.config.reactorType && this.props.config.reactorType[0] === 'AggregateObjectReactor' && this.props.config.viewerI){
                     viewerConfig = this.props.config.viewerI[0];
                 }
             }

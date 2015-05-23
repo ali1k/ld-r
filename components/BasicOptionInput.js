@@ -19,7 +19,7 @@ class BasicOptionInput extends React.Component {
     }
 
     createDefaultValue(valueType, dataType) {
-        return this.props.config.defaultValue? this.props.config.defaultValue[0]: '';
+        return this.props.config.defaultValue ? this.props.config.defaultValue[0] : '';
     }
     handleChange(event) {
         if(event.target.value === 'other'){
@@ -56,7 +56,7 @@ class BasicOptionInput extends React.Component {
             output = <div className="field">
                                 <select className="ui search dropdown" ref="basicInputSelect" value={this.state.value} onChange={this.handleChange.bind(this)}>
                                     {optionList}
-                                    {(this.props.config.allowUserDefinedValue? <option value="other"> **Other** </option>: '' )}
+                                    {(this.props.config.allowUserDefinedValue ? <option value="other"> **Other** </option> : '' )}
                                 </select>
                      </div>;
         }

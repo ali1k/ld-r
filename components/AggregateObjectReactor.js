@@ -6,7 +6,7 @@ import AggregateDataEdit from './AggregateDataEdit';
 class AggregateObjectReactor extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {changes: {}, inEditMode: this.props.inEditMode? 1 : 0, showDelete: false};
+        this.state = {changes: {}, inEditMode: this.props.inEditMode ? 1 : 0, showDelete: false};
     }
     handleEdit(){
         //disable new mode
@@ -42,7 +42,7 @@ class AggregateObjectReactor extends React.Component {
             }
         }
         //does not allow deleting all items
-        if(counter>0 && counter<total){
+        if(counter > 0 && counter < total){
             this.setState({showDelete: true});
         }else{
             this.setState({showDelete: false});
@@ -149,7 +149,7 @@ class AggregateObjectReactor extends React.Component {
                                 </div>
                                 <div className="four wide column field animated fadeInLeft">
                                     {saveDIV}
-                                    {(this.state.showDelete? deleteDIV: '')}
+                                    {(this.state.showDelete ? deleteDIV : '')}
                                     {undoDIV}
                                 </div>
                         </div>

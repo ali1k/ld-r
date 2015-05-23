@@ -63,7 +63,7 @@ class DBpediaInput extends React.Component {
         this.setState({value: term});
         this.props.onDataEdit(term);
         //handle autocomplete here
-        if(term.length>2){
+        if(term.length > 2){
             /*global $*/
             $(currentComp).find('.transition').addClass('visible');
             this.context.executeAction(lookupDBpedia, {
@@ -81,7 +81,7 @@ class DBpediaInput extends React.Component {
         }
         let suggestions = this.props.DBpediaStore.suggestions.map(function(node, index) {
             return (
-                <a className="result" key={'suggestion_'+index} onClick={self.addSuggestion.bind(self, node.uri)}>
+                <a className="result" key={'suggestion_' + index} onClick={self.addSuggestion.bind(self, node.uri)}>
                   <div className="content">
                     <div className="title">{node.title}</div>
                     <div className="description">{node.description}</div>

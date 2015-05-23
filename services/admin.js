@@ -25,7 +25,7 @@ export default {
     read: (req, resource, params, config, callback) => {
         if (resource === 'admin.userslist') {
             //SPARQL QUERY
-            graphName = (params.id? params.id: defaultGraphName);
+            graphName = (params.id ? params.id : defaultGraphName);
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {graphName: graphName, users: []});
@@ -41,9 +41,9 @@ export default {
             }
             query = queryObject.getUsers(graphName);
             //build http uri
-            rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
-            rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     users: utilObject.parseUsers(res)

@@ -18,12 +18,12 @@ export default {
         if (resource === 'dbpedia.lookup') {
             query = params.query;
             //send request
-            rp({method: 'get', headers: {'Accept': 'application/json'}, accept: 'application/json', uri: 'http://'+dbpediaLookupService[0].host+'/api/search.asmx/PrefixSearch?QueryClass=&MaxHits=5&QueryString='+ query}).then(function(res){
+            rp({method: 'get', headers: {'Accept': 'application/json'}, accept: 'application/json', uri: 'http://' + dbpediaLookupService[0].host + '/api/search.asmx/PrefixSearch?QueryClass=&MaxHits=5&QueryString=' + query}).then(function(res){
                 callback(null, {
                     suggestions: utilObject.parseDBpediaLookup(res)
                 });
             }).catch(function (err) {
-                console.log('\n Status Code: \n'+err.statusCode+'\n Error Msg: \n'+err.message);
+                console.log('\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 callback(null, {suggestions: []});
             });
         /////////////////////////////////////////////
@@ -31,12 +31,12 @@ export default {
             let rpPath, uris = params.uris;
             query = queryObject.getPrefixes() + queryObject.getCoordinates(uris);
             // console.log(query);
-            rpPath = DBpediaEndpoint+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+            rpPath = DBpediaEndpoint + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             rp.get({uri: rpPath}).then(function(res){
                 callback(null, {coordinates: utilObject.parseDBpediaCoordinates(res)});
             }).catch(function () {
                 //last chance: try DBpedia live endpoint!
-                rpPath = DBpediaLiveEndpoint+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+                rpPath = DBpediaLiveEndpoint + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
                 rp.get({uri: rpPath}).then(function(res){
                     callback(null, {coordinates: utilObject.parseDBpediaCoordinates(res)});
                 }).catch(function (err) {
