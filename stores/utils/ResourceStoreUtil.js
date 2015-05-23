@@ -3,19 +3,6 @@ class ResourceStoreUtil{
     constructor() {
 
     }
-    findResourceTitle(resourceURI, props) {
-        let title = resourceURI;
-        props.forEach(function(v, i) {
-            if(props[i].propertyURI === 'http://purl.org/dc/terms/title'){
-                title = props[i].instances[0].value;
-                return title;
-            }else if(props[i].propertyURI === 'http://www.w3.org/2000/01/rdf-schema#label'){
-                title = props[i].instances[0].value;
-                return title;
-            }
-        });
-        return title;
-    }
     //main public method to be called in store
     preservePropertiesOrder (oldProps, newProps) {
       //assuming we are not inserting new rdf properties and just add multiple instances of existing properties

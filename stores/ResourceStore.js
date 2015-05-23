@@ -13,7 +13,7 @@ class ResourceStore extends BaseStore {
         this.currentCategory = payload.currentCategory;
         // this.properties = payload.properties;
         this.properties = utilObject.preservePropertiesOrder(this.properties, payload.properties);
-        this.title = utilObject.findResourceTitle(payload.resourceURI, payload.properties);
+        this.title = payload.title ? payload.title : payload.resourceURI;
         this.emitChange();
     }
     cleanResource() {

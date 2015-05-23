@@ -14,7 +14,7 @@ class ResourceUtil{
         return property;
     }
     parseProperties(body, graphName, category) {
-        let selectedConfig;
+        let title = '', selectedConfig;
         //first check if there is a specific config for the property on the selected graphName
         selectedConfig = propertiesConfig[graphName];
         //if no specific config is found, get the generic config
@@ -37,6 +37,14 @@ class ResourceUtil{
           return [];
         }else{
           parsed.results.bindings.forEach(function(el) {
+            //see if we can find a suitable title for resource
+            if(el.p.value === 'http://purl.org/dc/terms/title'){
+                title = el.o.value;
+            }else if(el.p.value === 'http://www.w3.org/2000/01/rdf-schema#label'){
+                title = el.o.value;
+            }
+            //-------------------
+            //handle categories
             if(filterByCategory){
                 if(!selectedConfig.config[el.p.value] || !selectedConfig.config[el.p.value].category || category !== selectedConfig.config[el.p.value].category[0]){
                     //skip property
@@ -55,11 +63,11 @@ class ResourceUtil{
           });
           output.forEach(function(el) {
             if(propIndex[el.propertyURI]){
-              finalOutput.push({propertyURI:el.propertyURI, property: el.property, hint: el.hint, prefLabel: el.prefLabel, defaultOptions: el.defaultOptions, instances: propIndex[el.propertyURI]});
+              finalOutput.push({propertyURI: el.propertyURI, property: el.property, hint: el.hint, prefLabel: el.prefLabel, defaultOptions: el.defaultOptions, instances: propIndex[el.propertyURI]});
               propIndex[el.propertyURI]=null;
             }
           });
-          return finalOutput;
+          return {props: finalOutput, title: title};
         }
     }
     parseObjectProperties(body) {

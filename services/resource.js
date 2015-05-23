@@ -56,7 +56,7 @@ export default {
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
                 //exceptional case for user properties: we hide some admin props from normal users
-                let props = utilObject.parseProperties(res, graphName, category);
+                let {props, title} = utilObject.parseProperties(res, graphName, category);
                 if(graphName === authGraphName[0] && !parseInt(user.isSuperUser)){
                     props = utilObject.deleteAdminProperties(props);
                 }
@@ -64,6 +64,7 @@ export default {
                 callback(null, {
                     graphName: graphName,
                     resourceURI: resourceURI,
+                    title: title,
                     currentCategory: category,
                     properties: props
                 });
@@ -72,7 +73,7 @@ export default {
                 if(enableLogs){
                     log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 }
-                callback(null, {graphName: graphName, resourceURI: resourceURI, currentCategory: 0, properties: []});
+                callback(null, {graphName: graphName, resourceURI: resourceURI, title: '', currentCategory: 0, properties: []});
             });
         } else if (resource === 'resource.objectProperties') {
             graphName = params.dataset;
