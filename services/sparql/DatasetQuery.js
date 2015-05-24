@@ -18,7 +18,7 @@ class DatasetQuery{
             SELECT DISTINCT ?resource ?label ?title WHERE {\
                 { GRAPH <'+ graphName +'> \
                     { \
-                    ?resource a '+ type +' . \
+                    ?resource a <'+ type +'> . \
                     OPTIONAL {?resource dcterms:title ?title .} \
                     OPTIONAL {?resource rdfs:label ?label .} \
                     } \
@@ -31,7 +31,7 @@ class DatasetQuery{
             SELECT DISTINCT ?resource ?label ?title ?graphName WHERE { \
                 { GRAPH ?graphName \
                     { \
-                    ?resource a '+ type +' . \
+                    ?resource a <'+ type +'> . \
                     OPTIONAL {?resource dcterms:title ?title .} \
                     OPTIONAL {?resource rdfs:label ?label .} \
                     }\

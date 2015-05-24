@@ -4,7 +4,7 @@ export default {
     //Default Named Graph under observation
     defaultGraphName: [''],
     //resource types to start with
-    resourceFocusType: ['void:Dataset'],
+    resourceFocusType: ['http://rdfs.org/ns/void#Dataset'],
     //only allow to view data -> disable edit
     readOnly: 0,
     //will withdraw access if not logged in
