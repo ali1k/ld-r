@@ -60,6 +60,10 @@ class Resource extends React.Component {
         let list = this.props.ResourceStore.properties.map(function(node, index) {
             //if there was no config at all or it is hidden, do not render the property
             if(!selectedConfig.config[node.propertyURI] || !selectedConfig.config[node.propertyURI].isHidden){
+                //will use config from generic if no config for property was found
+                if(!selectedConfig.config[node.propertyURI] && propertiesConfig.generic.config[node.propertyURI]){
+                    selectedConfig.config[node.propertyURI] = propertiesConfig.generic.config[node.propertyURI];
+                }
                 //for readOnly, we first check the defautl value then we check readOnly value of each property if exists
                 //this is what comes from the config
                 if(readOnly){

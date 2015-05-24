@@ -24,6 +24,7 @@ export default {
             //if enabled, will categorize properties in different tabs based on propertyCategories
             useCategories: 1,
             categories: ['general', 'structural'],
+            //config is necessary even if empty config
             config: {
                 'http://purl.org/dc/terms/title': {
                     category: ['general'],
