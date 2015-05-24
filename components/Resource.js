@@ -145,7 +145,7 @@ class Resource extends React.Component {
         return (
             <div className="ui page grid" ref="resource">
                 <div className="ui column">
-                    <h2> <i className="link icon share alternate"></i> {this.props.ResourceStore.title}</h2>
+                    <h2> <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.ResourceStore.graphName) + '/' + encodeURIComponent(this.props.ResourceStore.resourceURI)}><i className="black icon share alternate"></i></a> <a href={this.props.ResourceStore.resourceURI} target="_blank">{this.props.ResourceStore.title}</a></h2>
                     {mainDIV}
                 </div>
             </div>

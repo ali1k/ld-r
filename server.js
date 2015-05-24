@@ -14,6 +14,8 @@ import serialize from 'serialize-javascript';
 import {navigateAction} from 'fluxible-router';
 //required for authentication
 import handleAuthentication from './plugins/authentication/handleAuth';
+//required for export resources
+import handleExport from './plugins/export/handleExport';
 import {enableAuthentication} from './configs/reactor';
 import session from 'express-session';
 import hogan from 'hogan-express';
@@ -41,6 +43,8 @@ server.use(session({
 if(enableAuthentication){
     handleAuthentication(server);
 }
+//handling content export
+handleExport(server);
 server.set('state namespace', 'App');
 server.use(favicon(path.join(__dirname, '/favicon.ico')));
 //--------used for views external to fluxible

@@ -13,13 +13,16 @@ var httpOptions = {
   port: config.sparqlEndpoint[0].port,
   path: config.sparqlEndpoint[0].path
 };
+var appShortTitle = config.appShortTitle;
+var appFullTitle = config.appFullTitle;
+
 var outputFormat = 'application/sparql-results+json';
 module.exports = function handleAuthentication(server) {
     server.use(passport.initialize());
     server.use(passport.session());
     server.get('/login', function(req, res) {
         if(!req.isAuthenticated()){
-            res.render('login', {user: req.user });
+            res.render('login', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, user: req.user });
         }else{
             return res.redirect('/');
         }
@@ -31,7 +34,7 @@ module.exports = function handleAuthentication(server) {
             if (err) { return next(err); }
             if (!user) {
                 console.log('auth failed! ' + info.message);
-                res.render('login', {data: req.body, errorMsg: 'Authentication failed... ' + info.message});
+                res.render('login', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, data: req.body, errorMsg: 'Authentication failed... ' + info.message});
             }else{
                 req.logIn(user, function(err2) {
                     if (err2) { return next(err2); }
@@ -50,14 +53,14 @@ module.exports = function handleAuthentication(server) {
     });
     server.get('/confirmation', function(req, res) {
         if(!req.isAuthenticated()){
-            res.render('confirmation', {needsConfirmation: reactorConfig.enableUserConfirmation});
+            res.render('confirmation', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, needsConfirmation: reactorConfig.enableUserConfirmation});
         }else{
             return res.redirect('/');
         }
      });
     server.get('/register', function(req, res) {
         if(!req.isAuthenticated()){
-            res.render('register');
+            res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle});
         }else{
             return res.redirect('/');
         }
@@ -75,7 +78,7 @@ module.exports = function handleAuthentication(server) {
          }
          if(error){
              console.log(error);
-             res.render('register', {data: req.body, errorMsg: 'Error... '+error});
+             res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, data: req.body, errorMsg: 'Error... '+error});
          }else{
              //successfull
              //first check if user already exists
@@ -133,12 +136,12 @@ module.exports = function handleAuthentication(server) {
                              console.log(err2);
                          });
                      }else{
-                         res.render('register', {data: req.body, errorMsg: 'Error... User already exists!'});
+                         res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, data: req.body, errorMsg: 'Error... User already exists!'});
                          console.log('User already exists!');
                      }
 
                  }else{
-                     res.render('register', {data: req.body, errorMsg: 'Error... Unknown Error!'});
+                     res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, data: req.body, errorMsg: 'Error... Unknown Error!'});
                  }
              }).catch(function (errq) {
                  console.log(errq);
