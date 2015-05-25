@@ -27,10 +27,12 @@ var exportResource = function(format, graphName, resourceURI, req, res) {
     /*jshint multistr: true */
     var query = '\
     PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
+    PREFIX ldReactor: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
     CONSTRUCT {<http://'+req.headers.host+'/dataset/'+encodeURIComponent(graphName)+'/resource/'+encodeURIComponent(resourceURI)+'> foaf:primaryTopic <'+resourceURI+'> . ?s ?p ?o . ?o ?sp ?spo .} FROM <'+graphName+'> WHERE { \
     <'+resourceURI+'> ?p ?o . \
     ?s ?p ?o .\
     OPTIONAL {?o ?sp ?spo .}\
+    FILTER(?p != ldReactor:password) \
     } \
     ';
     var rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
