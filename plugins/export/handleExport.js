@@ -27,7 +27,7 @@ var exportResource = function(format, graphName, resourceURI, req, res) {
     /*jshint multistr: true */
     var query = '\
     PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-    CONSTRUCT {<'+req.headers.host+'/dataset/'+encodeURIComponent(graphName)+'/resource/'+encodeURIComponent(resourceURI)+'> foaf:primaryTopic <'+resourceURI+'> . ?s ?p ?o . ?o ?sp ?spo .} FROM <'+graphName+'> WHERE { \
+    CONSTRUCT {<http://'+req.headers.host+'/dataset/'+encodeURIComponent(graphName)+'/resource/'+encodeURIComponent(resourceURI)+'> foaf:primaryTopic <'+resourceURI+'> . ?s ?p ?o . ?o ?sp ?spo .} FROM <'+graphName+'> WHERE { \
     <'+resourceURI+'> ?p ?o . \
     ?s ?p ?o .\
     OPTIONAL {?o ?sp ?spo .}\
