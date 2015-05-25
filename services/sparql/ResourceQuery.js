@@ -39,7 +39,7 @@ class ResourceQuery{
         newValue='<'+objectValue+'>';
       }else{
           // automatically detect uris even in literal values
-          if(validUrl.is_web_uri(objectValue)){
+          if(validUrl.is_web_uri(objectValue.toString())){
               newValue='<'+objectValue+'>';
           }else{
               newValue='"""'+objectValue+'"""';
