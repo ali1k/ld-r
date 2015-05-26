@@ -13,8 +13,8 @@ class UsersList extends React.Component {
         });
     }
     render() {
-      let actBtn, list, dbClass='yellow user icon', user = this.context.getUser();
-      let currentComponent=this;
+      let actBtn, emailHint = 0, list, dbClass = 'yellow user icon', user = this.context.getUser();
+      let currentComponent = this;
       if(!user || !parseInt(user.isSuperUser)){
           return (
               <div className="ui page grid">
@@ -37,6 +37,8 @@ class UsersList extends React.Component {
             }else{
                 dbClass='yellow large user icon';
                 actBtn = <div className="item"><button onClick={currentComponent.activateUser.bind(currentComponent, node.v, node.mbox)} className="ui mini button"> Activate </button></div>;
+                // put the flag
+                emailHint = 1;
             }
             //do not show current super user to edit himself
             if(node.v !== user.id && !parseInt(node.isSuperUser)){
@@ -64,7 +66,7 @@ class UsersList extends React.Component {
                     <div className="ui huge divided animated list">
                       {list}
                     </div>
-                    * A notification email will be sent to user after activation.
+                    {emailHint ? <div>* A notification email will be sent to the user after activation.</div> : ''}
                   </div>
               </div>
             </div>
