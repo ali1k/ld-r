@@ -5,6 +5,7 @@ var passport = require ('passport');
 var passportConfig = require('./passport-config');
 passportConfig.enable(passport);
 //----------------------
+var handleEmail = require('../../plugins/email/handleEmail');
 var rp = require('request-promise');
 var config = require('../../configs/general');
 var reactorConfig = require('../../configs/reactor');
@@ -131,6 +132,10 @@ module.exports = function handleAuthentication(server) {
 
                          rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(){
                              console.log('User is created!');
+                             //send email notifications
+                             if(reactorConfig.enableAuthentication){
+                                 handleEmail.sendMail('userRegistration', req.body.email, '', '', '', '');
+                             }
                              return res.redirect('/confirmation');
                          }).catch(function (err2) {
                              console.log(err2);

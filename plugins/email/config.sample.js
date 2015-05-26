@@ -16,6 +16,10 @@ module.exports = {
         'userActivation': {
             subject: '[LD-Reactor] You account is activated',
             text: 'You can now login to LD-Reactor by using the following link: \n https://github.com/ali1k/ld-reactor'
+        },
+        'userRegistration': {
+            subject: '[LD-Reactor] New user has registered',
+            text: 'A new user has registered to the system and is waiting for your confirmation.'
         }
     }
 }

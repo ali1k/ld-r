@@ -8,13 +8,20 @@ module.exports = {
             case 'userActivation':
                 subject = config.emailTemplates.userActivation.subject;
                 text = config.emailTemplates.userActivation.text;
+                if(!from){
+                    from = config.sender;
+                }
+                break;
+            case 'userRegistration':
+                subject = config.emailTemplates.userRegistration.subject;
+                text = config.emailTemplates.userRegistration.text;
+                if(!to){
+                    to = config.sender;
+                }
                 break;
             default:
                 subject =subject;
                 text = text;
-        }
-        if(config.sender){
-            from = config.sender;
         }
         var transporter = nodemailer.createTransport(smtpTransport(config.emailConfig));
         // send mail
