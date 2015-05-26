@@ -6,3 +6,4 @@ logs/*.log
 tmp.js
 configs/general.js
 configs/reactor.js
+plugins/email/config.js

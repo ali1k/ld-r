@@ -15,6 +15,8 @@ export default {
     dynamicResourceDomain: ['http://example.org'],
     //will allow super users to confirm and activate regiastered users
     enableUserConfirmation: 0,
+    //will enable email notifications
+    enableEmailNotifications: 0,
     //will put all update actions in log folder
     enableLogs: 0,
     //[Optional] config for property components

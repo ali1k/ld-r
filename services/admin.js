@@ -1,7 +1,8 @@
 'use strict';
 
 import {sparqlEndpoint} from '../configs/general';
-import {authGraphName, enableAuthentication} from '../configs/reactor';
+import {authGraphName, enableAuthentication, enableEmailNotifications} from '../configs/reactor';
+import {sendMail} from '../plugins/email/handleEmail';
 import AdminQuery from './sparql/AdminQuery';
 import AdminUtil from './utils/AdminUtil';
 import rp from 'request-promise';
@@ -56,9 +57,38 @@ export default {
             console.log('other services');
         }
 
-    }
+    },
     // other methods
     // create: function(req, resource, params, body, config, callback) {},
-    // update: function(req, resource, params, body, config, callback) {},
+    update: (req, resource, params, body, config, callback) => {
+        if (resource === 'admin.activateUser') {
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {});
+                }else{
+                    user = req.user;
+                    //only super users have access to admin services
+                    if(!parseInt(user.isSuperUser)){
+                        callback(null, {});
+                    }
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            query = queryObject.activateUser(defaultGraphName, params.resourceURI);
+            //build http uri
+            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
+            //send request
+            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
+                if(enableEmailNotifications){
+                    sendMail('userActivation', '', params.email, '', '', '');
+                }
+                callback(null, {});
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {});
+            });
+        }
+    }
     // delete: function(req, resource, params, config, callback) {}
 };

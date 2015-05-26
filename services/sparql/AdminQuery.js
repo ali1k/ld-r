@@ -16,14 +16,25 @@ class AdminQuery{
     getUsers(graphName) {
         /*jshint multistr: true */
         this.query = '\
-        SELECT DISTINCT ?subject ?username ?isActive FROM <'+ graphName +'> WHERE {\
+        SELECT DISTINCT ?subject ?username ?isActive ?isSuperUser ?mbox FROM <'+ graphName +'> WHERE {\
                 { \
                 ?subject a foaf:Person . \
                 ?subject foaf:accountName ?username . \
                 ?subject ldReactor:isActive ?isActive . \
+                ?subject ldReactor:isSuperUser ?isSuperUser . \
+                ?subject foaf:mbox ?mbox . \
                 } \
         } ORDER BY ASC(?username)\
         ';
+        return this.prefixes + this.query;
+    }
+    activateUser(graphName, resourceURI){
+        let del = 'DELETE FROM <'+ graphName +'> {<'+ resourceURI +'> ldReactor:isActive ?uri} WHERE { <'+ resourceURI +'> ldReactor:isActive ?uri .}';
+        /*jshint multistr: true */
+        let ins = '\
+        INSERT DATA INTO <'+ graphName +'> { \
+        <'+ resourceURI + '> ldReactor:isActive "1" } ';
+        this.query= del + ins;
         return this.prefixes + this.query;
     }
 }

@@ -3,9 +3,9 @@
   "version": "0.1.3",
   "description": "Reactive Linked Data Components",
   "private": false,
-  "repository" :
-  { "type" : "git"
-  , "url" : "https://github.com/ali1k/ld-reactor.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ali1k/ld-reactor.git"
   },
   "scripts": {
     "build": "grunt build && node start.js",
@@ -26,6 +26,8 @@
     "fluxible-router": "^0.1.4",
     "hogan-express": "^0.5.2",
     "log": "^1.4.0",
+    "nodemailer": "^1.3.4",
+    "nodemailer-smtp-transport": "^1.0.3",
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
     "password-hash": "^1.2.2",
