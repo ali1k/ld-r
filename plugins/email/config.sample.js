@@ -14,7 +14,7 @@ module.exports = {
     sender: '',
     emailTemplates: {
         'userActivation': {
-            subject: '[LD-Reactor] You account is activated',
+            subject: '[LD-Reactor] Your account is activated',
             text: 'You can now login to LD-Reactor by using the following link: \n https://github.com/ali1k/ld-reactor'
         },
         'userRegistration': {
