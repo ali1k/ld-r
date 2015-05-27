@@ -1,7 +1,7 @@
 import {appFullTitle} from '../configs/general';
 
 export default function loadDataset(context, payload, done) {
-    context.service.read('dataset.resourcesByType', payload, {}, function (err, res) {
+    context.service.read('dataset.resourcesByType', payload, {timeout: 10 * 1000}, function (err, res) {
         if (err) {
             context.dispatch('LOAD_DATASET_FAILURE', err);
         } else {
