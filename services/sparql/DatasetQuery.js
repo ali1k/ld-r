@@ -10,20 +10,47 @@ class DatasetQuery{
          ';
         this.query='';
     }
-    getResourcesByType(graphName, type) {
+    countResourcesByType(graphName, type) {
+        //go to default graph if no graph name is given
+        if(String(graphName)!==''){
+            /*jshint multistr: true */
+            this.query = '\
+            SELECT count(?resource) AS ?total WHERE {\
+                { GRAPH <' + graphName + '> \
+                    { \
+                    ?resource a < '+ type + '> . \
+                    } \
+                } \
+            }  \
+            ';
+        }else{
+            /*jshint multistr: true */
+            this.query = '\
+            SELECT count(?resource) AS ?total WHERE { \
+                { GRAPH ?graphName \
+                    { \
+                    ?resource a <'+ type +'> . \
+                    }\
+                } \
+            }  \
+            ';
+        }
+        return this.prefixes + this.query;
+    }
+    getResourcesByType(graphName, type, limit, offset) {
         //go to default graph if no graph name is given
         if(String(graphName)!==''){
             /*jshint multistr: true */
             this.query = '\
             SELECT DISTINCT ?resource ?label ?title WHERE {\
-                { GRAPH <'+ graphName +'> \
+                { GRAPH <' + graphName + '> \
                     { \
-                    ?resource a <'+ type +'> . \
+                    ?resource a < '+ type + '> . \
                     OPTIONAL {?resource dcterms:title ?title .} \
                     OPTIONAL {?resource rdfs:label ?label .} \
                     } \
                 } \
-            } ORDER BY ASC(?resource) LIMIT 100 \
+            } ORDER BY ASC(?resource) LIMIT ' + limit + ' OFFSET ' + offset + ' \
             ';
         }else{
             /*jshint multistr: true */
@@ -36,7 +63,7 @@ class DatasetQuery{
                     OPTIONAL {?resource rdfs:label ?label .} \
                     }\
                 } \
-            } ORDER BY ASC(?resource) LIMIT 100 \
+            } ORDER BY ASC(?resource) LIMIT ' + limit + ' OFFSET ' + offset + ' \
             ';
         }
         return this.prefixes + this.query;

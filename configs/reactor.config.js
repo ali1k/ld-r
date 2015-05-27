@@ -5,6 +5,8 @@ export default {
     defaultGraphName: [''],
     //resource types to start with
     resourceFocusType: ['http://rdfs.org/ns/void#Dataset'],
+    //used for pagination in resource list
+    maxNumberOfResourcesOnPage: [100],
     //only allow to view data -> disable edit
     readOnly: 0,
     //will withdraw access if not logged in

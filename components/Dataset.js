@@ -1,10 +1,14 @@
 import React from 'react';
 import DatasetStore from '../stores/DatasetStore';
-import {enableAuthentication} from '../configs/reactor';
+import {enableAuthentication, maxNumberOfResourcesOnPage} from '../configs/reactor';
 import {connectToStores} from 'fluxible/addons';
 import {NavLink} from 'fluxible-router';
+import getResourcesCount from '../actions/getResourcesCount';
 
 class Dataset extends React.Component {
+    componentDidMount() {
+        this.context.executeAction(getResourcesCount, {id: this.props.DatasetStore.graphName});
+    }
     includesProperty(list, resource) {
         let out = false;
         list.forEach(function(el) {
@@ -75,14 +79,28 @@ class Dataset extends React.Component {
                 );
             });
         }
+        let i, tmp, pageList = [];
+        if(this.props.DatasetStore.total){
+            tmp = Math.ceil(this.props.DatasetStore.total / maxNumberOfResourcesOnPage);
+            for (i = 1; i <= tmp; i++) {
+                if(i === parseInt(this.props.DatasetStore.page)){
+                    pageList.push(<NavLink routeName="dataset" className="ui label blue" href={'/dataset/' + i + '/' + encodeURIComponent(this.props.DatasetStore.graphName)}> {i} </NavLink>);
+                }else{
+                    pageList.push(<NavLink routeName="dataset" className="ui basic label" href={'/dataset/' + i + '/' + encodeURIComponent(this.props.DatasetStore.graphName)}> {i} </NavLink>);
+                }
+            }
+        }
         return (
             <div className="ui page grid" ref="dataset">
                 <div className="ui column">
-                    <div className="ui segment">
-                        <h3> Resources of type "{this.props.DatasetStore.resourceFocusType ? this.props.DatasetStore.resourceFocusType.join() : 'everything!'}"</h3>
+                    <div className="ui segment top attached">
+                        <h3>{this.props.DatasetStore.total ? <span className="ui big black circular label">{this.props.DatasetStore.total}</span> : ''} Resources of type "{this.props.DatasetStore.resourceFocusType ? this.props.DatasetStore.resourceFocusType.join() : 'everything!'}"</h3>
                         <div className="ui big divided animated list">
                             {list}
                         </div>
+                    </div>
+                    <div className= "ui secondary segment bottom attached">
+                        Page: {pageList}
                     </div>
                 </div>
             </div>
@@ -90,6 +108,7 @@ class Dataset extends React.Component {
     }
 }
 Dataset.contextTypes = {
+    executeAction: React.PropTypes.func.isRequired,
     getUser: React.PropTypes.func
 };
 Dataset = connectToStores(Dataset, [DatasetStore], function (stores, props) {

@@ -26,17 +26,21 @@ export default {
     },
     dataset: {
         //if no id is provided -> will start by defaultGraphName in reactor.config
-        path: '/dataset/:id?',
+        path: '/dataset/:page?/:id?',
         method: 'get',
         handler: require('../components/Dataset'),
         label: 'Dataset',
         action: (context, payload, done) => {
-            let graphName;
+            let graphName, page;
             graphName = payload.get('params').get('id');
+            page = payload.get('params').get('page');
             if (!graphName) {
                 graphName = 0;
             }
-            context.executeAction(loadDataset, { id: graphName}, done);
+            if (!page) {
+                page = 1;
+            }
+            context.executeAction(loadDataset, { id: graphName, page: page}, done);
         }
     },
     resource: {

@@ -1,6 +1,6 @@
 'use strict';
 import {sparqlEndpoint} from '../configs/general';
-import {defaultGraphName, resourceFocusType, enableAuthentication} from '../configs/reactor';
+import {defaultGraphName, resourceFocusType, enableAuthentication, maxNumberOfResourcesOnPage} from '../configs/reactor';
 import DatasetQuery from './sparql/DatasetQuery';
 import DatasetUtil from './utils/DatasetUtil';
 import rp from 'request-promise';
@@ -22,19 +22,20 @@ export default {
     // At least one of the CRUD methods is Required
     read: (req, resource, params, config, callback) => {
         if (resource === 'dataset.resourcesByType') {
+            let offset = (params.page - 1) * maxNumberOfResourcesOnPage;
             //SPARQL QUERY
             graphName = (params.id ? params.id : defaultGraphName);
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
-                    callback(null, {graphName: graphName, resourceFocusType: resourceFocusType, resources: []});
+                    callback(null, {graphName: graphName, resourceFocusType: resourceFocusType, resources: [], page: params.page});
                 }else{
                     user = req.user;
                 }
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getResourcesByType(graphName, resourceFocusType);
+            query = queryObject.getResourcesByType(graphName, resourceFocusType, maxNumberOfResourcesOnPage, offset);
             //build http uri
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
@@ -42,11 +43,37 @@ export default {
                 callback(null, {
                     graphName: graphName,
                     resourceFocusType: resourceFocusType,
-                    resources: utilObject.parseResourcesByType(res, graphName)
+                    resources: utilObject.parseResourcesByType(res, graphName),
+                    page: params.page
                 });
             }).catch(function (err) {
                 console.log(err);
-                callback(null, {graphName: graphName, resourceFocusType: resourceFocusType, resources: []});
+                callback(null, {graphName: graphName, resourceFocusType: resourceFocusType, resources: [], page: params.page});
+            });
+        } else if (resource === 'dataset.countResourcesByType') {
+            //SPARQL QUERY
+            graphName = (params.id ? params.id : defaultGraphName);
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {total: 0});
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            query = queryObject.countResourcesByType(graphName, resourceFocusType);
+            //build http uri
+            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
+            //send request
+            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
+                callback(null, {
+                    total: utilObject.parseCountResourcesByType(res)
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {total: 0});
             });
         }
 

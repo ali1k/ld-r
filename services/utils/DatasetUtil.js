@@ -19,5 +19,13 @@ class DatasetUtil{
       }
       return output;
     }
+    parseCountResourcesByType(body) {
+      let total = 0;
+      let parsed = JSON.parse(body);
+      if(parsed.results.bindings.length){
+          total = parsed.results.bindings[0].total.value;
+      }
+      return total;
+    }
 }
 export default DatasetUtil;
