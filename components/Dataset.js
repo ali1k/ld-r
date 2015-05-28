@@ -91,14 +91,29 @@ class Dataset extends React.Component {
                 );
             });
         }
-        let i, tmp, pageList = [];
+        let i, totalPages, threshold = 15, currentPage, pageList = [];
+        let firstPage, lastPage;
         if(this.props.DatasetStore.total){
-            tmp = Math.ceil(this.props.DatasetStore.total / maxNumberOfResourcesOnPage);
-            for (i = 1; i <= tmp; i++) {
-                if(i === parseInt(this.props.DatasetStore.page)){
-                    pageList.push(<NavLink routeName="dataset" className="ui label blue" href={'/dataset/' + i + '/' + encodeURIComponent(this.props.DatasetStore.graphName)}> {i} </NavLink>);
-                }else{
-                    pageList.push(<NavLink routeName="dataset" className="ui basic label" href={'/dataset/' + i + '/' + encodeURIComponent(this.props.DatasetStore.graphName)}> {i} </NavLink>);
+            currentPage = parseInt(this.props.DatasetStore.page);
+            //total number of pages
+            totalPages = Math.ceil(this.props.DatasetStore.total / maxNumberOfResourcesOnPage);
+            if(totalPages > threshold){
+                firstPage = <NavLink routeName="dataset" className="ui purple circular label" href={'/dataset/1/' + encodeURIComponent(this.props.DatasetStore.graphName)}> <i className="step backward icon"></i> </NavLink>;
+                lastPage = <NavLink routeName="dataset" className="ui purple circular label" href={'/dataset/' + totalPages + '/' + encodeURIComponent(this.props.DatasetStore.graphName)}> <i className="step forward icon"></i> </NavLink>;
+                for (i = currentPage; (i <= (currentPage + threshold) && i < totalPages); i++) {
+                    if(i === currentPage){
+                        pageList.push(<NavLink routeName="dataset" className="ui label blue" href={'/dataset/' + i + '/' + encodeURIComponent(this.props.DatasetStore.graphName)}> {i} </NavLink>);
+                    }else{
+                        pageList.push(<NavLink routeName="dataset" className="ui basic label" href={'/dataset/' + i + '/' + encodeURIComponent(this.props.DatasetStore.graphName)}> {i} </NavLink>);
+                    }
+                }
+            }else{
+                for (i = 1; i <= totalPages; i++) {
+                    if(i === currentPage){
+                        pageList.push(<NavLink routeName="dataset" className="ui label blue" href={'/dataset/' + i + '/' + encodeURIComponent(this.props.DatasetStore.graphName)}> {i} </NavLink>);
+                    }else{
+                        pageList.push(<NavLink routeName="dataset" className="ui basic label" href={'/dataset/' + i + '/' + encodeURIComponent(this.props.DatasetStore.graphName)}> {i} </NavLink>);
+                    }
                 }
             }
         }
@@ -123,7 +138,7 @@ class Dataset extends React.Component {
                         </div>
                     </div>
                     <div className= "ui secondary segment bottom attached">
-                        Page: {pageList}
+                        {totalPages} Page(s): {firstPage} {pageList} {lastPage}
                     </div>
                 </div>
             </div>

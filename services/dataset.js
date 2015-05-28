@@ -24,7 +24,7 @@ export default {
         if (resource === 'dataset.resourcesByType') {
             let offset = (params.page - 1) * maxNumberOfResourcesOnPage;
             //SPARQL QUERY
-            graphName = (params.id ? params.id : defaultGraphName);
+            graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName);
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -52,7 +52,7 @@ export default {
             });
         } else if (resource === 'dataset.countResourcesByType') {
             //SPARQL QUERY
-            graphName = (params.id ? params.id : defaultGraphName);
+            graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName);
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){

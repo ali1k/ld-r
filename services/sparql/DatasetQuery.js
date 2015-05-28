@@ -73,7 +73,7 @@ class DatasetQuery{
                     OPTIONAL {?resource rdfs:label ?label .} \
                     } \
                 } \
-            } ORDER BY ASC(?resource) LIMIT ' + limit + ' OFFSET ' + offset + ' \
+            } LIMIT ' + limit + ' OFFSET ' + offset + ' \
             ';
         }else{
             /*jshint multistr: true */
@@ -85,7 +85,7 @@ class DatasetQuery{
                     OPTIONAL {?resource rdfs:label ?label .} \
                     }\
                 } \
-            } ORDER BY ASC(?resource) LIMIT ' + limit + ' OFFSET ' + offset + ' \
+            } LIMIT ' + limit + ' OFFSET ' + offset + ' \
             ';
         }
         return this.prefixes + this.query;
