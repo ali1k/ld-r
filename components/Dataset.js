@@ -67,7 +67,7 @@ class Dataset extends React.Component {
             list = <div className="ui warning message"><div className="header"> There was no resource in the selected dataset! Either add resources to your dataset or go to another dataset which has resources...</div></div>;
         }else{
             list = this.props.DatasetStore.resources.map((node, index) => {
-                title = node.title ? node.title : (node.label ? node.label : node.v);
+                title = node.title ? node.title : (node.label ? node.label : self.getPropertyLabel(node.v));
                 if(!enableAuthentication) {
                     dbClass = 'green cube icon';
                 }else{
@@ -91,16 +91,21 @@ class Dataset extends React.Component {
                 );
             });
         }
-        let i, totalPages, threshold = 15, currentPage, pageList = [];
+        let i, startI, totalPages, threshold = 10, currentPage, pageList = [];
         let firstPage, lastPage;
         if(this.props.DatasetStore.total){
             currentPage = parseInt(this.props.DatasetStore.page);
             //total number of pages
             totalPages = Math.ceil(this.props.DatasetStore.total / maxNumberOfResourcesOnPage);
             if(totalPages > threshold){
-                firstPage = <NavLink routeName="dataset" className="ui purple circular label" href={'/dataset/1/' + encodeURIComponent(this.props.DatasetStore.graphName)}> <i className="step backward icon"></i> </NavLink>;
-                lastPage = <NavLink routeName="dataset" className="ui purple circular label" href={'/dataset/' + totalPages + '/' + encodeURIComponent(this.props.DatasetStore.graphName)}> <i className="step forward icon"></i> </NavLink>;
-                for (i = currentPage; (i <= (currentPage + threshold) && i < totalPages); i++) {
+                firstPage = <NavLink routeName="dataset" className="ui purple label" href={'/dataset/1/' + encodeURIComponent(this.props.DatasetStore.graphName)}><i className="step backward icon"></i></NavLink>;
+                lastPage = <NavLink routeName="dataset" className="ui purple label" href={'/dataset/' + totalPages + '/' + encodeURIComponent(this.props.DatasetStore.graphName)}><i className="step forward icon"></i></NavLink>;
+                if(currentPage - Math.round(threshold / 2) <= 0){
+                    startI = 1;
+                }else{
+                    startI = currentPage - Math.round(threshold / 2);
+                }
+                for (i = startI; (i <= (currentPage + threshold) && i <= totalPages); i++) {
                     if(i === currentPage){
                         pageList.push(<NavLink routeName="dataset" className="ui label blue" href={'/dataset/' + i + '/' + encodeURIComponent(this.props.DatasetStore.graphName)}> {i} </NavLink>);
                     }else{
