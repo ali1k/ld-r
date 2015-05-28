@@ -46,6 +46,18 @@ class Dataset extends React.Component {
             return {access: true, type: 'full'};
         }
     }
+    getPropertyLabel(uri) {
+        let property = '';
+        let tmp = uri;
+        let tmp2 = tmp.split('#');
+        if(tmp2.length > 1){
+            property = tmp2[1];
+        }else{
+            tmp2 = tmp.split('/');
+            property = tmp2[tmp2.length - 1];
+        }
+        return property;
+    }
     render() {
         let self = this;
         let user = this.context.getUser();
@@ -90,11 +102,23 @@ class Dataset extends React.Component {
                 }
             }
         }
+        let rType = this.props.DatasetStore.resourceFocusType;
+        let typeSt, typesLink = [];
+        if(rType){
+            if(!rType.length || (rType.length && !rType[0]) ){
+                typeSt = <span className="ui black label"> Everything </span>;
+            }else{
+                rType.forEach(function(uri) {
+                    typesLink.push(<a key={uri} className="ui black label" target="_blank" href={uri}> {self.getPropertyLabel(uri)} </a>);
+                });
+                typeSt = typesLink;
+            }
+        }
         return (
             <div className="ui page grid" ref="dataset">
                 <div className="ui column">
                     <div className="ui segment top attached">
-                        <h3>{this.props.DatasetStore.total ? <span className="ui big black circular label">{this.props.DatasetStore.total}</span> : ''} Resources of type "{this.props.DatasetStore.resourceFocusType ? this.props.DatasetStore.resourceFocusType.join() : 'everything!'}"</h3>
+                        <h3>{this.props.DatasetStore.total ? <span className="ui big black circular label">{this.props.DatasetStore.total}</span> : ''} Resources of type {typeSt}</h3>
                         <div className="ui big divided animated list">
                             {list}
                         </div>
