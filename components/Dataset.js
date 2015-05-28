@@ -1,6 +1,6 @@
 import React from 'react';
 import DatasetStore from '../stores/DatasetStore';
-import {enableAuthentication, maxNumberOfResourcesOnPage} from '../configs/reactor';
+import {enableAuthentication, maxNumberOfResourcesOnPage, resourceFocusType} from '../configs/reactor';
 import {connectToStores} from 'fluxible/addons';
 import {NavLink} from 'fluxible-router';
 import getResourcesCount from '../actions/getResourcesCount';
@@ -102,13 +102,12 @@ class Dataset extends React.Component {
                 }
             }
         }
-        let rType = this.props.DatasetStore.resourceFocusType;
         let typeSt, typesLink = [];
-        if(rType){
-            if(!rType.length || (rType.length && !rType[0]) ){
+        if(resourceFocusType){
+            if(!resourceFocusType.length || (resourceFocusType.length && !resourceFocusType[0]) ){
                 typeSt = <span className="ui black label"> Everything </span>;
             }else{
-                rType.forEach(function(uri) {
+                resourceFocusType.forEach(function(uri) {
                     typesLink.push(<a key={uri} className="ui black label" target="_blank" href={uri}> {self.getPropertyLabel(uri)} </a>);
                 });
                 typeSt = typesLink;
