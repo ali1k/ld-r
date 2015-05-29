@@ -16,6 +16,7 @@ class IndividualObjectReactor extends React.Component {
         if(this.props.spec.extended && !this.state.isExtendedView){
             this.context.executeAction(loadObjectProperties, {
               dataset: this.props.graphName,
+              propertyURI: this.props.property,
               objectURI: this.props.spec.value
             });
             this.setState({isExtendedView: 1});
@@ -60,6 +61,7 @@ class IndividualObjectReactor extends React.Component {
     handleShowDetails(){
         this.context.executeAction(loadObjectProperties, {
           dataset: this.props.graphName,
+          propertyURI: this.props.property,
           objectURI: this.props.spec.value
         });
         this.setState({isExtendedView: 1});
@@ -67,16 +69,24 @@ class IndividualObjectReactor extends React.Component {
     handleHideDetails(){
         this.setState({isExtendedView: 0});
     }
+    //to create fake config
+    buildList(data) {
+        let list = [];
+        for (let prop in data) {
+            list.push({spec: {propertyURI: prop, value: data[prop].value, valueType: data[prop].valueType, dataType: data[prop].dataType}, config: data[prop]});
+        }
+        return list;
+    }
     render() {
         //add object Properties only to the relevant ones
         if(this.state.isExtendedView){
             if(this.props.spec.extended){
                 this.props.spec.extendedViewData = this.props.IndividualObjectStore.objectProperties[this.props.spec.value];
             }else{
-                //add details situation
+                //add default details situation
                 if(this.props.config && this.props.config.extensions){
-                    //get from config
-                    this.props.spec.extendedViewData = this.props.config.extensions;
+                    //get from config and build as a list
+                    this.props.spec.extendedViewData = this.buildList(this.props.config.extensions.config);
                 }else{
                     //use default
                     this.props.spec.extendedViewData = [

@@ -70,13 +70,18 @@ class ResourceUtil{
           return {props: finalOutput, title: title};
         }
     }
-    parseObjectProperties(body) {
+    parseObjectProperties(graphName, propertyURI, body) {
+        let selectedConfig = propertiesConfig[graphName];
+        //if no specific config is found, get the generic config
+        if(!selectedConfig){
+            selectedConfig = propertiesConfig.generic;
+        }
         let self=this;
         let parsed = JSON.parse(body);
         var output=[];
         if(parsed.results.bindings.length){
           parsed.results.bindings.forEach(function(el) {
-            output.push({spec:{property: self.getPropertyLabel(el.p.value), propertyURI: el.p.value, valueType: el.o.type, dataType:(el.o.type==='typed-literal'?el.o.datatype:''), value: el.o.value}, config: propertiesConfig[el.p.value]});
+            output.push({spec:{property: self.getPropertyLabel(el.p.value), propertyURI: el.p.value, valueType: el.o.type, dataType:(el.o.type==='typed-literal'?el.o.datatype:''), value: el.o.value}, config:         selectedConfig.config[propertyURI] ? (selectedConfig.config[propertyURI].extensions ? selectedConfig.config[propertyURI].extensions.config[el.p.value] : {}) : {}});
         });
           return output;
         }

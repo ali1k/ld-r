@@ -1,5 +1,6 @@
 import React from 'react';
 import PropertyHeader from './PropertyHeader';
+import IndividualDataEdit from './IndividualDataEdit';
 import BasicIndividualInput from './BasicIndividualInput';
 
 class BasicIndividualDetailEdit extends React.Component {
@@ -20,6 +21,7 @@ class BasicIndividualDetailEdit extends React.Component {
     handleEnterPress(){
         this.props.onEnterPress();
     }
+
     render() {
         let self = this;
         let list = this.props.spec.extendedViewData.map(function(node, index) {
@@ -34,7 +36,7 @@ class BasicIndividualDetailEdit extends React.Component {
                         <div className="ui dividing header"></div>
                         <div className="fourteen wide column field list">
                             <div className="ui attached secondary segment">
-                                <BasicIndividualInput noFocus="1" spec={node.spec} config={node.config} onDataEdit={self.handleDetailDataEdit.bind(self, node.spec.propertyURI, node.spec.valueType, node.spec.dataType)}/>
+                                <IndividualDataEdit noFocus="1" spec={node.spec} config={node.config} onDataEdit={self.handleDetailDataEdit.bind(self, node.spec.propertyURI, node.spec.valueType, node.spec.dataType)}/>
                             </div>
                         </div>
                         <div className="one wide column field">

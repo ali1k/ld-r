@@ -26,10 +26,10 @@ class IndividualDataView extends React.Component {
             //go to extended view
             switch(extendedViewerConfig){
                 case 'BasicIndividualDetailView':
-                    extendedViewer = <BasicIndividualDetailView spec={this.props.spec} config={this.props.config}/>;
+                    extendedViewer = <BasicIndividualDetailView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
                 break;
                 default:
-                    extendedViewer = <BasicIndividualDetailView spec={this.props.spec} config={this.props.config}/>;
+                    extendedViewer = <BasicIndividualDetailView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
             }
             output = extendedViewer;
         }else{

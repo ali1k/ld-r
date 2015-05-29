@@ -1,6 +1,6 @@
 import React from 'react';
 import PropertyHeader from './PropertyHeader';
-import BasicIndividualView from './BasicIndividualView';
+import IndividualDataView from './IndividualDataView';
 
 class BasicIndividualDetailView extends React.Component {
     componentDidMount() {
@@ -25,7 +25,7 @@ class BasicIndividualDetailView extends React.Component {
                         <div className="ui dividing header"></div>
                         <div className="fourteen wide column field list">
                             <div className="ui attached secondary segment">
-                                <BasicIndividualView spec={node.spec} config={node.config}/>
+                                <IndividualDataView spec={node.spec} config={node.config} />
                             </div>
                         </div>
                         <div className="one wide column field">

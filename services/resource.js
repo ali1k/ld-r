@@ -26,7 +26,7 @@ const httpOptions = {
 };
 const outputFormat = 'application/sparql-results+json';
 /*-----------------------------------*/
-let rpPath, category, graphName, resourceURI, objectURI, objectValue, query, queryObject, utilObject;
+let rpPath, category, graphName, propertyURI, resourceURI, objectURI, objectValue, query, queryObject, utilObject;
 queryObject = new ResourceQuery();
 utilObject = new ResourceUtil();
 
@@ -78,6 +78,7 @@ export default {
         } else if (resource === 'resource.objectProperties') {
             graphName = params.dataset;
             objectURI = params.objectURI;
+            propertyURI = params.propertyURI;
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -94,7 +95,7 @@ export default {
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
                 callback(null, {
                     objectURI: objectURI,
-                    properties: utilObject.parseObjectProperties(res)
+                    properties: utilObject.parseObjectProperties(graphName, propertyURI, res)
                 });
             }).catch(function (err) {
                 console.log(err);
