@@ -6,7 +6,7 @@ import DBpediaQuery from './sparql/DBpediaQuery';
 const DBpediaEndpoint = 'http://dbpedia.org/sparql';
 const DBpediaLiveEndpoint = 'http://live.dbpedia.org/sparql';
 const outputFormat = 'application/sparql-results+json';
-let query;
+let query, lookupClass = '';
 let utilObject = new DBpediaUtil();
 let queryObject = new DBpediaQuery();
 
@@ -17,8 +17,9 @@ export default {
     read: (req, resource, params, config, callback) => {
         if (resource === 'dbpedia.lookup') {
             query = params.query;
+            lookupClass = params.lookupClass ? params.lookupClass : '';
             //send request
-            rp({method: 'get', headers: {'Accept': 'application/json'}, accept: 'application/json', uri: 'http://' + dbpediaLookupService[0].host + '/api/search.asmx/PrefixSearch?QueryClass=&MaxHits=5&QueryString=' + query}).then(function(res){
+            rp({method: 'get', headers: {'Accept': 'application/json'}, accept: 'application/json', uri: 'http://' + dbpediaLookupService[0].host + '/api/search.asmx/PrefixSearch?QueryClass=' + lookupClass + '&MaxHits=5&QueryString=' + query}).then(function(res){
                 callback(null, {
                     suggestions: utilObject.parseDBpediaLookup(res)
                 });
