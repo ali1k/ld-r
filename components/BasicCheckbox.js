@@ -5,18 +5,21 @@ class BasicCheckbox extends React.Component {
         super(props);
         this.state = {checked: false};
         //initial data sent
-        this.props.onToggle(false);
+        if(!this.props.notInitialize){
+            this.props.onToggle(false);
+        }
+    }
+    handleClick(event) {
+        this.props.onToggle(!this.state.checked);
+        this.setState({checked: !this.state.checked});
     }
     handleChange(event) {
-        let c = this.refs.checkBox.getDOMNode();
-        c.checked = !c.checked;
-        this.setState({checked: c.checked});
-        this.props.onToggle(c.checked);
+
     }
     render() {
         return (
-            <div className="ui basic icon button" onClick={this.handleChange.bind(this)} ref="basicCheckbox">
-                <input type="checkbox" ref="checkBox" onClick={this.handleChange.bind(this)}/>
+            <div className="ui basic icon button" ref="basicCheckbox" onClick={this.handleClick.bind(this)}>
+                <input type="checkbox" ref="checkBox" onChange={this.handleChange.bind(this)} checked={this.state.checked}/>
             </div>
         );
     }
