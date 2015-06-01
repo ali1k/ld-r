@@ -101,9 +101,9 @@ class DatasetQuery{
         ';
         return this.prefixes + this.query;
     }
-    countSecondLevelPropertyValues(graphName, propertyURI, prevSelection) {
+    getMultipleFilters(prevSelection) {
         let st = '', filters, tmp, i = 0, hasInvalidURI = 0, hasValidURI = 0;
-        filters = []
+        filters = [];
         for (let key in prevSelection) {
             hasInvalidURI = 0;
             hasValidURI = 0;
@@ -143,6 +143,24 @@ class DatasetQuery{
             //no constrain is selected
             st = '?s a ?o .';
         }
+        return st;
+    }
+    getSideEffects(graphName, propertyURI, prevSelection) {
+        let st = this.getMultipleFilters(prevSelection);
+        st = st + '?s <'+ propertyURI + '>  ?v.';
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT (count(?s) AS ?total) ?v WHERE {\
+            { GRAPH <' + graphName + '> \
+                { '+ st +' \
+                } \
+            } \
+        } \
+        ';
+        return this.prefixes + this.query;
+    }
+    countSecondLevelPropertyValues(graphName, propertyURI, prevSelection) {
+        let st = this.getMultipleFilters(prevSelection);
         /*jshint multistr: true */
         this.query = '\
         SELECT DISTINCT (count(?s) AS ?total) WHERE {\
@@ -155,47 +173,7 @@ class DatasetQuery{
         return this.prefixes + this.query;
     }
     getSecondLevelPropertyValues(graphName, propertyURI, prevSelection, offset) {
-        let st = '', filters, tmp, i = 0, hasInvalidURI = 0, hasValidURI = 0;
-        filters = []
-        for (let key in prevSelection) {
-            hasInvalidURI = 0;
-            hasValidURI = 0;
-            tmp = [];
-            i++;
-            if(prevSelection[key].length){
-                prevSelection[key].forEach(function(el){
-                    // automatically detect uris even in literal values
-                    if(validUrl.is_web_uri(el)){
-                        tmp.push('<' + el + '>');
-                        hasValidURI = 1;
-                    }else{
-                        hasInvalidURI = 1 ;
-                        tmp.push('"' + el + '"');
-                    }
-                })
-                //special case: values are heterogenious, we should use str function then
-                if(hasInvalidURI && hasValidURI) {
-                    tmp = [];
-                    prevSelection[key].forEach(function(el){
-                        tmp.push('"' + el + '"');
-                    });
-                    filters.push('str(?v' + i + ') IN ('+ tmp.join(',') +')');
-                }else{
-                    if(hasInvalidURI){
-                        filters.push('str(?v' + i + ') IN ('+ tmp.join(',') +')');
-                    }else{
-                        filters.push('?v' + i + ' IN ('+ tmp.join(',') +')');
-                    }
-                }
-                //---------
-                st = st + '?s <'+ key + '>  ?v' + i + '. ';
-            }
-        }
-        st = st + ' FILTER (' + filters.join(' && ') + ') ';
-        if(!filters.length){
-            //no constrain is selected
-            st = '?s a ?o .';
-        }
+        let st = this.getMultipleFilters(prevSelection);
         /*jshint multistr: true */
         this.query = '\
         SELECT DISTINCT ?s WHERE {\

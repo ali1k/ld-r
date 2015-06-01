@@ -72,6 +72,10 @@ class FacetedBrowser extends React.Component {
         return properties;
     }
     handleOnCheck(level, status, value, propertyURI) {
+        let self = this;
+        //handling cascading facet update
+        let sideEffectsArr = [];
+        let atLeastOne = 0;
         if(level === 2){
             //keep history of selection up to date
             if(status){
@@ -82,14 +86,56 @@ class FacetedBrowser extends React.Component {
             }else{
                 this.state.selection[propertyURI].splice(this.state.selection[propertyURI].indexOf(value), 1);
             }
+            //check if there are active facets to be updated as side effect
+            sideEffectsArr = [];
+            atLeastOne = 0;
+            for (let key in this.state.selection) {
+                //apply on active but non-selected
+                if(key !== propertyURI && !this.state.selection[key].length){
+                    sideEffectsArr.push(key);
+                }else{
+                    atLeastOne = 1;
+                }
+            }
         }else{
             //for master level
             if(!status){
                 //empty the selection
                 delete this.state.selection[value];
+            }else{
+                //initiate facet
+                this.state.selection[value] = [];
+            }
+            sideEffectsArr = [];
+            atLeastOne = 0;
+            for (let key in this.state.selection) {
+                //apply on active but non-selected
+                if(!this.state.selection[key].length){
+                    sideEffectsArr.push(key);
+                }else{
+                    atLeastOne = 1;
+                }
+            }
+            // there should be at least one second level facet selected for cascading effect
+            if(!atLeastOne){
+                sideEffectsArr = [];
             }
         }
         this.context.executeAction(loadFacets, {id: this.props.FacetedBrowserStore.graphName, page: this.props.FacetedBrowserStore.page, selection: {level: level, propertyURI: propertyURI, value: value, status: status, prevSelection: this.state.selection}});
+        //apply side effects
+        sideEffectsArr.forEach(function(el){
+            self.context.executeAction(loadFacets, {isSideEffect: 1, id: self.props.FacetedBrowserStore.graphName, page: self.props.FacetedBrowserStore.page, selection: {level: 2, propertyURI: el, prevSelection: self.state.selection}});
+        });
+    }
+    //used to fix the key of component in dynamic cases
+    findIndexInProperties(properties, value) {
+        let i = 0;
+        properties.forEach(function(el, index){
+            if(el.value === value){
+                i = index;
+            }
+        });
+        return i;
     }
     render() {
         let self = this;
@@ -99,7 +145,7 @@ class FacetedBrowser extends React.Component {
             if(self.props.FacetedBrowserStore.facets[node.value]){
                 showFactes = 1;
                 return (
-                    <Facet title={node.label} property={node.value} items={self.props.FacetedBrowserStore.facets[node.value]} onCheck={self.handleOnCheck.bind(self, 2)} key={index}/>
+                    <Facet title={node.label} property={node.value} items={self.props.FacetedBrowserStore.facets[node.value]} onCheck={self.handleOnCheck.bind(self, 2)} key={self.findIndexInProperties(properties, node.value)}/>
                 );
             }
         });
