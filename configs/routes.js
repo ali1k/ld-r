@@ -1,6 +1,7 @@
 import loadDataset from '../actions/loadDataset';
 import loadResource from '../actions/loadResource';
 import loadUsersList from '../actions/loadUsersList';
+import loadFacets from '../actions/loadFacets';
 import {appFullTitle, appShortTitle} from '../configs/general';
 
 export default {
@@ -22,6 +23,20 @@ export default {
         action: (context, payload, done) => {
             context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | About'});
             done();
+        }
+    },
+    facets: {
+        path: '/browse/:id?',
+        method: 'get',
+        handler: require('../components/FacetedBrowser'),
+        label: 'Faceted Browser',
+        action: (context, payload, done) => {
+            let graphName, page;
+            graphName = payload.get('params').get('id');
+            if (!graphName) {
+                graphName = 0;
+            }
+            context.executeAction(loadFacets, {id: graphName, selection: 0, page: 1}, done);
         }
     },
     dataset: {

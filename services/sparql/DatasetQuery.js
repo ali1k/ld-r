@@ -1,4 +1,6 @@
 'use strict';
+import validUrl from 'valid-url';
+
 class DatasetQuery{
     constructor() {
         /*jshint multistr: true */
@@ -84,6 +86,124 @@ class DatasetQuery{
             } LIMIT ' + limit + ' OFFSET ' + offset + ' \
             ';
         }
+        return this.prefixes + this.query;
+    }
+    getMasterPropertyValues(graphName, propertyURI) {
+        let st = '?s <'+ propertyURI + '>  ?v.';
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT (count(?s) AS ?total) ?v WHERE {\
+            { GRAPH <' + graphName + '> \
+                { '+ st +' \
+                } \
+            } \
+        } \
+        ';
+        return this.prefixes + this.query;
+    }
+    countSecondLevelPropertyValues(graphName, propertyURI, prevSelection) {
+        let st = '', filters, tmp, i = 0, hasInvalidURI = 0, hasValidURI = 0;
+        filters = []
+        for (let key in prevSelection) {
+            hasInvalidURI = 0;
+            hasValidURI = 0;
+            tmp = [];
+            i++;
+            if(prevSelection[key].length){
+                prevSelection[key].forEach(function(el){
+                    // automatically detect uris even in literal values
+                    if(validUrl.is_web_uri(el)){
+                        tmp.push('<' + el + '>');
+                        hasValidURI = 1;
+                    }else{
+                        hasInvalidURI = 1 ;
+                        tmp.push('"' + el + '"');
+                    }
+                })
+                //special case: values are heterogenious, we should convert all to string and use str function then
+                if(hasInvalidURI && hasValidURI) {
+                    tmp = [];
+                    prevSelection[key].forEach(function(el){
+                        tmp.push('"' + el + '"');
+                    });
+                    filters.push('str(?v' + i + ') IN ('+ tmp.join(',') +')');
+                }else{
+                    if(hasInvalidURI){
+                        filters.push('str(?v' + i + ') IN ('+ tmp.join(',') +')');
+                    }else{
+                        filters.push('?v' + i + ' IN ('+ tmp.join(',') +')');
+                    }
+                }
+                //---------
+                st = st + '?s <'+ key + '>  ?v' + i + '. ';
+            }
+        }
+        st = st + ' FILTER (' + filters.join(' && ') + ') ';
+        if(!filters.length){
+            //no constrain is selected
+            st = '?s a ?o .';
+        }
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT (count(?s) AS ?total) WHERE {\
+            { GRAPH <' + graphName + '> \
+                { '+ st +' \
+                } \
+            } \
+        }\
+        ';
+        return this.prefixes + this.query;
+    }
+    getSecondLevelPropertyValues(graphName, propertyURI, prevSelection, offset) {
+        let st = '', filters, tmp, i = 0, hasInvalidURI = 0, hasValidURI = 0;
+        filters = []
+        for (let key in prevSelection) {
+            hasInvalidURI = 0;
+            hasValidURI = 0;
+            tmp = [];
+            i++;
+            if(prevSelection[key].length){
+                prevSelection[key].forEach(function(el){
+                    // automatically detect uris even in literal values
+                    if(validUrl.is_web_uri(el)){
+                        tmp.push('<' + el + '>');
+                        hasValidURI = 1;
+                    }else{
+                        hasInvalidURI = 1 ;
+                        tmp.push('"' + el + '"');
+                    }
+                })
+                //special case: values are heterogenious, we should use str function then
+                if(hasInvalidURI && hasValidURI) {
+                    tmp = [];
+                    prevSelection[key].forEach(function(el){
+                        tmp.push('"' + el + '"');
+                    });
+                    filters.push('str(?v' + i + ') IN ('+ tmp.join(',') +')');
+                }else{
+                    if(hasInvalidURI){
+                        filters.push('str(?v' + i + ') IN ('+ tmp.join(',') +')');
+                    }else{
+                        filters.push('?v' + i + ' IN ('+ tmp.join(',') +')');
+                    }
+                }
+                //---------
+                st = st + '?s <'+ key + '>  ?v' + i + '. ';
+            }
+        }
+        st = st + ' FILTER (' + filters.join(' && ') + ') ';
+        if(!filters.length){
+            //no constrain is selected
+            st = '?s a ?o .';
+        }
+        /*jshint multistr: true */
+        this.query = '\
+        SELECT DISTINCT ?s WHERE {\
+            { GRAPH <' + graphName + '> \
+                { '+ st +' \
+                } \
+            } \
+        } LIMIT 50 OFFSET ' + (offset-1);
         return this.prefixes + this.query;
     }
 }

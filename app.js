@@ -11,6 +11,7 @@ import ResourceStore from './stores/ResourceStore';
 import IndividualObjectStore from './stores/IndividualObjectStore';
 import DBpediaStore from './stores/DBpediaStore';
 import DBpediaGMapStore from './stores/DBpediaGMapStore';
+import FacetedBrowserStore from './stores/FacetedBrowserStore';
 
 let app = new Fluxible({
     component: Application,
@@ -22,7 +23,8 @@ let app = new Fluxible({
         ResourceStore,
         IndividualObjectStore,
         DBpediaStore,
-        DBpediaGMapStore
+        DBpediaGMapStore,
+        FacetedBrowserStore
     ]
 });
 

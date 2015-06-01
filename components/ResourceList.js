@@ -8,7 +8,7 @@ class ResourceList extends React.Component {
     buildLink(v, g, title, icon){
         if(this.props.OpenInNewTab){
             return (
-                <a href={'/dataset/' + g + '/resource/' + v} target="_blank">  <i className={icon}></i> {title}  </a>
+                <a href={'/dataset/' + g + '/resource/' + v} target="_blank"><i className={icon}></i> {title} </a>
             );
         }else{
             return (

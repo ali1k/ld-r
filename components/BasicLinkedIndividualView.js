@@ -6,7 +6,7 @@ class BasicLinkedIndividualView extends React.Component {
         let outputDIV, val = this.props.spec.value;
         if(this.props.spec.valueType === 'uri'){
             outputDIV = <NavLink routeName="resource" className="ui label" href={'/dataset/' + encodeURIComponent(this.props.graphName) + '/resource/' + encodeURIComponent(val)} >
-                            {val}
+                <i className="black cube icon"></i> {val}
                         </NavLink>;
         }else{
             outputDIV = <span> {val} </span>;
