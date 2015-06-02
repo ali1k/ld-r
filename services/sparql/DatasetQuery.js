@@ -141,7 +141,7 @@ class DatasetQuery{
         st = st + ' FILTER (' + filters.join(' && ') + ') ';
         if(!filters.length){
             //no constrain is selected
-            st = '?s a ?o .';
+            st = '?s rdf:type ?o .';
         }
         return st;
     }

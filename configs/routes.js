@@ -36,7 +36,7 @@ export default {
             if (!graphName) {
                 graphName = 0;
             }
-            context.executeAction(loadFacets, {id: graphName, selection: 0, page: 1}, done);
+            context.executeAction(loadFacets, {mode: 'init', id: graphName, selection: 0, page: 1}, done);
         }
     },
     dataset: {

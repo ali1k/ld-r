@@ -13,11 +13,10 @@ class FacetedBrowser extends React.Component {
         this.state = {selection: {}};
     }
     componentDidMount() {
-        //show all resources
-        this.context.executeAction(loadFacets, {clear: 1, id: this.props.FacetedBrowserStore.graphName, page: 1, selection: {level: 2, prevSelection: this.state.selection}});
+
     }
     gotoPage(page) {
-        this.context.executeAction(loadFacets, {id: this.props.FacetedBrowserStore.graphName, page: page, selection: {level: 2, prevSelection: this.state.selection}});
+        this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.graphName, page: page, selection: { prevSelection: this.state.selection}});
     }
     addCommas(n){
         let rx = /(\d+)(\d{3})/;
@@ -73,6 +72,7 @@ class FacetedBrowser extends React.Component {
     }
     handleOnCheck(level, status, value, propertyURI) {
         let self = this;
+        let hadAnySelected = 0;
         //handling cascading facet update
         let sideEffectsArr = [];
         let atLeastOne = 0;
@@ -97,8 +97,14 @@ class FacetedBrowser extends React.Component {
                     atLeastOne = 1;
                 }
             }
+            this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.graphName, page: this.props.FacetedBrowserStore.page, selection: {propertyURI: propertyURI, value: value, status: status, prevSelection: this.state.selection}});
         }else{
             //for master level
+            if(this.state.selection[value] && this.state.selection[value].length){
+                hadAnySelected = 1;
+            }else{
+                hadAnySelected = 0;
+            }
             if(!status){
                 //empty the selection
                 delete this.state.selection[value];
@@ -120,11 +126,23 @@ class FacetedBrowser extends React.Component {
             if(!atLeastOne){
                 sideEffectsArr = [];
             }
+            //should not run if there is a side effect -> prevents duplicate runs
+            if(sideEffectsArr.indexOf(value) === -1){
+                this.context.executeAction(loadFacets, {mode: 'master', id: this.props.FacetedBrowserStore.graphName, page: this.props.FacetedBrowserStore.page, selection: {propertyURI: propertyURI, value: value, status: status, prevSelection: this.state.selection}});
+            }
+            //on uncheck update list of resources
+            if(!status && hadAnySelected){
+                this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.graphName, page: this.props.FacetedBrowserStore.page, selection: {propertyURI: value, value: value, status: status, prevSelection: this.state.selection}});
+                //add new type of side effect on uncheck
+                for (let key in this.state.selection) {
+                    sideEffectsArr.push(key);
+                }
+            }
         }
-        this.context.executeAction(loadFacets, {id: this.props.FacetedBrowserStore.graphName, page: this.props.FacetedBrowserStore.page, selection: {level: level, propertyURI: propertyURI, value: value, status: status, prevSelection: this.state.selection}});
+        // console.log(sideEffectsArr);
         //apply side effects
         sideEffectsArr.forEach(function(el){
-            self.context.executeAction(loadFacets, {isSideEffect: 1, id: self.props.FacetedBrowserStore.graphName, page: self.props.FacetedBrowserStore.page, selection: {level: 2, propertyURI: el, prevSelection: self.state.selection}});
+            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: self.props.FacetedBrowserStore.graphName, page: self.props.FacetedBrowserStore.page, selection: {status: status, propertyURI: el, prevSelection: self.state.selection}});
         });
     }
     //used to fix the key of component in dynamic cases
@@ -141,12 +159,17 @@ class FacetedBrowser extends React.Component {
         let self = this;
         let showFactes = 0;
         let properties = this. buildMasterFacet(this.props.FacetedBrowserStore.graphName);
+        //console.log(self.props.FacetedBrowserStore.facets);
         let list = properties.map(function(node, index) {
+            //console.log(self.props.FacetedBrowserStore.facets);
             if(self.props.FacetedBrowserStore.facets[node.value]){
                 showFactes = 1;
+                //console.log(self.findIndexInProperties(properties, node.value));
                 return (
                     <Facet title={node.label} property={node.value} items={self.props.FacetedBrowserStore.facets[node.value]} onCheck={self.handleOnCheck.bind(self, 2)} key={self.findIndexInProperties(properties, node.value)}/>
                 );
+            }else{
+                return undefined;
             }
         });
         let pagerSize = showFactes ? 5 : 10;
@@ -157,7 +180,7 @@ class FacetedBrowser extends React.Component {
             resourceDIV = <div className="ui segment">
                             <h3 className="ui dividing header">
                                 Resources <span className="ui blue circular label">{this.addCommas(this.props.FacetedBrowserStore.total)}</span>
-                              {this.props.FacetedBrowserStore.isComplete ? '' : <img src="/assets/img/loader.gif" alt="loading..."/>}
+                            {this.props.FacetedBrowserStore.isComplete ? '' : <img src="/assets/img/loader.gif" alt="loading..."/>}
                              </h3>
                             <ResourceList resources={this.props.FacetedBrowserStore.resources} graphName={this.props.FacetedBrowserStore.graphName} OpenInNewTab={true} isBig={!showFactes}/>
                             <ResourceListPager handleClick={this.gotoPage.bind(this)} graphName={this.props.FacetedBrowserStore.graphName} total={this.props.FacetedBrowserStore.total} threshold={pagerSize} currentPage={this.props.FacetedBrowserStore.page}/>

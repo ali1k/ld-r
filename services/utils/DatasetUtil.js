@@ -39,7 +39,7 @@ class DatasetUtil{
       }
       return total;
     }
-    parseMasterPropertyValues(body, status, level, propertyURI, value) {
+    parseMasterPropertyValues(body, status, propertyURI, value) {
         let self = this;
         let output={};
         let values=[];
@@ -47,10 +47,10 @@ class DatasetUtil{
         parsed.results.bindings.forEach(function(el) {
             values.push( {value: el.v.value, label: self.getPropertyLabel(el.v.value), total: el.total.value});
         });
-        output ={status: status, level: level, propertyURI: propertyURI, value: value, items: values}
+        output ={status: status, propertyURI: propertyURI, value: value, items: values}
         return output;
     }
-    parseSecondLevelPropertyValues(graphName, body, status, level, propertyURI, value) {
+    parseSecondLevelPropertyValues(graphName, body, status, propertyURI, value) {
         let self = this;
         let output={};
         let values=[];
@@ -58,7 +58,7 @@ class DatasetUtil{
         parsed.results.bindings.forEach(function(el) {
             values.push( {v: el.s.value, label: self.getPropertyLabel(el.s.value), g: graphName});
         });
-        output ={status: status, level: level, propertyURI: propertyURI, value: value, items: values}
+        output ={status: status, propertyURI: propertyURI, value: value, items: values}
         return output;
     }
 }
