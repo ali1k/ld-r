@@ -20,14 +20,13 @@ class ResourceListPager extends React.Component {
         let self = this;
         let graphName = this.props.graphName;
         let i, startI, totalPages, threshold = this.props.threshold, currentPage, pageList = [];
-        let firstPage, lastPage;
         if(this.props.total){
             currentPage = parseInt(this.props.currentPage);
             //total number of pages
             totalPages = Math.ceil(this.props.total / maxNumberOfResourcesOnPage);
             if(totalPages > threshold){
-                firstPage = self.buildLink(1, 'purple', 'step backward icon');
-                lastPage = self.buildLink(totalPages, 'purple', 'step forward icon');
+                //first page
+                pageList.push(self.buildLink(0, 'purple', 'step backward icon'));
                 if(currentPage - Math.round(threshold / 2) <= 0){
                     startI = 1;
                 }else{
@@ -40,6 +39,8 @@ class ResourceListPager extends React.Component {
                         pageList.push(self.buildLink(i, 'basic', 0));
                     }
                 }
+                //last page
+                pageList.push(self.buildLink(totalPages + 1, 'purple', 'step forward icon'));
             }else{
                 for (i = 1; i <= totalPages; i++) {
                     if(i === currentPage){
@@ -52,7 +53,7 @@ class ResourceListPager extends React.Component {
         }
         return (
             <div className="ui" ref="resourceListPager">
-                {totalPages} Page(s): {firstPage} {pageList} {lastPage}
+                {totalPages} Page(s): <span>{pageList}</span>
             </div>
         );
     }

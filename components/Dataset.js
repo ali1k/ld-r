@@ -23,6 +23,15 @@ class Dataset extends React.Component {
         }
         return property;
     }
+    addCommas(n){
+        let rx = /(\d+)(\d{3})/;
+        return String(n).replace(/^\d+/, function(w){
+            while(rx.test(w)){
+                w = w.replace(rx, '$1,$2');
+            }
+            return w;
+        });
+    }
     render() {
         let self = this;
         let graphName = this.props.DatasetStore.graphName;
@@ -41,7 +50,7 @@ class Dataset extends React.Component {
             <div className="ui page grid" ref="dataset">
                 <div className="ui column">
                     <div className="ui segment top attached">
-                        <h3>{this.props.DatasetStore.total ? <span className="ui big black circular label">{this.props.DatasetStore.total}</span> : ''} Resources of type {typeSt}</h3>
+                        <h3>{this.props.DatasetStore.total ? <span className="ui big black circular label">{this.addCommas(this.props.DatasetStore.total)}</span> : ''} Resources of type {typeSt}</h3>
                         <ResourceList resources={this.props.DatasetStore.resources} graphName={graphName} isBig={true} />
                     </div>
                     <div className= "ui secondary segment bottom attached">
