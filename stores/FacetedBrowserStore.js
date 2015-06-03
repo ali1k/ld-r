@@ -14,7 +14,7 @@ class FacetedBrowserStore extends BaseStore {
         this.graphName = '';
     }
     clearFacets() {
-        this.clearFacets();
+        this.clearAll();
         this.emitChange();
     }
     startTask () {
