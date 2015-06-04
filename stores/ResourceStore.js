@@ -5,7 +5,7 @@ let utilObject = new ResourceStoreUtil();
 class ResourceStore extends BaseStore {
     constructor(dispatcher) {
         super(dispatcher);
-        this.cleanResource();
+        this.cleanAll();
     }
     updatePropertyList(payload) {
         this.graphName = payload.graphName;
@@ -16,12 +16,16 @@ class ResourceStore extends BaseStore {
         this.title = payload.title ? payload.title : payload.resourceURI;
         this.emitChange();
     }
-    cleanResource() {
+    cleanAll() {
         this.properties = [];
         this.graphName = '';
         this.currentCategory = 0;
         this.resourceURI = '';
         this.title = '';
+    }
+    cleanResource() {
+        this.cleanAll();
+        this.emitChange();
     }
     getState() {
         return {
