@@ -45,10 +45,11 @@ export default {
     //for Faceted Browser it is required to fill im the following configuration
     facetsConfig: {
         'generic': {
+            list: [
+                'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
+            ],
             config: {
-                facets: [
-                    {property: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'}
-                ]
+
             }
         }
     }
