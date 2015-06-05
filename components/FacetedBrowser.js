@@ -27,45 +27,55 @@ class FacetedBrowser extends React.Component {
             return w;
         });
     }
-    getPropertyLabel(uri) {
-        let property = '';
-        let tmp = uri;
-        let tmp2 = tmp.split('#');
-        if(tmp2.length > 1){
-            property = tmp2[1];
-        }else{
-            tmp2 = tmp.split('/');
-            property = tmp2[tmp2.length - 1];
-        }
-        return property;
-    }
-    buildMasterFacet(graphName) {
-        let self = this;
+    getPropertyConfig(graphName, propertyURI){
+        let selectedConfig;
         let g = graphName;
-        let hasPropConfig = propertiesConfig ? (propertiesConfig[g] ? (propertiesConfig[g].config ? 1 : 0) : 0) : 0;
-        let properties = [];
         if(!g){
             g = 'generic';
         }
+        let hasFacetConfig = facetsConfig[g].config ? (facetsConfig[g].config[propertyURI] ? 1 : 0) : 0;
+        if(hasFacetConfig){
+            //first check the custom facets config
+            selectedConfig = facetsConfig[g].config[propertyURI];
+        }else{
+            //second: check the generic facet config
+            let hasGenericFacetConfig = facetsConfig.generic.config ? (facetsConfig.generic.config[propertyURI] ? 1 : 0) : 0;
+            if(hasGenericFacetConfig){
+                selectedConfig = facetsConfig.generic.config[propertyURI];
+            }else{
+                let hasPropConfig = propertiesConfig ? (propertiesConfig[g] ? (propertiesConfig[g].config ? 1 : 0) : 0) : 0;
+                if(hasPropConfig && propertiesConfig[g].config[propertyURI]){
+                    selectedConfig = propertiesConfig[g].config[propertyURI];
+                }else{
+                    if(propertiesConfig.generic.config[propertyURI]){
+                        selectedConfig = propertiesConfig.generic.config[propertyURI];
+                    }else{
+                        selectedConfig = {};
+                    }
+                }
+            }
+        }
+        return selectedConfig;
+    }
+    buildMasterFacet(graphName) {
+        let self = this;
+        let properties = [];
         let selectedFacetConfig;
+        let g = graphName;
+        if(!g){
+            g = 'generic';
+        }
         if(!facetsConfig[g]){
             selectedFacetConfig = facetsConfig.generic;
         }else{
             selectedFacetConfig = facetsConfig[g];
         }
-        let label = '';
         //action only if there is a config
-        if(selectedFacetConfig.config && selectedFacetConfig.config.facets){
-            selectedFacetConfig.config.facets.forEach(function(el) {
-                label = self.getPropertyLabel(el.property);
-                if(hasPropConfig && propertiesConfig[g].config[el.property] && propertiesConfig[g].config[el.property].label){
-                    label = propertiesConfig[g].config[el.property].label;
-                }else{
-                    if(propertiesConfig.generic.config[el.property]){
-                        label = propertiesConfig.generic.config[el.property].label;
-                    }
-                }
-                properties.push({label: label, value: el.property});
+        let propConfig;
+        if(selectedFacetConfig.list){
+            selectedFacetConfig.list.forEach(function(el) {
+                propConfig = self.getPropertyConfig(graphName, el);
+                properties.push({label: (propConfig ? (propConfig.label ? propConfig.label : 0) : 0), value: el, valueType: 'uri'});
             });
         }
         return properties;
@@ -155,6 +165,18 @@ class FacetedBrowser extends React.Component {
         });
         return i;
     }
+    getPropertyLabel(uri) {
+        let property = '';
+        let tmp = uri;
+        let tmp2 = tmp.split('#');
+        if(tmp2.length > 1){
+            property = tmp2[1];
+        }else{
+            tmp2 = tmp.split('/');
+            property = tmp2[tmp2.length - 1];
+        }
+        return property;
+    }
     render() {
         let self = this;
         let showFactes = 0;
@@ -166,7 +188,7 @@ class FacetedBrowser extends React.Component {
                 showFactes = 1;
                 //console.log(self.findIndexInProperties(properties, node.value));
                 return (
-                    <Facet title={node.label} property={node.value} items={self.props.FacetedBrowserStore.facets[node.value]} onCheck={self.handleOnCheck.bind(self, 2)} key={self.findIndexInProperties(properties, node.value)}/>
+                    <Facet onCheck={self.handleOnCheck.bind(self, 2)} key={self.findIndexInProperties(properties, node.value)} spec={{propertyURI: node.value, property: self.getPropertyLabel(node.value), instances: self.props.FacetedBrowserStore.facets[node.value]}} config={self.getPropertyConfig(self.props.FacetedBrowserStore.graphName, node.value)} graphName={self.props.FacetedBrowserStore.graphName}/>
                 );
             }else{
                 return undefined;
@@ -189,7 +211,7 @@ class FacetedBrowser extends React.Component {
         return (
             <div className="ui page grid" ref="facetedBrowser">
                     <div className="ui stackable four wide column">
-                        <Facet title="Properties" color="green" items={properties} onCheck={this.handleOnCheck.bind(this, 1)} key="master" property="master" maxHeight={500} minHeight={300} />
+                        <Facet color="green" onCheck={this.handleOnCheck.bind(this, 1)} key="master" maxHeight={500} minHeight={300} spec={{property: '', propertyURI: '', instances: properties}} config={{label: 'Properties'}} graphName={this.props.FacetedBrowserStore.graphName}/>
                     </div>
                     {facetsDIV}
                     <div className={'ui stackable ' + resSize + ' wide column'}>

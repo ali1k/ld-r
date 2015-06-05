@@ -96,8 +96,7 @@ export default {
                 callback(null, {
                     graphName: graphName,
                     page: 1,
-                    facets: utilObject.parseMasterPropertyValues(res, true, decodeURIComponent(params.selection.propertyURI), decodeURIComponent(params.selection.propertyURI)),
-                    total: 0
+                    facets: {propertyURI: decodeURIComponent(params.selection.propertyURI), items: utilObject.parseMasterPropertyValues(res)}
                 });
             }).catch(function (err) {
                 console.log(err);
@@ -121,8 +120,7 @@ export default {
                 callback(null, {
                     graphName: graphName,
                     page: 1,
-                    facets: {propertyURI: decodeURIComponent(params.selection.value), status: false},
-                    total: 0
+                    facets: {propertyURI: decodeURIComponent(params.selection.value), status: false}
                 });
             }
             query = queryObject.getMasterPropertyValues(graphName, decodeURIComponent(params.selection.value));
@@ -132,8 +130,7 @@ export default {
                 callback(null, {
                     graphName: graphName,
                     page: 1,
-                    facets: utilObject.parseMasterPropertyValues(res, Boolean(params.selection.status), decodeURIComponent(params.selection.value), decodeURIComponent(params.selection.value)),
-                    total: 0
+                    facets: {status: Boolean(params.selection.status), propertyURI: decodeURIComponent(params.selection.value), items: utilObject.parseMasterPropertyValues(res)}
                 });
             }).catch(function (err) {
                 console.log(err);
@@ -169,7 +166,7 @@ export default {
                     callback(null, {
                         graphName: graphName,
                         page: params.page,
-                        facets: utilObject.parseSecondLevelPropertyValues(graphName, res2, Boolean(params.selection.status), decodeURIComponent(params.selection.propertyURI), params.selection.value),
+                        facets: {items: utilObject.parseSecondLevelPropertyValues(graphName, res2)},
                         total: utilObject.parseCountResourcesByType(res)
                     });
                 }).catch(function (err2) {
