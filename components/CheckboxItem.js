@@ -38,9 +38,19 @@ class CheckboxItem extends React.Component {
         }else if(this.props.shortenURI){
             title = this.getURILabel(this.props.spec.value);
         }
+        if(this.props.spec.valueType === 'uri'){
+            if(this.props.config && this.props.config.hasLinkedValue){
+                title = <a className="ui label" href={'/dataset/' + encodeURIComponent(this.props.graphName) + '/resource/' + encodeURIComponent(this.props.spec.value)} target="_blank"> {title} </a>;
+            }else{
+                title = <a href={this.props.spec.value} target="_blank"> {title} </a>;
+            }
+        }
+        if(this.state.isActive){
+            title = <b> {title} </b>;
+        }
         return (
             <div className="inline field" ref="checkboxItem">
-                <BasicCheckbox onToggle={this.checkBox.bind(this)} notInitialize={true} /> {(this.state.isActive ? <b> {title}</b> : title)} {this.props.total ? <span className="ui small blue circular label"> {this.addCommas(this.props.total)} </span> : ''}
+                <BasicCheckbox onToggle={this.checkBox.bind(this)} notInitialize={true} /> {title} {this.props.total ? <span className="ui small blue circular label"> {this.addCommas(this.props.total)} </span> : ''}
             </div>
         );
     }

@@ -3,6 +3,9 @@ import PropertyHeader from './PropertyHeader';
 import DataBrowseReactor from './DataBrowseReactor';
 
 class Facet extends React.Component {
+    constructor(props){
+        super(props);
+    }
     checkItem(status, value) {
         this.props.onCheck(status, value, this.props.spec.propertyURI);
     }
@@ -25,19 +28,22 @@ class Facet extends React.Component {
         return (
             <div className={cardClasses} ref="facet">
                 <div className="content">
-                    <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.props.config} size="3" />
+                    <div className="ui horizontal list">
+                        <div className="item">
+                            <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.props.config} size="3" />
+                        </div>
+                    </div>
                     <div className="ui dividing header"></div>
                     <div className="meta">
 
                     </div>
                     <div className="description">
                         <div className="ui form" style={descStyle}>
-                            <DataBrowseReactor shortenURI={true} spec={this.props.spec} config={this.props.config} onSelect={this.checkItem.bind(this)} />
+                            <DataBrowseReactor shortenURI={true} spec={this.props.spec} config={this.props.config} onSelect={this.checkItem.bind(this)} graphName={this.props.graphName}/>
                         </div>
                     </div>
                   </div>
                   <div className="extra content">
-
                   </div>
             </div>
         );
