@@ -8,12 +8,6 @@ class BasicIndividualDetailView extends React.Component {
     }
     render() {
         let self = this;
-        let outputDIV;
-        if(this.props.spec.valueType === 'uri'){
-            outputDIV = <a href={this.props.spec.value} target="_blank"> {this.props.spec.value} </a>;
-        }else{
-            outputDIV = <span> {this.props.spec.value} </span>;
-        }
         let list = this.props.spec.extendedViewData.map(function(node, index) {
             return (
                 <div className="item" key={index}>
@@ -25,9 +19,7 @@ class BasicIndividualDetailView extends React.Component {
                         </div>
                         <div className="ui dividing header"></div>
                         <div className="fourteen wide column field list">
-                            <div className="ui attached secondary segment">
                                 <IndividualDataView spec={node.spec} config={node.config} graphName={self.props.graphName} />
-                            </div>
                         </div>
                         <div className="one wide column field">
 
@@ -38,9 +30,6 @@ class BasicIndividualDetailView extends React.Component {
         });
         return (
             <div ref="detailProperties">
-                <div className="ui attached secondary segment">
-                    {outputDIV}
-                </div>
                 <div className="ui attached primary segment">
                     <div className="ui list">
                         {list}

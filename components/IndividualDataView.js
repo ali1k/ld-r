@@ -9,7 +9,7 @@ import LanguageView from './more/LanguageView';
 
 class IndividualDataView extends React.Component {
     render() {
-        let viewer, viewerConfig = '', extendedViewer, extendedViewerConfig = '', output;
+        let viewer, viewerConfig = '', extendedViewer, extendedViewerConfig = '';
         if(this.props.config){
             if(this.props.config.extendedViewer){
                 extendedViewerConfig = this.props.config.extendedViewer[0];
@@ -31,36 +31,34 @@ class IndividualDataView extends React.Component {
                 default:
                     extendedViewer = <BasicIndividualDetailView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
             }
-            output = extendedViewer;
-        }else{
-            //go to normal view
-            switch(viewerConfig){
-                case 'BasicIndividualView':
-                    viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
-                break;
-                case 'BasicLinkedIndividualView':
-                    viewer = <BasicLinkedIndividualView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
-                break;
-                case 'PasswordView':
-                    viewer = <PasswordView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
-                break;
-                case 'BasicDBpediaView':
-                    viewer = <BasicDBpediaView asWikipedia="1" spec={this.props.spec} config={this.props.config}/>;
-                break;
-                case 'LanguageView':
-                    viewer = <LanguageView spec={this.props.spec} config={this.props.config}/>;
-                break;
-                case 'BasicOptionView':
-                    viewer = <BasicOptionView spec={this.props.spec} config={this.props.config}/>;
-                break;
-                default:
-                    viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
-            }
-            output = viewer;
+        }
+        //normal view
+        switch(viewerConfig){
+            case 'BasicIndividualView':
+                viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
+            break;
+            case 'BasicLinkedIndividualView':
+                viewer = <BasicLinkedIndividualView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
+            break;
+            case 'PasswordView':
+                viewer = <PasswordView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
+            break;
+            case 'BasicDBpediaView':
+                viewer = <BasicDBpediaView asWikipedia="1" spec={this.props.spec} config={this.props.config}/>;
+            break;
+            case 'LanguageView':
+                viewer = <LanguageView spec={this.props.spec} config={this.props.config}/>;
+            break;
+            case 'BasicOptionView':
+                viewer = <BasicOptionView spec={this.props.spec} config={this.props.config}/>;
+            break;
+            default:
+                viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
         }
         return (
-            <div className="ui secondary segment" ref="individualDataView">
-                {output}
+            <div className="ui" ref="individualDataView">
+                <div className="ui attached secondary segment"> {viewer} </div>
+                {extendedViewer}
             </div>
         );
     }

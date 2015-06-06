@@ -122,6 +122,7 @@ export default {
                     page: 1,
                     facets: {propertyURI: decodeURIComponent(params.selection.value), status: false}
                 });
+                return 0;
             }
             query = queryObject.getMasterPropertyValues(graphName, decodeURIComponent(params.selection.value));
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);

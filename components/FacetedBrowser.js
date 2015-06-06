@@ -12,9 +12,6 @@ class FacetedBrowser extends React.Component {
         super(props);
         this.state = {selection: {}};
     }
-    componentDidMount() {
-
-    }
     gotoPage(page) {
         this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.graphName, page: page, selection: { prevSelection: this.state.selection}});
     }

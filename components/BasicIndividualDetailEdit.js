@@ -35,9 +35,7 @@ class BasicIndividualDetailEdit extends React.Component {
                         </div>
                         <div className="ui dividing header"></div>
                         <div className="fourteen wide column field list">
-                            <div className="ui attached secondary segment">
                                 <IndividualDataEdit noFocus="1" spec={node.spec} config={node.config} onDataEdit={self.handleDetailDataEdit.bind(self, node.spec.propertyURI, node.spec.valueType, node.spec.dataType)}/>
-                            </div>
                         </div>
                         <div className="one wide column field">
 
@@ -48,9 +46,6 @@ class BasicIndividualDetailEdit extends React.Component {
         });
         return (
             <div ref="detailPropertiesEdit">
-                <div className="ui attached secondary segment">
-                <BasicIndividualInput spec={{value: this.props.spec.value, valueType: this.props.spec.valueType, dataType: this.props.spec.dataType}} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onEnterPress={this.handleEnterPress.bind(this)} allowActionByKey="1"/>
-                </div>
                 <div className="ui attached primary segment">
                     <div className="ui list">
                         {list}
