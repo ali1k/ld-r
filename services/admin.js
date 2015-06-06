@@ -1,22 +1,15 @@
 'use strict';
-
-import {sparqlEndpoint} from '../configs/general';
+import {getHTTPOptions} from './utils/helpers';
 import {authGraphName, enableAuthentication, enableEmailNotifications} from '../configs/reactor';
 import {sendMail} from '../plugins/email/handleEmail';
 import AdminQuery from './sparql/AdminQuery';
 import AdminUtil from './utils/AdminUtil';
 import rp from 'request-promise';
 /*-------------config-------------*/
-const httpOptions = {
-  host: sparqlEndpoint[0].host,
-  port: sparqlEndpoint[0].port,
-  path: sparqlEndpoint[0].path
-};
 let user;
 const outputFormat = 'application/sparql-results+json';
-const defaultGraphName = authGraphName;
 /*-----------------------------------*/
-let rpPath, graphName, query, queryObject, utilObject;
+let httpOptions, rpPath, graphName, query, queryObject, utilObject;
 queryObject = new AdminQuery();
 utilObject = new AdminUtil();
 
@@ -26,7 +19,7 @@ export default {
     read: (req, resource, params, config, callback) => {
         if (resource === 'admin.userslist') {
             //SPARQL QUERY
-            graphName = (params.id ? params.id : defaultGraphName);
+            graphName = (params.id ? params.id : authGraphName[0]);
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {graphName: graphName, users: []});
@@ -42,6 +35,7 @@ export default {
             }
             query = queryObject.getUsers(graphName);
             //build http uri
+            httpOptions = getHTTPOptions(graphName);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
@@ -75,8 +69,9 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.activateUser(defaultGraphName, params.resourceURI);
+            query = queryObject.activateUser(authGraphName[0], params.resourceURI);
             //build http uri
+            httpOptions = getHTTPOptions(authGraphName[0]);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){

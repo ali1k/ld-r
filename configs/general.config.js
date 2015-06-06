@@ -4,9 +4,11 @@ export default {
     appFullTitle: ['Linked Data Reactor'],
     appShortTitle: ['LD-Reactor'],
     serverPort: [4000],
-    sparqlEndpoint: [
-        { host: 'localhost', port: 8890, path: '/sparql' }
-    ],
+    sparqlEndpoint: {
+        'generic': {
+            host: 'localhost', port: 8890, path: '/sparql'
+        }
+    },
     dbpediaLookupService: [
         { host: 'lookup.dbpedia.org' }
     ]

@@ -2,10 +2,17 @@
 var rp = require('request-promise');
 var config = require('../../configs/general');
 var reactorConfig = require('../../configs/reactor');
-var httpOptions = {
-  host: config.sparqlEndpoint[0].host,
-  port: config.sparqlEndpoint[0].port,
-  path: config.sparqlEndpoint[0].path
+var httpOptions, g;
+if(config.sparqlEndpoint[reactorConfig.authGraphName[0]]){
+    g = reactorConfig.authGraphName[0];
+}else{
+    //go for generic SPARQL endpoint
+    g = 'generic';
+}
+httpOptions = {
+  host: config.sparqlEndpoint[g].host,
+  port: config.sparqlEndpoint[g].port,
+  path: config.sparqlEndpoint[g].path
 };
 var appShortTitle = config.appShortTitle;
 var appFullTitle = config.appFullTitle;

@@ -1,19 +1,14 @@
 'use strict';
-import {sparqlEndpoint} from '../configs/general';
+import {getHTTPOptions} from './utils/helpers';
 import {defaultGraphName, resourceFocusType, enableAuthentication, maxNumberOfResourcesOnPage} from '../configs/reactor';
 import DatasetQuery from './sparql/DatasetQuery';
 import DatasetUtil from './utils/DatasetUtil';
 import rp from 'request-promise';
 /*-------------config-------------*/
-const httpOptions = {
-  host: sparqlEndpoint[0].host,
-  port: sparqlEndpoint[0].port,
-  path: sparqlEndpoint[0].path
-};
 const outputFormat = 'application/sparql-results+json';
 let user;
 /*-----------------------------------*/
-let rpPath, graphName, query, queryObject, utilObject, propertyURI;
+let httpOptions, rpPath, graphName, query, queryObject, utilObject, propertyURI;
 queryObject = new DatasetQuery();
 utilObject = new DatasetUtil();
 
@@ -24,7 +19,7 @@ export default {
         if (resource === 'dataset.resourcesByType') {
             let offset = (params.page - 1) * maxNumberOfResourcesOnPage;
             //SPARQL QUERY
-            graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName);
+            graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -37,6 +32,7 @@ export default {
             }
             query = queryObject.getResourcesByType(graphName, resourceFocusType, maxNumberOfResourcesOnPage, offset);
             //build http uri
+            httpOptions = getHTTPOptions(graphName);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
@@ -52,7 +48,7 @@ export default {
             });
         } else if (resource === 'dataset.countResourcesByType') {
             //SPARQL QUERY
-            graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName);
+            graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -65,6 +61,7 @@ export default {
             }
             query = queryObject.countResourcesByType(graphName, resourceFocusType);
             //build http uri
+            httpOptions = getHTTPOptions(graphName);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
@@ -77,7 +74,7 @@ export default {
             });
             //used to update other facets based on a change in a facet
         } else if (resource === 'dataset.facetsSideEffect') {
-            graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName);
+            graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);
            //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -89,6 +86,7 @@ export default {
                 user = {accountName: 'open'};
             }
             query = queryObject.getSideEffects(graphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
+            httpOptions = getHTTPOptions(graphName);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             // console.log(query);
             //send request
@@ -104,7 +102,7 @@ export default {
             });
         //handles changes in master level facets
         } else if (resource === 'dataset.facetsMaster') {
-            graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName);
+            graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);
            //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -125,6 +123,7 @@ export default {
                 return 0;
             }
             query = queryObject.getMasterPropertyValues(graphName, decodeURIComponent(params.selection.value));
+            httpOptions = getHTTPOptions(graphName);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
@@ -139,7 +138,7 @@ export default {
             });
         //handles changes in second level facets
         } else if (resource === 'dataset.facetsSecondLevel') {
-            graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName);
+            graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);
            //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -157,6 +156,7 @@ export default {
                 query = queryObject.countSecondLevelPropertyValues(graphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
             }
             //console.log(query);
+            httpOptions = getHTTPOptions(graphName);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){

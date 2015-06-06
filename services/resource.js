@@ -1,5 +1,5 @@
 'use strict';
-import {sparqlEndpoint} from '../configs/general';
+import {getHTTPOptions} from './utils/helpers';
 import {defaultGraphName, resourceFocusType, enableLogs, enableAuthentication, authGraphName} from '../configs/reactor';
 import ResourceQuery from './sparql/ResourceQuery';
 import ResourceUtil from './utils/ResourceUtil';
@@ -19,14 +19,9 @@ if(enableLogs){
     log = new Log('debug', fs.createWriteStream(logPath));
 }
 /*-------------config-------------*/
-const httpOptions = {
-  host: sparqlEndpoint[0].host,
-  port: sparqlEndpoint[0].port,
-  path: sparqlEndpoint[0].path
-};
 const outputFormat = 'application/sparql-results+json';
 /*-----------------------------------*/
-let rpPath, category, graphName, propertyURI, resourceURI, objectURI, objectValue, query, queryObject, utilObject;
+let httpOptions, rpPath, category, graphName, propertyURI, resourceURI, objectURI, objectValue, query, queryObject, utilObject;
 queryObject = new ResourceQuery();
 utilObject = new ResourceUtil();
 
@@ -52,6 +47,7 @@ export default {
             query = queryObject.getPrefixes() + queryObject.getProperties(graphName, resourceURI);
             // console.log(query);
             //build http uri
+            httpOptions = getHTTPOptions(graphName);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
@@ -90,6 +86,7 @@ export default {
                 user = {accountName: 'open'};
             }
             query = queryObject.getPrefixes() + queryObject.getObjectProperties(graphName, objectURI);
+            httpOptions = getHTTPOptions(graphName);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
@@ -127,6 +124,7 @@ export default {
                  user = {accountName: 'open'};
              }
              query = queryObject.getPrefixes() + queryObject.addTriple(params.dataset, params.resourceURI, params.propertyURI, params.objectValue, params.valueType);
+             httpOptions = getHTTPOptions(params.dataset);
              rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
              //send request
              rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
@@ -161,6 +159,7 @@ export default {
                 user = {accountName: 'open'};
             }
             query = queryObject.getPrefixes() + queryObject.updateTriple(params.dataset, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType);
+            httpOptions = getHTTPOptions(params.dataset);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
@@ -192,6 +191,7 @@ export default {
                 user = {accountName: 'open'};
             }
             query = queryObject.getPrefixes() + queryObject.updateObjectTriples(params.dataset, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.detailData);
+            httpOptions = getHTTPOptions(params.dataset);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
@@ -223,6 +223,7 @@ export default {
                 user = {accountName: 'open'};
             }
             query = queryObject.getPrefixes() + queryObject.updateTriples(params.dataset, params.resourceURI, params.propertyURI, params.changes);
+            httpOptions = getHTTPOptions(params.dataset);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
@@ -257,6 +258,7 @@ export default {
                 user = {accountName: 'open'};
             }
             query = queryObject.getPrefixes() + queryObject.deleteTriple(params.dataset, params.resourceURI, params.propertyURI, params.objectValue, params.valueType);
+            httpOptions = getHTTPOptions(params.dataset);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
@@ -288,6 +290,7 @@ export default {
                 user = {accountName: 'open'};
             }
             query = queryObject.getPrefixes() + queryObject.deleteTriples(params.dataset, params.resourceURI, params.propertyURI, params.changes);
+            httpOptions = getHTTPOptions(params.dataset);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){

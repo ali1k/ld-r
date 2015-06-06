@@ -30,7 +30,7 @@ class FacetedBrowser extends React.Component {
         if(!g){
             g = 'generic';
         }
-        let hasFacetConfig = facetsConfig[g].config ? (facetsConfig[g].config[propertyURI] ? 1 : 0) : 0;
+        let hasFacetConfig = facetsConfig[g] ? (facetsConfig[g].config ? (facetsConfig[g].config[propertyURI] ? 1 : 0) : 0) : 0;
         if(hasFacetConfig){
             //first check the custom facets config
             selectedConfig = facetsConfig[g].config[propertyURI];
