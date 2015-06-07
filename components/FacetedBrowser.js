@@ -195,7 +195,7 @@ class FacetedBrowser extends React.Component {
         let output;
         let l = this.getBrowsableList();
         if(!l){
-            output = <div className="ui warning message"><div className="header"> There was no datasets to browse! Please add your desired graph names in <b>facetsConfig</b>.</div></div>;
+            output = <div className="ui warning message"><div className="header"> There was no datasets to browse! Please add your desired graph names to the <b>facetsConfig</b>.</div></div>;
         }else{
             output = l.map(function(node, index) {
                 return (
