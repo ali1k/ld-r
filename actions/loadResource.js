@@ -1,5 +1,6 @@
 import {appFullTitle} from '../configs/general';
 export default function loadResource(context, payload, done) {
+    context.dispatch('START_TASK_RESOURCE', {});
     context.service.read('resource.properties', payload, {timeout: 5 * 1000}, function (err, res) {
         if (err) {
             context.dispatch('LOAD_RESOURCE_FAILURE', err);

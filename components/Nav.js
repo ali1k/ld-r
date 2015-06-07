@@ -30,8 +30,8 @@ class Nav extends React.Component {
             <nav ref="defaultNavbar" className="ui blue menu inverted navbar page grid">
                     <NavLink routeName="home" className="brand item" activeClass="active"><img className="ui mini image" src="/assets/img/ld-reactor.gif" alt="ld-reactor" /></NavLink>
                     <NavLink routeName="about" className="item" activeClass="active">About {appShortTitle} </NavLink>
-                    <NavLink routeName="dataset" className="item" activeClass="active" href="/dataset">Default Dataset</NavLink>
-                    <NavLink routeName="facets" className="item" activeClass="active" href="/browse">Faceted Browser</NavLink>
+                    <NavLink routeName="dataset" className="item" activeClass="active" href="/dataset"> Dataset</NavLink>
+                    <NavLink routeName="facets" className="item" activeClass="active" href="/browse"> Browse Data</NavLink>
                     {userMenu}
                     <div className="ui right item link" onClick={this.showHelpModal}>
                             <i className="small help circle icon"></i>

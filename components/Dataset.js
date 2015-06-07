@@ -1,6 +1,6 @@
 import React from 'react';
 import DatasetStore from '../stores/DatasetStore';
-import {resourceFocusType} from '../configs/reactor';
+import {resourceFocusType, defaultGraphName} from '../configs/reactor';
 import {connectToStores} from 'fluxible/addons';
 import {NavLink} from 'fluxible-router';
 import getResourcesCount from '../actions/getResourcesCount';
@@ -50,7 +50,7 @@ class Dataset extends React.Component {
             <div className="ui page grid" ref="dataset">
                 <div className="ui column">
                     <div className="ui segment top attached">
-                        <h3>{this.props.DatasetStore.total ? <span className="ui big black circular label">{this.addCommas(this.props.DatasetStore.total)}</span> : ''} Resources of type {typeSt}</h3>
+                        <h3>{this.props.DatasetStore.total ? <span className="ui big black circular label">{this.addCommas(this.props.DatasetStore.total)}</span> : ''} Resources of type {typeSt} in {defaultGraphName[0] ? <a href={defaultGraphName[0]}>{defaultGraphName[0]}</a> : ' all datasets'}</h3>
                         <ResourceList resources={this.props.DatasetStore.resources} graphName={graphName} isBig={true} />
                     </div>
                     <div className= "ui secondary segment bottom attached">
