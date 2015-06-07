@@ -155,7 +155,7 @@ export default {
             }else{
                 query = queryObject.countSecondLevelPropertyValues(graphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
             }
-            //console.log(query);
+            // console.log(query);
             httpOptions = getHTTPOptions(graphName);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request

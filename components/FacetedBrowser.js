@@ -78,7 +78,17 @@ class FacetedBrowser extends React.Component {
         }
         return properties;
     }
-    handleOnCheck(level, status, value, propertyURI) {
+    findIndexInSelection(arr, value){
+        let i = -1;
+        arr.forEach(function(el, index){
+            if(el.value === value){
+                i = index;
+            }
+        });
+        return i;
+    }
+    handleOnCheck(level, valueType, dataType, status, value, propertyURI) {
+        // console.log(level, valueType, dataType, status, value, propertyURI);
         let self = this;
         let hadAnySelected = 0;
         //handling cascading facet update
@@ -90,9 +100,9 @@ class FacetedBrowser extends React.Component {
                 if(!this.state.selection[propertyURI]){
                     this.state.selection[propertyURI] = [];
                 }
-                this.state.selection[propertyURI].push(value);
+                this.state.selection[propertyURI].push({value: value, valueType: valueType, dataType: dataType});
             }else{
-                this.state.selection[propertyURI].splice(this.state.selection[propertyURI].indexOf(value), 1);
+                this.state.selection[propertyURI].splice(this.findIndexInSelection(this.state.selection[propertyURI], value), 1);
             }
             //check if there are active facets to be updated as side effect
             sideEffectsArr = [];
@@ -216,11 +226,11 @@ class FacetedBrowser extends React.Component {
         if(this.props.FacetedBrowserStore.graphName){
             let list = properties.map(function(node, index) {
                 //console.log(self.props.FacetedBrowserStore.facets);
-                if(self.props.FacetedBrowserStore.facets[node.value]){
+                if(self.props.FacetedBrowserStore.facets[node.value] && self.props.FacetedBrowserStore.facets[node.value].length){
                     showFactes = 1;
                     //console.log(self.findIndexInProperties(properties, node.value));
                     return (
-                        <Facet onCheck={self.handleOnCheck.bind(self, 2)} key={self.findIndexInProperties(properties, node.value)} spec={{propertyURI: node.value, property: self.getPropertyLabel(node.value), instances: self.props.FacetedBrowserStore.facets[node.value]}} config={self.getPropertyConfig(self.props.FacetedBrowserStore.graphName, node.value)} graphName={self.props.FacetedBrowserStore.graphName}/>
+                        <Facet onCheck={self.handleOnCheck.bind(self, 2, self.props.FacetedBrowserStore.facets[node.value][0].valueType, self.props.FacetedBrowserStore.facets[node.value][0].dataType)} key={self.findIndexInProperties(properties, node.value)} spec={{propertyURI: node.value, property: self.getPropertyLabel(node.value), instances: self.props.FacetedBrowserStore.facets[node.value]}} config={self.getPropertyConfig(self.props.FacetedBrowserStore.graphName, node.value)} graphName={self.props.FacetedBrowserStore.graphName}/>
                     );
                 }else{
                     return undefined;
@@ -243,7 +253,7 @@ class FacetedBrowser extends React.Component {
             return (
                 <div className="ui page grid" ref="facetedBrowser">
                         <div className="ui stackable four wide column">
-                            <Facet color="green" onCheck={this.handleOnCheck.bind(this, 1)} key="master" maxHeight={500} minHeight={300} spec={{property: '', propertyURI: '', instances: properties}} config={{label: 'Properties'}} graphName={this.props.FacetedBrowserStore.graphName}/>
+                            <Facet color="green" onCheck={this.handleOnCheck.bind(this, 1, 'uri', '')} key="master" maxHeight={500} minHeight={300} spec={{property: '', propertyURI: '', instances: properties}} config={{label: 'Properties'}} graphName={this.props.FacetedBrowserStore.graphName}/>
                         </div>
                         {facetsDIV}
                         <div className={'ui stackable ' + resSize + ' wide column'}>

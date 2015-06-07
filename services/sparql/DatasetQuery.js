@@ -1,10 +1,9 @@
 'use strict';
-import validUrl from 'valid-url';
-
 class DatasetQuery{
     constructor() {
         /*jshint multistr: true */
         this.prefixes='\
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \
         PREFIX dcterms: <http://purl.org/dc/terms/> \
         PREFIX void: <http://rdfs.org/ns/void#> \
         PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
@@ -102,36 +101,63 @@ class DatasetQuery{
         return this.prefixes + this.query;
     }
     getMultipleFilters(prevSelection) {
-        let st = '', filters, tmp, i = 0, hasInvalidURI = 0, hasValidURI = 0;
+        let st = '', filters, tmp, i = 0, hasURIVal = 0, hasLiteralVal = 0, typedLiteralVal = '';
         filters = [];
         for (let key in prevSelection) {
-            hasInvalidURI = 0;
-            hasValidURI = 0;
+            hasURIVal = 0;
+            hasLiteralVal = 0;
+            typedLiteralVal = '';
             tmp = [];
             i++;
             if(prevSelection[key].length){
                 prevSelection[key].forEach(function(el){
                     // automatically detect uris even in literal values
-                    if(validUrl.is_web_uri(el)){
-                        tmp.push('<' + el + '>');
-                        hasValidURI = 1;
+                    if(el.valueType === 'uri'){
+                        tmp.push('<' + el.value + '>');
+                        hasURIVal = 1;
                     }else{
-                        hasInvalidURI = 1 ;
-                        tmp.push('"' + el + '"');
+                        hasLiteralVal = 1;
+                        if(el.valueType === 'literal'){
+                            tmp.push('"' + el.value + '"');
+                            typedLiteralVal = 'str';
+                        }else{
+                            //handle typed-literal values
+                            switch (el.dataType) {
+                                case 'http://www.w3.org/2001/XMLSchema#integer':
+                                    typedLiteralVal = 'xsd:integer';
+                                    tmp.push(el.value);
+                                    break;
+                                case 'http://www.w3.org/2001/XMLSchema#decimal':
+                                    typedLiteralVal = 'xsd:decimal';
+                                    tmp.push(el.value);
+                                    break;
+                                case 'http://www.w3.org/2001/XMLSchema#float':
+                                    typedLiteralVal = 'xsd:float';
+                                    tmp.push(el.value);
+                                    break;
+                                case 'http://www.w3.org/2001/XMLSchema#double':
+                                    typedLiteralVal = 'xsd:double';
+                                    tmp.push(el.value);
+                                    break;
+                                default:
+                                    tmp.push('"' + el.value + '"');
+                                    typedLiteralVal = 'str';
+                            }
+                        }
                     }
                 })
                 //special case: values are heterogenious, we should convert all to string and use str function then
-                if(hasInvalidURI && hasValidURI) {
+                if(hasURIVal && hasLiteralVal) {
                     tmp = [];
                     prevSelection[key].forEach(function(el){
-                        tmp.push('"' + el + '"');
+                        tmp.push('"' + el.value + '"');
                     });
                     filters.push('str(?v' + i + ') IN ('+ tmp.join(',') +')');
                 }else{
-                    if(hasInvalidURI){
-                        filters.push('str(?v' + i + ') IN ('+ tmp.join(',') +')');
-                    }else{
+                    if(hasURIVal){
                         filters.push('?v' + i + ' IN ('+ tmp.join(',') +')');
+                    }else{
+                        filters.push(typedLiteralVal+'(?v' + i + ') IN ('+ tmp.join(',') +')');
                     }
                 }
                 //---------
