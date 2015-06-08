@@ -7,8 +7,6 @@ export default {
     resourceFocusType: [''],
     //used for pagination in resource list
     maxNumberOfResourcesOnPage: [100],
-    //only allow to view data -> disable edit
-    readOnly: 0,
     //will withdraw access if not logged in
     enableAuthentication: 0,
     //graph that stores users data, must be loaded beforehand
@@ -25,6 +23,8 @@ export default {
     propertiesConfig: {
         //these configs are used as generic configs, which still can be empty!
         'generic': {
+            //only allow to view data -> disable edit
+            readOnly: 0,
             //if enabled, will categorize properties in different tabs based on propertyCategories
             useCategories: 0,
             categories: [''],
@@ -36,6 +36,7 @@ export default {
         //for each graph name, you can define custom configs.
         //if no custom config is defined for a specific graph, the generic config will be used.
         'https://github.com/ali1k/ld-reactor/blob/master/plugins/authentication/schema/users.ttl#': {
+            readOnly: 0,
             useCategories: 0,
             config: {
 

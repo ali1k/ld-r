@@ -1,6 +1,6 @@
 import React from 'react';
 import Property from './Property';
-import {readOnly, propertiesConfig, enableAuthentication} from '../configs/reactor';
+import {propertiesConfig, enableAuthentication} from '../configs/reactor';
 import ResourceStore from '../stores/ResourceStore';
 import {connectToStores} from 'fluxible/addons';
 import {NavLink} from 'fluxible-router';
@@ -47,6 +47,7 @@ class Resource extends React.Component {
         }
     }
     render() {
+        let readOnly;
         let user = this.context.getUser();
         let self = this;
         let selectedConfig, accessLevel, isWriteable, configReadOnly;
@@ -55,6 +56,13 @@ class Resource extends React.Component {
         //if no specific config is found, get the generic config
         if(!selectedConfig){
             selectedConfig = propertiesConfig.generic;
+        }
+        //if readOnly is not defined make it true
+        if(typeof selectedConfig.readOnly === 'undefined'){
+            readOnly = 1;
+        }else{
+            //get readOnly property for the graphName
+            readOnly = selectedConfig.readOnly;
         }
         //create a list of properties
         let list = this.props.ResourceStore.properties.map(function(node, index) {
