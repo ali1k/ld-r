@@ -150,16 +150,16 @@ class Property extends React.Component {
                               </div>;
             }
         }
-        let list, reactorTypeConfig = '';
+        let list, objectReactorTypeConfig = '';
         if(this.props.config){
-            if(this.props.config.reactorType){
-                reactorTypeConfig = this.props.config.reactorType[0];
+            if(this.props.config.objectReactorType){
+                objectReactorTypeConfig = this.props.config.objectReactorType[0];
             }
         }
         //check if it is the only value of a property -> used to hide delete button
         let isOnlyChild = (this.calculateValueCount(this.props.spec.instances) === 1);
         //dispatch to the right reactor
-        switch(reactorTypeConfig){
+        switch(objectReactorTypeConfig){
             case 'IndividualObjectReactor':
                 list = this.props.spec.instances.map(function(node, index) {
                     if(!node){
