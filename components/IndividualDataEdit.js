@@ -26,7 +26,7 @@ class IndividualDataEdit extends React.Component {
             if(this.props.config.editor){
                 editorConfig = this.props.config.editor[0];
                 //in case of Aggregate nature, can consider editorI
-                if(this.props.config.reactorType && this.props.config.reactorType[0] === 'AggregateObjectReactor' && this.props.config.editorI){
+                if(this.props.config.objectReactorType && this.props.config.objectReactorType[0] === 'AggregateObjectReactor' && this.props.config.editorI){
                     editorConfig = this.props.config.editorI[0];
                 }
             }
