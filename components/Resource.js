@@ -1,5 +1,5 @@
 import React from 'react';
-import Property from './Property';
+import IndividualPropertyReactor from './IndividualPropertyReactor';
 import {propertiesConfig, enableAuthentication} from '../configs/reactor';
 import ResourceStore from '../stores/ResourceStore';
 import {connectToStores} from 'fluxible/addons';
@@ -106,7 +106,7 @@ class Resource extends React.Component {
                     }
                 }
                 return (
-                    <Property key={index} spec={node} readOnly={configReadOnly} config={selectedConfig.config[node.propertyURI]} graphName={self.props.ResourceStore.graphName} resource={self.props.ResourceStore.resourceURI}/>
+                    <IndividualPropertyReactor key={index} spec={node} readOnly={configReadOnly} config={selectedConfig.config[node.propertyURI]} graphName={self.props.ResourceStore.graphName} resource={self.props.ResourceStore.resourceURI}/>
                 );
             }
         });

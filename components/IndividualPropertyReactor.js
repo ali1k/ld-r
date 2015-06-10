@@ -10,7 +10,7 @@ import updateIndividualObjectDetail from '../actions/updateIndividualObjectDetai
 import updateAggObject from '../actions/updateAggObject';
 import deleteAggObject from '../actions/deleteAggObject';
 
-class Property extends React.Component {
+class IndividualPropertyReactor extends React.Component {
     constructor(props) {
         super(props);
         this.state = {inNewValueMode: false, showNewInsert: true};
@@ -184,7 +184,7 @@ class Property extends React.Component {
                 });
         }
         return (
-            <div className="property item" ref='property'>
+            <div className="property item" ref='individualPropertyReactor'>
                 <div className="ui horizontal list">
                     <div className="item">
                         <PropertyHeader spec={this.props.spec} config={this.props.config} size="3" />
@@ -200,7 +200,7 @@ class Property extends React.Component {
         );
     }
 }
-Property.contextTypes = {
+IndividualPropertyReactor.contextTypes = {
     executeAction: React.PropTypes.func.isRequired
 };
-export default Property;
+export default IndividualPropertyReactor;
