@@ -6,6 +6,7 @@ import BasicLinkedIndividualView from './BasicLinkedIndividualView';
 import BasicOptionView from './BasicOptionView';
 import PasswordView from './PasswordView';
 import LanguageView from './more/LanguageView';
+import TwoLetterCountryView from './more/TwoLetterCountryView';
 
 class IndividualDataView extends React.Component {
     render() {
@@ -48,6 +49,9 @@ class IndividualDataView extends React.Component {
             break;
             case 'LanguageView':
                 viewer = <LanguageView spec={this.props.spec} config={this.props.config}/>;
+            break;
+            case 'TwoLetterCountryView':
+                viewer = <TwoLetterCountryView spec={this.props.spec} config={this.props.config}/>;
             break;
             case 'BasicOptionView':
                 viewer = <BasicOptionView spec={this.props.spec} config={this.props.config}/>;
