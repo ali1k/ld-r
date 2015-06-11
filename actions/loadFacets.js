@@ -19,7 +19,7 @@ export default function loadFacets(context, payload, done) {
                 context.dispatch('LOAD_FACETS_RESOURCES_SUCCESS', res);
             }
             context.dispatch('UPDATE_PAGE_TITLE', {
-                pageTitle: (appFullTitle + ' | Faceted Browser | ' + payload.id) || ''
+                pageTitle: (appFullTitle + ' | Faceted Browser | ' + decodeURIComponent(payload.id)) || ''
             });
             done();
         });
