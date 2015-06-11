@@ -209,9 +209,10 @@ class FacetedBrowser extends React.Component {
         }else{
             output = l.map(function(node, index) {
                 return (
-                    <NavLink routeName="browse" className="ui item" href={'/browse/' + encodeURIComponent(node)} key={index}>
-                        <div className="content"> <i className="ui blue icon cubes"></i> {node} </div>
-                    </NavLink>
+                    <a className="ui item" key={index} href={'/browse/' + encodeURIComponent(node)}> <div className="content"> <i className="ui blue icon cubes"></i> {node} </div> </a>
+                    // <NavLink routeName="browse" className="ui item" href={'/browse/' + encodeURIComponent(node)} key={index}>
+                    //     <div className="content"> <i className="ui blue icon cubes"></i> {node} </div>
+                    // </NavLink>
                 );
             });
         }
