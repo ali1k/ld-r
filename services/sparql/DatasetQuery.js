@@ -29,7 +29,7 @@ class DatasetQuery{
         if(String(graphName)!==''){
             /*jshint multistr: true */
             this.query = '\
-            SELECT count(?resource) AS ?total WHERE {\
+            SELECT count(DISTINCT ?resource) AS ?total WHERE {\
                 { GRAPH <' + graphName + '> \
                     { '+ st +' \
                     } \
@@ -39,7 +39,7 @@ class DatasetQuery{
         }else{
             /*jshint multistr: true */
             this.query = '\
-            SELECT count(?resource) AS ?total WHERE { \
+            SELECT count(DISTINCT ?resource) AS ?total WHERE { \
                 { GRAPH ?graphName \
                     { '+ st +' \
                     }\
@@ -91,7 +91,7 @@ class DatasetQuery{
         let st = '?s <'+ propertyURI + '>  ?v.';
         /*jshint multistr: true */
         this.query = '\
-        SELECT DISTINCT (count(?s) AS ?total) ?v WHERE {\
+        SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {\
             { GRAPH <' + graphName + '> \
                 { '+ st +' \
                 } \
@@ -176,7 +176,7 @@ class DatasetQuery{
         st = st + '?s <'+ propertyURI + '>  ?v.';
         /*jshint multistr: true */
         this.query = '\
-        SELECT DISTINCT (count(?s) AS ?total) ?v WHERE {\
+        SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {\
             { GRAPH <' + graphName + '> \
                 { '+ st +' \
                 } \
@@ -189,7 +189,7 @@ class DatasetQuery{
         let st = this.getMultipleFilters(prevSelection);
         /*jshint multistr: true */
         this.query = '\
-        SELECT DISTINCT (count(?s) AS ?total) WHERE {\
+        SELECT (count(DISTINCT ?s) AS ?total) WHERE {\
             { GRAPH <' + graphName + '> \
                 { '+ st +' \
                 } \
