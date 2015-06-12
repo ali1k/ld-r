@@ -34,6 +34,7 @@ class CheckboxItem extends React.Component {
     }
     render() {
         let title, c;
+        let graphName = this.props.graphName;
         if(this.props.config && this.props.config.browserViewer){
             c = this.props.config;
             //we simulate viewer for individualDataView
@@ -48,7 +49,10 @@ class CheckboxItem extends React.Component {
             }
             if(this.props.spec.valueType === 'uri'){
                 if(this.props.config && this.props.config.hasLinkedValue){
-                    title = <a className="ui label" href={'/dataset/' + encodeURIComponent(this.props.graphName) + '/resource/' + encodeURIComponent(this.props.spec.value)} target="_blank"> {title} </a>;
+                    if(this.props.config.linkedGraph){
+                        graphName = this.props.config.linkedGraph[0];
+                    }
+                    title = <a className="ui label" href={'/dataset/' + encodeURIComponent(graphName) + '/resource/' + encodeURIComponent(this.props.spec.value)} target="_blank"> {title} </a>;
                 }else{
                     title = <a href={this.props.spec.value} target="_blank"> {title} </a>;
                 }
