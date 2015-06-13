@@ -1,10 +1,12 @@
 import React from 'react';
 import PropertyHeader from './PropertyHeader';
 import DataBrowseReactor from './DataBrowseReactor';
+import SearchInput from 'react-search-input';
 
 class Facet extends React.Component {
     constructor(props){
         super(props);
+        this.state = {searchTerm: ''};
     }
     checkItem(status, value) {
         this.props.onCheck(status, value, this.props.spec.propertyURI);
@@ -12,6 +14,10 @@ class Facet extends React.Component {
     //used for custom sorting
     compare(a, b) {
         return (parseInt(b.total) - parseInt(a.total));
+    }
+    //filter content
+    searchUpdated(term) {
+        this.setState({searchTerm: term}); // needed to force re-render
     }
     render() {
         let self = this;
@@ -25,6 +31,15 @@ class Facet extends React.Component {
         if(self.props.spec.propertyURI){
             this.props.spec.instances.sort(this.compare);
         }
+        let newSpec = {};
+        let cloneInstances = this.props.spec.instances.slice(0);
+        newSpec.property = this.props.spec.property;
+        newSpec.propertyURI = this.props.spec.propertyURI;
+        if (this.refs.search) {
+            let filters = ['label', 'value'];
+            cloneInstances = cloneInstances.filter(this.refs.search.filter(filters));
+        }
+        newSpec.instances = cloneInstances;
         return (
             <div className={cardClasses} ref="facet">
                 <div className="content">
@@ -39,11 +54,12 @@ class Facet extends React.Component {
                     </div>
                     <div className="description">
                         <div className="ui form" style={descStyle}>
-                            <DataBrowseReactor shortenURI={true} spec={this.props.spec} config={this.props.config} onSelect={this.checkItem.bind(this)} graphName={this.props.graphName}/>
+                            <DataBrowseReactor shortenURI={true} spec={newSpec} config={this.props.config} onSelect={this.checkItem.bind(this)} graphName={this.props.graphName}/>
                         </div>
                     </div>
                   </div>
                   <div className="extra content">
+                      <SearchInput className="ui mini search icon input" ref="search" onChange={this.searchUpdated.bind(this)} throttle={500}/>
                   </div>
             </div>
         );
