@@ -1,11 +1,11 @@
 {
   "name": "linked-data-reactor",
   "version": "0.1.66",
-  "description": "Reactive Linked Data Components",
+  "description": "Linked Data Reactor",
   "private": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/ali1k/ld-reactor.git"
+    "url": "https://github.com/ali1k/ld-r.git"
   },
   "scripts": {
     "build": "grunt build && node start.js",
