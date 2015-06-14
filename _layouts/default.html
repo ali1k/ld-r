@@ -22,35 +22,35 @@
         </nav>
           <div class="ui stackable page grid">
             <div class="four wide column">
-                <div class="ui pointing vertical menu">
+                <div class="ui pointing vertical menu" id="menu">
                   <div class="header item">
                     LD-Reactor Docs
                   </div>
-                  <a class="item" href="/">
+                  <a class="item" href="/" data-section="">
                     Home
                   </a>
-                  <a class="item" href="/docs/quickstart.html">
+                  <a class="item" href="/docs/quickstart.html" data-section="quickstart">
                     Quick Start
                   </a>
                   <div class="item">
                     Configs
                     <div class="menu">
-                        <a class="item" href="/docs/configGeneral.html">General</a>
-                        <a class="item" href="/docs/configProperties.html">Properties</a>
-                        <a class="item" href="/docs/configFacets.html">Faceted Browser</a>
+                        <a class="item" href="/docs/configGeneral.html" data-section="configGeneral">General</a>
+                        <a class="item" href="/docs/configProperties.html" data-section="configProperties">Properties</a>
+                        <a class="item" href="/docs/configFacets.html" data-section="configFacets">Faceted Browser</a>
                     </div>
                   </div>
                   <div class="item">
                     Components
                     <div class="menu">
-                        <a class="item" href="/docs/componentsCore.html">Core Components</a>
-                        <a class="item" href="/docs/componentsOthers.html">Others</a>
+                        <a class="item" href="/docs/componentsCore.html" data-section="componentsCore">Core Components</a>
+                        <a class="item" href="/docs/componentsOthers.html" data-section="componentsOthers">Others</a>
                     </div>
                   </div>
-                  <a class="item" href="/docs/demo.html">
+                  <a class="item" href="/docs/demo.html" data-section="demo">
                     Demo
                   </a>
-                  <a class="item" href="/docs/contact.html">
+                  <a class="item" href="/docs/contact.html" data-section="contact">
                     Contact Us
                   </a>
                 </div>
@@ -62,9 +62,10 @@
             </div>
           </div>
     </div>
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js">
     </script>
-
+    <script>
+      $('#menu [data-section="{{page.section}}"]').addClass('blue active');
+    </script>
   </body>
 </html>
