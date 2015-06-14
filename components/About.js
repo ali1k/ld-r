@@ -9,7 +9,7 @@ class About extends React.Component {
                     <div className="ui segment content">
                         <h2 className="ui header">About</h2>
                         <p>
-                            Documentation is available on <a href="https://github.com/ali1k/ld-reactor">Github</a>. <br/>LD-Reactor is developed by:
+                            Documentation is available at <a href="http://ld-r.org">http://ld-r.org</a>. <br/>LD-Reactor is developed by:
                             <div className="blue ui card item">
                               <div className="content">
                                 <div className="header"><a href="http://vu.nl" target="_blank"><img className="ui centered medium image" src="/assets/img/VU_logo.png" /></a></div>
