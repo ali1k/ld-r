@@ -1,5 +1,5 @@
-[![Dependency Status](https://david-dm.org/ali1k/ld-reactor.svg)](https://david-dm.org/ali1k/ld-reactor)
-[![devDependency Status](https://david-dm.org/ali1k/ld-reactor/dev-status.svg)](https://david-dm.org/ali1k/ld-reactor#info=devDependencies)
+[![Dependency Status](https://david-dm.org/ali1k/ld-r.svg)](https://david-dm.org/ali1k/ld-r)
+[![devDependency Status](https://david-dm.org/ali1k/ld-r/dev-status.svg)](https://david-dm.org/ali1k/ld-r#info=devDependencies)
 
 # Linked Data Reactor
 
