@@ -1,7 +1,7 @@
 import React from 'react';
 import CheckboxItem from './CheckboxItem';
 
-class DataBrowseReactor extends React.Component {
+class DataBrowse extends React.Component {
     handleSelect(status, value) {
         this.props.onSelect(status, value);
     }
@@ -37,4 +37,4 @@ class DataBrowseReactor extends React.Component {
     }
 }
 
-export default DataBrowseReactor;
+export default DataBrowse;
