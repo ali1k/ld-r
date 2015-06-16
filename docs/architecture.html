@@ -18,11 +18,11 @@ Architecture
     <div class="ui divided list">
         <div class="item">
           <div class="content">
-                <div class="header ui circular labels">
+            <div class="header ui circular labels">
                   <a class="ui label">
                     1
                   </a> Dataset
-                </div>
+            </div>
             <div class="description">
                 This layer handles events dealing with a set of resources. The unit of action here is a named graph.
             </div>
@@ -30,7 +30,11 @@ Architecture
         </div>
         <div class="item">
           <div class="content">
-            <a class="header">Resource</a>
+              <div class="header ui circular labels">
+                    <a class="ui label">
+                      2
+                  </a> Resource
+              </div>
             <div class="description">
                 This layer handles events related to a resource (i.e. anything we would like to describe). Resource URI is used here for identifying the resource.
             </div>
@@ -38,7 +42,11 @@ Architecture
         </div>
         <div class="item">
           <div class="content">
-            <a class="header">Property</a>
+              <div class="header ui circular labels">
+                    <a class="ui label">
+                      3
+                  </a> Property
+              </div>
             <div class="description">
                 This layer handles events related to  properties of a given resource. It can deal with either an individual property or aggregate properties (i.e. combining two or more properties).
             </div>
@@ -46,7 +54,11 @@ Architecture
         </div>
         <div class="item">
           <div class="content">
-            <a class="header">Object</a>
+              <div class="header ui circular labels">
+                    <a class="ui label">
+                      4
+                  </a> Object
+              </div>
             <div class="description">
                 This layer handles the value(s) of a given property from a given resource. It can be either applied to each individual value of a property or on an aggregate basis to the whole values of a property (e.g. in case of a Map or Chart).
             </div>
@@ -54,7 +66,11 @@ Architecture
         </div>
         <div class="item">
           <div class="content">
-            <a class="header">View/Edit/Browse Selector</a>
+              <div class="header ui circular labels">
+                    <a class="ui label">
+                      5
+                  </a> View/Edit/Browse Selector
+              </div>
             <div class="description">
 
             </div>
@@ -62,7 +78,11 @@ Architecture
         </div>
         <div class="item">
           <div class="content">
-            <a class="header">View/Edit/Browse</a>
+              <div class="header ui circular labels">
+                    <a class="ui label">
+                      6
+                  </a> View/Edit/Browse
+              </div>
             <div class="description">
 
             </div>
