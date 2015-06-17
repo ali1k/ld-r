@@ -32,5 +32,14 @@ Config: General
       <td>The port number of your application.</td>
       <td>[4000]</td>
     </tr>
+    <tr>
+      <td class="positive">sparqlEndpoint</td>
+      <td>The specification your SPARQL endpoint. It should contain the graph name on which your data can be found.</td>
+      <td>
+             'http://dbpedia.org': {
+                  host: 'dbpedia.org', port: 80, path: '/sparql'
+              }
+      </td>
+    </tr>
   </tbody>
 </table>
