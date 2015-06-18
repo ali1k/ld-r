@@ -31,5 +31,50 @@ Config: General
       <td>Short title of your application.</td>
       <td>['LD-Reactor']</td>
     </tr>
+    <tr >
+      <td class="positive">defaultGraphName</td>
+      <td>Name of the default graph to be viewed/browsed/edited. If not set, will consider all existing graph names in 'generic' endpoint. Leave it empty if you want to browse multiple graphs.</td>
+      <td>['http://dbpedia.org']</td>
+    </tr>
+    <tr >
+      <td class="positive">resourceFocusType</td>
+      <td>If you want to focus on specific resource types (i.e. RDF Classes) to to be viewed/edited. Multiple entity types can be also set. If no value is set, all existing entity types will be shown.</td>
+      <td>['http://rdfs.org/ns/void#Dataset', 'http://dbpedia.org/ontology/Organisation']</td>
+    </tr>
+    <tr >
+      <td class="positive">maxNumberOfResourcesOnPage</td>
+      <td>Maximum number of resources on page.</td>
+      <td>[20]</td>
+    </tr>
+    <tr >
+      <td class="positive">enableAuthentication</td>
+      <td>If set to '1', will prevent access to datasets unless user is registered and logged in to the system.</td>
+      <td>0</td>
+    </tr>
+    <tr >
+      <td class="positive">authGraphName</td>
+      <td>Name of the graph used to store user's data. It is required if <span class="ui label">enableAuthentication</span> is set to '1'.</td>
+      <td>https://ld-r.org/users</td>
+    </tr>
+    <tr >
+      <td class="positive">enableUserConfirmation</td>
+      <td>If set to '1', will allow super users to confirm and activate registered users.</td>
+      <td>0</td>
+    </tr>
+    <tr >
+      <td class="positive">enableEmailNotifications</td>
+      <td>If set to '1', will enable email notifications on new user registration, user account activation, etc.</td>
+      <td>0</td>
+    </tr>
+    <tr >
+      <td class="positive">dynamicResourceDomain</td>
+      <td>Used as domain name when creating random resource URIs.</td>
+      <td>http://example.com</td>
+    </tr>
+    <tr >
+      <td class="positive">enableLogs</td>
+      <td>If set to '1', will log all update actions of users in the 'log' directory.</td>
+      <td>0</td>
+    </tr>
   </tbody>
 </table>
