@@ -1,4 +1,4 @@
-import {appFullTitle} from '../configs/general';
+import {appFullTitle} from '../configs/reactor';
 export default function loadResource(context, payload, done) {
     context.dispatch('START_TASK_RESOURCE', {});
     context.service.read('resource.properties', payload, {timeout: 5 * 1000}, function (err, res) {

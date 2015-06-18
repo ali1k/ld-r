@@ -1,6 +1,6 @@
 'use strict';
 var rp = require('request-promise');
-var config = require('../../configs/general');
+var config = require('../../configs/server');
 var reactorConfig = require('../../configs/reactor');
 var httpOptions, g;
 if(config.sparqlEndpoint[reactorConfig.authGraphName[0]]){

@@ -1,13 +1,17 @@
 //important: first value in the array is considered as default value for the property
 //this file is visible to the client/server-side
 export default {
+    //full page title
+    appFullTitle: ['Linked Data Reactor'],
+    //short page title
+    appShortTitle: ['LD-Reactor'],
     //Default Named Graph under observation, if not set , will consider all existing graph names
     defaultGraphName: [''],
     //resource types to start with, can be an array, if not set, all existing types will be shown
     resourceFocusType: [''],
     //used for pagination in resource list
     maxNumberOfResourcesOnPage: [100],
-    //will withdraw access if not logged in
+    //will prevent access if not logged in
     enableAuthentication: 0,
     //graph that stores users data, must be loaded beforehand
     authGraphName: ['https://github.com/ali1k/ld-reactor/blob/master/plugins/authentication/schema/users.ttl#'],

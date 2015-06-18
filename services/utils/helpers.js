@@ -1,4 +1,4 @@
-import {sparqlEndpoint} from '../../configs/general';
+import {sparqlEndpoint} from '../../configs/server';
 import validUrl from 'valid-url';
 export default {
     getHTTPOptions: function(graphName) {

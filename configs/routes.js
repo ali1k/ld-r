@@ -2,7 +2,7 @@ import loadDataset from '../actions/loadDataset';
 import loadResource from '../actions/loadResource';
 import loadUsersList from '../actions/loadUsersList';
 import loadFacets from '../actions/loadFacets';
-import {appFullTitle, appShortTitle} from '../configs/general';
+import {appFullTitle, appShortTitle} from '../configs/reactor';
 
 export default {
     home: {

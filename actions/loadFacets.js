@@ -1,4 +1,4 @@
-import {appFullTitle} from '../configs/general';
+import {appFullTitle} from '../configs/reactor';
 
 export default function loadFacets(context, payload, done) {
     //timer

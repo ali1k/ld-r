@@ -7,7 +7,7 @@ passportConfig.enable(passport);
 //----------------------
 var handleEmail = require('../../plugins/email/handleEmail');
 var rp = require('request-promise');
-var config = require('../../configs/general');
+var config = require('../../configs/server');
 var reactorConfig = require('../../configs/reactor');
 var httpOptions, g;
 if(config.sparqlEndpoint[reactorConfig.authGraphName[0]]){
@@ -21,8 +21,8 @@ httpOptions = {
   port: config.sparqlEndpoint[g].port,
   path: config.sparqlEndpoint[g].path
 };
-var appShortTitle = config.appShortTitle;
-var appFullTitle = config.appFullTitle;
+var appShortTitle = reactorConfig.appShortTitle;
+var appFullTitle = reactorConfig.appFullTitle;
 
 var outputFormat = 'application/sparql-results+json';
 module.exports = function handleAuthentication(server) {

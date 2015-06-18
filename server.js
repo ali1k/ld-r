@@ -21,7 +21,7 @@ import session from 'express-session';
 import hogan from 'hogan-express';
 import debugLib from 'debug';
 import React from 'react';
-import generalConfig from './configs/general';
+import serverConfig from './configs/server';
 import app from './app';
 import HtmlComponent from './components/DefaultHTMLLayout';
 const htmlComponent = React.createFactory(HtmlComponent);
@@ -114,7 +114,7 @@ server.use((req, res, next) => {
     });
 });
 
-const port = process.env.PORT || generalConfig.serverPort[0];
+const port = process.env.PORT || serverConfig.serverPort[0];
 server.listen(port);
 console.log('Listening on port ' + port);
 

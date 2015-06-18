@@ -1,5 +1,5 @@
 'use strict';
-import {dbpediaLookupService} from '../configs/general';
+import {dbpediaLookupService} from '../configs/server';
 import rp from 'request-promise';
 import DBpediaUtil from './utils/DBpediaUtil';
 import DBpediaQuery from './sparql/DBpediaQuery';

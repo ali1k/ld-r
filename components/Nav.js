@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import {NavLink} from 'fluxible-router';
-import {appFullTitle, appShortTitle} from '../configs/general';
+import {appFullTitle, appShortTitle} from '../configs/reactor';
 
 class Nav extends React.Component {
     componentDidMount(){
