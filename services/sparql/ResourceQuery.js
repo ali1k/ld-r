@@ -1,10 +1,10 @@
 'use strict';
-import validUrl from 'valid-url';
-
+import {getQueryDataTypeValue} from '../utils/helpers';
 class ResourceQuery{
     constructor() {
         /*jshint multistr: true */
         this.prefixes='\
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \
         PREFIX dcterms: <http://purl.org/dc/terms/> \
         PREFIX void: <http://rdfs.org/ns/void#> \
         PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
@@ -32,34 +32,25 @@ class ResourceQuery{
         } ORDER BY ?p ?o';
       return this.query;
     }
-    addTriple (graphName, resourceURI, propertyURI, objectValue, valueType) {
+    addTriple (graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
         //todo: consider different value types
-      let newValue;
-      if(valueType==='uri'){
-        newValue='<'+objectValue+'>';
-      }else{
-          // automatically detect uris even in literal values
-          if(validUrl.is_web_uri(objectValue.toString())){
-              newValue='<'+objectValue+'>';
-          }else{
-              newValue='"""'+objectValue+'"""';
-          }
-      }
+      let newValue, tmp = {};
+      tmp = getQueryDataTypeValue(valueType, dataType, objectValue);
+      newValue = tmp.value;
       /*jshint multistr: true */
       this.query = '\
       INSERT DATA INTO <'+ graphName +'> { \
-      <'+ resourceURI + '> <'+ propertyURI +'> '+newValue+' } ';
+      <'+ resourceURI + '> <'+ propertyURI +'> '+ newValue +' } ';
       return this.query;
     }
-    deleteTriple(graphName, resourceURI, propertyURI, objectValue, valueType) {
+    deleteTriple(graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
+        let dtype, newValue, tmp = {};
         if(objectValue){
+            tmp = getQueryDataTypeValue(valueType, dataType, objectValue);
+            newValue = tmp.value;
+            dtype = tmp.dtype;
           //if we just want to delete a specific value for multi-valued ones
-          if(valueType === 'uri'){
-              this.query = 'DELETE FROM <'+ graphName +'> {<'+ resourceURI +'> <'+ propertyURI +'> ?uri} WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?uri . FILTER(iri(?uri)= <'+ objectValue +'> ) }';
-          }else{
-              //todo: handle each typed literal separately e.g. date
-              this.query = 'DELETE FROM <'+ graphName +'> {<'+ resourceURI +'> <'+ propertyURI +'> ?label} WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?label . FILTER(str(?label)="""'+ objectValue +'""")}';
-          }
+          this.query = 'DELETE FROM <'+ graphName +'> {<'+ resourceURI +'> <'+ propertyURI +'> ?v} WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?v . FILTER(' + dtype + '(?v)= '+ newValue +' ) }';
         }else{
             this.query = 'DELETE FROM <'+ graphName +'> {<'+ resourceURI +'> <'+ propertyURI +'> ?z } WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?z } ';
         }
@@ -69,28 +60,28 @@ class ResourceQuery{
         let self = this;
         self.query= '';
         changes.forEach(function(change) {
-            self.query = self.query + self.deleteTriple(graphName, resourceURI, propertyURI, change.oldValue, change.valueType);
+            self.query = self.query + self.deleteTriple(graphName, resourceURI, propertyURI, change.oldValue, change.valueType, change.dataType);
         });
         return self.query;
     }
-    updateTriple (graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType) {
-        this.query = this.deleteTriple(graphName, resourceURI, propertyURI, oldObjectValue, valueType) + this.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType);
+    updateTriple (graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType) {
+        this.query = this.deleteTriple(graphName, resourceURI, propertyURI, oldObjectValue, valueType, dataType) + this.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType);
         return this.query;
     }
     updateTriples (graphName, resourceURI, propertyURI, changes) {
         let self = this;
         self.query= '';
         changes.forEach(function(change) {
-            self.query = self.query + self.updateTriple(graphName, resourceURI, propertyURI, change.oldValue, change.newValue, change.valueType);
+            self.query = self.query + self.updateTriple(graphName, resourceURI, propertyURI, change.oldValue, change.newValue, change.valueType, change.dataType);
         });
         return self.query;
     }
-    updateObjectTriples (graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, detailData) {
+    updateObjectTriples (graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType, detailData) {
         let self=this;
-        self.query = self.deleteTriple(graphName, resourceURI, propertyURI, oldObjectValue, valueType) + self.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType) ;
+        self.query = self.deleteTriple(graphName, resourceURI, propertyURI, oldObjectValue, valueType, dataType) + self.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType) ;
         for (let propURI in detailData) {
-            self.query = self.query + self.deleteTriple(graphName, oldObjectValue, propURI, '', detailData[propURI].valueType);
-            self.query = self.query + self.addTriple(graphName, newObjectValue, propURI, detailData[propURI].value, detailData[propURI].valueType);
+            self.query = self.query + self.deleteTriple(graphName, oldObjectValue, propURI, '', detailData[propURI].valueType, detailData[propURI].dataType);
+            self.query = self.query + self.addTriple(graphName, newObjectValue, propURI, detailData[propURI].value, detailData[propURI].valueType, detailData[propURI].dataType);
         }
         return self.query;
     }

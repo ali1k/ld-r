@@ -34,11 +34,11 @@ class IndividualObjectReactor extends React.Component {
     }
     handleSave(){
         if(this.props.isNewValue){
-            this.props.onCreate(this.state.objectValue, this.props.spec.valueType);
+            this.props.onCreate(this.state.objectValue, this.props.spec.valueType, this.props.spec.dataType);
         }else{
             //check if it is extended
             if(this.props.spec.extended || this.state.isExtendedView){
-                this.props.onDetailUpdate(this.props.spec.value, this.state.objectValue, this.props.spec.valueType, this.state.detailData);
+                this.props.onDetailUpdate(this.props.spec.value, this.state.objectValue, this.props.spec.valueType, this.props.spec.dataType, this.state.detailData);
                 if(this.state.isExtendedView){
                     this.props.spec.extended = 1;
                 }
@@ -46,14 +46,14 @@ class IndividualObjectReactor extends React.Component {
             }else{
                 //update only in case of change
                 if(this.props.spec.value !== this.state.objectValue){
-                    this.props.onUpdate(this.props.spec.value, this.state.objectValue, this.props.spec.valueType);
+                    this.props.onUpdate(this.props.spec.value, this.state.objectValue, this.props.spec.valueType, this.props.spec.dataType);
                 }
                 this.setState({inEditMode: 0});
             }
         }
     }
     handleDelete(){
-        this.props.onDelete(this.props.spec.value, this.props.spec.valueType);
+        this.props.onDelete(this.props.spec.value, this.props.spec.valueType, this.props.spec.dataType);
     }
     handleUndo(){
         this.setState({objectValue: this.props.spec.value, inEditMode: 0, isExtendedView: 0});

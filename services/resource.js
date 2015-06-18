@@ -123,7 +123,7 @@ export default {
              }else{
                  user = {accountName: 'open'};
              }
-             query = queryObject.getPrefixes() + queryObject.addTriple(params.dataset, params.resourceURI, params.propertyURI, params.objectValue, params.valueType);
+             query = queryObject.getPrefixes() + queryObject.addTriple(params.dataset, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
              httpOptions = getHTTPOptions(params.dataset);
              rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
              //send request
@@ -158,7 +158,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getPrefixes() + queryObject.updateTriple(params.dataset, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType);
+            query = queryObject.getPrefixes() + queryObject.updateTriple(params.dataset, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType);
             httpOptions = getHTTPOptions(params.dataset);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
@@ -190,7 +190,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getPrefixes() + queryObject.updateObjectTriples(params.dataset, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.detailData);
+            query = queryObject.getPrefixes() + queryObject.updateObjectTriples(params.dataset, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData);
             httpOptions = getHTTPOptions(params.dataset);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
@@ -257,7 +257,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getPrefixes() + queryObject.deleteTriple(params.dataset, params.resourceURI, params.propertyURI, params.objectValue, params.valueType);
+            query = queryObject.getPrefixes() + queryObject.deleteTriple(params.dataset, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
             httpOptions = getHTTPOptions(params.dataset);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request

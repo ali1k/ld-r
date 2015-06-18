@@ -1,4 +1,5 @@
 'use strict';
+import {getQueryDataTypeValue} from '../utils/helpers';
 class DatasetQuery{
     constructor() {
         /*jshint multistr: true */
@@ -102,6 +103,7 @@ class DatasetQuery{
     }
     getMultipleFilters(prevSelection) {
         let st = '', filters, tmp, i = 0, hasURIVal = 0, hasLiteralVal = 0, typedLiteralVal = '';
+        let typeVal = {};
         filters = [];
         for (let key in prevSelection) {
             hasURIVal = 0;
@@ -111,39 +113,13 @@ class DatasetQuery{
             i++;
             if(prevSelection[key].length){
                 prevSelection[key].forEach(function(el){
-                    // automatically detect uris even in literal values
-                    if(el.valueType === 'uri'){
-                        tmp.push('<' + el.value + '>');
+                    typeVal = getQueryDataTypeValue(el.valueType, el.dataType, el.value);
+                    tmp.push(typeVal.value);
+                    typedLiteralVal = typeVal.dtype;
+                    if(typedLiteralVal === 'uri'){
                         hasURIVal = 1;
                     }else{
                         hasLiteralVal = 1;
-                        if(el.valueType === 'literal'){
-                            tmp.push('"' + el.value + '"');
-                            typedLiteralVal = 'str';
-                        }else{
-                            //handle typed-literal values
-                            switch (el.dataType) {
-                                case 'http://www.w3.org/2001/XMLSchema#integer':
-                                    typedLiteralVal = 'xsd:integer';
-                                    tmp.push(el.value);
-                                    break;
-                                case 'http://www.w3.org/2001/XMLSchema#decimal':
-                                    typedLiteralVal = 'xsd:decimal';
-                                    tmp.push(el.value);
-                                    break;
-                                case 'http://www.w3.org/2001/XMLSchema#float':
-                                    typedLiteralVal = 'xsd:float';
-                                    tmp.push(el.value);
-                                    break;
-                                case 'http://www.w3.org/2001/XMLSchema#double':
-                                    typedLiteralVal = 'xsd:double';
-                                    tmp.push(el.value);
-                                    break;
-                                default:
-                                    tmp.push('"' + el.value + '"');
-                                    typedLiteralVal = 'str';
-                            }
-                        }
                     }
                 })
                 //special case: values are heterogenious, we should convert all to string and use str function then

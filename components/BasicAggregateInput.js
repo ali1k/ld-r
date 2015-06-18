@@ -7,8 +7,8 @@ class BasicAggregateInput extends React.Component {
         super(props);
         this.state = {};
     }
-    handleDataEdit(key, oldValue, valueType, newValue){
-        this.state[key] = {oldValue: oldValue, newValue: newValue, valueType: valueType};
+    handleDataEdit(key, oldValue, valueType, dataType, newValue){
+        this.state[key] = {oldValue: oldValue, newValue: newValue, valueType: valueType, dataType: dataType};
         this.props.onAggDataEdit(this.state);
     }
     handleEnterPress(){
@@ -25,7 +25,7 @@ class BasicAggregateInput extends React.Component {
                 return undefined; // stop processing this iteration
             }
             return (
-                <div key={index} className="ui form grid"> <div className="twelve wide column field"> <IndividualDataEdit spec={node} config={self.props.config} graphName={self.props.graphName} onDataEdit={self.handleDataEdit.bind(self, index, node.value, node.valueType)} onEnterPress={self.handleEnterPress.bind(this)}/> </div> <div className="two wide column field"> <BasicCheckbox onToggle={self.checkBox.bind(self, index)}/> </div> </div>
+                <div key={index} className="ui form grid"> <div className="twelve wide column field"> <IndividualDataEdit spec={node} config={self.props.config} graphName={self.props.graphName} onDataEdit={self.handleDataEdit.bind(self, index, node.value, node.valueType, node.dataType)} onEnterPress={self.handleEnterPress.bind(this)}/> </div> <div className="two wide column field"> <BasicCheckbox onToggle={self.checkBox.bind(self, index)}/> </div> </div>
             );
         });
         return (

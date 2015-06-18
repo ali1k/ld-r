@@ -1,5 +1,5 @@
 import {sparqlEndpoint} from '../../configs/general';
-
+import validUrl from 'valid-url';
 export default {
     getHTTPOptions: function(graphName) {
         let httpOptions, g;
@@ -15,5 +15,70 @@ export default {
           path: sparqlEndpoint[g].path
         };
         return httpOptions;
+    },
+    getQueryDataTypeValue(valueType, dataType, objectValue) {
+        let newValue, dtype;
+        switch (valueType) {
+            case 'uri':
+            case 'bnode':
+              newValue='<'+objectValue+'>';
+              dtype = 'uri';
+              break;
+            case 'literal':
+                // automatically detect uris even in literal values
+                if(validUrl.is_web_uri(objectValue.toString())){
+                    newValue='<'+objectValue+'>';
+                    dtype = 'uri';
+                }else{
+                    newValue='"""'+objectValue+'"""';
+                    dtype = 'str';
+                }
+              break;
+            case 'typed-literal':
+                //handle typed-literal values
+                switch (dataType) {
+                    case 'http://www.w3.org/2001/XMLSchema#integer':
+                        dtype = 'xsd:integer';
+                        newValue='"'+objectValue+'"^^' + dtype;
+                        break;
+                    case 'http://www.w3.org/2001/XMLSchema#decimal':
+                        dtype = 'xsd:decimal';
+                        newValue='"'+objectValue+'"^^' + dtype;
+                        break;
+                    case 'http://www.w3.org/2001/XMLSchema#float':
+                        dtype = 'xsd:float';
+                        newValue='"'+objectValue+'"^^' + dtype;
+                        break;
+                    case 'http://www.w3.org/2001/XMLSchema#double':
+                        dtype = 'xsd:double';
+                        newValue='"'+objectValue+'"^^' + dtype;
+                        break;
+                    case 'http://www.w3.org/2001/XMLSchema#dateTime':
+                        dtype = 'xsd:dateTime';
+                        newValue='"'+objectValue+'"^^' + dtype;
+                        break;
+                    case 'http://www.w3.org/2001/XMLSchema#date':
+                        dtype = 'xsd:date';
+                        newValue='"'+objectValue+'"^^' + dtype;
+                        break;
+                    case 'http://www.w3.org/2001/XMLSchema#boolean':
+                        dtype = 'xsd:boolean';
+                        newValue='"'+objectValue+'"^^' + dtype;
+                        break;
+                    default:
+                        newValue='"""'+objectValue+'"""';
+                        dtype = 'str';
+                }
+              break;
+            default:
+              // default: handle as string
+              newValue='"""'+objectValue+'"""';
+              dtype = 'str';
+        }
+        //fix in virtuoso
+        if(dtype === 'uri'){
+            dtype = 'iri';
+        }
+        return {dtype: dtype, value: newValue};
     }
 }

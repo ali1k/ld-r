@@ -40,7 +40,7 @@ class IndividualPropertyReactor extends React.Component {
     controlNewInsert (control){
         this.setState({showNewInsert: control});
     }
-    handleDeleteIndividualObject(propertyURI, objectValue, valueType){
+    handleDeleteIndividualObject(objectValue, valueType, dataType){
         if(!objectValue){
             return null;
         }
@@ -48,12 +48,13 @@ class IndividualPropertyReactor extends React.Component {
           category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
-          propertyURI: propertyURI,
+          propertyURI: this.props.spec.propertyURI,
           objectValue: objectValue,
-          valueType: valueType
+          valueType: valueType,
+          dataType: dataType
         });
     }
-    handleDeleteAggObject(propertyURI, changes){
+    handleDeleteAggObject(changes){
         if(!changes.length){
             return null;
         }
@@ -61,11 +62,11 @@ class IndividualPropertyReactor extends React.Component {
           category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
-          propertyURI: propertyURI,
+          propertyURI: this.props.spec.propertyURI,
           changes: changes
         });
     }
-    handleCreateIndividualObject(propertyURI, objectValue, valueType){
+    handleCreateIndividualObject(objectValue, valueType, dataType){
         if(!objectValue){
             return null;
         }
@@ -73,13 +74,14 @@ class IndividualPropertyReactor extends React.Component {
           category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
-          propertyURI: propertyURI,
+          propertyURI: this.props.spec.propertyURI,
           objectValue: objectValue,
-          valueType: valueType
+          valueType: valueType,
+          dataType: dataType
         });
         this.setState({inNewValueMode: 0});
     }
-    handleUpdateIndividualObject(propertyURI, oldObjectValue, newObjectValue, valueType){
+    handleUpdateIndividualObject(oldObjectValue, newObjectValue, valueType, dataType){
         if(!newObjectValue){
             return null;
         }
@@ -87,13 +89,14 @@ class IndividualPropertyReactor extends React.Component {
           category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
-          propertyURI: propertyURI,
+          propertyURI: this.props.spec.propertyURI,
           oldObjectValue: oldObjectValue,
           newObjectValue: newObjectValue,
-          valueType: valueType
+          valueType: valueType,
+          dataType: dataType
         });
     }
-    handleUpdateAggObject(propertyURI, changes){
+    handleUpdateAggObject(changes){
         if(!changes.length){
             return null;
         }
@@ -101,19 +104,20 @@ class IndividualPropertyReactor extends React.Component {
           category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
-          propertyURI: propertyURI,
+          propertyURI: this.props.spec.propertyURI,
           changes: changes
         });
     }
-    handleDetailUpdateIndividualObject(propertyURI, oldObjectValue, newObjectValue, valueType, detailData){
+    handleDetailUpdateIndividualObject(oldObjectValue, newObjectValue, valueType, dataType, detailData){
         this.context.executeAction(updateIndividualObjectDetail, {
           category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
-          propertyURI: propertyURI,
+          propertyURI: this.props.spec.propertyURI,
           oldObjectValue: oldObjectValue,
           newObjectValue: newObjectValue,
           valueType: valueType,
+          dataType: dataType,
           detailData: detailData
         });
     }
@@ -129,7 +133,7 @@ class IndividualPropertyReactor extends React.Component {
         if(this.props.config && this.props.config.allowNewValue && !this.props.readOnly){
             propLabel = this.props.config.label ? this.props.config.label : this.props.spec.property;
             if(this.state.inNewValueMode){
-                defaultValueDIV = <IndividualObjectReactor isNewValue={true} inEditMode={true} key="defaultValue" spec={this.simulateDefaultValue(this.props.spec.instances, 'default')} config={this.props.config} graphName={this.props.graphName} resource={this.props.resource} onCreate={this.handleCreateIndividualObject.bind(this, this.props.spec.propertyURI)}/>;
+                defaultValueDIV = <IndividualObjectReactor isNewValue={true} inEditMode={true} key="defaultValue" spec={this.simulateDefaultValue(this.props.spec.instances, 'default')} config={this.props.config} graphName={this.props.graphName} resource={this.props.resource} onCreate={this.handleCreateIndividualObject.bind(this)}/>;
                 newValueDIV = <div className="ui list">
                                         <div className="item">
                                             <div onClick={this.handleCancelNewIndividualObject.bind(this)} className="medium ui basic icon labeled button">
@@ -166,12 +170,12 @@ class IndividualPropertyReactor extends React.Component {
                         return undefined; // stop processing this iteration
                     }
                     return (
-                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self, self.props.spec.propertyURI)} onUpdate={self.handleUpdateIndividualObject.bind(self, self.props.spec.propertyURI)} onDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self, self.props.spec.propertyURI)}/>
+                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self)} onUpdate={self.handleUpdateIndividualObject.bind(self)} onDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self)}/>
                     );
                 });
             break;
             case 'AggregateObjectReactor':
-                list = <AggregateObjectReactor isOnlyChild={isOnlyChild} readOnly={self.props.readOnly} spec={this.props.spec} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} onIndividualDelete={self.handleDeleteIndividualObject.bind(self, self.props.spec.propertyURI)} onIndividualUpdate={self.handleUpdateIndividualObject.bind(self, self.props.spec.propertyURI)} onIndividualDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self, self.props.spec.propertyURI)} onUpdate={self.handleUpdateAggObject.bind(self, self.props.spec.propertyURI)} onDelete={self.handleDeleteAggObject.bind(self, self.props.spec.propertyURI)} controlNewInsert={self.controlNewInsert.bind(self)}/>;
+                list = <AggregateObjectReactor isOnlyChild={isOnlyChild} readOnly={self.props.readOnly} spec={this.props.spec} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} onIndividualDelete={self.handleDeleteIndividualObject.bind(self)} onIndividualUpdate={self.handleUpdateIndividualObject.bind(self)} onIndividualDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self)} onUpdate={self.handleUpdateAggObject.bind(self)} onDelete={self.handleDeleteAggObject.bind(self)} controlNewInsert={self.controlNewInsert.bind(self)}/>;
             break;
             default:
                 list = this.props.spec.instances.map(function(node, index) {
@@ -179,7 +183,7 @@ class IndividualPropertyReactor extends React.Component {
                         return undefined; // stop processing this iteration
                     }
                     return (
-                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self, self.props.spec.propertyURI)} onUpdate={self.handleUpdateIndividualObject.bind(self, self.props.spec.propertyURI)} onDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self, self.props.spec.propertyURI)}/>
+                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self)} onUpdate={self.handleUpdateIndividualObject.bind(self)} onDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self)}/>
                     );
                 });
         }
