@@ -8,3 +8,34 @@ path: docs/configProperties.html
 <h1 class="ui dividing header">
 Config: Properties
 </h1>
+<p>
+    Properties config are defined per graph. The 'generic' property config will be used if no specific config is defined for a graph.
+    For properties config, you have to change the following parameters in <a class="ui label" href="https://github.com/ali1k/ld-r/blob/master/configs/reactor.config.js">configs/reactor.js</a>:
+</p>
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+      <th>Example value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="positive">readOnly</td>
+      <td> If set to '1', will disabled editing property values.</td>
+      <td>0</td>
+    </tr>
+    <tr >
+      <td class="positive">useCategories</td>
+      <td>If set to '1', you can categorize properties in different tabs. It is required to define the list of categories beforehand by using <span class="ui label">categories</span>.</td>
+      <td>1</td>
+    </tr>
+    <tr >
+      <td class="positive">categories</td>
+      <td>List of categories to be used.</td>
+      <td>['general', 'content', 'structural']</td>
+    </tr>
+
+  </tbody>
+</table>
