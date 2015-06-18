@@ -174,7 +174,8 @@ class DatasetQuery{
         ';
         return this.prefixes + this.query;
     }
-    getSecondLevelPropertyValues(graphName, propertyURI, prevSelection, offset) {
+    getSecondLevelPropertyValues(graphName, propertyURI, prevSelection, limit, offset) {
+        let noffset = ((offset-1) < 0) ? 0 : (offset-1);
         let st = this.getMultipleFilters(prevSelection);
         /*jshint multistr: true */
         this.query = '\
@@ -183,7 +184,7 @@ class DatasetQuery{
                 { '+ st +' \
                 } \
             } \
-        } LIMIT 50 OFFSET ' + (offset-1);
+        } LIMIT ' + limit + ' OFFSET ' + noffset;
         return this.prefixes + this.query;
     }
 }
