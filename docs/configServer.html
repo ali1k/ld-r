@@ -1,0 +1,46 @@
+---
+layout: default
+title: Config | Server
+section: configServer
+path: docs/configServer.html
+---
+
+<h1 class="ui dividing header">
+Config: Server
+</h1>
+<p>
+    For server config, you have to change the following parameters in <a class="ui label" href="https://github.com/ali1k/ld-r/blob/master/configs/general.config.js">configs/general.js</a>:
+</p>
+</p>
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+      <th>Example value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="positive">serverPort</td>
+      <td>The port number of your application.</td>
+      <td>[4000]</td>
+    </tr>
+    <tr>
+      <td class="positive">sparqlEndpoint</td>
+      <td>The specification of your SPARQL endpoint. It should contain the graph name on which your data can be found.</td>
+      <td>
+             'http://dbpedia.org': {
+                  host: 'dbpedia.org', port: 80, path: '/sparql'
+              }
+      </td>
+    </tr>
+    <tr>
+      <td class="positive">dbpediaLookupService</td>
+      <td>Address of your DBpedia lookup service.</td>
+      <td>
+          { host: 'lookup.dbpedia.org' }
+      </td>
+    </tr>
+  </tbody>
+</table>
