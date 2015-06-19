@@ -10,7 +10,7 @@ Config: Properties
 </h1>
 <p>
     Properties config are defined per graph. The 'generic' property config will be used if no specific config is defined for a graph.
-    For properties config, you have to change the following parameters in <a class="ui label" href="https://github.com/ali1k/ld-r/blob/master/configs/reactor.config.js">configs/reactor.js</a>:
+    For properties config, you have to change the following <span class="ui label">propertiesConfig</span> in <a class="ui label" href="https://github.com/ali1k/ld-r/blob/master/configs/reactor.config.js">configs/reactor.js</a>:
 </p>
 <table class="ui celled table">
   <thead>
@@ -36,6 +36,93 @@ Config: Properties
       <td>List of categories to be used.</td>
       <td>['general', 'content', 'structural']</td>
     </tr>
-
   </tbody>
 </table>
+<p>
+    After defining the above general property configs, users can define specific configs for each property by using the URI of the property. Main property configs are as following:
+</p>
+
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+      <th>Example value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="positive">category</td>
+      <td> If <span class="ui label">useCategories</span> is set to '1', here you have to mention the category name from the list of <span class="ui label">categories</span>.</td>
+      <td>['general']</td>
+    </tr>
+    <tr >
+      <td class="positive">label</td>
+      <td>Label for the property. If not set, the exact property name for its URI will be used.</td>
+      <td>['Dataset Title']</td>
+    </tr>
+    <tr >
+      <td class="positive">hint</td>
+      <td>A hint for the property which will be shown in the popover.</td>
+      <td>['The title of the dataset described by this document.']</td>
+    </tr>
+    <tr >
+      <td class="positive">isHidden</td>
+      <td>Hide the property.</td>
+      <td>1</td>
+    </tr>
+    <tr >
+      <td class="positive">defaultValue</td>
+      <td>default value for the corresponding component.</td>
+      <td>default</td>
+    </tr>
+    <tr >
+      <td class="positive">allowNewValue</td>
+      <td>If set to '1', will allow adding new objects to a given property.</td>
+      <td>1</td>
+    </tr>
+    <tr >
+      <td class="positive">allowExtension</td>
+      <td>If set to '1', will allow adding new properties to a given object (works only for URI object values). You can specify the list of property extensions and their config in <span class="ui label">extensions</span>.</td>
+      <td>1</td>
+    </tr>
+    <tr >
+      <td class="warning">objectReactorType</td>
+      <td>Selects the right component for handling object values. Can be set to either 'IndividualObjectReactor' or 'AggregateObjectReactor'.</td>
+      <td>['IndividualDataEdit']</td>
+    </tr>
+    <tr >
+      <td class="warning">dataEditType</td>
+      <td>Selects the right component to dispatch edits.</td>
+      <td>['IndividualObjectReactor']</td>
+    </tr>
+    <tr >
+      <td class="warning">editor</td>
+      <td>Specifies the right edit component.</td>
+      <td>['BasicIndividualInput']</td>
+    </tr>
+    <tr >
+      <td class="warning">extendedEditor</td>
+      <td>Specifies the right view when component value is edited in extended mode.</td>
+      <td>['BasicIndividualDetailEdit']</td>
+    </tr>
+    <tr >
+      <td class="warning">dataViewType</td>
+      <td>Selects the right component to dispatch views.</td>
+      <td>['IndividualDataView']</td>
+    </tr>
+    <tr >
+      <td class="warning">viewer</td>
+      <td>Specifies the right view component.</td>
+      <td>['BasicIndividualView']</td>
+    </tr>
+    <tr >
+      <td class="warning">extendedViewer</td>
+      <td>Specifies the right view when component value is extended.</td>
+      <td>['BasicIndividualDetailView']</td>
+    </tr>
+  </tbody>
+</table>
+  <p>
+      A sample config is provided at <a href="https://github.com/ali1k/ld-r/blob/master/configs/reactor.sample.js"><span class="ui label">configs/reactor.sample.js</span></a>. Each component might have its own proprietary configs. You can find the list of proprietary configs for components in <a href="/docs/componentsOthers.html">Components</a> section.
+  </p>
