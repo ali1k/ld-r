@@ -9,7 +9,10 @@ path: docs/pluginAuth.html
     Plugins: Authentication
 </h1>
 <p>
-    LD-R provides a plugin for authentication and user access control.
+    LD-R provides a plugin for authentication and user access control. Since LD-R stores users as resources in the triple store, you need to first insert user's data into your data store under a graph name. You then need to set this graph name as <span class="ui label">authGraphName</span> in your reactor config file. There is already a sample schema available for admin user at <a href="https://github.com/ali1k/ld-r/blob/master/plugins/authentication/schema/users.ttl"><span class="ui label">plugins/authentication/schema/users.ttl</span></a> that can be used. To enable user authentication, you need to set the value for <span class="ui label">enableAuthentication</span> to '1'. You can also setup <span class="ui label">enableUserConfirmation</span> to control user confirmation after registration. Each registered user will create a new resource which can be viewed, browsed and edited like other resources in the system.
+</p>
+<p>
+    LD-R defines an access strategy for users. There are three access levels in the system: Graph, Resource or Property-based access. A Super user will have access to whole levels and can configure which user has access to which level (e.g. User X can only edit Graph G1 or User Y can only edit Resource R or User Z can only edit Property P1 in Resource R1). The following figure depicts these three user access levels:
 </p>
 <div>
     <img class="ui centered image" src="/assets/img/userAccessLevels.jpg" alt="ld-reactor access levels" />
