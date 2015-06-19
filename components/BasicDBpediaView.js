@@ -32,7 +32,7 @@ class BasicDBpediaView extends React.Component {
             link = this.props.spec.value;
             if(this.isDBpediaURI(this.props.spec.value)){
                 label = '<' + this.getTitlefromURI(this.props.spec.value) + '>';
-                if(this.props.asWikipedia){
+                if(this.props.config.asWikipedia){
                     link = this.getWikipediaURI(this.props.spec.value);
                 }
             }

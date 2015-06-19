@@ -45,7 +45,7 @@ class IndividualDataView extends React.Component {
                 viewer = <PasswordView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
             break;
             case 'BasicDBpediaView':
-                viewer = <BasicDBpediaView asWikipedia="1" spec={this.props.spec} config={this.props.config}/>;
+                viewer = <BasicDBpediaView spec={this.props.spec} config={this.props.config}/>;
             break;
             case 'LanguageView':
                 viewer = <LanguageView spec={this.props.spec} config={this.props.config}/>;
