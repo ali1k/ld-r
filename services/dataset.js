@@ -11,13 +11,16 @@ let user;
 let httpOptions, rpPath, graphName, query, queryObject, utilObject, propertyURI;
 queryObject = new DatasetQuery();
 utilObject = new DatasetUtil();
-
+let maxOnPage = maxNumberOfResourcesOnPage;
+if(!maxOnPage){
+    maxOnPage = 20;
+}
 export default {
     name: 'dataset',
     // At least one of the CRUD methods is Required
     read: (req, resource, params, config, callback) => {
         if (resource === 'dataset.resourcesByType') {
-            let offset = (params.page - 1) * maxNumberOfResourcesOnPage;
+            let offset = (params.page - 1) * maxOnPage;
             //SPARQL QUERY
             graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);
             //control access on authentication
@@ -30,7 +33,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getResourcesByType(graphName, resourceFocusType, maxNumberOfResourcesOnPage, offset);
+            query = queryObject.getResourcesByType(graphName, resourceFocusType, maxOnPage, offset);
             //build http uri
             httpOptions = getHTTPOptions(graphName);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
@@ -160,7 +163,7 @@ export default {
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
-                let query2 = queryObject.getSecondLevelPropertyValues(graphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, maxNumberOfResourcesOnPage, params.page);
+                let query2 = queryObject.getSecondLevelPropertyValues(graphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, maxOnPage, params.page);
                  //console.log(query2);
                 let rpPath2 = httpOptions.path + '?query=' + encodeURIComponent(query2) + '&format=' + encodeURIComponent(outputFormat);
                 rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath2}).then(function(res2){
