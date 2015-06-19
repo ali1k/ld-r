@@ -8,3 +8,50 @@ path: docs/configFacets.html
 <h1 class="ui dividing header">
 Config: Facets
 </h1>
+<p>
+    Facets config are defined per graph to browse the content of a named graph using a faceted browser interface. The 'generic' facet config will be used if no specific config is defined for a graph.
+    For facets config, you have to change the following <span class="ui label">facetsConfig</span> in <a class="ui label" href="https://github.com/ali1k/ld-r/blob/master/configs/reactor.config.js">configs/reactor.js</a>:
+</p>
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+      <th>Example value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="positive">list</td>
+      <td> List of all properties for which a facet needs to be created.</td>
+      <td>['http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+          'http://risis.eu/cordisH2020/vocab/fundingScheme',
+          'http://rdf-vocabulary.ddialliance.org/discovery#startDate']</td>
+    </tr>
+</table>
+<p>
+    After defining the above list of facets, users can define specific configs for each facet property by using the URI of the property. These configs are similar to normal <a href="/docs/configProperties.html">properties config</a> and can overwrite them in the faceted browser. Main facets configs are as following:
+</p>
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+      <th>Example value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="warning">browserViewer</td>
+      <td> Specifies which view component to use to render the values of a facet property.</td>
+      <td>['TwoLetterCountryView']</td>
+    </tr>
+    <tr>
+      <td class="positive">hasLinkedValue</td>
+      <td> Will create a link to view each value of the facets property.</td>
+      <td>1</td>
+    </tr>
+</table>
+<p>
+    A sample config is provided at <a href="https://github.com/ali1k/ld-r/blob/master/configs/reactor.sample.js"><span class="ui label">configs/reactor.sample.js</span></a>. Each component might have its own proprietary configs. You can find the list of proprietary configs for components in <a href="/docs/componentsOthers.html">Components</a> section.
+</p>
