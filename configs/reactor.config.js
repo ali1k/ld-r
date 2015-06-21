@@ -4,7 +4,7 @@ export default {
     //full page title
     appFullTitle: ['Linked Data Reactor'],
     //short page title
-    appShortTitle: ['LD-Reactor'],
+    appShortTitle: ['LD-R'],
     //Default Named Graph under observation, if not set , will consider all existing graph names
     defaultGraphName: [''],
     //resource types to start with, can be an array, if not set, all existing types will be shown
