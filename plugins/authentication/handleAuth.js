@@ -143,7 +143,7 @@ module.exports = function handleAuthentication(server) {
                          rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(){
                              console.log('User is created!');
                              //send email notifications
-                             if(reactorConfig.enableAuthentication){
+                             if(reactorConfig.enableEmailNotifications){
                                  handleEmail.sendMail('userRegistration', req.body.email, '', '', '', '');
                              }
                              return res.redirect('/confirmation');
