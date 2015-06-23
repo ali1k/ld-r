@@ -12,7 +12,7 @@ You should have installed [NodeJS](https://nodejs.org/), [npm](https://github.co
 
 Clone the repository: `git clone https://github.com/ali1k/ld-r.git`
 
-and simply run `./install script`
+and simply run `./install` script
 
 ###Configuration
 
