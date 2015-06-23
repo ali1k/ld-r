@@ -29,6 +29,7 @@ class UsersList extends React.Component {
               </div>
           )
       }
+      let i = 0;
       if(this.props.UserStore.users){
         list = this.props.UserStore.users.map(function(node, index) {
             if(parseInt(node.isActive)){
@@ -42,11 +43,12 @@ class UsersList extends React.Component {
             }
             //do not show current super user to edit himself
             if(node.v !== user.id && !parseInt(node.isSuperUser)){
+                i++;
                 return (
                   <div className="item animated fadeIn" key={index}>
                       <div className="ui horizontal list">
                           <NavLink className="item" routeName="resource" href={'/dataset/'+ encodeURIComponent(currentComponent.props.UserStore.graphName) +'/resource/' + encodeURIComponent(node.v)} >
-                          <div className="content"> <i className={dbClass}></i> {node.title} </div>
+                          <div className="content"> <span className="ui blue circular label">{i}</span> <i className={dbClass}></i> {node.title} </div>
                           </NavLink>
                            {actBtn}
                       </div>
@@ -61,7 +63,7 @@ class UsersList extends React.Component {
           <div className="ui page grid">
             <div className="row">
               <div className="column">
-                <h1 className="ui header">Registered Users</h1>
+                <h1 className="ui header"><span className="ui big black circular label">{i}</span> Registered Users</h1>
                   <div className="ui segment">
                     <div className="ui huge divided animated list">
                       {list}
