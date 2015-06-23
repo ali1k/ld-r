@@ -27,7 +27,11 @@ export default {
             if(graphName){
                 resourceFocusType = utilObject.getResourceFocusType(propertiesConfig[graphName]);
             }else{
-                resourceFocusType = [];
+                if(propertiesConfig.generic.resourceFocusType){
+                    resourceFocusType = propertiesConfig.generic.resourceFocusType;
+                }else{
+                    resourceFocusType = [];
+                }
             }
             //control access on authentication
             if(enableAuthentication){
@@ -61,7 +65,11 @@ export default {
             if(graphName){
                 resourceFocusType = utilObject.getResourceFocusType(propertiesConfig[graphName]);
             }else{
-                resourceFocusType = [];
+                if(propertiesConfig.generic.resourceFocusType){
+                    resourceFocusType = propertiesConfig.generic.resourceFocusType;
+                }else{
+                    resourceFocusType = [];
+                }
             }
             //control access on authentication
             if(enableAuthentication){
