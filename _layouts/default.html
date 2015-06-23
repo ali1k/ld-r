@@ -14,11 +14,14 @@
   </head>
   <body>
     <div>
-        <nav class="ui blue menu inverted navbar page grid">
+        <nav class="ui blue menu inverted navbar page grid" id="topmenu">
                 <a class="brand item" href="/"><img class="ui mini image" src="/assets/img/ld-reactor.gif" alt="ld-reactor" /></a>
                 <a class="item" href="/">LD-R</a>
                 <a class="item" href="/docs/quickstart.html" data-section="quickstart">
                   Quick Start
+                </a>
+                <a class="item" href="/docs/demo.html" data-section="demo">
+                  Demo
                 </a>
                 <a href="http://github.com/ali1k/ld-r"><div class="ui right item link">
                         <i class="github circle icon"></i> Github
@@ -93,6 +96,7 @@
     </script>
     <script>
       $('#menu [data-section="{{page.section}}"]').addClass('blue active');
+      $('#topmenu [data-section="{{page.section}}"]').addClass('active');
     </script>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
