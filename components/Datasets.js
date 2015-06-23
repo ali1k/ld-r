@@ -30,6 +30,7 @@ class Datasets extends React.Component {
                     if(graph === defaultGraphName[0]){
                         dfl = <i className="ui green flag icon" title="default dataset"></i>;
                     }
+                    brws = <a className="ui icon" href={'/browse/' + encodeURIComponent(graph)} title="browse"><i className="zoom icon"></i></a>;
                     dss.push(graph);
                     output.push(<div className="ui item" key={graph}> <div className="content"> <i className="ui blue icon cubes"></i> <a href={'/dataset/1/' + encodeURIComponent(graph)} title="go to resource list">{graph}</a> {brws} {dfl}</div> </div>);
                 }
