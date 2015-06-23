@@ -4,19 +4,32 @@ class DatasetUtil{
 
     }
     getPropertyLabel(uri) {
-        var property='';
-        var tmp=uri;
-        var tmp2=tmp.split('#');
-        if(tmp2.length>1){
-            property=tmp2[1];
+        let property = '';
+        let tmp = uri;
+        let tmp2 = tmp.split('#');
+        if(tmp2.length > 1){
+            property = tmp2[1];
         }else{
-            tmp2=tmp.split('/');
-            property=tmp2[tmp2.length-1];
+            tmp2 = tmp.split('/');
+            property = tmp2[tmp2.length - 1];
         }
         return property;
     }
+    getResourceFocusType(config){
+        let output = [];
+        if(config){
+            if(config.resourceFocusType){
+                output = config.resourceFocusType;
+            }else{
+                output = [];
+            }
+        }else{
+            output = [];
+        }
+        return output;
+    }
     parseResourcesByType(body, graphName) {
-      let output=[];
+      let output = [];
       let parsed = JSON.parse(body);
       if(parsed.results.bindings.length){
           if(String(graphName)===''){

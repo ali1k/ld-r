@@ -1,6 +1,5 @@
 import React from 'react';
 import DatasetStore from '../stores/DatasetStore';
-import {resourceFocusType, defaultGraphName} from '../configs/reactor';
 import {connectToStores} from 'fluxible/addons';
 import {NavLink} from 'fluxible-router';
 import getResourcesCount from '../actions/getResourcesCount';
@@ -35,6 +34,7 @@ class Dataset extends React.Component {
     render() {
         let self = this;
         let graphName = this.props.DatasetStore.graphName;
+        let resourceFocusType = this.props.DatasetStore.resourceFocusType;
         let typeSt, typesLink = [];
         if(resourceFocusType){
             if(!resourceFocusType.length || (resourceFocusType.length && !resourceFocusType[0]) ){

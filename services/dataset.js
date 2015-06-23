@@ -1,6 +1,6 @@
 'use strict';
 import {getHTTPOptions} from './utils/helpers';
-import {defaultGraphName, resourceFocusType, enableAuthentication, maxNumberOfResourcesOnPage} from '../configs/reactor';
+import {defaultGraphName, enableAuthentication, maxNumberOfResourcesOnPage, propertiesConfig} from '../configs/reactor';
 import DatasetQuery from './sparql/DatasetQuery';
 import DatasetUtil from './utils/DatasetUtil';
 import rp from 'request-promise';
@@ -8,7 +8,7 @@ import rp from 'request-promise';
 const outputFormat = 'application/sparql-results+json';
 let user;
 /*-----------------------------------*/
-let httpOptions, rpPath, graphName, query, queryObject, utilObject, propertyURI;
+let httpOptions, rpPath, graphName, query, queryObject, utilObject, propertyURI, resourceFocusType;
 queryObject = new DatasetQuery();
 utilObject = new DatasetUtil();
 let maxOnPage = maxNumberOfResourcesOnPage;
@@ -23,6 +23,12 @@ export default {
             let offset = (params.page - 1) * maxOnPage;
             //SPARQL QUERY
             graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);
+            //check if resource focus is set
+            if(graphName){
+                resourceFocusType = utilObject.getResourceFocusType(propertiesConfig[graphName]);
+            }else{
+                resourceFocusType = [];
+            }
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -52,6 +58,11 @@ export default {
         } else if (resource === 'dataset.countResourcesByType') {
             //SPARQL QUERY
             graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);
+            if(graphName){
+                resourceFocusType = utilObject.getResourceFocusType(propertiesConfig[graphName]);
+            }else{
+                resourceFocusType = [];
+            }
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){

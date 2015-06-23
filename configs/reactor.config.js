@@ -7,8 +7,6 @@ export default {
     appShortTitle: ['LD-R'],
     //Default Named Graph under observation, if not set , will consider all existing graph names
     defaultGraphName: [''],
-    //resource types to start with, can be an array, if not set, all existing types will be shown
-    resourceFocusType: [''],
     //used for pagination in resource list
     maxNumberOfResourcesOnPage: [100],
     //will prevent access if not logged in
@@ -27,6 +25,8 @@ export default {
     propertiesConfig: {
         //these configs are used as generic configs, which still can be empty!
         'generic': {
+            //resource types to focus on, can be an array, if not set, all existing types will be shown
+            resourceFocusType: [''],
             //only allow to view data -> disable edit
             readOnly: 0,
             //if enabled, will categorize properties in different tabs based on propertyCategories

@@ -39,6 +39,17 @@ export default {
             context.executeAction(loadFacets, {mode: 'init', id: graphName, selection: 0, page: 1}, done);
         }
     },
+    datasets: {
+        //if no id is provided -> will start by defaultGraphName in reactor.config
+        path: '/datasets',
+        method: 'get',
+        handler: require('../components/Datasets'),
+        label: 'Datasets',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Datasets'});
+            done();
+        }
+    },
     dataset: {
         //if no id is provided -> will start by defaultGraphName in reactor.config
         path: '/dataset/:page?/:id?',
