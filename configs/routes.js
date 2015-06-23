@@ -2,7 +2,7 @@ import loadDataset from '../actions/loadDataset';
 import loadResource from '../actions/loadResource';
 import loadUsersList from '../actions/loadUsersList';
 import loadFacets from '../actions/loadFacets';
-import {appFullTitle, appShortTitle} from '../configs/reactor';
+import {appFullTitle, appShortTitle, authGraphName, dynamicResourceDomain} from '../configs/reactor';
 
 export default {
     home: {
@@ -82,6 +82,16 @@ export default {
                 category = 0;
             }
             context.executeAction(loadResource, { dataset: decodeURIComponent(payload.get('params').get('did')), resource: decodeURIComponent(payload.get('params').get('rid')), category: category}, done);
+        }
+    },
+    user: {
+        path: '/user/:id',
+        method: 'get',
+        handler: require('../components/Resource'),
+        label: 'User',
+        action: (context, payload, done) => {
+            let category = 0;
+            context.executeAction(loadResource, { dataset: authGraphName, resource: dynamicResourceDomain + '/user/' + decodeURIComponent(payload.get('params').get('id')), category: category}, done);
         }
     },
     users: {
