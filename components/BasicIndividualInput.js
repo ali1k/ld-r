@@ -45,9 +45,18 @@ class BasicIndividualInput extends React.Component {
         this.setState({value: event.target.value});
     }
     render() {
+        let placeholder = '';
+        //placeholder can come from config or direct property
+        if(this.props.config && this.props.config.placeholder){
+            placeholder = this.props.config.placeholder[0];
+        }else{
+            if(this.props.placeholder){
+                placeholder = this.props.placeholder;
+            }
+        }
         return (
             <div className="ui">
-                <input ref="basicIndividualInput" type="text" value={this.state.value} placeholder={(this.props.placeholder ? this.props.placeholder : '' )} onChange={this.handleChange.bind(this)} onKeyDown={this.handleKeyDown.bind(this)}/>
+                <input ref="basicIndividualInput" type="text" value={this.state.value} placeholder={placeholder} onChange={this.handleChange.bind(this)} onKeyDown={this.handleKeyDown.bind(this)}/>
             </div>
         );
     }
