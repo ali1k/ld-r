@@ -64,9 +64,14 @@ class IndividualDataEdit extends React.Component {
             default:
                 editor = <BasicIndividualInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;
         }
+        //check if it has a blank node value config
+        let hideObject = 0;
+        if(this.props.config && this.props.config.hasBlankNode && extendedEditor){
+            hideObject = 1;
+        }
         return (
             <div className="ui" ref="individualDataEdit">
-                <div className="ui attached secondary segment"> {editor} </div>
+                {hideObject ? '' : <div className="ui attached secondary segment"> {editor} </div>}
                 {extendedEditor}
             </div>
         );

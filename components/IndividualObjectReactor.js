@@ -11,7 +11,18 @@ class IndividualObjectReactor extends React.Component {
         super(props);
         this.state = {objectValue: this.props.spec.value, detailData: {}, inEditMode: this.props.inEditMode, isExtendedView: 0};
     }
-    handleEdit(){
+    componentDidMount() {
+        let self = this;
+        //a trick to allow cascading actions
+        let wtime = Math.floor(Math.random() * 1500) + 100;
+        //expand blank nodes
+        if(this.props.config && this.props.config.hasBlankNode && this.props.spec.extended){
+            setTimeout(function(){
+                self.handleShowDetails();
+            }, wtime);
+        }
+    }
+    handleEdit() {
         //check if it is extended
         if(this.props.spec.extended && !this.state.isExtendedView){
             this.context.executeAction(loadObjectProperties, {
@@ -23,16 +34,16 @@ class IndividualObjectReactor extends React.Component {
         }
         this.setState({inEditMode: 1});
     }
-    handleAddDetails(){
+    handleAddDetails() {
         this.setState({inEditMode: 1, isExtendedView: 1});
     }
-    handleDataEdit(value){
+    handleDataEdit(value) {
         this.setState({objectValue: value});
     }
-    handleDetailDataEdit(detailData){
+    handleDetailDataEdit(detailData) {
         this.setState({detailData: detailData});
     }
-    handleSave(){
+    handleSave() {
         if(this.props.isNewValue){
             this.props.onCreate(this.state.objectValue, this.props.spec.valueType, this.props.spec.dataType);
         }else{
@@ -52,13 +63,13 @@ class IndividualObjectReactor extends React.Component {
             }
         }
     }
-    handleDelete(){
+    handleDelete() {
         this.props.onDelete(this.props.spec.value, this.props.spec.valueType, this.props.spec.dataType);
     }
-    handleUndo(){
+    handleUndo() {
         this.setState({objectValue: this.props.spec.value, inEditMode: 0, isExtendedView: 0});
     }
-    handleShowDetails(){
+    handleShowDetails() {
         this.context.executeAction(loadObjectProperties, {
           dataset: this.props.graphName,
           propertyURI: this.props.property,
@@ -66,7 +77,7 @@ class IndividualObjectReactor extends React.Component {
         });
         this.setState({isExtendedView: 1});
     }
-    handleHideDetails(){
+    handleHideDetails() {
         this.setState({isExtendedView: 0});
     }
     //to create fake config

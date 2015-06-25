@@ -59,9 +59,14 @@ class IndividualDataView extends React.Component {
             default:
                 viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
         }
+        //check if it has a blank node value config
+        let hideObject = 0;
+        if(this.props.config && this.props.config.hasBlankNode && extendedViewer){
+            hideObject = 1;
+        }
         return (
             <div className="ui" ref="individualDataView">
-                <div className="ui attached secondary segment"> {viewer} </div>
+                {hideObject ? '' : <div className="ui attached secondary segment"> {viewer} </div>}
                 {extendedViewer}
             </div>
         );

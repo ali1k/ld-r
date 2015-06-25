@@ -77,6 +77,7 @@ export default {
                     label: ['Editor of Property'],
                     allowNewValue: 1,
                     allowExtension: 1,
+                    hasBlankNode: 1,
                     extensions: {
                         config: {
                             'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resource': {

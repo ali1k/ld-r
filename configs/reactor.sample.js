@@ -75,6 +75,7 @@ export default {
                     category: ['date'],
                     hint: ['Time coverage of the data itself but not of the data collection. For example we collect pictures in 2015 about the war. However, the pictures themselves could have been taken from 1939 to 1945. So the time coverage is 1939-1945.'],
                     allowExtension: 1,
+                    hasBlankNode: 1,
                     extensions: {
                         config: {
                             'http://rdf-vocabulary.ddialliance.org/discovery#startDate': {
@@ -389,6 +390,7 @@ export default {
                     label: ['Editor of Property'],
                     allowNewValue: 1,
                     allowExtension: 1,
+                    hasBlankNode: 1,
                     extensions: {
                         config: {
                             'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resource': {
