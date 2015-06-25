@@ -5,7 +5,7 @@ class BasicLinkedIndividualView extends React.Component {
     render() {
         let outputDIV, val = this.props.spec.value;
         let graphName = this.props.graphName;
-        if(this.props.config.linkedGraph){
+        if(this.props.config && this.props.config.linkedGraph){
             graphName = this.props.config.linkedGraph[0];
         }
         if(this.props.spec.valueType === 'uri'){
