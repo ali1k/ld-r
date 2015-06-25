@@ -80,14 +80,6 @@ class IndividualObjectReactor extends React.Component {
     handleHideDetails() {
         this.setState({isExtendedView: 0});
     }
-    //to create fake config
-    buildList(data) {
-        let list = [];
-        for (let prop in data) {
-            list.push({spec: {propertyURI: prop, value: data[prop].value, valueType: data[prop].valueType, dataType: data[prop].dataType}, config: data[prop]});
-        }
-        return list;
-    }
     render() {
         //add object Properties only to the relevant ones
         if(this.state.isExtendedView){
@@ -97,15 +89,14 @@ class IndividualObjectReactor extends React.Component {
                 //add default details situation
                 if(this.props.config && this.props.config.extensions){
                     //get from config and build as a list
-                    this.props.spec.extendedViewData = this.buildList(this.props.config.extensions.config);
+                    this.props.spec.extendedViewData = this.props.config.extensions;
                 }else{
                     //use default
                     this.props.spec.extendedViewData = [
                         {
                             spec: {
                                 propertyURI: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-                                value: 'http://xmlns.com/foaf/0.1/Person',
-                                valueType: 'uri'
+                                instances: [{value: 'http://xmlns.com/foaf/0.1/Person', valueType: 'uri'}]
                             },
                             config: {
                                 hint: ['Type of the entity'],
@@ -115,8 +106,7 @@ class IndividualObjectReactor extends React.Component {
                         {
                             spec: {
                                 propertyURI: 'http://www.w3.org/2000/01/rdf-schema#label',
-                                value: 'Label',
-                                valueType: 'literal'
+                                instances: [{value: 'Label', valueType: 'literal'}]
                             },
                             config: {
                                 hint: ['A descriptor label for the URI'],

@@ -78,22 +78,28 @@ export default {
                     allowNewValue: 1,
                     allowExtension: 1,
                     hasBlankNode: 1,
-                    extensions: {
-                        config: {
-                            'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resource': {
-                                valueType: 'uri',
-                                hint: ['Resource URI under which the property is exposed.'],
-                                label: ['Resource'],
-                                value: 'http://exampleResource.org'
+                    extensions: [
+                        {
+                            spec: {
+                                propertyURI: 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resource',
+                                instances: [{value: 'http://exampleResource.org', valueType: 'uri'}]
                             },
-                            'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#property': {
-                                valueType: 'uri',
+                            config: {
+                                hint: ['Resource URI under which the property is exposed.'],
+                                label: ['Resource']
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#property',
+                                instances: [{value: 'http://exampleProperty.org', valueType: 'uri'}]
+                            },
+                            config: {
                                 hint: ['Property URI'],
-                                label: ['Property'],
-                                value: 'http://exampleProperty.org'
+                                label: ['Property']
                             }
                         }
-                    }
+                    ]
                 },
                 'http://xmlns.com/foaf/0.1/organization': {
                     label: ['Organization'],

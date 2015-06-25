@@ -70,6 +70,19 @@ class ResourceUtil{
           return {props: finalOutput, title: title};
         }
     }
+    findExtensionIndex(extensions, propertyURI) {
+        let index = 0;
+        extensions.forEach(function(el, i) {
+            if(el.spec.propertyURI === propertyURI){
+                index = i;
+            }
+        });
+        return index;
+    }
+    getExtensionConfig(extensions, propertyURI){
+        let index = this.findExtensionIndex(extensions, propertyURI);
+        return extensions[index].config;
+    }
     parseObjectProperties(graphName, propertyURI, body) {
         let selectedConfig = propertiesConfig[graphName];
         //if no specific config is found, get the generic config
@@ -91,7 +104,7 @@ class ResourceUtil{
         });
         output.forEach(function(el) {
           if(propIndex[el.propertyURI]){
-            finalOutput.push({spec:{propertyURI: el.propertyURI, property: el.property, instances: propIndex[el.propertyURI]}, config:selectedConfig.config[propertyURI] ? (selectedConfig.config[propertyURI].extensions ? selectedConfig.config[propertyURI].extensions.config[el.propertyURI] : {}) : {}});
+            finalOutput.push({spec:{propertyURI: el.propertyURI, property: el.property, instances: propIndex[el.propertyURI]}, config: selectedConfig.config[propertyURI] ? (selectedConfig.config[propertyURI].extensions ? self.getExtensionConfig(selectedConfig.config[propertyURI].extensions, el.propertyURI) : {}) : {}});
             propIndex[el.propertyURI]=null;
           }
         });

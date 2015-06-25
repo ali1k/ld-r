@@ -76,20 +76,30 @@ export default {
                     hint: ['Time coverage of the data itself but not of the data collection. For example we collect pictures in 2015 about the war. However, the pictures themselves could have been taken from 1939 to 1945. So the time coverage is 1939-1945.'],
                     allowExtension: 1,
                     hasBlankNode: 1,
-                    extensions: {
-                        config: {
-                            'http://rdf-vocabulary.ddialliance.org/discovery#startDate': {
+                    extensions: [
+                        {
+                            spec: {
+                                propertyURI: 'http://rdf-vocabulary.ddialliance.org/discovery#startDate',
+                                instances: [{value: '', valueType: 'literal'}]
+                            },
+                            config: {
                                 label: ['Start date'],
                                 category: ['overview'],
                                 hint: ['Start date of the time coverage.']
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'http://rdf-vocabulary.ddialliance.org/discovery#endDate',
+                                instances: [{value: '', valueType: 'literal'}]
                             },
-                            'http://rdf-vocabulary.ddialliance.org/discovery#endDate': {
+                            config: {
                                 label: ['End date'],
                                 category: ['overview'],
                                 hint: ['End date of the time coverage.']
                             }
                         }
-                    }
+                    ]
                 },
                 'http://purl.org/dc/terms/spatial': {
                     label: ['Geographical coverage'],
@@ -132,10 +142,13 @@ export default {
                     editor: ['DBpediaInput'],
                     viewer: ['BasicDBpediaView'],
                     extendedViewer: ['BasicIndividualDetailView'],
-                    extensions: {
-                        config: {
-                            'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
-                                valueType: 'uri',
+                    extensions: [
+                        {
+                            spec: {
+                                propertyURI: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+                                instances: [{value: 'http://xmlns.com/foaf/0.1/Person', valueType: 'uri'}]
+                            },
+                            config: {
                                 hint: ['Type of the entity'],
                                 label: ['Type'],
                                 viewer: ['BasicOptionView'],
@@ -144,24 +157,31 @@ export default {
                                     {label: 'Person', value: 'http://xmlns.com/foaf/0.1/Person'},
                                     {label: 'Organization', value: 'http://xmlns.com/foaf/0.1/Organization'}
                                 ],
-                                value: ['http://xmlns.com/foaf/0.1/Person'],
                                 defaultValue: ['http://xmlns.com/foaf/0.1/Person'],
                                 allowUserDefinedValue: 1
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'http://www.w3.org/2000/01/rdf-schema#label',
+                                instances: [{value: 'Label', valueType: 'literal'}]
                             },
-                            'http://www.w3.org/2000/01/rdf-schema#label': {
-                                value: 'Label',
-                                valueType: 'literal',
+                            config: {
                                 hint: ['A descriptor label for the URI'],
                                 label: ['Label']
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'http://xmlns.com/foaf/0.1/mbox',
+                                instances: [{value: 'email address', valueType: 'literal'}]
                             },
-                            'http://xmlns.com/foaf/0.1/mbox': {
-                                value: 'email address',
-                                valueType: 'literal',
+                            config: {
                                 hint: ['A corresponding email address'],
                                 label: ['Email']
                             }
                         }
-                    }
+                    ]
                 },
                 'http://purl.org/dc/terms/publisher': {
                     allowNewValue: 1,
@@ -172,10 +192,13 @@ export default {
                     editor: ['DBpediaInput'],
                     viewer: ['BasicDBpediaView'],
                     extendedViewer: ['BasicIndividualDetailView'],
-                    extensions: {
-                        config: {
-                            'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
-                                valueType: 'uri',
+                    extensions: [
+                        {
+                            spec: {
+                                propertyURI: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+                                instances: [{value: 'http://xmlns.com/foaf/0.1/Person', valueType: 'uri'}]
+                            },
+                            config: {
                                 hint: ['Type of the entity'],
                                 label: ['Type'],
                                 viewer: ['BasicOptionView'],
@@ -184,24 +207,31 @@ export default {
                                     {label: 'Person', value: 'http://xmlns.com/foaf/0.1/Person'},
                                     {label: 'Organization', value: 'http://xmlns.com/foaf/0.1/Organization'}
                                 ],
-                                value: ['http://xmlns.com/foaf/0.1/Person'],
                                 defaultValue: ['http://xmlns.com/foaf/0.1/Person'],
                                 allowUserDefinedValue: 1
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'http://www.w3.org/2000/01/rdf-schema#label',
+                                instances: [{value: 'Label', valueType: 'literal'}]
                             },
-                            'http://www.w3.org/2000/01/rdf-schema#label': {
-                                value: 'Label',
-                                valueType: 'literal',
+                            config: {
                                 hint: ['A descriptor label for the URI'],
                                 label: ['Label']
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'http://xmlns.com/foaf/0.1/mbox',
+                                instances: [{value: 'email address', valueType: 'literal'}]
                             },
-                            'http://xmlns.com/foaf/0.1/mbox': {
-                                value: 'email address',
-                                valueType: 'literal',
+                            config: {
                                 hint: ['A corresponding email address'],
                                 label: ['Email']
                             }
                         }
-                    }
+                    ]
                 },
                 'http://purl.org/dc/terms/contributor': {
                     allowNewValue: 1,
@@ -212,10 +242,13 @@ export default {
                     editor: ['DBpediaInput'],
                     viewer: ['BasicDBpediaView'],
                     extendedViewer: ['BasicIndividualDetailView'],
-                    extensions: {
-                        config: {
-                            'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
-                                valueType: 'uri',
+                    extensions: [
+                        {
+                            spec: {
+                                propertyURI: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+                                instances: [{value: 'http://xmlns.com/foaf/0.1/Person', valueType: 'uri'}]
+                            },
+                            config: {
                                 hint: ['Type of the entity'],
                                 label: ['Type'],
                                 viewer: ['BasicOptionView'],
@@ -224,24 +257,31 @@ export default {
                                     {label: 'Person', value: 'http://xmlns.com/foaf/0.1/Person'},
                                     {label: 'Organization', value: 'http://xmlns.com/foaf/0.1/Organization'}
                                 ],
-                                value: ['http://xmlns.com/foaf/0.1/Person'],
                                 defaultValue: ['http://xmlns.com/foaf/0.1/Person'],
                                 allowUserDefinedValue: 1
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'http://www.w3.org/2000/01/rdf-schema#label',
+                                instances: [{value: 'Label', valueType: 'literal'}]
                             },
-                            'http://www.w3.org/2000/01/rdf-schema#label': {
-                                value: 'Label',
-                                valueType: 'literal',
+                            config: {
                                 hint: ['A descriptor label for the URI'],
                                 label: ['Label']
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'http://xmlns.com/foaf/0.1/mbox',
+                                instances: [{value: 'email address', valueType: 'literal'}]
                             },
-                            'http://xmlns.com/foaf/0.1/mbox': {
-                                value: 'email address',
-                                valueType: 'literal',
+                            config: {
                                 hint: ['A corresponding email address'],
                                 label: ['Email']
                             }
                         }
-                    }
+                    ]
                 },
                 'http://purl.org/dc/terms/created': {
                     label: ['Created date'],
@@ -391,22 +431,28 @@ export default {
                     allowNewValue: 1,
                     allowExtension: 1,
                     hasBlankNode: 1,
-                    extensions: {
-                        config: {
-                            'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resource': {
-                                value: 'http://exampleResource.org',
-                                valueType: 'uri',
+                    extensions: [
+                        {
+                            spec: {
+                                propertyURI: 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resource',
+                                instances: [{value: 'http://exampleResource.org', valueType: 'uri'}]
+                            },
+                            config: {
                                 hint: ['Resource URI under which the property is exposed.'],
                                 label: ['Resource']
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#property',
+                                instances: [{value: 'http://exampleProperty.org', valueType: 'uri'}]
                             },
-                            'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#property': {
-                                value: 'http://exampleProperty.org',
-                                valueType: 'uri',
+                            config: {
                                 hint: ['Property URI'],
                                 label: ['Property']
                             }
                         }
-                    }
+                    ]
                 },
                 'http://xmlns.com/foaf/0.1/organization': {
                     label: ['Institution Name'],
