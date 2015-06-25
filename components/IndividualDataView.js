@@ -6,7 +6,6 @@ import BasicLinkedIndividualView from './BasicLinkedIndividualView';
 import BasicOptionView from './BasicOptionView';
 import PasswordView from './PasswordView';
 import LanguageView from './more/LanguageView';
-import FileSizeView from './more/FileSizeView';
 
 class IndividualDataView extends React.Component {
     render() {
@@ -56,9 +55,6 @@ class IndividualDataView extends React.Component {
             break;
             case 'BasicOptionView':
                 viewer = <BasicOptionView spec={this.props.spec} config={this.props.config}/>;
-            break;
-            case 'FileSizeView':
-                viewer = <FileSizeView spec={this.props.spec} config={this.props.config}/>;
             break;
             default:
                 viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
