@@ -51,7 +51,7 @@ class ResourceUtil{
                     return;
                 }
             }
-            var property=self.getPropertyLabel(el.p.value);
+            let property=self.getPropertyLabel(el.p.value);
             //group by properties
             //I put the valueType into instances because we might have cases (e.g. subject property) in which for different instances, we have different value types
             if(propIndex[el.p.value]){
@@ -59,11 +59,11 @@ class ResourceUtil{
             }else{
               propIndex[el.p.value]=[{value: el.o.value, valueType: el.o.type, dataType:(el.o.type==='typed-literal'?el.o.datatype:''), extended:parseInt(el.hasExtendedValue.value)}];
             }
-            output.push({propertyURI:el.p.value, property: property,  hint: (el.hint? el.hint.value:''), prefLabel: (el.prefLabel? el.prefLabel.value:''), defaultOptions: (el.defaultOptions? el.defaultOptions.value: '') ,  instances:[{value: el.o.value, valueType: el.o.type, dataType:(el.o.type==='typed-literal'?el.o.datatype:''), extended:parseInt(el.hasExtendedValue.value)}]});
+            output.push({propertyURI:el.p.value, property: property,  instances:[]});
           });
           output.forEach(function(el) {
             if(propIndex[el.propertyURI]){
-              finalOutput.push({propertyURI: el.propertyURI, property: el.property, hint: el.hint, prefLabel: el.prefLabel, defaultOptions: el.defaultOptions, instances: propIndex[el.propertyURI]});
+              finalOutput.push({propertyURI: el.propertyURI, property: el.property, instances: propIndex[el.propertyURI]});
               propIndex[el.propertyURI]=null;
             }
           });
@@ -78,12 +78,24 @@ class ResourceUtil{
         }
         let self=this;
         let parsed = JSON.parse(body);
-        var output=[];
+        let output=[], propIndex={}, finalOutput=[];
         if(parsed.results.bindings.length){
           parsed.results.bindings.forEach(function(el) {
-            output.push({spec:{property: self.getPropertyLabel(el.p.value), propertyURI: el.p.value, valueType: el.o.type, dataType:(el.o.type==='typed-literal'?el.o.datatype:''), value: el.o.value}, config:         selectedConfig.config[propertyURI] ? (selectedConfig.config[propertyURI].extensions ? selectedConfig.config[propertyURI].extensions.config[el.p.value] : {}) : {}});
+            let property=self.getPropertyLabel(el.p.value);
+            if(propIndex[el.p.value]){
+                propIndex[el.p.value].push({value: el.o.value, valueType: el.o.type, dataType:(el.o.type==='typed-literal'?el.o.datatype:''), extended:parseInt(el.hasExtendedValue.value)});
+            }else{
+                propIndex[el.p.value]=[{value: el.o.value, valueType: el.o.type, dataType:(el.o.type==='typed-literal'?el.o.datatype:''), extended:parseInt(el.hasExtendedValue.value)}];
+            }
+            output.push({propertyURI:el.p.value, property: property,  instances:[]});
         });
-          return output;
+        output.forEach(function(el) {
+          if(propIndex[el.propertyURI]){
+            finalOutput.push({spec:{propertyURI: el.propertyURI, property: el.property, instances: propIndex[el.propertyURI]}, config:selectedConfig.config[propertyURI] ? (selectedConfig.config[propertyURI].extensions ? selectedConfig.config[propertyURI].extensions.config[el.propertyURI] : {}) : {}});
+            propIndex[el.propertyURI]=null;
+          }
+        });
+          return finalOutput;
         }
     }
     //------ permission check functions---------------

@@ -24,14 +24,6 @@ class ResourceQuery{
       } ORDER BY ?p ?o';
       return this.query;
     }
-    getObjectProperties(graphName, objectURI) {
-        /*jshint multistr: true */
-        this.query = '\
-        SELECT ?p ?o FROM <'+ graphName +'> WHERE { \
-        <'+ objectURI + '> ?p ?o .\
-        } ORDER BY ?p ?o';
-      return this.query;
-    }
     addTriple (graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
         //todo: consider different value types
       let newValue, tmp = {};

@@ -6,7 +6,7 @@ import BasicLinkedIndividualView from './BasicLinkedIndividualView';
 import BasicOptionView from './BasicOptionView';
 import PasswordView from './PasswordView';
 import LanguageView from './more/LanguageView';
-import TwoLetterCountryView from './more/TwoLetterCountryView';
+import FileSizeView from './more/FileSizeView';
 
 class IndividualDataView extends React.Component {
     render() {
@@ -33,7 +33,11 @@ class IndividualDataView extends React.Component {
                     extendedViewer = <BasicIndividualDetailView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
             }
         }
-        //normal view
+        //always go for linked view when it has extensions
+        if(this.props.spec.extended){
+            viewerConfig = 'BasicLinkedIndividualView';
+        }
+        //go to normal view
         switch(viewerConfig){
             case 'BasicIndividualView':
                 viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
@@ -50,11 +54,11 @@ class IndividualDataView extends React.Component {
             case 'LanguageView':
                 viewer = <LanguageView spec={this.props.spec} config={this.props.config}/>;
             break;
-            case 'TwoLetterCountryView':
-                viewer = <TwoLetterCountryView spec={this.props.spec} config={this.props.config}/>;
-            break;
             case 'BasicOptionView':
                 viewer = <BasicOptionView spec={this.props.spec} config={this.props.config}/>;
+            break;
+            case 'FileSizeView':
+                viewer = <FileSizeView spec={this.props.spec} config={this.props.config}/>;
             break;
             default:
                 viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;

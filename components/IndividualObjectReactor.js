@@ -16,7 +16,7 @@ class IndividualObjectReactor extends React.Component {
         //a trick to allow cascading actions
         let wtime = Math.floor(Math.random() * 1500) + 100;
         //expand blank nodes
-        if(this.props.config && this.props.config.hasBlankNode && this.props.spec.extended){
+        if(this.props.config && this.props.config.hasBlankNode && this.props.spec.extended && !this.state.isExtendedView){
             setTimeout(function(){
                 self.handleShowDetails();
             }, wtime);

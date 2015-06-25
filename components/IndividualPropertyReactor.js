@@ -170,12 +170,12 @@ class IndividualPropertyReactor extends React.Component {
                         return undefined; // stop processing this iteration
                     }
                     return (
-                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self)} onUpdate={self.handleUpdateIndividualObject.bind(self)} onDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self)}/>
+                        <IndividualObjectReactor inEditMode={self.props.inEditMode} key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self)} onUpdate={self.handleUpdateIndividualObject.bind(self)} onDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self)}/>
                     );
                 });
             break;
             case 'AggregateObjectReactor':
-                list = <AggregateObjectReactor isOnlyChild={isOnlyChild} readOnly={self.props.readOnly} spec={this.props.spec} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} onIndividualDelete={self.handleDeleteIndividualObject.bind(self)} onIndividualUpdate={self.handleUpdateIndividualObject.bind(self)} onIndividualDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self)} onUpdate={self.handleUpdateAggObject.bind(self)} onDelete={self.handleDeleteAggObject.bind(self)} controlNewInsert={self.controlNewInsert.bind(self)}/>;
+                list = <AggregateObjectReactor inEditMode={self.props.inEditMode} isOnlyChild={isOnlyChild} readOnly={self.props.readOnly} spec={this.props.spec} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} onIndividualDelete={self.handleDeleteIndividualObject.bind(self)} onIndividualUpdate={self.handleUpdateIndividualObject.bind(self)} onIndividualDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self)} onUpdate={self.handleUpdateAggObject.bind(self)} onDelete={self.handleDeleteAggObject.bind(self)} controlNewInsert={self.controlNewInsert.bind(self)}/>;
             break;
             default:
                 list = this.props.spec.instances.map(function(node, index) {
@@ -183,7 +183,7 @@ class IndividualPropertyReactor extends React.Component {
                         return undefined; // stop processing this iteration
                     }
                     return (
-                        <IndividualObjectReactor key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self)} onUpdate={self.handleUpdateIndividualObject.bind(self)} onDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self)}/>
+                        <IndividualObjectReactor inEditMode={self.props.inEditMode} key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self)} onUpdate={self.handleUpdateIndividualObject.bind(self)} onDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self)}/>
                     );
                 });
         }

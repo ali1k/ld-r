@@ -85,7 +85,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getPrefixes() + queryObject.getObjectProperties(graphName, objectURI);
+            query = queryObject.getPrefixes() + queryObject.getProperties(graphName, objectURI);
             httpOptions = getHTTPOptions(graphName);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
