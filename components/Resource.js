@@ -53,6 +53,18 @@ class Resource extends React.Component {
         });
         return config;
     }
+    getPropertyLabel(uri) {
+        let property = '';
+        let tmp = uri;
+        let tmp2 = tmp.split('#');
+        if(tmp2.length > 1){
+            property = tmp2[1];
+        }else{
+            tmp2 = tmp.split('/');
+            property = tmp2[tmp2.length - 1];
+        }
+        return property;
+    }
     render() {
         let readOnly;
         let user = this.context.getUser();
@@ -70,8 +82,8 @@ class Resource extends React.Component {
         rightConfig = selectedConfig;
         if(propertyPath && propertyPath.length){
             //only two level supported for now
-            if(selectedConfig.config && selectedConfig.config[propertyPath] && selectedConfig.config[propertyPath].extensions){
-                rightConfig = {config: self.buildConfigFromExtensions(selectedConfig.config[propertyPath].extensions)};
+            if(selectedConfig.config && selectedConfig.config[propertyPath[1]] && selectedConfig.config[propertyPath[1]].extensions){
+                rightConfig = {config: self.buildConfigFromExtensions(selectedConfig.config[propertyPath[1]].extensions)};
             }
         }
         //if readOnly is not defined make it true
@@ -123,7 +135,7 @@ class Resource extends React.Component {
                     }
                 }
                 return (
-                    <IndividualPropertyReactor key={index} spec={node} readOnly={configReadOnly} config={rightConfig.config[node.propertyURI]} graphName={self.props.ResourceStore.graphName} resource={self.props.ResourceStore.resourceURI}/>
+                    <IndividualPropertyReactor key={index} spec={node} readOnly={configReadOnly} config={rightConfig.config[node.propertyURI]} graphName={self.props.ResourceStore.graphName} resource={self.props.ResourceStore.resourceURI} propertyPath= {self.props.ResourceStore.propertyPath}/>
                 );
             }
         });
@@ -167,9 +179,18 @@ class Resource extends React.Component {
                             </div>
                       </div>;
         }
+        let breadcrumb;
+        if(self.props.ResourceStore.propertyPath.length > 1){
+            breadcrumb = <div className="ui large breadcrumb">
+                          <a className="section" href={'/dataset/' + encodeURIComponent(self.props.ResourceStore.graphName) + '/resource/' + encodeURIComponent(self.props.ResourceStore.propertyPath[0])}>{self.props.ResourceStore.propertyPath[0]}</a>
+                          <i className="right chevron icon divider"></i>
+                          <div className="active section">{self.getPropertyLabel(self.props.ResourceStore.propertyPath[1])}</div>
+                        </div>;
+        }
         return (
             <div className="ui page grid" ref="resource">
                 <div className="ui column">
+                    {breadcrumb}
                     <h2>
                         {this.props.ResourceStore.isComplete ? '' : <img src="/assets/img/loader.gif" alt="loading..."/>}
                         <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.ResourceStore.graphName) + '/' + encodeURIComponent(this.props.ResourceStore.resourceURI)}><i className="black icon cube"></i></a> <a href={this.props.ResourceStore.resourceURI} target="_blank">{this.props.ResourceStore.title}</a>

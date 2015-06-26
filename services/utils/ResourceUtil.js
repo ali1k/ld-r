@@ -26,8 +26,8 @@ class ResourceUtil{
         rightConfig = selectedConfig;
         if(propertyPath && propertyPath.length){
             //only two level supported for now
-            if(selectedConfig.config && selectedConfig.config[propertyPath] && selectedConfig.config[propertyPath].extensions){
-                rightConfig = {config: this.buildConfigFromExtensions(selectedConfig.config[propertyPath].extensions)};
+            if(selectedConfig.config && selectedConfig.config[propertyPath[1]] && selectedConfig.config[propertyPath[1]].extensions){
+                rightConfig = {config: this.buildConfigFromExtensions(selectedConfig.config[propertyPath[1]].extensions)};
             }
         }
         let filterByCategory=0, self=this;

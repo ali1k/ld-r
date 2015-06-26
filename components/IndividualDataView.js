@@ -35,7 +35,7 @@ class IndividualDataView extends React.Component {
         //always go for linked view when it has extensions
         if(this.props.config && this.props.config.allowExtension && this.props.spec.extended){
             viewerConfig = 'BasicLinkedIndividualView';
-            propertyPath = [this.props.property];
+            propertyPath = [this.props.resource, this.props.property];
         }
         if(this.props.config && this.props.config.category){
             category = this.props.config.category;

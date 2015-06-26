@@ -158,18 +158,18 @@ class IndividualObjectReactor extends React.Component {
         if (this.state.inEditMode) {
             switch(dataEditTypeConfig){
                 case 'IndividualDataEdit':
-                    dataEditType = <IndividualDataEdit isDefault={false} property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)} onEnterPress={this.handleSave.bind(this)}/>;
+                    dataEditType = <IndividualDataEdit isDefault={false} resource={this.props.resource} property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)} onEnterPress={this.handleSave.bind(this)}/>;
                 break;
                 default:
-                    dataEditType = <IndividualDataEdit isDefault={false} property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)} onEnterPress={this.handleSave.bind(this)}/>;
+                    dataEditType = <IndividualDataEdit isDefault={false} resource={this.props.resource} property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)} onEnterPress={this.handleSave.bind(this)}/>;
             }
         }else{
             switch(dataViewTypeConfig){
                 case 'IndividualDataView':
-                    dataViewType = <IndividualDataView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
+                    dataViewType = <IndividualDataView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config} resource={this.props.resource} property={this.props.property}/>;
                 break;
                 default:
-                    dataViewType = <IndividualDataView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
+                    dataViewType = <IndividualDataView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config} resource={this.props.resource} property={this.props.property}/>;
             }
         }
         let editDIV, saveDIV, undoDIV, detailDIV, deleteDIV;

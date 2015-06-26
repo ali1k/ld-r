@@ -35,6 +35,9 @@ export default {
             graphName = params.dataset;
             resourceURI = params.resource;
             propertyPath = decodeURIComponent(params.propertyPath);
+            if(propertyPath.length > 1){
+                propertyPath = propertyPath.split(',');
+            }
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
