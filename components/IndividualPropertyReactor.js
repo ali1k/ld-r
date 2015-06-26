@@ -48,6 +48,7 @@ class IndividualPropertyReactor extends React.Component {
           category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
+          propertyPath: this.props.propertyPath,
           propertyURI: this.props.spec.propertyURI,
           objectValue: objectValue,
           valueType: valueType,
@@ -62,6 +63,7 @@ class IndividualPropertyReactor extends React.Component {
           category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
+          propertyPath: this.props.propertyPath,
           propertyURI: this.props.spec.propertyURI,
           changes: changes
         });
@@ -74,6 +76,7 @@ class IndividualPropertyReactor extends React.Component {
           category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
+          propertyPath: this.props.propertyPath,
           propertyURI: this.props.spec.propertyURI,
           objectValue: objectValue,
           valueType: valueType,
@@ -89,6 +92,7 @@ class IndividualPropertyReactor extends React.Component {
           category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
+          propertyPath: this.props.propertyPath,
           propertyURI: this.props.spec.propertyURI,
           oldObjectValue: oldObjectValue,
           newObjectValue: newObjectValue,
@@ -104,6 +108,7 @@ class IndividualPropertyReactor extends React.Component {
           category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
+          propertyPath: this.props.propertyPath,
           propertyURI: this.props.spec.propertyURI,
           changes: changes
         });
@@ -113,6 +118,7 @@ class IndividualPropertyReactor extends React.Component {
           category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
           dataset: this.props.graphName,
           resourceURI: this.props.resource,
+          propertyPath: this.props.propertyPath,
           propertyURI: this.props.spec.propertyURI,
           oldObjectValue: oldObjectValue,
           newObjectValue: newObjectValue,

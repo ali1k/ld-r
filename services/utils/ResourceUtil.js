@@ -13,13 +13,22 @@ class ResourceUtil{
         }
         return property;
     }
-    parseProperties(body, graphName, category) {
-        let title = '', selectedConfig;
+    parseProperties(body, graphName, category, propertyPath) {
+        let title = '', selectedConfig, rightConfig;
         //first check if there is a specific config for the property on the selected graphName
         selectedConfig = propertiesConfig[graphName];
         //if no specific config is found, get the generic config
         if(!selectedConfig){
             selectedConfig = propertiesConfig.generic;
+        }
+        //handle properties config in different levels
+        //todo: now only handles level 2 properties should be extended later if needed
+        rightConfig = selectedConfig;
+        if(propertyPath && propertyPath.length){
+            //only two level supported for now
+            if(selectedConfig.config && selectedConfig.config[propertyPath] && selectedConfig.config[propertyPath].extensions){
+                rightConfig = {config: this.buildConfigFromExtensions(selectedConfig.config[propertyPath].extensions)};
+            }
         }
         let filterByCategory=0, self=this;
         let parsed = JSON.parse(body);
@@ -46,7 +55,7 @@ class ResourceUtil{
             //-------------------
             //handle categories
             if(filterByCategory){
-                if(!selectedConfig.config[el.p.value] || !selectedConfig.config[el.p.value].category || category !== selectedConfig.config[el.p.value].category[0]){
+                if(!rightConfig.config[el.p.value] || !rightConfig.config[el.p.value].category || category !== rightConfig.config[el.p.value].category[0]){
                     //skip property
                     return;
                 }
@@ -69,6 +78,13 @@ class ResourceUtil{
           });
           return {props: finalOutput, title: title};
         }
+    }
+    buildConfigFromExtensions(extensions) {
+        let config = {};
+        extensions.forEach(function(el, i) {
+            config[el.spec.propertyURI] = el.config;
+        });
+        return config;
     }
     findExtensionIndex(extensions, propertyURI) {
         let index = 0;

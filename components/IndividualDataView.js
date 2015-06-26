@@ -9,7 +9,7 @@ import LanguageView from './more/LanguageView';
 
 class IndividualDataView extends React.Component {
     render() {
-        let viewer, viewerConfig = '', extendedViewer, extendedViewerConfig = '';
+        let category = 0, propertyPath = [], viewer, viewerConfig = '', extendedViewer, extendedViewerConfig = '';
         if(this.props.config){
             if(this.props.config.extendedViewer){
                 extendedViewerConfig = this.props.config.extendedViewer[0];
@@ -33,8 +33,12 @@ class IndividualDataView extends React.Component {
             }
         }
         //always go for linked view when it has extensions
-        if(this.props.spec.extended){
+        if(this.props.config && this.props.config.allowExtension && this.props.spec.extended){
             viewerConfig = 'BasicLinkedIndividualView';
+            propertyPath = [this.props.property];
+        }
+        if(this.props.config && this.props.config.category){
+            category = this.props.config.category;
         }
         //go to normal view
         switch(viewerConfig){
@@ -42,7 +46,7 @@ class IndividualDataView extends React.Component {
                 viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
             break;
             case 'BasicLinkedIndividualView':
-                viewer = <BasicLinkedIndividualView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
+                viewer = <BasicLinkedIndividualView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config} propertyPath={propertyPath} category={category}/>;
             break;
             case 'PasswordView':
                 viewer = <PasswordView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;

@@ -46,16 +46,33 @@ class Resource extends React.Component {
             return {access: true, type: 'full'};
         }
     }
+    buildConfigFromExtensions(extensions) {
+        let config = {};
+        extensions.forEach(function(el, i) {
+            config[el.spec.propertyURI] = el.config;
+        });
+        return config;
+    }
     render() {
         let readOnly;
         let user = this.context.getUser();
         let self = this;
-        let selectedConfig, accessLevel, isWriteable, configReadOnly;
+        let selectedConfig, rightConfig, accessLevel, isWriteable, configReadOnly;
         //first check if there is a specific config for the property on the selected graphName
         selectedConfig = propertiesConfig[self.props.ResourceStore.graphName];
         //if no specific config is found, get the generic config
         if(!selectedConfig){
             selectedConfig = propertiesConfig.generic;
+        }
+        let propertyPath = self.props.ResourceStore.propertyPath;
+        //handle properties config in different levels
+        //todo: now only handles level 2 properties should be extended later if needed
+        rightConfig = selectedConfig;
+        if(propertyPath && propertyPath.length){
+            //only two level supported for now
+            if(selectedConfig.config && selectedConfig.config[propertyPath] && selectedConfig.config[propertyPath].extensions){
+                rightConfig = {config: self.buildConfigFromExtensions(selectedConfig.config[propertyPath].extensions)};
+            }
         }
         //if readOnly is not defined make it true
         if(typeof selectedConfig.readOnly === 'undefined'){
@@ -69,8 +86,8 @@ class Resource extends React.Component {
             //if there was no config at all or it is hidden, do not render the property
             if(!selectedConfig.config[node.propertyURI] || !selectedConfig.config[node.propertyURI].isHidden){
                 //will use config from generic if no config for property was found
-                if(!selectedConfig.config[node.propertyURI] && propertiesConfig.generic.config[node.propertyURI]){
-                    selectedConfig.config[node.propertyURI] = propertiesConfig.generic.config[node.propertyURI];
+                if(!rightConfig.config[node.propertyURI] && propertiesConfig.generic.config[node.propertyURI]){
+                    rightConfig.config[node.propertyURI] = propertiesConfig.generic.config[node.propertyURI];
                 }
                 //for readOnly, we first check the defautl value then we check readOnly value of each property if exists
                 //this is what comes from the config
@@ -82,8 +99,8 @@ class Resource extends React.Component {
                         configReadOnly = false;
                     }else{
                         //it property is readOnly from config
-                        if(selectedConfig.config[node.propertyURI]){
-                            if(selectedConfig.config[node.propertyURI].readOnly){
+                        if(rightConfig.config[node.propertyURI]){
+                            if(rightConfig.config[node.propertyURI].readOnly){
                                 configReadOnly = true;
                             }else{
                                 //check access levels
@@ -106,7 +123,7 @@ class Resource extends React.Component {
                     }
                 }
                 return (
-                    <IndividualPropertyReactor key={index} spec={node} readOnly={configReadOnly} config={selectedConfig.config[node.propertyURI]} graphName={self.props.ResourceStore.graphName} resource={self.props.ResourceStore.resourceURI}/>
+                    <IndividualPropertyReactor key={index} spec={node} readOnly={configReadOnly} config={rightConfig.config[node.propertyURI]} graphName={self.props.ResourceStore.graphName} resource={self.props.ResourceStore.resourceURI}/>
                 );
             }
         });
@@ -119,7 +136,7 @@ class Resource extends React.Component {
             }
             tabsDIV = selectedConfig.categories.map(function(node, index) {
                 return (
-                    <NavLink key={index} routeName="resource" href={'/dataset/' + encodeURIComponent(self.props.ResourceStore.graphName) + '/resource/' + encodeURIComponent(self.props.ResourceStore.resourceURI) + '/' + node}>
+                    <NavLink key={index} routeName="resource" href={'/dataset/' + encodeURIComponent(self.props.ResourceStore.graphName) + '/resource/' + encodeURIComponent(self.props.ResourceStore.resourceURI) + '/' + node + '/' + encodeURIComponent(self.props.ResourceStore.propertyPath)}>
                       <div className={(node === currentCategory ? 'item link active' : 'item link')}> {node} </div>
                     </NavLink>
                 );

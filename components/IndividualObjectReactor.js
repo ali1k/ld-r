@@ -5,7 +5,7 @@ import IndividualDataView from './IndividualDataView';
 import IndividualDataEdit from './IndividualDataEdit';
 import IndividualObjectStore from '../stores/IndividualObjectStore';
 import {connectToStores} from 'fluxible/addons';
-
+import {navigateAction} from 'fluxible-router';
 class IndividualObjectReactor extends React.Component {
     constructor(props) {
         super(props);
@@ -16,23 +16,50 @@ class IndividualObjectReactor extends React.Component {
         //a trick to allow cascading actions
         let wtime = Math.floor(Math.random() * 1500) + 100;
         //expand blank nodes
-        if(this.props.config && this.props.config.hasBlankNode && this.props.spec.extended && !this.state.isExtendedView){
+        if(this.props.config && this.props.config.hasBlankNode && this.props.config.autoLoadDetails && this.props.spec.extended && !this.state.isExtendedView){
             setTimeout(function(){
                 self.handleShowDetails();
             }, wtime);
         }
     }
-    handleEdit() {
-        //check if it is extended
-        if(this.props.spec.extended && !this.state.isExtendedView){
-            this.context.executeAction(loadObjectProperties, {
-              dataset: this.props.graphName,
-              propertyURI: this.props.property,
-              objectURI: this.props.spec.value
+    shouldNavigate(){
+        let yes = 0;
+        if(this.props.spec.extended && this.props.config && this.props.config.extensions){
+            this.props.config.extensions.forEach(function(el, i) {
+                if(el.config.allowExtension || el.config.allowNewValue){
+                    yes = 1;
+                    return yes;
+                }
             });
-            this.setState({isExtendedView: 1});
+        }else{
+            yes = 0;
         }
-        this.setState({inEditMode: 1});
+        return yes;
+    }
+    handleEdit() {
+        //navigate to a new windows if it has multi-valued objects or extended objects
+        if(this.shouldNavigate()){
+            let category = 0;
+            if(this.props.config && this.props.config.category){
+                category = this.props.config.category;
+            }
+            this.context.executeAction(navigateAction, {
+                url: '/dataset/' + encodeURIComponent(this.props.graphName) + '/resource/' + encodeURIComponent(this.props.spec.value) + '/' + category + '/' + encodeURIComponent(this.props.property)
+            }, (err) => {
+                console.log('forwarded to another page! ' + err);
+            });
+        }else{
+            //check if it is extended
+            if(this.props.spec.extended && !this.state.isExtendedView){
+                this.context.executeAction(loadObjectProperties, {
+                  dataset: this.props.graphName,
+                  propertyURI: this.props.property,
+                  objectURI: this.props.spec.value
+                });
+                this.setState({isExtendedView: 1});
+            }
+            this.setState({inEditMode: 1});
+        }
     }
     handleAddDetails() {
         this.setState({inEditMode: 1, isExtendedView: 1});
@@ -139,10 +166,10 @@ class IndividualObjectReactor extends React.Component {
         }else{
             switch(dataViewTypeConfig){
                 case 'IndividualDataView':
-                    dataViewType = <IndividualDataView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
+                    dataViewType = <IndividualDataView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
                 break;
                 default:
-                    dataViewType = <IndividualDataView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
+                    dataViewType = <IndividualDataView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
             }
         }
         let editDIV, saveDIV, undoDIV, detailDIV, deleteDIV;

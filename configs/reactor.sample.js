@@ -76,26 +76,27 @@ export default {
                     hint: ['Time coverage of the data itself but not of the data collection. For example we collect pictures in 2015 about the war. However, the pictures themselves could have been taken from 1939 to 1945. So the time coverage is 1939-1945.'],
                     allowExtension: 1,
                     hasBlankNode: 1,
+                    autoLoadDetails: 1,
                     extensions: [
                         {
                             spec: {
                                 propertyURI: 'http://rdf-vocabulary.ddialliance.org/discovery#startDate',
-                                instances: [{value: '', valueType: 'literal'}]
+                                instances: [{value: '2010-12-24', valueType: 'literal'}]
                             },
                             config: {
                                 label: ['Start date'],
-                                category: ['overview'],
+                                category: ['date'],
                                 hint: ['Start date of the time coverage.']
                             }
                         },
                         {
                             spec: {
                                 propertyURI: 'http://rdf-vocabulary.ddialliance.org/discovery#endDate',
-                                instances: [{value: '', valueType: 'literal'}]
+                                instances: [{value: '2015-12-24', valueType: 'literal'}]
                             },
                             config: {
                                 label: ['End date'],
-                                category: ['overview'],
+                                category: ['date'],
                                 hint: ['End date of the time coverage.']
                             }
                         }
@@ -110,6 +111,7 @@ export default {
                     dataViewType: ['AggregateDataView'],
                     viewer: ['DBpediaGoogleMapView'],
                     viewerI: ['BasicDBpediaView'],
+                    asWikipedia: 1,
                     editor: ['DBpediaInput'],
                     lookupClass: ['Place']
                 },
@@ -125,7 +127,8 @@ export default {
                     hint: ['Tags a dataset with a topic. For the general case, we recommend the use of a DBpedia resource URI (http://dbpedia.org/resource/XXX) to categorise a dataset, where XXX stands for the thing which best describes the main topic of what the dataset is about.'],
                     allowNewValue: 1,
                     editor: ['DBpediaInput'],
-                    viewer: ['BasicDBpediaView']
+                    viewer: ['BasicDBpediaView'],
+                    asWikipedia: 1
                 },
                 'http://purl.org/dc/terms/source': {
                     label: ['Data Source'],
@@ -141,6 +144,7 @@ export default {
                     hint: ['An entity, such as a person, organisation, or service, that is primarily responsible for creating the dataset. The creator should be described using a URI if available, rather than just providing the name as a literal. ORCID provides a useful service for this.'],
                     editor: ['DBpediaInput'],
                     viewer: ['BasicDBpediaView'],
+                    asWikipedia: 1,
                     extendedViewer: ['BasicIndividualDetailView'],
                     extensions: [
                         {
@@ -151,6 +155,7 @@ export default {
                             config: {
                                 hint: ['Type of the entity'],
                                 label: ['Type'],
+                                category: ['people'],
                                 viewer: ['BasicOptionView'],
                                 editor: ['BasicOptionInput'],
                                 options: [
@@ -168,6 +173,7 @@ export default {
                             },
                             config: {
                                 hint: ['A descriptor label for the URI'],
+                                category: ['people'],
                                 label: ['Label']
                             }
                         },
@@ -178,6 +184,7 @@ export default {
                             },
                             config: {
                                 hint: ['A corresponding email address'],
+                                category: ['people'],
                                 label: ['Email']
                             }
                         }
@@ -191,6 +198,7 @@ export default {
                     hint: ['An entity, such as a person, organisation, or service, that is responsible for making the dataset available. The publisher should be described using a URI if available, rather than just providing the name as a literal.'],
                     editor: ['DBpediaInput'],
                     viewer: ['BasicDBpediaView'],
+                    asWikipedia: 1,
                     extendedViewer: ['BasicIndividualDetailView'],
                     extensions: [
                         {
@@ -200,6 +208,7 @@ export default {
                             },
                             config: {
                                 hint: ['Type of the entity'],
+                                category: ['people'],
                                 label: ['Type'],
                                 viewer: ['BasicOptionView'],
                                 editor: ['BasicOptionInput'],
@@ -218,6 +227,7 @@ export default {
                             },
                             config: {
                                 hint: ['A descriptor label for the URI'],
+                                category: ['people'],
                                 label: ['Label']
                             }
                         },
@@ -228,6 +238,7 @@ export default {
                             },
                             config: {
                                 hint: ['A corresponding email address'],
+                                category: ['people'],
                                 label: ['Email']
                             }
                         }
@@ -241,6 +252,7 @@ export default {
                     hint: ['An entity, such as a person, organisation, or service, that is responsible for making contributions to the dataset. The contributor should be described using a URI if available, rather than just providing the name as a literal.'],
                     editor: ['DBpediaInput'],
                     viewer: ['BasicDBpediaView'],
+                    asWikipedia: 1,
                     extendedViewer: ['BasicIndividualDetailView'],
                     extensions: [
                         {
@@ -250,6 +262,7 @@ export default {
                             },
                             config: {
                                 hint: ['Type of the entity'],
+                                category: ['people'],
                                 label: ['Type'],
                                 viewer: ['BasicOptionView'],
                                 editor: ['BasicOptionInput'],
@@ -268,6 +281,7 @@ export default {
                             },
                             config: {
                                 hint: ['A descriptor label for the URI'],
+                                category: ['people'],
                                 label: ['Label']
                             }
                         },
@@ -278,6 +292,7 @@ export default {
                             },
                             config: {
                                 hint: ['A corresponding email address'],
+                                category: ['people'],
                                 label: ['Email']
                             }
                         }
@@ -387,6 +402,7 @@ export default {
                     category: ['overview'],
                     hint: ['The version of the dataset described by this document']
                 }
+
             }
         },
         //for each graph name, you can define custom configs.
@@ -431,6 +447,7 @@ export default {
                     allowNewValue: 1,
                     allowExtension: 1,
                     hasBlankNode: 1,
+                    autoLoadDetails: 1,
                     extensions: [
                         {
                             spec: {

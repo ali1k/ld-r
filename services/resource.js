@@ -21,7 +21,7 @@ if(enableLogs){
 /*-------------config-------------*/
 const outputFormat = 'application/sparql-results+json';
 /*-----------------------------------*/
-let httpOptions, rpPath, category, graphName, propertyURI, resourceURI, objectURI, objectValue, query, queryObject, utilObject;
+let httpOptions, rpPath, category, graphName, propertyURI, resourceURI, objectURI, objectValue, query, queryObject, utilObject, propertyPath;
 queryObject = new ResourceQuery();
 utilObject = new ResourceUtil();
 
@@ -34,10 +34,11 @@ export default {
             //SPARQL QUERY
             graphName = params.dataset;
             resourceURI = params.resource;
+            propertyPath = decodeURIComponent(params.propertyPath);
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
-                    callback(null, {graphName: graphName, resourceURI: resourceURI, currentCategory: 0, properties: []});
+                    callback(null, {graphName: graphName, resourceURI: resourceURI, currentCategory: 0, propertyPath: [], properties: []});
                 }else{
                     user = req.user;
                 }
@@ -52,7 +53,7 @@ export default {
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
                 //exceptional case for user properties: we hide some admin props from normal users
-                let {props, title} = utilObject.parseProperties(res, graphName, category);
+                let {props, title} = utilObject.parseProperties(res, graphName, category, propertyPath);
                 if(graphName === authGraphName[0] && !parseInt(user.isSuperUser)){
                     props = utilObject.deleteAdminProperties(props);
                 }
@@ -62,6 +63,7 @@ export default {
                     resourceURI: resourceURI,
                     title: title,
                     currentCategory: category,
+                    propertyPath: propertyPath,
                     properties: props
                 });
             }).catch(function (err) {
@@ -69,7 +71,7 @@ export default {
                 if(enableLogs){
                     log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 }
-                callback(null, {graphName: graphName, resourceURI: resourceURI, title: '', currentCategory: 0, properties: []});
+                callback(null, {graphName: graphName, resourceURI: resourceURI, title: '', currentCategory: 0, propertyPath: [], properties: []});
             });
         } else if (resource === 'resource.objectProperties') {
             graphName = params.dataset;

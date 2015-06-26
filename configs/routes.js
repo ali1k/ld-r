@@ -70,18 +70,21 @@ export default {
         }
     },
     resource: {
-        path: '/dataset/:did/resource/:rid/:pcategory?',
+        path: '/dataset/:did/:resource/:rid/:pcategory?/:propertyPath?',
         method: 'get',
         handler: require('../components/Resource'),
         label: 'Resource',
         action: (context, payload, done) => {
             //predicate Category
-            let category;
-            category = payload.get('params').get('pcategory');
+            let category = payload.get('params').get('pcategory');
             if(!category){
                 category = 0;
             }
-            context.executeAction(loadResource, { dataset: decodeURIComponent(payload.get('params').get('did')), resource: decodeURIComponent(payload.get('params').get('rid')), category: category}, done);
+            let propertyPath = payload.get('params').get('propertyPath');
+            if(!propertyPath){
+                propertyPath = [];
+            }
+            context.executeAction(loadResource, { dataset: decodeURIComponent(payload.get('params').get('did')), resource: decodeURIComponent(payload.get('params').get('rid')), category: category, propertyPath: propertyPath}, done);
         }
     },
     user: {

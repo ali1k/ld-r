@@ -11,6 +11,7 @@ class ResourceStore extends BaseStore {
         this.graphName = payload.graphName;
         this.resourceURI = payload.resourceURI;
         this.currentCategory = payload.currentCategory;
+        this.propertyPath = payload.propertyPath;
         // this.properties = payload.properties;
         this.properties = utilObject.preservePropertiesOrder(this.properties, payload.properties);
         this.title = payload.title ? payload.title : payload.resourceURI;
@@ -23,6 +24,7 @@ class ResourceStore extends BaseStore {
         this.currentCategory = 0;
         this.resourceURI = '';
         this.title = '';
+        this.propertyPath = [];
         this.isComplete = 1;
     }
     cleanResource() {
@@ -40,6 +42,7 @@ class ResourceStore extends BaseStore {
             title: this.title,
             currentCategory: this.currentCategory,
             properties: this.properties,
+            propertyPath: this.propertyPath,
             isComplete: this.isComplete
         };
     }
@@ -52,6 +55,7 @@ class ResourceStore extends BaseStore {
         this.title = state.title;
         this.graphName = state.graphName;
         this.currentCategory = state.currentCategory;
+        this.propertyPath = state.propertyPath;
     }
 }
 
