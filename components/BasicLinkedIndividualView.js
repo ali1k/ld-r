@@ -8,13 +8,9 @@ class BasicLinkedIndividualView extends React.Component {
         if(this.props.config && this.props.config.linkedGraph){
             graphName = this.props.config.linkedGraph[0];
         }
-        if(this.props.spec.valueType === 'uri'){
-            outputDIV = <NavLink routeName="resource" className="ui label" href={'/dataset/' + encodeURIComponent(graphName) + '/resource/' + encodeURIComponent(val)} >
-                <i className="black cube icon"></i> {val}
-                        </NavLink>;
-        }else{
-            outputDIV = <span> {val} </span>;
-        }
+        outputDIV = <NavLink routeName="resource" className="ui label" href={'/dataset/' + encodeURIComponent(graphName) + '/resource/' + encodeURIComponent(val)} >
+            <i className="black cube icon"></i> {val}
+                    </NavLink>;
         return (
             <div className="ui" ref="basicLinkedIndividualView">
                 {outputDIV}
