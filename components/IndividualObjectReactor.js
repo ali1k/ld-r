@@ -44,7 +44,7 @@ class IndividualObjectReactor extends React.Component {
                 category = this.props.config.category;
             }
             this.context.executeAction(navigateAction, {
-                url: '/dataset/' + encodeURIComponent(this.props.graphName) + '/resource/' + encodeURIComponent(this.props.spec.value) + '/' + category + '/' + encodeURIComponent(this.props.property)
+                url: '/dataset/' + encodeURIComponent(this.props.graphName) + '/resource/' + encodeURIComponent(this.props.spec.value) + '/' + category + '/' + encodeURIComponent([this.props.resource, this.props.property])
             }, (err) => {
                 console.log('forwarded to another page! ' + err);
             });
