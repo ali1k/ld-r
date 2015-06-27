@@ -42,6 +42,7 @@ export default {
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {graphName: graphName, resourceURI: resourceURI, currentCategory: 0, propertyPath: [], properties: []});
+                    return 0;
                 }else{
                     user = req.user;
                 }
@@ -84,6 +85,7 @@ export default {
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {objectURI: objectURI, properties: []});
+                    return 0;
                 }else{
                     user = req.user;
                 }
@@ -116,6 +118,7 @@ export default {
              if(enableAuthentication){
                  if(!req.user){
                      callback(null, {category: params.category});
+                     return 0;
                  }else{
                      //check if user permitted to do the update action
                      user = req.user;
@@ -123,12 +126,48 @@ export default {
                      if(!accessLevel.access){
                          //action not allowed!
                          callback(null, {category: params.category});
+                         return 0;
                      }
                  }
              }else{
                  user = {accountName: 'open'};
              }
              query = queryObject.getPrefixes() + queryObject.addTriple(params.dataset, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
+             httpOptions = getHTTPOptions(params.dataset);
+             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
+             //send request
+             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
+                 if(enableLogs){
+                     log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                 }
+                 callback(null, {category: params.category});
+             }).catch(function (err) {
+                 console.log(err);
+                 if(enableLogs){
+                     log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                 }
+                 callback(null, {category: params.category});
+             });
+         } else if (resource === 'resource.individualObjectDetail') {
+             //control access on authentication
+             if(enableAuthentication){
+                 if(!req.user){
+                     callback(null, {category: params.category});
+                     return 0;
+                 }else{
+                     user = req.user;
+                     accessLevel = utilObject.checkAccess(user, params.dataset, params.resourceURI, params.propertyURI);
+                     if(!accessLevel.access){
+                         //action not allowed!
+                         callback(null, {category: params.category});
+                         return 0;
+                     }
+                 }
+             }else{
+                 user = {accountName: 'open'};
+             }
+             //we should add this resource into user's profile too
+             query = queryObject.getPrefixes() + queryObject.updateObjectTriples(params.dataset, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData) + queryObject.addTriple(authGraphName, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', params.newObjectValue, 'uri', '');
              httpOptions = getHTTPOptions(params.dataset);
              rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
              //send request
@@ -152,12 +191,14 @@ export default {
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {category: params.category});
+                    return 0;
                 }else{
                     user = req.user;
                     accessLevel = utilObject.checkAccess(user, params.dataset, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
+                        return 0;
                     }
                 }
             }else{
@@ -184,12 +225,21 @@ export default {
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {category: params.category});
+                    return 0;
                 }else{
                     user = req.user;
                     accessLevel = utilObject.checkAccess(user, params.dataset, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
+                        return 0;
+                    }
+                    //check access for detail object
+                    accessLevel = utilObject.checkAccess(user, params.dataset, params.oldObjectValue, '');
+                    if(!accessLevel.access){
+                        //action not allowed!
+                        callback(null, {category: params.category});
+                        return 0;
                     }
                 }
             }else{
@@ -216,12 +266,14 @@ export default {
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {category: params.category});
+                    return 0;
                 }else{
                     user = req.user;
                     accessLevel = utilObject.checkAccess(user, params.dataset, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
+                        return 0;
                     }
                 }
             }else{
@@ -251,12 +303,14 @@ export default {
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {category: params.category});
+                    return 0;
                 }else{
                     user = req.user;
                     accessLevel = utilObject.checkAccess(user, params.dataset, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
+                        return 0;
                     }
                 }
             }else{

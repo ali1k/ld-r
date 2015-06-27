@@ -76,8 +76,12 @@ class IndividualObjectReactor extends React.Component {
         }else{
             //check if it is extended
             if(this.props.spec.extended || this.state.isExtendedView){
-                this.props.onDetailUpdate(this.props.spec.value, this.state.objectValue, this.props.spec.valueType, this.props.spec.dataType, this.state.detailData);
-                if(this.state.isExtendedView){
+                if(this.props.spec.extended){
+                    //update mode
+                    this.props.onDetailUpdate(this.props.spec.value, this.state.objectValue, this.props.spec.valueType, this.props.spec.dataType, this.state.detailData);
+                }else{
+                    //create mode
+                    this.props.onDetailCreate(this.props.spec.value, this.state.objectValue, this.props.spec.valueType, this.props.spec.dataType, this.state.detailData);
                     this.props.spec.extended = 1;
                 }
                 this.setState({inEditMode: 0, isExtendedView: 0});

@@ -1,10 +1,12 @@
 import React from 'react';
 import {provideContext} from 'fluxible/addons';
 import PropertyHeader from './PropertyHeader';
+import {enableAuthentication} from '../configs/reactor';
 import IndividualObjectReactor from './IndividualObjectReactor';
 import AggregateObjectReactor from './AggregateObjectReactor';
 import deleteIndividualObject from '../actions/deleteIndividualObject';
 import createIndividualObject from '../actions/createIndividualObject';
+import createIndividualObjectDetail from '../actions/createIndividualObjectDetail';
 import updateIndividualObject from '../actions/updateIndividualObject';
 import updateIndividualObjectDetail from '../actions/updateIndividualObjectDetail';
 import updateAggObject from '../actions/updateAggObject';
@@ -113,6 +115,20 @@ class IndividualPropertyReactor extends React.Component {
           changes: changes
         });
     }
+    handleDetailCreateIndividualObject(oldObjectValue, newObjectValue, valueType, dataType, detailData){
+        this.context.executeAction(createIndividualObjectDetail, {
+          category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
+          dataset: this.props.graphName,
+          resourceURI: this.props.resource,
+          propertyPath: this.props.propertyPath,
+          propertyURI: this.props.spec.propertyURI,
+          oldObjectValue: oldObjectValue,
+          newObjectValue: newObjectValue,
+          valueType: valueType,
+          dataType: dataType,
+          detailData: detailData
+        });
+    }
     handleDetailUpdateIndividualObject(oldObjectValue, newObjectValue, valueType, dataType, detailData){
         this.context.executeAction(updateIndividualObjectDetail, {
           category: (this.props.config ? (this.props.config.category ? this.props.config.category[0] : '') : ''),
@@ -133,7 +149,45 @@ class IndividualPropertyReactor extends React.Component {
     handleCancelNewIndividualObject(){
         this.setState({inNewValueMode: 0});
     }
+    includesProperty(list, resource, property) {
+        let out = false;
+        list.forEach(function(el) {
+            if (el.r === resource && el.p === property){
+                out = true;
+                return out;
+            }
+        });
+        return out;
+    }
+    checkAccess(user, graph, resource, property) {
+        if(enableAuthentication) {
+            if(user){
+                if(parseInt(user.isSuperUser)){
+                    return {access: true, type: 'full'};
+                }else{
+                    if(graph && user.editorOfGraph.indexOf(graph) !== -1){
+                        return {access: true, type: 'full'};
+                    }else{
+                        if(resource && user.editorOfResource.indexOf(resource) !== -1){
+                            return {access: true, type: 'full'};
+                        }else{
+                            if(property && this.includesProperty(user.editorOfProperty, resource, property)){
+                                return {access: true, type: 'partial'};
+                            }else{
+                                return {access: false};
+                            }
+                        }
+                    }
+                }
+            }else{
+                return {access: false};
+            }
+        }else{
+            return {access: true, type: 'full'};
+        }
+    }
     render() {
+        let user = this.context.getUser();
         let self = this;
         let newValueDIV, defaultValueDIV, propLabel;
         if(this.props.config && this.props.config.allowNewValue && !this.props.readOnly){
@@ -168,6 +222,7 @@ class IndividualPropertyReactor extends React.Component {
         }
         //check if it is the only value of a property -> used to hide delete button
         let isOnlyChild = (this.calculateValueCount(this.props.spec.instances) === 1);
+        let accessLevel, readOnly;
         //dispatch to the right reactor
         switch(objectReactorTypeConfig){
             case 'IndividualObjectReactor':
@@ -175,21 +230,37 @@ class IndividualPropertyReactor extends React.Component {
                     if(!node){
                         return undefined; // stop processing this iteration
                     }
+                    //check access level for details
+                    readOnly = self.props.readOnly;
+                    if(node.extended){
+                        accessLevel = self.checkAccess(user, self.props.graphName, self.props.resource, '');
+                        if(!accessLevel.access){
+                            readOnly = true;
+                        }
+                    }
                     return (
-                        <IndividualObjectReactor inEditMode={self.props.inEditMode} key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self)} onUpdate={self.handleUpdateIndividualObject.bind(self)} onDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self)}/>
+                        <IndividualObjectReactor inEditMode={self.props.inEditMode} key={index} readOnly={readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self)} onUpdate={self.handleUpdateIndividualObject.bind(self)} onDetailCreate={self.handleDetailCreateIndividualObject.bind(self)} onDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self)}/>
                     );
                 });
             break;
             case 'AggregateObjectReactor':
-                list = <AggregateObjectReactor inEditMode={self.props.inEditMode} isOnlyChild={isOnlyChild} readOnly={self.props.readOnly} spec={this.props.spec} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} onIndividualDelete={self.handleDeleteIndividualObject.bind(self)} onIndividualUpdate={self.handleUpdateIndividualObject.bind(self)} onIndividualDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self)} onUpdate={self.handleUpdateAggObject.bind(self)} onDelete={self.handleDeleteAggObject.bind(self)} controlNewInsert={self.controlNewInsert.bind(self)}/>;
+                list = <AggregateObjectReactor inEditMode={self.props.inEditMode} isOnlyChild={isOnlyChild} readOnly={self.props.readOnly} spec={this.props.spec} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} onIndividualDelete={self.handleDeleteIndividualObject.bind(self)} onIndividualUpdate={self.handleUpdateIndividualObject.bind(self)} onDetailCreate={self.handleDetailCreateIndividualObject.bind(self)} onIndividualDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self)} onUpdate={self.handleUpdateAggObject.bind(self)} onDelete={self.handleDeleteAggObject.bind(self)} controlNewInsert={self.controlNewInsert.bind(self)}/>;
             break;
             default:
                 list = this.props.spec.instances.map(function(node, index) {
                     if(!node){
                         return undefined; // stop processing this iteration
                     }
+                    //check access level for details
+                    readOnly = self.props.readOnly;
+                    if(node.extended){
+                        accessLevel = self.checkAccess(user, self.props.graphName, node.value, '');
+                        if(!accessLevel.access){
+                            readOnly = true;
+                        }
+                    }
                     return (
-                        <IndividualObjectReactor inEditMode={self.props.inEditMode} key={index} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self)} onUpdate={self.handleUpdateIndividualObject.bind(self)} onDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self)}/>
+                        <IndividualObjectReactor inEditMode={self.props.inEditMode} key={index} readOnly={readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={isOnlyChild} onDelete={self.handleDeleteIndividualObject.bind(self)} onUpdate={self.handleUpdateIndividualObject.bind(self)} onDetailCreate={self.handleDetailCreateIndividualObject.bind(self)} onDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self)}/>
                     );
                 });
         }
@@ -211,6 +282,7 @@ class IndividualPropertyReactor extends React.Component {
     }
 }
 IndividualPropertyReactor.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired
+    executeAction: React.PropTypes.func.isRequired,
+    getUser: React.PropTypes.func
 };
 export default IndividualPropertyReactor;
