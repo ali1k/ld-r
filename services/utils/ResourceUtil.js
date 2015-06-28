@@ -87,7 +87,7 @@ class ResourceUtil{
         return config;
     }
     findExtensionIndex(extensions, propertyURI) {
-        let index = 0;
+        let index = -1;
         extensions.forEach(function(el, i) {
             if(el.spec.propertyURI === propertyURI){
                 index = i;
@@ -97,6 +97,9 @@ class ResourceUtil{
     }
     getExtensionConfig(extensions, propertyURI){
         let index = this.findExtensionIndex(extensions, propertyURI);
+        if(index === -1){
+            return {};
+        }
         return extensions[index].config;
     }
     parseObjectProperties(graphName, propertyURI, body) {
