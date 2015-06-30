@@ -9,13 +9,17 @@ class ResourceListPager extends React.Component {
     componentDidMount() {
     }
     buildLink(page, color, icon) {
+        let p = page;
+        if(p <= 0){
+            p = 1;
+        }
         if(this.props.handleClick){
             return (
-            <a onClick={this.props.handleClick.bind(this, page)} key={page} className={'ui ' + color + ' label'}> {icon ? <i className={icon}></i> : {page}} </a>
+            <a onClick={this.props.handleClick.bind(this, p)} key={page} className={'ui ' + color + ' label'}> {icon ? <i className={icon}></i> : {page}} </a>
             );
         }else{
             return (
-                <NavLink key={page} routeName="dataset" className={'ui ' + color + ' label'} href={'/dataset/' + page + '/' + encodeURIComponent(this.props.graphName)}> {icon ? <i className={icon}></i> : {page}} </NavLink>
+                <NavLink key={page} routeName="dataset" className={'ui ' + color + ' label'} href={'/dataset/' + p + '/' + encodeURIComponent(this.props.graphName)}> {icon ? <i className={icon}></i> : <span>{page}</span>} </NavLink>
             );
         }
     }
@@ -43,7 +47,7 @@ class ResourceListPager extends React.Component {
                     }
                 }
                 //last page
-                pageList.push(self.buildLink(totalPages + 1, 'purple', 'step forward icon'));
+                pageList.push(self.buildLink(totalPages, 'purple', 'step forward icon'));
             }else{
                 for (i = 1; i <= totalPages; i++) {
                     if(i === currentPage){
