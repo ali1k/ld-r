@@ -9,17 +9,13 @@ class ResourceListPager extends React.Component {
     componentDidMount() {
     }
     buildLink(page, color, icon) {
-        let p = page;
-        if(p <= 0){
-            p = 1;
-        }
         if(this.props.handleClick){
             return (
-            <a onClick={this.props.handleClick.bind(this, p)} key={page} className={'ui ' + color + ' label'}> {icon ? <i className={icon}></i> : <span>{page}</span>} </a>
+            <a onClick={this.props.handleClick.bind(this, page)} key={(icon ? ('i' + page) : page)} className={'ui ' + color + ' label'}> {icon ? <i className={icon}></i> : <span>{page}</span>} </a>
             );
         }else{
             return (
-                <NavLink key={page} routeName="dataset" className={'ui ' + color + ' label'} href={'/dataset/' + p + '/' + encodeURIComponent(this.props.graphName)}> {icon ? <i className={icon}></i> : <span>{page}</span>} </NavLink>
+                <NavLink key={(icon ? ('i' + page) : page)} routeName="dataset" className={'ui ' + color + ' label'} href={'/dataset/' + page + '/' + encodeURIComponent(this.props.graphName)}> {icon ? <i className={icon}></i> : <span>{page}</span>} </NavLink>
             );
         }
     }
@@ -33,7 +29,7 @@ class ResourceListPager extends React.Component {
             totalPages = Math.ceil(this.props.total / maxOnPage);
             if(totalPages > threshold){
                 //first page
-                pageList.push(self.buildLink(0, 'purple', 'step backward icon'));
+                pageList.push(self.buildLink(1, 'purple', 'step backward icon'));
                 if(currentPage - Math.round(threshold / 2) <= 0){
                     startI = 1;
                 }else{
