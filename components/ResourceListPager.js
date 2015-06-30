@@ -15,7 +15,7 @@ class ResourceListPager extends React.Component {
         }
         if(this.props.handleClick){
             return (
-            <a onClick={this.props.handleClick.bind(this, p)} key={page} className={'ui ' + color + ' label'}> {icon ? <i className={icon}></i> : {page}} </a>
+            <a onClick={this.props.handleClick.bind(this, p)} key={page} className={'ui ' + color + ' label'}> {icon ? <i className={icon}></i> : <span>{page}</span>} </a>
             );
         }else{
             return (
