@@ -41,7 +41,7 @@ export default {
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
-                    callback(null, {graphName: graphName, resourceURI: resourceURI, currentCategory: 0, propertyPath: [], properties: []});
+                    callback(null, {graphName: graphName, resourceURI: resourceURI, resourceType: '', currentCategory: 0, propertyPath: [], properties: []});
                     return 0;
                 }else{
                     user = req.user;
@@ -57,7 +57,7 @@ export default {
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
                 //exceptional case for user properties: we hide some admin props from normal users
-                let {props, title} = utilObject.parseProperties(res, graphName, category, propertyPath);
+                let {props, title, resourceType} = utilObject.parseProperties(res, graphName, category, propertyPath);
                 if(graphName === authGraphName[0] && !parseInt(user.isSuperUser)){
                     props = utilObject.deleteAdminProperties(props);
                 }
@@ -65,6 +65,7 @@ export default {
                 callback(null, {
                     graphName: graphName,
                     resourceURI: resourceURI,
+                    resourceType: resourceType,
                     title: title,
                     currentCategory: category,
                     propertyPath: propertyPath,
@@ -75,7 +76,7 @@ export default {
                 if(enableLogs){
                     log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 }
-                callback(null, {graphName: graphName, resourceURI: resourceURI, title: '', currentCategory: 0, propertyPath: [], properties: []});
+                callback(null, {graphName: graphName, resourceURI: resourceURI, resourceType: '', title: '', currentCategory: 0, propertyPath: [], properties: []});
             });
         } else if (resource === 'resource.objectProperties') {
             graphName = params.dataset;
@@ -84,7 +85,7 @@ export default {
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
-                    callback(null, {objectURI: objectURI, properties: []});
+                    callback(null, {objectURI: objectURI, objectType: '', properties: []});
                     return 0;
                 }else{
                     user = req.user;
@@ -97,16 +98,18 @@ export default {
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
+                let {props, objectType} = utilObject.parseObjectProperties(graphName, propertyURI, res);
                 callback(null, {
                     objectURI: objectURI,
-                    properties: utilObject.parseObjectProperties(graphName, propertyURI, res)
+                    objectType: objectType,
+                    properties: props
                 });
             }).catch(function (err) {
                 console.log(err);
                 if(enableLogs){
                     log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 }
-                callback(null, {objectURI: objectURI, properties: []});
+                callback(null, {objectURI: objectURI, objectType: '', properties: []});
             });
         }
 

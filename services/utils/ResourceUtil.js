@@ -14,7 +14,7 @@ class ResourceUtil{
         return property;
     }
     parseProperties(body, graphName, category, propertyPath) {
-        let title = '', selectedConfig, rightConfig;
+        let title = '', selectedConfig, rightConfig, resourceType = '';
         //first check if there is a specific config for the property on the selected graphName
         selectedConfig = propertiesConfig[graphName];
         //if no specific config is found, get the generic config
@@ -51,6 +51,8 @@ class ResourceUtil{
                 title = el.o.value;
             }else if(el.p.value === 'http://www.w3.org/2000/01/rdf-schema#label'){
                 title = el.o.value;
+            }else if (el.p.value === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type') {
+                resourceType = el.o.value;
             }
             //-------------------
             //handle categories
@@ -76,7 +78,7 @@ class ResourceUtil{
               propIndex[el.propertyURI]=null;
             }
           });
-          return {props: finalOutput, title: title};
+          return {props: finalOutput, title: title, resourceType: resourceType};
         }
     }
     buildConfigFromExtensions(extensions) {
@@ -103,6 +105,7 @@ class ResourceUtil{
         return extensions[index].config;
     }
     parseObjectProperties(graphName, propertyURI, body) {
+        let title, objectType = '';
         let selectedConfig = propertiesConfig[graphName];
         //if no specific config is found, get the generic config
         if(!selectedConfig){
@@ -113,6 +116,13 @@ class ResourceUtil{
         let output=[], propIndex={}, finalOutput=[];
         if(parsed.results.bindings.length){
           parsed.results.bindings.forEach(function(el) {
+            if(el.p.value === 'http://purl.org/dc/terms/title'){
+                title = el.o.value;
+            }else if(el.p.value === 'http://www.w3.org/2000/01/rdf-schema#label'){
+                title = el.o.value;
+            }else if (el.p.value === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type') {
+                objectType = el.o.value;
+            }
             let property=self.getPropertyLabel(el.p.value);
             if(propIndex[el.p.value]){
                 propIndex[el.p.value].push({value: el.o.value, valueType: el.o.type, dataType:(el.o.type==='typed-literal'?el.o.datatype:''), extended:parseInt(el.hasExtendedValue.value)});
@@ -127,7 +137,7 @@ class ResourceUtil{
             propIndex[el.propertyURI]=null;
           }
         });
-          return finalOutput;
+        return {props: finalOutput, title: title, objectType: objectType};
         }
     }
     //------ permission check functions---------------

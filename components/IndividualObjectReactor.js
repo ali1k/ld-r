@@ -116,7 +116,10 @@ class IndividualObjectReactor extends React.Component {
         if(this.state.isExtendedView){
             if(this.props.spec.extended){
                 this.props.spec.extendedViewData = this.props.IndividualObjectStore.objectProperties[this.props.spec.value];
+                this.props.spec.objectType = this.props.IndividualObjectStore.objectTypes[this.props.spec.value];
             }else{
+                //no type is detected yet
+                this.props.spec.objectType = '';
                 //add default details situation
                 if(this.props.config && this.props.config.extensions){
                     //get from config and build as a list

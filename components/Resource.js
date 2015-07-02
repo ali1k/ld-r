@@ -158,7 +158,7 @@ class Resource extends React.Component {
                     <div key={index} className={(node === currentCategory ? 'ui bottom attached tab segment active' : 'ui bottom attached tab segment')}>
                         <div className="ui grid">
                             <div className="column ui list">
-                                {list}
+                                {(node === currentCategory ? list : '')}
                             </div>
                         </div>
                     </div>
@@ -188,7 +188,7 @@ class Resource extends React.Component {
                         </div>;
         }
         return (
-            <div className="ui page grid" ref="resource">
+            <div className="ui page grid" ref="resource" itemScope itemType={this.props.ResourceStore.resourceType} itemID={this.props.ResourceStore.resourceURI}>
                 <div className="ui column">
                     {breadcrumb}
                     <h2>

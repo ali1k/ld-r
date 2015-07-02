@@ -13,13 +13,13 @@ class AggregateDataView extends React.Component {
         }
         switch(viewerConfig){
             case 'BasicAggregateView':
-                viewer = <BasicAggregateView spec={this.props.spec} config={this.props.config}/>;
+                viewer = <BasicAggregateView property={this.props.property} spec={this.props.spec} config={this.props.config}/>;
             break;
             case 'DBpediaGoogleMapView':
                 viewer = <DBpediaGoogleMapView spec={this.props.spec} config={this.props.config}/>;
             break;
             default:
-                viewer = <BasicAggregateView spec={this.props.spec} config={this.props.config}/>;
+                viewer = <BasicAggregateView property={this.props.property} spec={this.props.spec} config={this.props.config}/>;
         }
         return (
             <div className="ui" ref="aggregateDataView">

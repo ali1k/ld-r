@@ -11,7 +11,7 @@ class BasicIndividualDetailView extends React.Component {
         let list = this.props.spec.extendedViewData.map(function(node, index) {
             let llist = node.spec.instances.map(function(instance, index2){
                 return (
-                    <IndividualDataView key={index + '_' + index2} spec={instance} config={node.config} graphName={self.props.graphName}/>
+                    <IndividualDataView key={index + '_' + index2} spec={instance} config={node.config} graphName={self.props.graphName} resource={self.props.spec.value} property={node.spec.propertyURI}/>
                 );
             });
             return (
@@ -34,7 +34,7 @@ class BasicIndividualDetailView extends React.Component {
             );
         });
         return (
-            <div ref="detailProperties">
+            <div ref="detailProperties" itemScope itemType={this.props.spec.objectType}>
                 <div className="ui attached primary segment">
                     <div className="ui list">
                         {list}

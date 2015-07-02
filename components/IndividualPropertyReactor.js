@@ -244,7 +244,7 @@ class IndividualPropertyReactor extends React.Component {
                 });
             break;
             case 'AggregateObjectReactor':
-                list = <AggregateObjectReactor inEditMode={self.props.inEditMode} isOnlyChild={isOnlyChild} readOnly={self.props.readOnly} spec={this.props.spec} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} onIndividualDelete={self.handleDeleteIndividualObject.bind(self)} onIndividualUpdate={self.handleUpdateIndividualObject.bind(self)} onDetailCreate={self.handleDetailCreateIndividualObject.bind(self)} onIndividualDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self)} onUpdate={self.handleUpdateAggObject.bind(self)} onDelete={self.handleDeleteAggObject.bind(self)} controlNewInsert={self.controlNewInsert.bind(self)}/>;
+                list = <AggregateObjectReactor inEditMode={self.props.inEditMode} isOnlyChild={isOnlyChild} readOnly={self.props.readOnly} spec={this.props.spec} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} onIndividualDelete={self.handleDeleteIndividualObject.bind(self)} onIndividualUpdate={self.handleUpdateIndividualObject.bind(self)} onDetailCreate={self.handleDetailCreateIndividualObject.bind(self)} onIndividualDetailUpdate={self.handleDetailUpdateIndividualObject.bind(self)} onUpdate={self.handleUpdateAggObject.bind(self)} onDelete={self.handleDeleteAggObject.bind(self)} controlNewInsert={self.controlNewInsert.bind(self)}/>;
             break;
             default:
                 list = this.props.spec.instances.map(function(node, index) {

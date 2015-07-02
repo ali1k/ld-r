@@ -69,7 +69,7 @@ class IndividualDataView extends React.Component {
             hideObject = 1;
         }
         return (
-            <div className="ui" ref="individualDataView">
+            <div className="ui" ref="individualDataView" itemProp={this.props.property}>
                 {hideObject ? '' : <div className="ui attached secondary segment"> {viewer} </div>}
                 {extendedViewer}
             </div>

@@ -92,7 +92,7 @@ class AggregateObjectReactor extends React.Component {
                             return undefined; // stop processing this iteration
                         }
                         return (
-                            <IndividualObjectReactor key={index} inEditMode={true} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
+                            <IndividualObjectReactor key={index} inEditMode={true} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.property} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
                         );
                     });
                 break;
@@ -102,7 +102,7 @@ class AggregateObjectReactor extends React.Component {
         }else{
             switch(dataViewTypeConfig){
                 case 'AggregateDataView':
-                    dataViewType = <AggregateDataView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
+                    dataViewType = <AggregateDataView graphName={this.props.graphName} resource={this.props.resource} property={this.props.property} spec={this.props.spec} config={this.props.config}/>;
                 break;
                 //will apply IndividualDataView on each child
                 case 'IndividualDataView':
@@ -112,7 +112,7 @@ class AggregateObjectReactor extends React.Component {
                             return undefined; // stop processing this iteration
                         }
                         return (
-                            <IndividualObjectReactor key={index} inEditMode={false} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
+                            <IndividualObjectReactor key={index} inEditMode={false} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.property} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
                         );
                     });
                 break;

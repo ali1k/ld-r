@@ -4,14 +4,17 @@ class IndividualObjectStore extends BaseStore {
     constructor(dispatcher) {
         super(dispatcher);
         this.objectProperties = {};
+        this.objectTypes = {};
     }
     updateObjectProperties(payload) {
         this.objectProperties[payload.objectURI] = payload.properties;
+        this.objectTypes[payload.objectURI] = payload.objectType;
         this.emitChange();
     }
     getState() {
         return {
-            objectProperties: this.objectProperties
+            objectProperties: this.objectProperties,
+            objectTypes: this.objectTypes
         };
     }
     dehydrate() {
@@ -19,6 +22,7 @@ class IndividualObjectStore extends BaseStore {
     }
     rehydrate(state) {
         this.objectProperties = state.objectProperties;
+        this.objectTypes = state.objectTypes;
     }
 }
 
