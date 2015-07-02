@@ -34,7 +34,7 @@ class BasicIndividualDetailView extends React.Component {
             );
         });
         return (
-            <div ref="detailProperties" itemScope itemType={this.props.spec.objectType}>
+            <div ref="detailProperties" itemScope itemType={this.props.spec.objectType} itemID={this.props.spec.value}>
                 <div className="ui attached primary segment">
                     <div className="ui list">
                         {list}
