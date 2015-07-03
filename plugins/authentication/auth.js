@@ -33,13 +33,13 @@ module.exports = {
       var self=this;
       /*jshint multistr: true */
       var query = '\
-      PREFIX ldReactor: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
+      PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
       PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
       SELECT ?p ?o ?pr ?pp FROM <'+ reactorConfig.authGraphName[0] +'> WHERE { \
         { \
             <'+id+'> a foaf:Person . \
             <'+id+'> ?p ?o . \
-            OPTIONAL {?o ldReactor:resource ?pr . ?o ldReactor:property ?pp .} \
+            OPTIONAL {?o ldr:resource ?pr . ?o ldr:property ?pp .} \
         } \
       } \
       ';
@@ -84,7 +84,7 @@ module.exports = {
       var self=this;
       /*jshint multistr: true */
       var query = '\
-      PREFIX ldReactor: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
+      PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
       PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
       SELECT ?s ?p ?o FROM <'+ reactorConfig.authGraphName[0] +'> WHERE { \
         { \

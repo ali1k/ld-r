@@ -119,22 +119,22 @@ module.exports = function handleAuthentication(server) {
                          var currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
                          /*jshint multistr: true */
                          query = '\
-                         PREFIX ldReactor: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
+                         PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
                          PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
                          PREFIX dcterms: <http://purl.org/dc/terms/> \
                          INSERT DATA INTO <'+ reactorConfig.authGraphName[0] +'> { \
-                         <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; foaf:mbox <'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldReactor:password """'+passwordHash.generate(req.body.password)+'"""; ldReactor:isActive "'+isActive+'"^^xsd:Integer; ldReactor:isSuperUser "0"^^xsd:Integer; ldReactor:editorOfGraph <'+dgraphURI+'>; ldReactor:editorOfResource <'+dresourceURI+'>; ldReactor:editorOfProperty <'+blanknode+'1>;ldReactor:editorOfProperty <'+blanknode+'2>; ldReactor:editorOfProperty <'+blanknode+'3>; ldReactor:editorOfProperty <'+blanknode+'4> .} \
+                         <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; foaf:mbox <'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfGraph <'+dgraphURI+'>; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1>;ldr:editorOfProperty <'+blanknode+'2>; ldr:editorOfProperty <'+blanknode+'3>; ldr:editorOfProperty <'+blanknode+'4> .} \
                          INSERT DATA INTO <'+ reactorConfig.authGraphName[0] +'> { \
-                             <'+blanknode+'1> ldReactor:resource <'+resourceURI+'> ; ldReactor:property foaf:firstName . \
+                             <'+blanknode+'1> ldr:resource <'+resourceURI+'> ; ldr:property foaf:firstName . \
                          } \
                          INSERT DATA INTO <'+ reactorConfig.authGraphName[0] +'> { \
-                             <'+blanknode+'2> ldReactor:resource <'+resourceURI+'> ; ldReactor:property foaf:lastName . \
+                             <'+blanknode+'2> ldr:resource <'+resourceURI+'> ; ldr:property foaf:lastName . \
                          } \
                          INSERT DATA INTO <'+ reactorConfig.authGraphName[0] +'> { \
-                             <'+blanknode+'3> ldReactor:resource <'+resourceURI+'> ; ldReactor:property foaf:organization . \
+                             <'+blanknode+'3> ldr:resource <'+resourceURI+'> ; ldr:property foaf:organization . \
                          } \
                          INSERT DATA INTO <'+ reactorConfig.authGraphName[0] +'> { \
-                             <'+blanknode+'4> ldReactor:resource <'+resourceURI+'> ; ldReactor:property ldReactor:password . \
+                             <'+blanknode+'4> ldr:resource <'+resourceURI+'> ; ldr:property ldr:password . \
                          } \
                          ';
                         //  console.log(query);
