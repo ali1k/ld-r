@@ -16,6 +16,21 @@ export default {
         };
         return httpOptions;
     },
+    getEndpointType: function(graphName) {
+        let g;
+        if(sparqlEndpoint[graphName]){
+            g = graphName;
+        }else{
+            //go for generic SPARQL endpoint
+            g = 'generic';
+        }
+        if(sparqlEndpoint[g].type){
+            return sparqlEndpoint[g].type;
+        }else{
+            //default endpoint type
+            return 'Virtuoso';
+        }
+    },
     getQueryDataTypeValue(valueType, dataType, objectValue) {
         let newValue, dtype;
         switch (valueType) {

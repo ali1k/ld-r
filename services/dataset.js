@@ -1,14 +1,15 @@
 'use strict';
-import {getHTTPOptions} from './utils/helpers';
+import {getHTTPOptions, getEndpointType} from './utils/helpers';
 import {defaultGraphName, enableAuthentication, maxNumberOfResourcesOnPage, propertiesConfig} from '../configs/reactor';
 import DatasetQuery from './sparql/DatasetQuery';
 import DatasetUtil from './utils/DatasetUtil';
 import rp from 'request-promise';
+import ldf from 'ldf-client';
 /*-------------config-------------*/
 const outputFormat = 'application/sparql-results+json';
 let user;
 /*-----------------------------------*/
-let httpOptions, rpPath, graphName, query, queryObject, utilObject, propertyURI, resourceFocusType;
+let httpOptions, endpointType, rpPath, graphName, query, queryObject, utilObject, propertyURI, resourceFocusType;
 queryObject = new DatasetQuery();
 utilObject = new DatasetUtil();
 let maxOnPage = maxNumberOfResourcesOnPage;
@@ -43,22 +44,46 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getResourcesByType(graphName, resourceFocusType, maxOnPage, offset);
             //build http uri
             httpOptions = getHTTPOptions(graphName);
-            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
-            //send request
-            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
-                callback(null, {
-                    graphName: graphName,
-                    resourceFocusType: resourceFocusType,
-                    resources: utilObject.parseResourcesByType(res, graphName),
-                    page: params.page
-                });
-            }).catch(function (err) {
-                console.log(err);
-                callback(null, {graphName: graphName, resourceFocusType: resourceFocusType, resources: [], page: params.page});
-            });
+            //check endpoint type
+            endpointType = getEndpointType(graphName);
+            switch (endpointType) {
+                case 'Virtuoso':
+                    query = queryObject.getResourcesByType(graphName, resourceFocusType, maxOnPage, offset);
+                    rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
+                    //send request
+                    rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
+                        callback(null, {
+                            graphName: graphName,
+                            resourceFocusType: resourceFocusType,
+                            resources: utilObject.parseResourcesByType(res, graphName),
+                            page: params.page
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {graphName: graphName, resourceFocusType: resourceFocusType, resources: [], page: params.page});
+                    });
+                break;
+                case 'LDF':
+                    //todo: add lDF-client support for IN phrase: it won't work if you select multiple entity types now
+                    query = queryObject.getResourcesByType('', resourceFocusType, maxOnPage, offset);
+                    let fragmentsClient = new ldf.FragmentsClient('http://' + httpOptions.host + ':' + httpOptions.port + httpOptions.path);
+                    let results = new ldf.SparqlIterator(query, { fragmentsClient: fragmentsClient });
+                    let stream = [];
+                    results.on('data', function(data){
+                        // console.log(data);
+                        stream.push(utilObject.parseResourcesByTypeFragment(data, graphName));
+                        // console.log(stream);
+                        callback(null, {
+                            graphName: graphName,
+                            resourceFocusType: resourceFocusType,
+                            resources: stream,
+                            page: params.page
+                        });
+                    });
+                break;
+            }
         } else if (resource === 'dataset.countResourcesByType') {
             //SPARQL QUERY
             graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);
@@ -81,19 +106,56 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.countResourcesByType(graphName, resourceFocusType);
             //build http uri
             httpOptions = getHTTPOptions(graphName);
-            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
-            //send request
-            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
-                callback(null, {
-                    total: utilObject.parseCountResourcesByType(res)
-                });
-            }).catch(function (err) {
-                console.log(err);
-                callback(null, {total: 0});
-            });
+            //check endpoint type
+            endpointType = getEndpointType(graphName);
+            switch (endpointType) {
+                case 'Virtuoso':
+                    query = queryObject.countResourcesByType(graphName, resourceFocusType);
+                    rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
+                    //send request
+                    rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
+                        callback(null, {
+                            total: utilObject.parseCountResourcesByType(res)
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {total: 0});
+                    });
+                break;
+                case 'LDF':
+                    //todo: add lDF-client support for aggregate sparql queries
+                    if(resourceFocusType.length >= 1){
+                        let itemsC = 0;
+                        resourceFocusType.forEach(function(uri) {
+                            rpPath = '?predicate=' + encodeURIComponent('http://www.w3.org/1999/02/22-rdf-syntax-ns#type') + '&object=' + encodeURIComponent(uri);
+                            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + httpOptions.path + rpPath, json: true}).then(function(res){
+                                let items = res['@graph'][0]['@graph'];
+                                itemsC = itemsC + parseInt(items[items.length - 1]['void:triples']);
+                                callback(null, {
+                                    total: itemsC
+                                });
+                            }).catch(function (err) {
+                                console.log(err);
+                                callback(null, {total: 0});
+                            });
+                        });
+                    }else{
+                        rpPath = '?predicate=' + encodeURIComponent('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
+                        rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + httpOptions.path + rpPath, json: true}).then(function(res){
+                            let items = res['@graph'][0]['@graph'];
+                            let itemsC = parseInt(items[items.length - 1]['void:triples']);
+                            callback(null, {
+                                total: itemsC
+                            });
+                        }).catch(function (err) {
+                            console.log(err);
+                            callback(null, {total: 0});
+                        });
+                    }
+                break;
+            }
             //used to update other facets based on a change in a facet
         } else if (resource === 'dataset.facetsSideEffect') {
             graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);

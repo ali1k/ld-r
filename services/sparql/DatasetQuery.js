@@ -40,11 +40,9 @@ class DatasetQuery{
         }else{
             /*jshint multistr: true */
             this.query = '\
-            SELECT count(?resource) AS ?total WHERE { \
-                { GRAPH ?graphName \
+            SELECT ?resource count(?resource) AS ?total WHERE {\
                     { '+ st +' \
-                    }\
-                } \
+                    } \
             }  \
             ';
         }
@@ -78,11 +76,9 @@ class DatasetQuery{
         }else{
             /*jshint multistr: true */
             this.query = '\
-            SELECT DISTINCT ?resource ?graphName WHERE { \
-                { GRAPH ?graphName \
+            SELECT DISTINCT ?resource WHERE { \
                     { '+ st +' \
                     }\
-                } \
             } LIMIT ' + limit + ' OFFSET ' + offset + ' \
             ';
         }
@@ -90,15 +86,25 @@ class DatasetQuery{
     }
     getMasterPropertyValues(graphName, propertyURI) {
         let st = '?s <'+ propertyURI + '>  ?v.';
-        /*jshint multistr: true */
-        this.query = '\
-        SELECT (count(?s) AS ?total) ?v WHERE {\
-            { GRAPH <' + graphName + '> \
-                { '+ st +' \
+        if(String(graphName)!==''){
+            /*jshint multistr: true */
+            this.query = '\
+            SELECT (count(?s) AS ?total) ?v WHERE {\
+                { GRAPH <' + graphName + '> \
+                    { '+ st +' \
+                    } \
                 } \
             } \
-        } \
-        ';
+            ';
+        }else{
+            /*jshint multistr: true */
+            this.query = '\
+            SELECT (count(?s) AS ?total) ?v WHERE {\
+                    { '+ st +' \
+                    } \
+            } \
+            ';
+        }
         return this.prefixes + this.query;
     }
     getMultipleFilters(prevSelection) {
@@ -150,41 +156,70 @@ class DatasetQuery{
     getSideEffects(graphName, propertyURI, prevSelection) {
         let st = this.getMultipleFilters(prevSelection);
         st = st + '?s <'+ propertyURI + '>  ?v.';
-        /*jshint multistr: true */
-        this.query = '\
-        SELECT (count(?s) AS ?total) ?v WHERE {\
-            { GRAPH <' + graphName + '> \
-                { '+ st +' \
+        if(String(graphName)!==''){
+            /*jshint multistr: true */
+            this.query = '\
+            SELECT (count(?s) AS ?total) ?v WHERE {\
+                { GRAPH <' + graphName + '> \
+                    { '+ st +' \
+                    } \
                 } \
             } \
-        } \
-        ';
+            ';
+        }else{
+            /*jshint multistr: true */
+            this.query = '\
+            SELECT (count(?s) AS ?total) ?v WHERE {\
+                    { '+ st +' \
+                    } \
+            } \
+            ';
+        }
         return this.prefixes + this.query;
     }
     countSecondLevelPropertyValues(graphName, propertyURI, prevSelection) {
         let st = this.getMultipleFilters(prevSelection);
-        /*jshint multistr: true */
-        this.query = '\
-        SELECT (count(?s) AS ?total) WHERE {\
-            { GRAPH <' + graphName + '> \
-                { '+ st +' \
+        if(String(graphName)!==''){
+            /*jshint multistr: true */
+            this.query = '\
+            SELECT (count(?s) AS ?total) WHERE {\
+                { GRAPH <' + graphName + '> \
+                    { '+ st +' \
+                    } \
                 } \
-            } \
-        }\
-        ';
+            }\
+            ';
+        }else{
+            /*jshint multistr: true */
+            this.query = '\
+            SELECT (count(?s) AS ?total) WHERE {\
+                    { '+ st +' \
+                    } \
+            }\
+            ';
+        }
         return this.prefixes + this.query;
     }
     getSecondLevelPropertyValues(graphName, propertyURI, prevSelection, limit, offset) {
         let noffset = ((offset-1) < 0) ? 0 : (offset-1);
         let st = this.getMultipleFilters(prevSelection);
-        /*jshint multistr: true */
-        this.query = '\
-        SELECT DISTINCT ?s WHERE {\
-            { GRAPH <' + graphName + '> \
-                { '+ st +' \
+        if(String(graphName)!==''){
+            /*jshint multistr: true */
+            this.query = '\
+            SELECT DISTINCT ?s WHERE {\
+                { GRAPH <' + graphName + '> \
+                    { '+ st +' \
+                    } \
                 } \
-            } \
-        } LIMIT ' + limit + ' OFFSET ' + noffset;
+            } LIMIT ' + limit + ' OFFSET ' + noffset;
+        }else{
+            /*jshint multistr: true */
+            this.query = '\
+            SELECT DISTINCT ?s WHERE {\
+                    { '+ st +' \
+                    } \
+            } LIMIT ' + limit + ' OFFSET ' + noffset;
+        }
         return this.prefixes + this.query;
     }
 }

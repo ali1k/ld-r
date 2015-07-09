@@ -44,6 +44,12 @@ class DatasetUtil{
       }
       return output;
     }
+    parseResourcesByTypeFragment(data, graphName) {
+        return {v: data['?resource'], g: graphName, title: data['?title']? data['?title'] : '', label: data['?label']? data['?label']: ''};
+    }
+    parseCountResourcesByTypeFragment(data) {
+        return data['?total'];
+    }
     parseCountResourcesByType(body) {
       let total = 0;
       let parsed = JSON.parse(body);

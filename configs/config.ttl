@@ -1,0 +1,55 @@
+@prefix : <https://github.com/ali1k/ld-reactor/blob/master/configs/config.ttl#> .
+@prefix ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+
+<https://ld-r.org/user/admin> ldr:config <https://ld-r.org/config/admin> .
+#Graph Config
+<https://ld-r.org/config/admin> ldr:configG <https://ld-r.org/config/1> .
+<https://ld-r.org/config/1> ldr:graph <http://ld-r.org/datasets/void>;
+                            ldr:resourceFocusType <http://rdfs.org/ns/void#Dataset> .
+#Resource Config
+#Property Config
+#Object Config
+#Graph > Resource Config
+<https://ld-r.org/config/admin> ldr:configGR <https://ld-r.org/config/2> .
+<https://ld-r.org/config/2> ldr:graph <http://ld-r.org/datasets/void>;
+                            ldr:resource "all" ;
+                            ldr:readOnly "0"^^xsd:Integer ;
+                            ldr:useCategories "1"^^xsd:Integer ;
+                            ldr:categories "overview", "people", "date", "legalAspects", "technicalAspects" ;
+#Graph > Property Config
+<https://ld-r.org/config/admin> ldr:configGP <https://ld-r.org/config/3> .
+<https://ld-r.org/config/3> ldr:graph <http://ld-r.org/datasets/void>;
+                            ldr:property <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ;
+                            ldr:isHidden "1"^^xsd:Integer .
+<https://ld-r.org/config/admin> ldr:configGP <https://ld-r.org/config/4> .
+<https://ld-r.org/config/4> ldr:graph <http://ld-r.org/datasets/void>;
+                            ldr:property <http://purl.org/dc/terms/title> ;
+                            ldr:label "Title" ;
+                            ldr:category "overview" ;
+                            ldr:hint """The title of the dataset described by this document.""" .
+<https://ld-r.org/config/4> ldr:graph <http://ld-r.org/datasets/void>;
+                            ldr:property <http://purl.org/dc/terms/language> ;
+                            ldr:label "Dataset Language" ;
+                            ldr:category "overview" ;
+                            ldr:hint """The language of the dataset. Resources defined by the Library of Congress (http://id.loc.gov/vocabulary/iso639-1.html, http://id.loc.gov/vocabulary/iso639-2.html) SHOULD be used.""" ;
+                            ldr:viewer "LanguageView" ;
+                            ldr:editor "LanguageInput" ;
+                            ldr:defaultValue <http://id.loc.gov/vocabulary/iso639-1/en> .
+#Graph > Object Config
+#Resource > Property Config
+#Resource > Object Config
+#Property > Object Config
+#Graph > Resource > Property Config
+#Graph > Resource > Object Config
+#Graph > Property > Object Config
+#Resource > Property > Object Config
+#Graph > Resource > Property > Object Config
