@@ -5,7 +5,7 @@ import BasicIndividualDetailEdit from './BasicIndividualDetailEdit';
 import BasicOptionInput from './BasicOptionInput';
 import DBpediaInput from './DBpediaInput';
 import PasswordInput from './PasswordInput';
-import {LanguageInput} from 'ld-r-components';
+import {LanguageInput} from 'void-components';
 
 class IndividualDataEdit extends React.Component {
     handleDataEdit(value){

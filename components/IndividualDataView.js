@@ -5,8 +5,8 @@ import BasicDBpediaView from './BasicDBpediaView';
 import BasicLinkedIndividualView from './BasicLinkedIndividualView';
 import BasicOptionView from './BasicOptionView';
 import PasswordView from './PasswordView';
-import {LanguageView} from 'ld-r-components';
-import {TwoLetterCountryView} from 'ld-r-components';
+import {LanguageView} from 'void-components';
+import {TwoLetterCountryView} from 'void-components';
 
 class IndividualDataView extends React.Component {
     render() {

@@ -25,7 +25,7 @@
     "fluxible-plugin-fetchr": "^0.3.3",
     "fluxible-router": "^0.1.9",
     "hogan-express": "^0.5.2",
-    "ld-r-components": "^1.0.55",
+    "ld-r-components": "^1.0.75",
     "log": "^1.4.0",
     "nodemailer": "^1.4.0",
     "nodemailer-smtp-transport": "^1.0.3",
@@ -38,7 +38,8 @@
     "request-promise": "^0.4.2",
     "serialize-javascript": "^1.0.0",
     "serve-favicon": "^2.3.0",
-    "valid-url": "^1.0.9"
+    "valid-url": "^1.0.9",
+    "void-components": "^1.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^3.0.1",
