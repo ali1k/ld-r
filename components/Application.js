@@ -6,7 +6,7 @@ import HelpModal from './HelpModal';
 import Home from './Home';
 import About from './About';
 import ApplicationStore from '../stores/ApplicationStore';
-import {connectToStores, provideContext} from 'fluxible/addons';
+import {connectToStores, provideContext} from 'fluxible-addons-react';
 import {handleHistory} from 'fluxible-router';
 
 class Application extends React.Component {
@@ -39,9 +39,9 @@ Application.contextTypes = {
     getUser: React.PropTypes.func
 };
 
-Application = connectToStores(Application, [ApplicationStore], function (stores, props) {
+Application = connectToStores(Application, [ApplicationStore], function (context, props) {
     return {
-        ApplicationStore: stores.ApplicationStore.getState()
+        ApplicationStore: context.getStore(ApplicationStore).getState()
     };
 });
 

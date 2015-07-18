@@ -25,8 +25,8 @@ import serverConfig from './configs/server';
 import app from './app';
 import HtmlComponent from './components/DefaultHTMLLayout';
 const htmlComponent = React.createFactory(HtmlComponent);
-
 const debug = debugLib('linked-data-reactor');
+let createElement = require('fluxible-addons-react').createElementWithContext;
 
 const server = express();
 // we need this because "cookie" is true in csrfProtection
@@ -104,7 +104,7 @@ server.use((req, res, next) => {
         const html = React.renderToStaticMarkup(htmlComponent({
             context: context.getComponentContext(),
             state: exposed,
-            markup: React.renderToString(context.createElement())
+            markup: React.renderToString(createElement(context))
         }));
 
         debug('Sending markup');

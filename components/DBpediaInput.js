@@ -1,8 +1,7 @@
 import React from 'react';
-import {provideContext} from 'fluxible/addons';
+import {provideContext, connectToStores} from 'fluxible-addons-react';
 import lookupDBpedia from '../actions/lookupDBpedia';
 import DBpediaStore from '../stores/DBpediaStore';
-import {connectToStores} from 'fluxible/addons';
 
 class DBpediaInput extends React.Component {
     constructor(props) {
@@ -102,9 +101,9 @@ class DBpediaInput extends React.Component {
 DBpediaInput.contextTypes = {
     executeAction: React.PropTypes.func.isRequired
 };
-DBpediaInput = connectToStores(DBpediaInput, [DBpediaStore], function (stores, props) {
+DBpediaInput = connectToStores(DBpediaInput, [DBpediaStore], function (context, props) {
     return {
-        DBpediaStore: stores.DBpediaStore.getState()
+        DBpediaStore: context.getStore(DBpediaStore).getState()
     };
 });
 export default DBpediaInput;

@@ -1,5 +1,5 @@
 import React from 'react';
-import {connectToStores} from 'fluxible/addons';
+import {connectToStores} from 'fluxible-addons-react';
 import GoogleMapView from './GoogleMapView';
 import BasicAggregateView from '../BasicAggregateView';
 import DBpediaGMapStore from '../../stores/DBpediaGMapStore';
@@ -43,9 +43,9 @@ class DBpediaGoogleMapView extends React.Component {
 DBpediaGoogleMapView.contextTypes = {
     executeAction: React.PropTypes.func.isRequired
 };
-DBpediaGoogleMapView = connectToStores(DBpediaGoogleMapView, [DBpediaGMapStore], function (stores, props) {
+DBpediaGoogleMapView = connectToStores(DBpediaGoogleMapView, [DBpediaGMapStore], function (context, props) {
     return {
-        DBpediaGMapStore: stores.DBpediaGMapStore.getState()
+        DBpediaGMapStore: context.getStore(DBpediaGMapStore).getState()
     };
 });
 export default DBpediaGoogleMapView;

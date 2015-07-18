@@ -3,7 +3,7 @@ import Facet from './Facet';
 import {NavLink} from 'fluxible-router';
 import {propertiesConfig, facetsConfig} from '../configs/reactor';
 import FacetedBrowserStore from '../stores/FacetedBrowserStore';
-import {connectToStores} from 'fluxible/addons';
+import {connectToStores} from 'fluxible-addons-react';
 import loadFacets from '../actions/loadFacets';
 import ResourceList from './ResourceList';
 import ResourceListPager from './ResourceListPager';
@@ -284,9 +284,9 @@ FacetedBrowser.contextTypes = {
     executeAction: React.PropTypes.func.isRequired,
     getUser: React.PropTypes.func
 };
-FacetedBrowser = connectToStores(FacetedBrowser, [FacetedBrowserStore], function (stores, props) {
+FacetedBrowser = connectToStores(FacetedBrowser, [FacetedBrowserStore], function (context, props) {
     return {
-        FacetedBrowserStore: stores.FacetedBrowserStore.getState()
+        FacetedBrowserStore: context.getStore(FacetedBrowserStore).getState()
     };
 });
 export default FacetedBrowser;

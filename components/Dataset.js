@@ -1,6 +1,6 @@
 import React from 'react';
 import DatasetStore from '../stores/DatasetStore';
-import {connectToStores} from 'fluxible/addons';
+import {connectToStores} from 'fluxible-addons-react';
 import {NavLink} from 'fluxible-router';
 import getResourcesCount from '../actions/getResourcesCount';
 import ResourceList from './ResourceList';
@@ -65,9 +65,9 @@ Dataset.contextTypes = {
     executeAction: React.PropTypes.func.isRequired,
     getUser: React.PropTypes.func
 };
-Dataset = connectToStores(Dataset, [DatasetStore], function (stores, props) {
+Dataset = connectToStores(Dataset, [DatasetStore], function (context, props) {
     return {
-        DatasetStore: stores.DatasetStore.getState()
+        DatasetStore: context.getStore(DatasetStore).getState()
     };
 });
 export default Dataset;

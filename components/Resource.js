@@ -2,7 +2,7 @@ import React from 'react';
 import IndividualPropertyReactor from './IndividualPropertyReactor';
 import {propertiesConfig, enableAuthentication} from '../configs/reactor';
 import ResourceStore from '../stores/ResourceStore';
-import {connectToStores} from 'fluxible/addons';
+import {connectToStores} from 'fluxible-addons-react';
 import {NavLink} from 'fluxible-router';
 
 class Resource extends React.Component {
@@ -204,9 +204,9 @@ class Resource extends React.Component {
 Resource.contextTypes = {
     getUser: React.PropTypes.func
 };
-Resource = connectToStores(Resource, [ResourceStore], function (stores, props) {
+Resource = connectToStores(Resource, [ResourceStore], function (context, props) {
     return {
-        ResourceStore: stores.ResourceStore.getState()
+        ResourceStore: context.getStore(ResourceStore).getState()
     };
 });
 export default Resource;

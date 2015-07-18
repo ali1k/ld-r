@@ -2,7 +2,7 @@ import React from 'react';
 import activateUser from '../../actions/activateUser';
 
 import UserStore from '../../stores/UserStore';
-import {connectToStores} from 'fluxible/addons';
+import {connectToStores} from 'fluxible-addons-react';
 import {NavLink} from 'fluxible-router';
 
 class UsersList extends React.Component {
@@ -81,9 +81,9 @@ UsersList.contextTypes = {
     getUser: React.PropTypes.func
 };
 
-UsersList = connectToStores(UsersList, [UserStore], function (stores, props) {
+UsersList = connectToStores(UsersList, [UserStore], function (context, props) {
     return {
-        UserStore: stores.UserStore.getState()
+        UserStore: context.getStore(UserStore).getState()
     };
 });
 export default UsersList;

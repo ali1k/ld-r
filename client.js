@@ -6,7 +6,7 @@ import app from './app';
 
 const debugClient = debug('linked-data-reactor');
 const dehydratedState = window.App; // Sent from the server
-
+let createElement = require('fluxible-addons-react').createElementWithContext;
 window.React = React; // For chrome dev tool support
 
 // expose debug object to browser, so that it can be enabled/disabled from browser:
@@ -24,7 +24,7 @@ app.rehydrate(dehydratedState, function (err, context) {
     const mountNode = document.getElementById('app');
 
     debugClient('React Rendering');
-    React.render(context.createElement(), mountNode, function () {
+    React.render(createElement(context), mountNode, function () {
         debugClient('React Rendered');
     });
 });

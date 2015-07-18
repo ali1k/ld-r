@@ -1,10 +1,9 @@
 import React from 'react';
-import {provideContext} from 'fluxible/addons';
+import {provideContext, connectToStores} from 'fluxible-addons-react';
 import loadObjectProperties from '../actions/loadObjectProperties';
 import IndividualDataView from './IndividualDataView';
 import IndividualDataEdit from './IndividualDataEdit';
 import IndividualObjectStore from '../stores/IndividualObjectStore';
-import {connectToStores} from 'fluxible/addons';
 import {navigateAction} from 'fluxible-router';
 class IndividualObjectReactor extends React.Component {
     constructor(props) {
@@ -259,9 +258,9 @@ class IndividualObjectReactor extends React.Component {
 IndividualObjectReactor.contextTypes = {
     executeAction: React.PropTypes.func.isRequired
 };
-IndividualObjectReactor = connectToStores(IndividualObjectReactor, [IndividualObjectStore], function (stores, props) {
+IndividualObjectReactor = connectToStores(IndividualObjectReactor, [IndividualObjectStore], function (context, props) {
     return {
-        IndividualObjectStore: stores.IndividualObjectStore.getState()
+        IndividualObjectStore: context.getStore(IndividualObjectStore).getState()
     };
 });
 export default IndividualObjectReactor;
