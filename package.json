@@ -41,7 +41,7 @@
     "serialize-javascript": "^1.0.0",
     "serve-favicon": "^2.3.0",
     "valid-url": "^1.0.9",
-    "void-components": "^1.0.0"
+    "void-components": "^1.0.2"
   },
   "devDependencies": {
     "babel-eslint": "^3.0.1",
