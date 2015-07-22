@@ -15,13 +15,14 @@ class ResourceUtil{
     }
     parseProperties(body, graphName, resourceURI, category, propertyPath, usePropertyCategories, propertyCategories) {
         let configurator = new Configurator();
-        let config = {}, title = '', resourceType = '';
+        let configExceptional = {},config = {}, title = '', resourceType = '';
         //handle properties config in different levels
         //todo: now only handles level 2 properties should be extended later if needed
         let exceptional = 0;
+        console.log(propertyPath);
         if(propertyPath && propertyPath.length){
             //it is only for property path
-            let configExceptional = configurator.preparePropertyConfig(graphName, resourceURI, propertyPath[1]);
+            configExceptional = configurator.preparePropertyConfig(graphName, resourceURI, propertyPath[1]);
             exceptional = 1;
         }
         let filterByCategory=0, self=this;
@@ -52,9 +53,9 @@ class ResourceUtil{
             if(!exceptional){
                 config = configurator.preparePropertyConfig(graphName, resourceURI, el.p.value);
             }else{
-                configExceptional.extensions.forEach(function(el){
-                    if(el.spec.propertyURI === el.p.value){
-                        let config = el.config;
+                configExceptional.extensions.forEach(function(ex){
+                    if(ex.spec.propertyURI === el.p.value){
+                        config = ex.config;
                     }
                 });
             }
