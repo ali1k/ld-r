@@ -6,7 +6,7 @@ export default {
     //Default Named Graph under observation, if not set , will consider all existing graph names
     defaultGraphName: [''],
     //will prevent access if not logged in
-    enableAuthentication: 0,
+    enableAuthentication: 1,
     //graph that stores users data, must be loaded beforehand
     authGraphName: ['https://ld-r.org/users'],
     //will allow super users to confirm and activate regiastered users
@@ -21,11 +21,11 @@ export default {
         //---------depth 1------------
         dataset: {
             'generic': {
-                resourceFocusType: [''],
+                resourceFocusType: [],
                 //only allow to view data -> disable edit
                 readOnly: 1,
                 //used for pagination in resource list
-                maxNumberOfResourcesOnPage: [100],
+                maxNumberOfResourcesOnPage: 100,
                 datasetReactor: ['Dataset']
             },
             'https://ld-r.org/users': {
@@ -36,7 +36,7 @@ export default {
             'generic': {
                 //if enabled, will categorize properties in different tabs based on property categories
                 usePropertyCategories: 0,
-                propertyCategories: [''],
+                propertyCategories: [],
                 //used when creating random resources
                 dynamicResourceDomain: ['http://example.org'],
                 resourceReactor: ['Resource']

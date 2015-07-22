@@ -1,5 +1,4 @@
 import React from 'react';
-import {enableAuthentication} from '../configs/reactor';
 import {NavLink} from 'fluxible-router';
 
 class ResourceList extends React.Component {
@@ -29,7 +28,7 @@ class ResourceList extends React.Component {
         return out;
     }
     checkAccess(user, graph, resource) {
-        if(enableAuthentication) {
+        if(this.props.enableAuthentication) {
             if(user){
                 if(parseInt(user.isSuperUser)){
                     return {access: true, type: 'full'};
@@ -77,7 +76,7 @@ class ResourceList extends React.Component {
         }else{
             list = this.props.resources.map((node, index) => {
                 title = node.title ? node.title : (node.label ? node.label : self.getPropertyLabel(node.v));
-                if(!enableAuthentication) {
+                if(!self.props.enableAuthentication) {
                     dbClass = 'green cube icon';
                 }else{
                     userAccess = self.checkAccess(user, node.g, node.v);

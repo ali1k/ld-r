@@ -1,10 +1,6 @@
 import React from 'react';
-import {maxNumberOfResourcesOnPage} from '../configs/reactor';
 import {NavLink} from 'fluxible-router';
-let maxOnPage = maxNumberOfResourcesOnPage;
-if(!maxOnPage){
-    maxOnPage = 20;
-}
+
 class ResourceListPager extends React.Component {
     componentDidMount() {
     }
@@ -21,6 +17,10 @@ class ResourceListPager extends React.Component {
     }
     render() {
         let self = this;
+        let maxOnPage = this.props.maxNumberOfResourcesOnPage;
+        if(!maxOnPage){
+            maxOnPage = 20;
+        }
         let graphName = this.props.graphName;
         let i, startI, totalPages, threshold = this.props.threshold, currentPage, pageList = [];
         if(this.props.total){
@@ -61,8 +61,4 @@ class ResourceListPager extends React.Component {
         );
     }
 }
-ResourceListPager.contextTypes = {
-    getUser: React.PropTypes.func
-};
-
 export default ResourceListPager;

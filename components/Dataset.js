@@ -1,14 +1,9 @@
 import React from 'react';
-import DatasetStore from '../stores/DatasetStore';
-import {connectToStores} from 'fluxible-addons-react';
-import {NavLink} from 'fluxible-router';
-import getResourcesCount from '../actions/getResourcesCount';
 import ResourceList from './ResourceList';
 import ResourceListPager from './ResourceListPager';
 
 class Dataset extends React.Component {
     componentDidMount() {
-        this.context.executeAction(getResourcesCount, {id: this.props.DatasetStore.graphName});
     }
     getPropertyLabel(uri) {
         let property = '';
@@ -33,8 +28,7 @@ class Dataset extends React.Component {
     }
     render() {
         let self = this;
-        let graphName = this.props.DatasetStore.graphName;
-        let resourceFocusType = this.props.DatasetStore.resourceFocusType;
+        let resourceFocusType = this.props.config.resourceFocusType;
         let typeSt, typesLink = [];
         if(resourceFocusType){
             if(!resourceFocusType.length || (resourceFocusType.length && !resourceFocusType[0]) ){
@@ -50,24 +44,15 @@ class Dataset extends React.Component {
             <div className="ui page grid" ref="dataset">
                 <div className="ui column">
                     <div className="ui segment top attached">
-                        <h3>{this.props.DatasetStore.total ? <span className="ui big black circular label">{this.addCommas(this.props.DatasetStore.total)}</span> : ''} Resources of type {typeSt} in {graphName ? <a href={graphName}>{graphName}</a> : ' all local datasets'}</h3>
-                        <ResourceList resources={this.props.DatasetStore.resources} graphName={graphName} isBig={true} />
+                        <h3>{this.props.total ? <span className="ui big black circular label">{this.addCommas(this.props.total)}</span> : ''} Resources of type {typeSt} in {this.props.graphName ? <a href={this.props.graphName}>{this.props.graphName}</a> : ' all local datasets'}</h3>
+                        <ResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} graphName={this.props.graphName} isBig={true} />
                     </div>
                     <div className= "ui secondary segment bottom attached">
-                        <ResourceListPager graphName={graphName} total={this.props.DatasetStore.total} threshold={10} currentPage={this.props.DatasetStore.page}/>
+                        <ResourceListPager graphName={this.props.graphName} total={this.props.total} threshold={10} currentPage={this.props.page} maxNumberOfResourcesOnPage={this.props.config.maxNumberOfResourcesOnPage}/>
                     </div>
                 </div>
             </div>
         );
     }
 }
-Dataset.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    getUser: React.PropTypes.func
-};
-Dataset = connectToStores(Dataset, [DatasetStore], function (context, props) {
-    return {
-        DatasetStore: context.getStore(DatasetStore).getState()
-    };
-});
 export default Dataset;

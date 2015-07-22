@@ -54,7 +54,7 @@ export default {
         //if no id is provided -> will start by defaultGraphName in reactor.config
         path: '/dataset/:page?/:id?',
         method: 'get',
-        handler: require('../components/Dataset'),
+        handler: require('../components/DatasetReactor'),
         label: 'Dataset',
         action: (context, payload, done) => {
             let graphName, page;
