@@ -9,7 +9,8 @@ class DatasetStore extends BaseStore {
             graphName: payload.graphName,
             resources: payload.resources,
             page: payload.page,
-            config: payload.config
+            config: payload.config,
+            total: this.dataset.total
         };
         this.emitChange();
     }
