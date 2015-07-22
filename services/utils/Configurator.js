@@ -22,7 +22,6 @@ class Configurator{
     prepareResourceConfig(graphName, resourceURI) {
         let config = this.cloneConfig(this.config);
         //default config
-        console.log(config.dataset.generic);
         let output = config.dataset.generic;
         for(let prop in config.resource.generic) {
             output[prop] = config.resource.generic[prop];

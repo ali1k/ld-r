@@ -1,8 +1,5 @@
 import React from 'react';
 import IndividualPropertyReactor from './IndividualPropertyReactor';
-import {propertiesConfig, enableAuthentication} from '../configs/reactor';
-import ResourceStore from '../stores/ResourceStore';
-import {connectToStores} from 'fluxible-addons-react';
 import {NavLink} from 'fluxible-router';
 
 class Resource extends React.Component {
@@ -20,7 +17,7 @@ class Resource extends React.Component {
         return out;
     }
     checkAccess(user, graph, resource, property) {
-        if(enableAuthentication) {
+        if(this.props.enableAuthentication) {
             if(user){
                 if(parseInt(user.isSuperUser)){
                     return {access: true, type: 'full'};
@@ -69,38 +66,18 @@ class Resource extends React.Component {
         let readOnly;
         let user = this.context.getUser();
         let self = this;
-        let selectedConfig, rightConfig, accessLevel, isWriteable, configReadOnly;
-        //first check if there is a specific config for the property on the selected graphName
-        selectedConfig = propertiesConfig[self.props.ResourceStore.graphName];
-        //if no specific config is found, get the generic config
-        if(!selectedConfig){
-            selectedConfig = propertiesConfig.generic;
-        }
-        let propertyPath = self.props.ResourceStore.propertyPath;
-        //handle properties config in different levels
-        //todo: now only handles level 2 properties should be extended later if needed
-        rightConfig = selectedConfig;
-        if(propertyPath && propertyPath.length){
-            //only two level supported for now
-            if(selectedConfig.config && selectedConfig.config[propertyPath[1]] && selectedConfig.config[propertyPath[1]].extensions){
-                rightConfig = {config: self.buildConfigFromExtensions(selectedConfig.config[propertyPath[1]].extensions)};
-            }
-        }
+        let accessLevel, isWriteable, configReadOnly;
         //if readOnly is not defined make it true
-        if(typeof selectedConfig.readOnly === 'undefined'){
+        if(typeof self.props.readOnly === 'undefined'){
             readOnly = 1;
         }else{
             //get readOnly property for the graphName
-            readOnly = selectedConfig.readOnly;
+            readOnly = self.props.readOnly;
         }
         //create a list of properties
-        let list = this.props.ResourceStore.properties.map(function(node, index) {
+        let list = this.props.properties.map(function(node, index) {
             //if there was no config at all or it is hidden, do not render the property
-            if(!selectedConfig.config[node.propertyURI] || !selectedConfig.config[node.propertyURI].isHidden){
-                //will use config from generic if no config for property was found
-                if(!rightConfig.config[node.propertyURI] && propertiesConfig.generic.config[node.propertyURI]){
-                    rightConfig.config[node.propertyURI] = propertiesConfig.generic.config[node.propertyURI];
-                }
+            if(!node.config || !node.config.isHidden){
                 //for readOnly, we first check the defautl value then we check readOnly value of each property if exists
                 //this is what comes from the config
                 if(readOnly){
@@ -111,12 +88,12 @@ class Resource extends React.Component {
                         configReadOnly = false;
                     }else{
                         //it property is readOnly from config
-                        if(rightConfig.config[node.propertyURI]){
-                            if(rightConfig.config[node.propertyURI].readOnly){
+                        if(node.config){
+                            if(node.config.readOnly){
                                 configReadOnly = true;
                             }else{
                                 //check access levels
-                                accessLevel = self.checkAccess(user, self.props.ResourceStore.graphName, self.props.ResourceStore.resourceURI, node.propertyURI);
+                                accessLevel = self.checkAccess(user, self.props.graphName, self.props.resourceURI, node.propertyURI);
                                 if(accessLevel.access){
                                     configReadOnly = false;
                                 }else{
@@ -125,7 +102,7 @@ class Resource extends React.Component {
                             }
                         }else{
                             //check access levels
-                            accessLevel = self.checkAccess(user, self.props.ResourceStore.graphName, self.props.ResourceStore.resourceURI, node.propertyURI);
+                            accessLevel = self.checkAccess(user, self.props.graphName, self.props.resourceURI, node.propertyURI);
                             if(accessLevel.access){
                                 configReadOnly = false;
                             }else{
@@ -135,25 +112,25 @@ class Resource extends React.Component {
                     }
                 }
                 return (
-                    <IndividualPropertyReactor key={index} spec={node} readOnly={configReadOnly} config={rightConfig.config[node.propertyURI]} graphName={self.props.ResourceStore.graphName} resource={self.props.ResourceStore.resourceURI} propertyPath= {self.props.ResourceStore.propertyPath}/>
+                    <IndividualPropertyReactor key={index} spec={node} readOnly={configReadOnly} config={node.config} graphName={self.props.graphName} resource={self.props.resourceURI} propertyPath= {self.props.propertyPath}/>
                 );
             }
         });
         let currentCategory, mainDIV, tabsDIV, tabsContentDIV;
         //categorize properties in different tabs
-        if(selectedConfig.useCategories){
-            currentCategory = this.props.ResourceStore.currentCategory;
+        if(this.props.config.usePropertyCategories){
+            currentCategory = this.props.currentCategory;
             if(!currentCategory){
-                currentCategory = selectedConfig.categories[0];
+                currentCategory = this.props.config.propertyCategories[0];
             }
-            tabsDIV = selectedConfig.categories.map(function(node, index) {
+            tabsDIV = this.props.config.propertyCategories.map(function(node, index) {
                 return (
-                    <NavLink key={index} routeName="resource" href={'/dataset/' + encodeURIComponent(self.props.ResourceStore.graphName) + '/resource/' + encodeURIComponent(self.props.ResourceStore.resourceURI) + '/' + node + '/' + encodeURIComponent(self.props.ResourceStore.propertyPath)}>
+                    <NavLink key={index} routeName="resource" href={'/dataset/' + encodeURIComponent(self.props.graphName) + '/resource/' + encodeURIComponent(self.props.resourceURI) + '/' + node + '/' + encodeURIComponent(self.props.propertyPath)}>
                       <div className={(node === currentCategory ? 'item link active' : 'item link')}> {node} </div>
                     </NavLink>
                 );
             });
-            tabsContentDIV = selectedConfig.categories.map(function(node, index) {
+            tabsContentDIV = this.props.config.propertyCategories.map(function(node, index) {
                 return (
                     <div key={index} className={(node === currentCategory ? 'ui bottom attached tab segment active' : 'ui bottom attached tab segment')}>
                         <div className="ui grid">
@@ -180,20 +157,20 @@ class Resource extends React.Component {
                       </div>;
         }
         let breadcrumb;
-        if(self.props.ResourceStore.propertyPath.length > 1){
+        if(self.props.propertyPath.length > 1){
             breadcrumb = <div className="ui large breadcrumb">
-                          <a className="section" href={'/dataset/' + encodeURIComponent(self.props.ResourceStore.graphName) + '/resource/' + encodeURIComponent(self.props.ResourceStore.propertyPath[0])}>{self.props.ResourceStore.propertyPath[0]}</a>
+                          <a className="section" href={'/dataset/' + encodeURIComponent(self.props.graphName) + '/resource/' + encodeURIComponent(self.props.propertyPath[0])}>{self.props.propertyPath[0]}</a>
                           <i className="right chevron icon divider"></i>
-                          <div className="active section">{self.getPropertyLabel(self.props.ResourceStore.propertyPath[1])}</div>
+                          <div className="active section">{self.getPropertyLabel(self.props.propertyPath[1])}</div>
                         </div>;
         }
         return (
-            <div className="ui page grid" ref="resource" itemScope itemType={this.props.ResourceStore.resourceType} itemID={this.props.ResourceStore.resourceURI}>
+            <div className="ui page grid" ref="resource" itemScope itemType={this.props.resourceType} itemID={this.props.resourceURI}>
                 <div className="ui column">
                     {breadcrumb}
                     <h2>
-                        {this.props.ResourceStore.isComplete ? '' : <img src="/assets/img/loader.gif" alt="loading..."/>}
-                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.ResourceStore.graphName) + '/' + encodeURIComponent(this.props.ResourceStore.resourceURI)}><i className="black icon cube"></i></a> <a href={this.props.ResourceStore.resourceURI} target="_blank">{this.props.ResourceStore.title}</a>
+                        {this.props.isComplete ? '' : <img src="/assets/img/loader.gif" alt="loading..."/>}
+                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.graphName) + '/' + encodeURIComponent(this.props.resourceURI)}><i className="black icon cube"></i></a> <a href={this.props.resourceURI} target="_blank">{this.props.title}</a>
                     </h2>
                     {mainDIV}
                 </div>
@@ -204,9 +181,4 @@ class Resource extends React.Component {
 Resource.contextTypes = {
     getUser: React.PropTypes.func
 };
-Resource = connectToStores(Resource, [ResourceStore], function (context, props) {
-    return {
-        ResourceStore: context.getStore(ResourceStore).getState()
-    };
-});
 export default Resource;

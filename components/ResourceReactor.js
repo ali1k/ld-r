@@ -7,7 +7,16 @@ class ResourceReactor extends React.Component {
     constructor(props) {
         super(props);
     }
-
+    //removes properties from an object
+    configMinus(config, props) {
+        let o = {};
+        for(let p in config) {
+            if(props.indexOf(p) === -1){
+                o [p] = config [p];
+            }
+        }
+        return o;
+    }
     render() {
         let graphName = this.props.ResourceStore.graphName;
         let properties = this.props.ResourceStore.properties;
@@ -16,20 +25,18 @@ class ResourceReactor extends React.Component {
         let title = this.props.ResourceStore.title;
         let currentCategory = this.props.ResourceStore.currentCategory;
         let propertyPath = this.props.ResourceStore.propertyPath;
+        let isComplete = this.props.ResourceStore.isComplete;
         let config = this.props.ResourceStore.config;
         let resourceReactor;
-        console.log(config);
-        /*
-        if(config){
+        if(config && config.resourceReactor){
             switch(config.resourceReactor[0]){
                 case 'Resource':
-                    resourceReactor = <Resource enableAuthentication={enableAuthentication} graphName={graphName} properties={properties}  resourceURI={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    resourceReactor = <Resource enableAuthentication={enableAuthentication} graphName={graphName} properties={properties} resourceURI={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} isComplete={isComplete} config={this.configMinus(config, ['resourceReactor'])}/>;
                 break;
                 default:
-                    resourceReactor = <Resource enableAuthentication={enableAuthentication} graphName={graphName} properties={properties}  resourceURI={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    resourceReactor = <Resource enableAuthentication={enableAuthentication} graphName={graphName} properties={properties} resourceURI={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} isComplete={isComplete} config={this.configMinus(config, ['resourceReactor'])}/>;
             }
         }
-        */
         return (
             <div ref="resourceReactor">
                 {resourceReactor}
