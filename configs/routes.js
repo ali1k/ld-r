@@ -72,7 +72,7 @@ export default {
     resource: {
         path: '/dataset/:did/:resource/:rid/:pcategory?/:propertyPath?',
         method: 'get',
-        handler: require('../components/Resource'),
+        handler: require('../components/ResourceReactor'),
         label: 'Resource',
         action: (context, payload, done) => {
             //predicate Category

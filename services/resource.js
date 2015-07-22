@@ -3,6 +3,7 @@ import {getHTTPOptions} from './utils/helpers';
 import {defaultGraphName, enableLogs, enableAuthentication, authGraphName} from '../configs/reactor';
 import ResourceQuery from './sparql/ResourceQuery';
 import ResourceUtil from './utils/ResourceUtil';
+import Configurator from './utils/Configurator';
 import rp from 'request-promise';
 import fs from 'fs';
 import Log from 'log';
@@ -21,9 +22,10 @@ if(enableLogs){
 /*-------------config-------------*/
 const outputFormat = 'application/sparql-results+json';
 /*-----------------------------------*/
-let httpOptions, rpPath, category, graphName, propertyURI, resourceURI, objectURI, objectValue, query, queryObject, utilObject, propertyPath;
+let httpOptions, rpPath, category, graphName, propertyURI, resourceURI, objectURI, objectValue, query, queryObject, utilObject, configurator, propertyPath;
 queryObject = new ResourceQuery();
 utilObject = new ResourceUtil();
+configurator = new Configurator();
 
 export default {
     name: 'resource',
@@ -38,10 +40,12 @@ export default {
             if(propertyPath.length > 1){
                 propertyPath = propertyPath.split(',');
             }
+            //config handler
+            let config = configurator.prepareResourceConfig(graphName, resourceURI);
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
-                    callback(null, {graphName: graphName, resourceURI: resourceURI, resourceType: '', currentCategory: 0, propertyPath: [], properties: []});
+                    callback(null, {graphName: graphName, resourceURI: resourceURI, resourceType: '', currentCategory: 0, propertyPath: [], properties: [], config: config});
                     return 0;
                 }else{
                     user = req.user;
@@ -57,7 +61,7 @@ export default {
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
                 //exceptional case for user properties: we hide some admin props from normal users
-                let {props, title, resourceType} = utilObject.parseProperties(res, graphName, category, propertyPath);
+                let {props, title, resourceType} = utilObject.parseProperties(res, graphName, resourceURI, category, propertyPath, config.usePropertyCategories, config.propertyCategories);
                 if(graphName === authGraphName[0] && !parseInt(user.isSuperUser)){
                     props = utilObject.deleteAdminProperties(props);
                 }
@@ -69,14 +73,15 @@ export default {
                     title: title,
                     currentCategory: category,
                     propertyPath: propertyPath,
-                    properties: props
+                    properties: props,
+                    config: config
                 });
             }).catch(function (err) {
                 console.log(err);
                 if(enableLogs){
                     log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 }
-                callback(null, {graphName: graphName, resourceURI: resourceURI, resourceType: '', title: '', currentCategory: 0, propertyPath: [], properties: []});
+                callback(null, {graphName: graphName, resourceURI: resourceURI, resourceType: '', title: '', currentCategory: 0, propertyPath: [], properties: [], config: config});
             });
         } else if (resource === 'resource.objectProperties') {
             graphName = params.dataset;

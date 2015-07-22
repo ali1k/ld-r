@@ -1,5 +1,5 @@
 'use strict';
-import {propertiesConfig} from '../../configs/reactor';
+import Configurator from './Configurator';
 class ResourceUtil{
     getPropertyLabel(uri) {
         var property='';
@@ -13,31 +13,25 @@ class ResourceUtil{
         }
         return property;
     }
-    parseProperties(body, graphName, category, propertyPath) {
-        let title = '', selectedConfig, rightConfig, resourceType = '';
-        //first check if there is a specific config for the property on the selected graphName
-        selectedConfig = propertiesConfig[graphName];
-        //if no specific config is found, get the generic config
-        if(!selectedConfig){
-            selectedConfig = propertiesConfig.generic;
-        }
+    parseProperties(body, graphName, resourceURI, category, propertyPath, usePropertyCategories, propertyCategories) {
+        let configurator = new Configurator();
+        let config = {}, title = '', resourceType = '';
         //handle properties config in different levels
         //todo: now only handles level 2 properties should be extended later if needed
-        rightConfig = selectedConfig;
+        let exceptional = 0;
         if(propertyPath && propertyPath.length){
-            //only two level supported for now
-            if(selectedConfig.config && selectedConfig.config[propertyPath[1]] && selectedConfig.config[propertyPath[1]].extensions){
-                rightConfig = {config: this.buildConfigFromExtensions(selectedConfig.config[propertyPath[1]].extensions)};
-            }
+            //it is only for property path
+            let configExceptional = configurator.preparePropertyConfig(graphName, resourceURI, propertyPath[1]);
+            exceptional = 1;
         }
         let filterByCategory=0, self=this;
         let parsed = JSON.parse(body);
         let output=[], propIndex={}, finalOutput=[];
-        if(selectedConfig.useCategories){
+        if(usePropertyCategories){
             //allow filter by category
             if(!category){
                 //get first category as default
-                category = selectedConfig.categories[0];
+                category = propertyCategories[0];
             }
             filterByCategory=1;
         }
@@ -55,9 +49,18 @@ class ResourceUtil{
                 resourceType = el.o.value;
             }
             //-------------------
+            if(!exceptional){
+                config = configurator.preparePropertyConfig(graphName, resourceURI, el.p.value);
+            }else{
+                configExceptional.extensions.forEach(function(el){
+                    if(el.spec.propertyURI === el.p.value){
+                        let config = el.config;
+                    }
+                });
+            }
             //handle categories
             if(filterByCategory){
-                if(!rightConfig.config[el.p.value] || !rightConfig.config[el.p.value].category || category !== rightConfig.config[el.p.value].category[0]){
+                if(!config || !config.category || category !== config.category[0]){
                     //skip property
                     return;
                 }
@@ -70,11 +73,11 @@ class ResourceUtil{
             }else{
               propIndex[el.p.value]=[{value: el.o.value, valueType: el.o.type, dataType:(el.o.type==='typed-literal'?el.o.datatype:''), extended:parseInt(el.hasExtendedValue.value)}];
             }
-            output.push({propertyURI:el.p.value, property: property,  instances:[]});
+            output.push({propertyURI:el.p.value, property: property, instances:[], config: config});
           });
           output.forEach(function(el) {
             if(propIndex[el.propertyURI]){
-              finalOutput.push({propertyURI: el.propertyURI, property: el.property, instances: propIndex[el.propertyURI]});
+              finalOutput.push({propertyURI: el.propertyURI, property: el.property, config: el.config, instances: propIndex[el.propertyURI]});
               propIndex[el.propertyURI]=null;
             }
           });
