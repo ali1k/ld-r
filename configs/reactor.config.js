@@ -1,5 +1,3 @@
-//important: first value in the array is considered as default value for the property
-//this file is visible to the client/server-side
 export default {
     //full page title
     appFullTitle: ['Linked Data Reactor'],
@@ -7,42 +5,63 @@ export default {
     appShortTitle: ['LD-R'],
     //Default Named Graph under observation, if not set , will consider all existing graph names
     defaultGraphName: [''],
-    //used for pagination in resource list
-    maxNumberOfResourcesOnPage: [100],
     //will prevent access if not logged in
     enableAuthentication: 0,
     //graph that stores users data, must be loaded beforehand
     authGraphName: ['https://ld-r.org/users'],
-    //used when creating random resources
-    dynamicResourceDomain: ['http://example.org'],
     //will allow super users to confirm and activate regiastered users
     enableUserConfirmation: 0,
     //will enable email notifications
     enableEmailNotifications: 0,
     //will put all update actions in log folder
     enableLogs: 0,
-    //[Optional] config for property components
-    propertiesConfig: {
-        //these configs are used as generic configs, which still can be empty!
-        'generic': {
-            //resource types to focus on, can be an array, if not set, all existing types will be shown
-            resourceFocusType: [''],
-            //only allow to view data -> disable edit
-            readOnly: 0,
-            //if enabled, will categorize properties in different tabs based on propertyCategories
-            useCategories: 0,
-            categories: [''],
-            //config is necessary even if empty config
-            config: {
-
+    // config = scope + spec
+    // scope is one the 15 combination of dataset, resource, property and object
+    config: {
+        //---------depth 1------------
+        dataset: {
+            'generic': {
+                resourceFocusType: [''],
+                //only allow to view data -> disable edit
+                readOnly: 1,
+                //used for pagination in resource list
+                maxNumberOfResourcesOnPage: [100],
+                datasetReactor: ['Dataset']
+            },
+            'https://ld-r.org/users': {
+                readOnly: 0
             }
         },
-        //for each graph name, you can define custom configs.
-        //if no custom config is defined for a specific graph, the generic config will be used.
-        'https://ld-r.org/users': {
-            readOnly: 0,
-            useCategories: 0,
-            config: {
+        resource: {
+            'generic': {
+                //if enabled, will categorize properties in different tabs based on property categories
+                usePropertyCategories: 0,
+                propertyCategories: [''],
+                //used when creating random resources
+                dynamicResourceDomain: ['http://example.org'],
+                resourceReactor: ['Resource']
+            }
+        },
+        property: {
+            'generic': {
+                propertyReactor: ['IndividualProperty']
+            }
+        },
+        //property value = object
+        object: {
+            'generic': {
+                objectReactor: ['IndividualObject'],
+                //to view/edit individual object values
+                objectIViewer: ['BasicIndividualView'],
+                objectIEditor: ['BasicIndividualInput']
+            }
+        },
+        //---------depth 2------------
+        dataset_resource: {
+
+        },
+        dataset_property: {
+            'https://ld-r.org/users': {
                 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
                     isHidden: 1
                 },
@@ -62,8 +81,8 @@ export default {
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#password': {
                     label: ['Password'],
-                    viewer: ['PasswordView'],
-                    editor: ['PasswordInput']
+                    objectIViewer: ['PasswordView'],
+                    objectIEditor: ['PasswordInput']
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfGraph': {
                     label: ['Editor of Graph'],
@@ -105,21 +124,39 @@ export default {
                 'http://xmlns.com/foaf/0.1/organization': {
                     label: ['Organization'],
                     allowNewValue: 1,
-                    viewer: ['BasicDBpediaView'],
-                    editor: ['DBpediaInput']
+                    objectIViewer: ['BasicDBpediaView'],
+                    objectIEditor: ['DBpediaInput']
                 }
             }
-        }
-    },
-    //for Faceted Browser it is required to fill im the following configuration
-    facetsConfig: {
-        'generic': {
-            list: [
-                'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
-            ],
-            config: {
+        },
+        dataset_object: {
 
-            }
+        },
+        resource_property: {
+
+        },
+        resource_object: {
+
+        },
+        property_object: {
+
+        },
+        //---------depth 3------------
+        dataset_resource_property: {
+
+        },
+        dataset_resource_object: {
+
+        },
+        dataset_property_object: {
+
+        },
+        resource_property_object: {
+
+        },
+        //---------depth 4------------
+        dataset_resource_property_object: {
+
         }
     }
 };
