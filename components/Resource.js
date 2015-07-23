@@ -1,5 +1,5 @@
 import React from 'react';
-import IndividualPropertyReactor from './IndividualPropertyReactor';
+import PropertyReactor from './PropertyReactor';
 import {NavLink} from 'fluxible-router';
 
 class Resource extends React.Component {
@@ -42,13 +42,6 @@ class Resource extends React.Component {
         }else{
             return {access: true, type: 'full'};
         }
-    }
-    buildConfigFromExtensions(extensions) {
-        let config = {};
-        extensions.forEach(function(el, i) {
-            config[el.spec.propertyURI] = el.config;
-        });
-        return config;
     }
     getPropertyLabel(uri) {
         let property = '';
@@ -112,7 +105,7 @@ class Resource extends React.Component {
                     }
                 }
                 return (
-                    <IndividualPropertyReactor key={index} spec={node} readOnly={configReadOnly} config={node.config} graphName={self.props.graphName} resource={self.props.resourceURI} propertyPath= {self.props.propertyPath}/>
+                    <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} graphName={self.props.graphName} resource={self.props.resourceURI} propertyPath= {self.props.propertyPath}/>
                 );
             }
         });

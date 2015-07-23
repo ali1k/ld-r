@@ -1,5 +1,5 @@
 import React from 'react';
-import IndividualObjectReactor from './IndividualObjectReactor';
+import IndividualObject from './IndividualObject';
 import AggregateDataView from './AggregateDataView';
 import AggregateDataEdit from './AggregateDataEdit';
 
@@ -92,7 +92,7 @@ class AggregateObjectReactor extends React.Component {
                             return undefined; // stop processing this iteration
                         }
                         return (
-                            <IndividualObjectReactor key={index} inEditMode={true} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.property} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
+                            <IndividualObject key={index} inEditMode={true} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.property} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
                         );
                     });
                 break;
@@ -112,7 +112,7 @@ class AggregateObjectReactor extends React.Component {
                             return undefined; // stop processing this iteration
                         }
                         return (
-                            <IndividualObjectReactor key={index} inEditMode={false} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.property} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
+                            <IndividualObject key={index} inEditMode={false} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.property} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
                         );
                     });
                 break;
