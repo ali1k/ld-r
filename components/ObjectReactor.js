@@ -10,6 +10,14 @@ class ObjectReactor extends React.Component {
     constructor(props) {
         super(props);
     }
+    handleShowDetails(objectURI) {
+        this.context.executeAction(loadObjectProperties, {
+          dataset: this.props.graphName,
+          resourceURI: this.props.resource,
+          propertyURI: this.props.property,
+          objectURI: objectURI
+        });
+    }
     includesProperty(list, resource, property) {
         let out = false;
         list.forEach(function(el) {
@@ -73,9 +81,16 @@ class ObjectReactor extends React.Component {
         let list;
         //check if it is the only value of a property -> used to hide delete button
         let isOnlyChild = (this.calculateValueCount(this.props.spec.instances) === 1);
-        let accessLevel, readOnly;
-        if(this.props.config && this.props.config.objectReactor){
-            switch(this.props.config.objectReactor[0]){
+        let objectReactorType, accessLevel, readOnly;
+        if(this.props.config){
+            if(!this.props.config.objectReactor){
+                objectReactorType = 'IndividualObject';
+            }else{
+                objectReactorType = this.props.config.objectReactor[0];
+            }
+        }
+        if(objectReactorType){
+            switch(objectReactorType){
                 case 'IndividualObject':
                     list = this.props.spec.instances.map(function(node, index) {
                         if(!node){
@@ -91,7 +106,7 @@ class ObjectReactor extends React.Component {
                         }
                         return (
                             <IndividualObject key={index} inEditMode={self.props.inEditMode} isNewValue={self.props.isNewValue} readOnly={readOnly} spec={node} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={isOnlyChild}
-                            onCreate={self.props.onCreateIndividualObject.bind(self)} onDelete={self.props.onDeleteIndividualObject.bind(self)} onUpdate={self.props.onUpdateIndividualObject.bind(self)} onDetailCreate={self.props.onDetailCreateIndividualObject.bind(self)} onDetailUpdate={self.props.onDetailUpdateIndividualObject.bind(self)} config={self.configMinus(self.props.config, ['objectReactor'])}/>
+                            onCreate={self.props.onCreateIndividualObject.bind(self)} onDelete={self.props.onDeleteIndividualObject.bind(self)} onUpdate={self.props.onUpdateIndividualObject.bind(self)} onDetailCreate={self.props.onDetailCreateIndividualObject.bind(self)} onDetailUpdate={self.props.onDetailUpdateIndividualObject.bind(self)} onShowDetail={self.handleShowDetails.bind(self)} config={self.configMinus(self.props.config, ['objectReactor'])} objectTypes={self.props.ObjectReactor ? self.props.ObjectReactor.objectTypes : {}} objectProperties={self.props.ObjectReactor ? self.props.ObjectReactor.objectProperties : {}}/>
                         );
                     });
                 break;
@@ -113,7 +128,7 @@ class ObjectReactor extends React.Component {
                         }
                         return (
                             <IndividualObject key={index} inEditMode={self.props.inEditMode} isNewValue={self.props.isNewValue} readOnly={readOnly} spec={node} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={isOnlyChild}
-                            onCreate={self.props.onCreateIndividualObject.bind(self)} onDelete={self.props.onDeleteIndividualObject.bind(self)} onUpdate={self.props.onUpdateIndividualObject.bind(self)} onDetailCreate={self.props.onDetailCreateIndividualObject.bind(self)} onDetailUpdate={self.props.onDetailUpdateIndividualObject.bind(self)} config={self.configMinus(self.props.config, ['objectReactor'])}/>
+                            onCreate={self.props.onCreateIndividualObject.bind(self)} onDelete={self.props.onDeleteIndividualObject.bind(self)} onUpdate={self.props.onUpdateIndividualObject.bind(self)} onDetailCreate={self.props.onDetailCreateIndividualObject.bind(self)} onDetailUpdate={self.props.onDetailUpdateIndividualObject.bind(self)} onShowDetail={self.handleShowDetails.bind(self)} config={self.configMinus(self.props.config, ['objectReactor'])} objectTypes={self.props.ObjectReactor ? self.props.ObjectReactor.objectTypes : {}} objectProperties={self.props.ObjectReactor ? self.props.ObjectReactor.objectProperties : {}}/>
                         );
                     });
             }

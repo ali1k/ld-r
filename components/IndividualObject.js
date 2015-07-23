@@ -1,11 +1,10 @@
 import React from 'react';
-import {provideContext, connectToStores} from 'fluxible-addons-react';
-import loadObjectProperties from '../actions/loadObjectProperties';
+import {provideContext} from 'fluxible-addons-react';
 import ObjectIViewer from './ObjectIViewer';
 import ObjectIEditor from './ObjectIEditor';
-import IndividualObjectStore from '../stores/IndividualObjectStore';
 import {navigateAction} from 'fluxible-router';
-class IndividualObjectReactor extends React.Component {
+
+class IndividualObject extends React.Component {
     constructor(props) {
         super(props);
         this.state = {objectValue: this.props.spec.value, detailData: {}, inEditMode: this.props.inEditMode, isExtendedView: 0};
@@ -44,18 +43,11 @@ class IndividualObjectReactor extends React.Component {
             }
             this.context.executeAction(navigateAction, {
                 url: '/dataset/' + encodeURIComponent(this.props.graphName) + '/resource/' + encodeURIComponent(this.props.spec.value) + '/' + category + '/' + encodeURIComponent([this.props.resource, this.props.property])
-            }, (err) => {
-                console.log('forwarded to another page! ' + err);
             });
         }else{
             //check if it is extended
             if(this.props.spec.extended && !this.state.isExtendedView){
-                this.context.executeAction(loadObjectProperties, {
-                  dataset: this.props.graphName,
-                  resourceURI: this.props.resource,
-                  propertyURI: this.props.property,
-                  objectURI: this.props.spec.value
-                });
+                this.props.onShowDetail(this.props.spec.value);
                 this.setState({isExtendedView: 1});
             }
             this.setState({inEditMode: 1});
@@ -101,12 +93,7 @@ class IndividualObjectReactor extends React.Component {
         this.setState({objectValue: this.props.spec.value, inEditMode: 0, isExtendedView: 0});
     }
     handleShowDetails() {
-        this.context.executeAction(loadObjectProperties, {
-          dataset: this.props.graphName,
-          resourceURI: this.props.resource,
-          propertyURI: this.props.property,
-          objectURI: this.props.spec.value
-        });
+        this.props.onShowDetail(this.props.spec.value);
         this.setState({isExtendedView: 1});
     }
     handleHideDetails() {
@@ -116,8 +103,8 @@ class IndividualObjectReactor extends React.Component {
         //add object Properties only to the relevant ones
         if(this.state.isExtendedView){
             if(this.props.spec.extended){
-                this.props.spec.extendedViewData = this.props.IndividualObjectStore.objectProperties[this.props.spec.value];
-                this.props.spec.objectType = this.props.IndividualObjectStore.objectTypes[this.props.spec.value];
+                this.props.spec.extendedViewData = this.props.objectProperties[this.props.spec.value];
+                this.props.spec.objectType = this.props.objectTypes[this.props.spec.value];
             }else{
                 //no type is detected yet
                 this.props.spec.objectType = '';
@@ -237,12 +224,7 @@ class IndividualObjectReactor extends React.Component {
         }
     }
 }
-IndividualObjectReactor.contextTypes = {
+IndividualObject.contextTypes = {
     executeAction: React.PropTypes.func.isRequired
 };
-IndividualObjectReactor = connectToStores(IndividualObjectReactor, [IndividualObjectStore], function (context, props) {
-    return {
-        IndividualObjectStore: context.getStore(IndividualObjectStore).getState()
-    };
-});
-export default IndividualObjectReactor;
+export default IndividualObject;

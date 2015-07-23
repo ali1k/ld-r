@@ -125,14 +125,21 @@ class PropertyReactor extends React.Component {
         return o;
     }
     render() {
-        let propertyReactor;
-        if(this.props.config && this.props.config.propertyReactor){
-            switch(this.props.config.propertyReactor[0]){
+        let propertyReactorType, propertyReactor;
+        if(this.props.config){
+            if(!this.props.config.propertyReactor){
+                propertyReactorType = 'IndividualProperty';
+            }else{
+                propertyReactorType = this.props.config.propertyReactor[0];
+            }
+        }
+        if(propertyReactorType){
+            switch(propertyReactorType){
                 case 'IndividualProperty':
-                    propertyReactor = <IndividualProperty spec={this.props.spec} enableAuthentication={this.props.enableAuthentication} readOnly={this.props.configReadOnly} graphName={this.props.graphName} resource={this.props.resource} propertyPath= {this.props.propertyPath} config={this.configMinus(this.props.config, ['propertyReactor'])} onCreateIndividualObject={this.handleCreateIndividualObject.bind(this)} onDeleteIndividualObject={this.handleDeleteIndividualObject.bind(this)} onUpdateIndividualObject={this.handleUpdateIndividualObject.bind(this)} onDetailCreateIndividualObject={this.handleDetailCreateIndividualObject.bind(this)} onDetailUpdateIndividualObject={this.handleDetailUpdateIndividualObject.bind(this)} onUpdateAggObject={this.handleUpdateAggObject.bind(this)} onDeleteAggObject={this.handleDeleteAggObject.bind(this)}/>;
+                    propertyReactor = <IndividualProperty spec={this.props.spec} enableAuthentication={this.props.enableAuthentication} readOnly={this.props.configReadOnly} graphName={this.props.graphName} resource={this.props.resource} property={this.props.property} propertyPath= {this.props.propertyPath} config={this.configMinus(this.props.config, ['propertyReactor'])} onCreateIndividualObject={this.handleCreateIndividualObject.bind(this)} onDeleteIndividualObject={this.handleDeleteIndividualObject.bind(this)} onUpdateIndividualObject={this.handleUpdateIndividualObject.bind(this)} onDetailCreateIndividualObject={this.handleDetailCreateIndividualObject.bind(this)} onDetailUpdateIndividualObject={this.handleDetailUpdateIndividualObject.bind(this)} onUpdateAggObject={this.handleUpdateAggObject.bind(this)} onDeleteAggObject={this.handleDeleteAggObject.bind(this)}/>;
                 break;
                 default:
-                    propertyReactor = <IndividualProperty spec={this.props.spec} enableAuthentication={this.props.enableAuthentication} readOnly={this.props.configReadOnly} graphName={this.props.graphName} resource={this.props.resource} propertyPath= {this.props.propertyPath} config={this.configMinus(this.props.config, ['propertyReactor'])} onCreateIndividualObject={this.handleCreateIndividualObject.bind(this)} onDeleteIndividualObject={this.handleDeleteIndividualObject.bind(this)} onUpdateIndividualObject={this.handleUpdateIndividualObject.bind(this)} onDetailCreateIndividualObject={this.handleDetailCreateIndividualObject.bind(this)} onDetailUpdateIndividualObject={this.handleDetailUpdateIndividualObject.bind(this)} onUpdateAggObject={this.handleUpdateAggObject.bind(this)} onDeleteAggObject={this.handleDeleteAggObject.bind(this)}/>;
+                    propertyReactor = <IndividualProperty spec={this.props.spec} enableAuthentication={this.props.enableAuthentication} readOnly={this.props.configReadOnly} graphName={this.props.graphName} resource={this.props.resource} property={this.props.property} propertyPath= {this.props.propertyPath} config={this.configMinus(this.props.config, ['propertyReactor'])} onCreateIndividualObject={this.handleCreateIndividualObject.bind(this)} onDeleteIndividualObject={this.handleDeleteIndividualObject.bind(this)} onUpdateIndividualObject={this.handleUpdateIndividualObject.bind(this)} onDetailCreateIndividualObject={this.handleDetailCreateIndividualObject.bind(this)} onDetailUpdateIndividualObject={this.handleDetailUpdateIndividualObject.bind(this)} onUpdateAggObject={this.handleUpdateAggObject.bind(this)} onDeleteAggObject={this.handleDeleteAggObject.bind(this)}/>;
             }
         }
         return (
