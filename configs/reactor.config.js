@@ -6,9 +6,9 @@ export default {
     //Default Named Graph under observation, if not set , will consider all existing graph names
     defaultGraphName: [''],
     //will prevent access if not logged in
-    enableAuthentication: 1,
+    enableAuthentication: 0,
     //graph that stores users data, must be loaded beforehand
-    authGraphName: ['https://ld-r.org/users'],
+    authGraphName: ['http://ld-r.org/users'],
     //will allow super users to confirm and activate regiastered users
     enableUserConfirmation: 0,
     //will enable email notifications
@@ -28,7 +28,7 @@ export default {
                 maxNumberOfResourcesOnPage: 100,
                 datasetReactor: ['Dataset']
             },
-            'https://ld-r.org/users': {
+            'http://ld-r.org/users': {
                 readOnly: 0
             }
         },
@@ -44,16 +44,18 @@ export default {
         },
         property: {
             'generic': {
-                propertyReactor: ['IndividualProperty']
+                propertyReactor: ['IndividualProperty'],
+                //following are object-based scope:
+                objectReactor: ['IndividualObject'],
+                //to view/edit individual object values
+                objectIViewer: ['BasicIndividualView'],
+                objectIEditor: ['BasicIndividualInput']
             }
         },
         //property value = object
         object: {
             'generic': {
-                objectReactor: ['IndividualObject'],
-                //to view/edit individual object values
-                objectIViewer: ['BasicIndividualView'],
-                objectIEditor: ['BasicIndividualInput']
+
             }
         },
         //---------depth 2------------
@@ -61,7 +63,7 @@ export default {
 
         },
         dataset_property: {
-            'https://ld-r.org/users': {
+            'http://ld-r.org/users': {
                 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
                     isHidden: 1
                 },
