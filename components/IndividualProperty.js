@@ -18,7 +18,7 @@ class IndividualProperty extends React.Component {
         let t;
         instances.forEach(function(v, i) {
             if(instances[i]){
-                t = {'isDefault': 1, 'value': value, 'valueType': instances[i].valueType, 'dataType': instances[i].dataType};
+                t = {'isDefault': 1, 'value': value, 'valueType': instances[i].valueType, 'dataType': instances[i].dataType, instances: [{value: value}]};
                 return t;
             }
         });
@@ -41,7 +41,6 @@ class IndividualProperty extends React.Component {
                                                 <i className="cancel square large red icon "></i> &nbsp; Cancel adding new <strong> {propLabel} </strong>
                                             </div>
                                         </div>
-
                                </div>;
             }else{
                 defaultValueDIV = '';
@@ -64,7 +63,7 @@ class IndividualProperty extends React.Component {
                 </div>
                 <div className="ui dividing header"></div>
                 <div className="property-objects">
-                    <ObjectReactor inEditMode={this.props.inEditMode} spec={this.props.spec} config={this.props.config} onCreateIndividualObject={this.props.onCreateIndividualObject.bind(this)} onDeleteIndividualObject={this.props.onDeleteIndividualObject.bind(this)} onUpdateIndividualObject={this.props.onUpdateIndividualObject.bind(this)} onDetailCreateIndividualObject={this.props.onDetailCreateIndividualObject.bind(this)} onDetailUpdateIndividualObject={this.props.onDetailUpdateIndividualObject.bind(this)} onUpdateAggObject={this.props.onUpdateAggObject.bind(this)} onDeleteAggObject={this.props.onDeleteAggObject.bind(this)} onControlNewInsert={this.controlNewInsert.bind(this)}/>
+                    <ObjectReactor inEditMode={this.props.inEditMode} graphName={this.props.graphName} resource={this.props.resource} propertyPath= {this.props.propertyPath} spec={this.props.spec} config={this.props.config} onCreateIndividualObject={this.props.onCreateIndividualObject.bind(this)} onDeleteIndividualObject={this.props.onDeleteIndividualObject.bind(this)} onUpdateIndividualObject={this.props.onUpdateIndividualObject.bind(this)} onDetailCreateIndividualObject={this.props.onDetailCreateIndividualObject.bind(this)} onDetailUpdateIndividualObject={this.props.onDetailUpdateIndividualObject.bind(this)} onUpdateAggObject={this.props.onUpdateAggObject.bind(this)} onDeleteAggObject={this.props.onDeleteAggObject.bind(this)} onControlNewInsert={this.controlNewInsert.bind(this)}/>
                 </div>
                 {defaultValueDIV}
                 {(this.state.showNewInsert ? newValueDIV : '')}

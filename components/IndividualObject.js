@@ -1,8 +1,8 @@
 import React from 'react';
 import {provideContext, connectToStores} from 'fluxible-addons-react';
 import loadObjectProperties from '../actions/loadObjectProperties';
-import IndividualDataView from './IndividualDataView';
-import IndividualDataEdit from './IndividualDataEdit';
+import ObjectIViewer from './ObjectIViewer';
+import ObjectIEditor from './ObjectIEditor';
 import IndividualObjectStore from '../stores/IndividualObjectStore';
 import {navigateAction} from 'fluxible-router';
 class IndividualObjectReactor extends React.Component {
@@ -52,6 +52,7 @@ class IndividualObjectReactor extends React.Component {
             if(this.props.spec.extended && !this.state.isExtendedView){
                 this.context.executeAction(loadObjectProperties, {
                   dataset: this.props.graphName,
+                  resourceURI: this.props.resource,
                   propertyURI: this.props.property,
                   objectURI: this.props.spec.value
                 });
@@ -102,6 +103,7 @@ class IndividualObjectReactor extends React.Component {
     handleShowDetails() {
         this.context.executeAction(loadObjectProperties, {
           dataset: this.props.graphName,
+          resourceURI: this.props.resource,
           propertyURI: this.props.property,
           objectURI: this.props.spec.value
         });
@@ -152,31 +154,11 @@ class IndividualObjectReactor extends React.Component {
         }else{
             this.props.spec.extendedViewData = 0;
         }
-        let dataViewType, dataViewTypeConfig = '', dataEditType, dataEditTypeConfig = '';
-        if(this.props.config){
-            if(this.props.config.dataEditType){
-                dataEditTypeConfig = this.props.config.dataEditType[0];
-            }
-            if(this.props.config.dataViewType){
-                dataViewTypeConfig = this.props.config.dataViewType[0];
-            }
-        }
+        let dataViewType, dataEditType;
         if (this.state.inEditMode) {
-            switch(dataEditTypeConfig){
-                case 'IndividualDataEdit':
-                    dataEditType = <IndividualDataEdit isDefault={false} resource={this.props.resource} property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)} onEnterPress={this.handleSave.bind(this)}/>;
-                break;
-                default:
-                    dataEditType = <IndividualDataEdit isDefault={false} resource={this.props.resource} property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)} onEnterPress={this.handleSave.bind(this)}/>;
-            }
+            dataEditType = <ObjectIEditor isDefault={false} resource={this.props.resource} property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)} onEnterPress={this.handleSave.bind(this)}/>;
         }else{
-            switch(dataViewTypeConfig){
-                case 'IndividualDataView':
-                    dataViewType = <IndividualDataView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config} resource={this.props.resource} property={this.props.property}/>;
-                break;
-                default:
-                    dataViewType = <IndividualDataView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config} resource={this.props.resource} property={this.props.property}/>;
-            }
+            dataViewType = <ObjectIViewer graphName={this.props.graphName} spec={this.props.spec} config={this.props.config} resource={this.props.resource} property={this.props.property}/>;
         }
         let editDIV, saveDIV, undoDIV, detailDIV, deleteDIV;
         //disable edit in readOnly mode

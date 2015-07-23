@@ -19,7 +19,6 @@ class ResourceUtil{
         //handle properties config in different levels
         //todo: now only handles level 2 properties should be extended later if needed
         let exceptional = 0;
-        console.log(propertyPath);
         if(propertyPath && propertyPath.length){
             //it is only for property path
             configExceptional = configurator.preparePropertyConfig(graphName, resourceURI, propertyPath[1]);
@@ -108,13 +107,10 @@ class ResourceUtil{
         }
         return extensions[index].config;
     }
-    parseObjectProperties(graphName, propertyURI, body) {
+    parseObjectProperties(body, graphName, resourceURI, propertyURI) {
         let title, objectType = '';
-        let selectedConfig = propertiesConfig[graphName];
-        //if no specific config is found, get the generic config
-        if(!selectedConfig){
-            selectedConfig = propertiesConfig.generic;
-        }
+        let configurator = new Configurator();
+        let config, configExceptional = configurator.preparePropertyConfig(graphName, resourceURI, propertyURI);
         let self=this;
         let parsed = JSON.parse(body);
         let output=[], propIndex={}, finalOutput=[];
@@ -127,17 +123,22 @@ class ResourceUtil{
             }else if (el.p.value === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type') {
                 objectType = el.o.value;
             }
+            configExceptional.extensions.forEach(function(ex){
+                if(ex.spec.propertyURI === el.p.value){
+                    config = ex.config;
+                }
+            });
             let property=self.getPropertyLabel(el.p.value);
             if(propIndex[el.p.value]){
                 propIndex[el.p.value].push({value: el.o.value, valueType: el.o.type, dataType:(el.o.type==='typed-literal'?el.o.datatype:''), extended:parseInt(el.hasExtendedValue.value)});
             }else{
                 propIndex[el.p.value]=[{value: el.o.value, valueType: el.o.type, dataType:(el.o.type==='typed-literal'?el.o.datatype:''), extended:parseInt(el.hasExtendedValue.value)}];
             }
-            output.push({propertyURI:el.p.value, property: property,  instances:[]});
+            output.push({propertyURI:el.p.value, property: property,  instances:[], config: config});
         });
         output.forEach(function(el) {
           if(propIndex[el.propertyURI]){
-            finalOutput.push({spec:{propertyURI: el.propertyURI, property: el.property, instances: propIndex[el.propertyURI]}, config: selectedConfig.config[propertyURI] ? (selectedConfig.config[propertyURI].extensions ? self.getExtensionConfig(selectedConfig.config[propertyURI].extensions, el.propertyURI) : {}) : {}});
+            finalOutput.push({spec:{propertyURI: el.propertyURI, property: el.property, config: el.config, instances: propIndex[el.propertyURI]}});
             propIndex[el.propertyURI]=null;
           }
         });

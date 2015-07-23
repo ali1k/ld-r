@@ -1,5 +1,5 @@
 import React from 'react';
-import IndividualDataView from './IndividualDataView';
+import ObjectIViewer from './ObjectIViewer';
 
 class BasicAggregateView extends React.Component {
     render() {

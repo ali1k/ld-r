@@ -1,6 +1,6 @@
 import React from 'react';
 import BasicCheckbox from './BasicCheckbox';
-import IndividualDataView from './IndividualDataView';
+import ObjectIViewer from './ObjectIViewer';
 
 class CheckboxItem extends React.Component {
     constructor(props) {
@@ -39,7 +39,7 @@ class CheckboxItem extends React.Component {
             c = this.props.config;
             //we simulate viewer for individualDataView
             c.viewer = this.props.config.browserViewer;
-            title = <IndividualDataView graphName={this.props.graphName} spec={this.props.spec} config={c}/>;
+            title = <ObjectIViewer graphName={this.props.graphName} spec={this.props.spec} config={c}/>;
         }else{
             title = this.props.spec.value;
             if(this.props.spec.label){

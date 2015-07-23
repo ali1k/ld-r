@@ -86,7 +86,7 @@ class Resource extends React.Component {
                                 configReadOnly = true;
                             }else{
                                 //check access levels
-                                accessLevel = self.checkAccess(user, self.props.graphName, self.props.resourceURI, node.propertyURI);
+                                accessLevel = self.checkAccess(user, self.props.graphName, self.props.resource, node.propertyURI);
                                 if(accessLevel.access){
                                     configReadOnly = false;
                                 }else{
@@ -95,7 +95,7 @@ class Resource extends React.Component {
                             }
                         }else{
                             //check access levels
-                            accessLevel = self.checkAccess(user, self.props.graphName, self.props.resourceURI, node.propertyURI);
+                            accessLevel = self.checkAccess(user, self.props.graphName, self.props.resource, node.propertyURI);
                             if(accessLevel.access){
                                 configReadOnly = false;
                             }else{
@@ -105,7 +105,7 @@ class Resource extends React.Component {
                     }
                 }
                 return (
-                    <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} graphName={self.props.graphName} resource={self.props.resourceURI} propertyPath= {self.props.propertyPath}/>
+                    <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} graphName={self.props.graphName} resource={self.props.resource} propertyPath= {self.props.propertyPath}/>
                 );
             }
         });
@@ -118,7 +118,7 @@ class Resource extends React.Component {
             }
             tabsDIV = this.props.config.propertyCategories.map(function(node, index) {
                 return (
-                    <NavLink key={index} routeName="resource" href={'/dataset/' + encodeURIComponent(self.props.graphName) + '/resource/' + encodeURIComponent(self.props.resourceURI) + '/' + node + '/' + encodeURIComponent(self.props.propertyPath)}>
+                    <NavLink key={index} routeName="resource" href={'/dataset/' + encodeURIComponent(self.props.graphName) + '/resource/' + encodeURIComponent(self.props.resource) + '/' + node + '/' + encodeURIComponent(self.props.propertyPath)}>
                       <div className={(node === currentCategory ? 'item link active' : 'item link')}> {node} </div>
                     </NavLink>
                 );
@@ -158,12 +158,12 @@ class Resource extends React.Component {
                         </div>;
         }
         return (
-            <div className="ui page grid" ref="resource" itemScope itemType={this.props.resourceType} itemID={this.props.resourceURI}>
+            <div className="ui page grid" ref="resource" itemScope itemType={this.props.resourceType} itemID={this.props.resource}>
                 <div className="ui column">
                     {breadcrumb}
                     <h2>
                         {this.props.isComplete ? '' : <img src="/assets/img/loader.gif" alt="loading..."/>}
-                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.graphName) + '/' + encodeURIComponent(this.props.resourceURI)}><i className="black icon cube"></i></a> <a href={this.props.resourceURI} target="_blank">{this.props.title}</a>
+                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.graphName) + '/' + encodeURIComponent(this.props.resource)}><i className="black icon cube"></i></a> <a href={this.props.resource} target="_blank">{this.props.title}</a>
                     </h2>
                     {mainDIV}
                 </div>

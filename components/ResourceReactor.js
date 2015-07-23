@@ -31,10 +31,10 @@ class ResourceReactor extends React.Component {
         if(config && config.resourceReactor){
             switch(config.resourceReactor[0]){
                 case 'Resource':
-                    resourceReactor = <Resource enableAuthentication={enableAuthentication} graphName={graphName} properties={properties} resourceURI={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} isComplete={isComplete} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    resourceReactor = <Resource enableAuthentication={enableAuthentication} graphName={graphName} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} isComplete={isComplete} config={this.configMinus(config, ['resourceReactor'])}/>;
                 break;
                 default:
-                    resourceReactor = <Resource enableAuthentication={enableAuthentication} graphName={graphName} properties={properties} resourceURI={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} isComplete={isComplete} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    resourceReactor = <Resource enableAuthentication={enableAuthentication} graphName={graphName} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} isComplete={isComplete} config={this.configMinus(config, ['resourceReactor'])}/>;
             }
         }
         return (

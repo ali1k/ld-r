@@ -87,6 +87,7 @@ export default {
             graphName = params.dataset;
             objectURI = params.objectURI;
             propertyURI = params.propertyURI;
+            resourceURI = params.resourceURI;
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -103,7 +104,7 @@ export default {
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
-                let {props, objectType} = utilObject.parseObjectProperties(graphName, propertyURI, res);
+                let {props, objectType} = utilObject.parseObjectProperties(res, graphName, resourceURI, propertyURI);
                 callback(null, {
                     objectURI: objectURI,
                     objectType: objectType,

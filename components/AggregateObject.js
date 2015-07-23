@@ -1,7 +1,7 @@
 import React from 'react';
 import IndividualObject from './IndividualObject';
-import AggregateDataView from './AggregateDataView';
-import AggregateDataEdit from './AggregateDataEdit';
+import ObjectAViewer from './ObjectAViewer';
+import ObjectAEditor from './ObjectAEditor';
 
 class AggregateObjectReactor extends React.Component {
     constructor(props) {
@@ -70,22 +70,12 @@ class AggregateObjectReactor extends React.Component {
     }
     render() {
         let isIndividual = false;
-        let dataViewType, dataViewTypeConfig = '', dataEditType, dataEditTypeConfig = '', self = this;
-        if(this.props.config){
-            if(this.props.config.dataEditType){
-                dataEditTypeConfig = this.props.config.dataEditType[0];
-            }
-            if(this.props.config.dataViewType){
-                dataViewTypeConfig = this.props.config.dataViewType[0];
-            }
-        }
+        let dataViewType, dataEditType, self = this;
         if (this.state.inEditMode) {
-            switch(dataEditTypeConfig){
-                case 'AggregateDataEdit':
-                    dataEditType = <AggregateDataEdit isDefault={false} property={this.props.property} spec={this.props.spec} config={this.props.config} onAggDataEdit={this.handleAggDataEdit.bind(this)}/>;
-                break;
-                //still can use IndividualDataEdit on each instance
-                case 'IndividualDataEdit':
+            if(this.props.config){
+                if(this.props.config.objectAEditor){
+                    dataEditType = <ObjectAEditor isDefault={false} property={this.props.property} spec={this.props.spec} config={this.props.config} onAggDataEdit={this.handleAggDataEdit.bind(this)}/>;
+                }else{
                     isIndividual = true;
                     dataEditType = this.props.spec.instances.map(function(node, index) {
                         if(!node){
@@ -95,17 +85,13 @@ class AggregateObjectReactor extends React.Component {
                             <IndividualObject key={index} inEditMode={true} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.property} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
                         );
                     });
-                break;
-                default:
-                    dataEditType = <AggregateDataEdit isDefault={false} property={this.props.property} spec={this.props.spec} config={this.props.config} onAggDataEdit={this.handleAggDataEdit.bind(this)}/>;
+                }
             }
         }else{
-            switch(dataViewTypeConfig){
-                case 'AggregateDataView':
-                    dataViewType = <AggregateDataView graphName={this.props.graphName} resource={this.props.resource} property={this.props.property} spec={this.props.spec} config={this.props.config}/>;
-                break;
-                //will apply IndividualDataView on each child
-                case 'IndividualDataView':
+            if(this.props.config){
+                if(this.props.config.objectAViewer){
+                    dataViewType = <ObjectAViewer graphName={this.props.graphName} resource={this.props.resource} property={this.props.property} spec={this.props.spec} config={this.props.config}/>;
+                }else{
                     isIndividual = true;
                     dataViewType = this.props.spec.instances.map(function(node, index) {
                         if(!node){
@@ -115,9 +101,7 @@ class AggregateObjectReactor extends React.Component {
                             <IndividualObject key={index} inEditMode={false} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.property} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
                         );
                     });
-                break;
-                default:
-                    dataViewType = <AggregateDataView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
+                }
             }
         }
         let editDIV, saveDIV, undoDIV, deleteDIV;

@@ -49,7 +49,9 @@ export default {
                 objectReactor: ['IndividualObject'],
                 //to view/edit individual object values
                 objectIViewer: ['BasicIndividualView'],
-                objectIEditor: ['BasicIndividualInput']
+                objectIEditor: ['BasicIndividualInput'],
+                extendedOEditor: ['BasicIndividualDetailEdit'],
+                extendedOViewer: ['BasicIndividualDetailView']
             }
         },
         //property value = object
