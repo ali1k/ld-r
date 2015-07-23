@@ -14,11 +14,17 @@ class IndividualProperty extends React.Component {
         this.setState({inNewValueMode: 0});
     }
     //considers 0 elements
-    simulateDefaultValue (instances, value){
+    simulateDefaultValue (){
+        let value, instances = this.props.spec.instances;
+        if(this.props.config && this.props.config.defaultValue){
+            value = this.props.config.defaultValue;
+        }else{
+            value = 'defaultValue';
+        }
         let t;
         instances.forEach(function(v, i) {
             if(instances[i]){
-                t = {'isDefault': 1, 'value': value, 'valueType': instances[i].valueType, 'dataType': instances[i].dataType, instances: [{value: value}]};
+                t = {'isDefault': 1, 'value': value, 'valueType': instances[i].valueType, 'dataType': instances[i].dataType};
                 return t;
             }
         });
@@ -34,7 +40,7 @@ class IndividualProperty extends React.Component {
         if(this.props.config && this.props.config.allowNewValue && !this.props.readOnly){
             propLabel = this.props.config.label ? this.props.config.label : this.props.spec.property;
             if(this.state.inNewValueMode){
-                defaultValueDIV = <ObjectReactor isNewValue={true} inEditMode={true} key="defaultValue" spec={this.simulateDefaultValue(this.props.spec.instances, 'default')} config={this.props.config} graphName={this.props.graphName} resource={this.props.resource} property={this.props.property} readOnly={false} onCreateIndividualObject={this.props.onCreateIndividualObject.bind(this)} onDeleteIndividualObject={this.props.onDeleteIndividualObject.bind(this)} onUpdateIndividualObject={this.props.onUpdateIndividualObject.bind(this)} onDetailCreateIndividualObject={this.props.onDetailCreateIndividualObject.bind(this)} onDetailUpdateIndividualObject={this.props.onDetailUpdateIndividualObject.bind(this)}/>;
+                defaultValueDIV = <ObjectReactor isNewValue={true} inEditMode={true} key="defaultValue" spec={this.simulateDefaultValue()} config={this.props.config} graphName={this.props.graphName} resource={this.props.resource} property={this.props.property} readOnly={false} onCreateIndividualObject={this.props.onCreateIndividualObject.bind(this)}/>;
                 newValueDIV = <div className="ui list">
                                         <div className="item">
                                             <div onClick={this.handleCancelNewIndividualObject.bind(this)} className="medium ui basic icon labeled button">
