@@ -136,7 +136,7 @@ class PropertyReactor extends React.Component {
             }
         }
         return (
-            <div ref="propertyReactor" className="item">
+            <div ref="propertyReactor" className="property item">
                 {propertyReactor}
             </div>
         );

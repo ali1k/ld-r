@@ -51,12 +51,12 @@ class IndividualProperty extends React.Component {
                                             <i className="plus square large blue icon "></i> &nbsp; Add another <strong> {propLabel} </strong>
                                         </div>
                                     </div>
-
+                                    <br/>
                               </div>;
             }
         }
         return (
-            <div className="property item" ref='individualProperty'>
+            <div ref='individualProperty'>
                 <div className="ui horizontal list">
                     <div className="item">
                         <PropertyHeader spec={this.props.spec} config={this.props.config} size="3" />
