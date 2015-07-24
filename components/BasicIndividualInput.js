@@ -30,11 +30,15 @@ class BasicIndividualInput extends React.Component {
         return Math.round(+new Date() / 1000);
     }
     createDefaultValue(valueType, dataType) {
+        let dynamicDomain = 'http://example.com';
+        if(this.props.config && this.props.config.dynamicResourceDomain){
+            dynamicDomain = this.props.config.dynamicResourceDomain[0];
+        }
         if(this.props.config && this.props.config.defaultValue){
             return this.props.config.defaultValue[0];
         }else{
             if(valueType === 'uri'){
-                return 'http://example.com/' + this.getRandomNumber();
+                return dynamicDomain + '/' + this.getRandomNumber();
             }else{
                 return 'exampleValue' + this.getRandomNumber();
             }

@@ -102,7 +102,7 @@ class ObjectReactor extends React.Component {
                             //check access level for details
                             readOnly = self.props.readOnly;
                             if(node.extended){
-                                accessLevel = self.checkAccess(user, self.props.graphName, self.props.resource, '');
+                                accessLevel = self.checkAccess(user, self.props.graphName, node.value, '');
                                 if(!accessLevel.access){
                                     readOnly = true;
                                 }
@@ -114,7 +114,7 @@ class ObjectReactor extends React.Component {
                         });
                     break;
                     case 'AggregateObject':
-                        list = <AggregateObject inEditMode={self.props.inEditMode} readOnly={self.props.readOnly} isNewValue={false} spec={self.props.node} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} onIndividualDelete={self.props.onDeleteIndividualObject.bind(self)} onIndividualUpdate={self.props.onUpdateIndividualObject.bind(self)} onDelete={self.props.onDeleteAggObject.bind(self)} onUpdate={self.props.onUpdateAggObject.bind(self)} onDetailCreate={self.props.onDetailCreateIndividualObject.bind(self)} onDetailUpdate={self.props.onDetailUpdateIndividualObject.bind(self)} controlNewInsert={self.props.onControlNewInsert.bind(self)} config={self.configMinus(self.props.config, ['objectReactor'])}/>;
+                        list = <AggregateObject inEditMode={self.props.inEditMode} readOnly={self.props.readOnly} isNewValue={false} spec={self.props.spec} graphName={self.props.graphName} resource={self.props.resource} property={self.props.spec.propertyURI} onIndividualDelete={self.props.onDeleteIndividualObject.bind(self)} onIndividualUpdate={self.props.onUpdateIndividualObject.bind(self)} onDelete={self.props.onDeleteAggObject.bind(self)} onUpdate={self.props.onUpdateAggObject.bind(self)} onDetailCreate={self.props.onDetailCreateIndividualObject.bind(self)} onDetailUpdate={self.props.onDetailUpdateIndividualObject.bind(self)} controlNewInsert={self.props.onControlNewInsert.bind(self)} config={self.configMinus(self.props.config, ['objectReactor'])}/>;
                     break;
                     default:
                         list = this.props.spec.instances.map(function(node, index) {

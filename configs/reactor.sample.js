@@ -1,74 +1,151 @@
-//important: first value in the array is considered as default value for the property
-//this file is visible to the client/server-side
 export default {
     //full page title
     appFullTitle: ['Linked Data Reactor'],
     //short page title
-    appShortTitle: ['LD-Reactor'],
+    appShortTitle: ['LD-R'],
     //Default Named Graph under observation, if not set , will consider all existing graph names
     defaultGraphName: [''],
-    //used for pagination in resource list
-    maxNumberOfResourcesOnPage: [50],
     //will prevent access if not logged in
-    enableAuthentication: 1,
+    enableAuthentication: 0,
     //graph that stores users data, must be loaded beforehand
-    authGraphName: ['http://ld-r.org/users'],
-    //used when creating random resources
-    dynamicResourceDomain: ['http://ld-r.org'],
+    authGraphName: ['https://github.com/ali1k/ld-reactor/blob/master/plugins/authentication/schema/users.ttl#'],
     //will allow super users to confirm and activate regiastered users
-    enableUserConfirmation: 1,
+    enableUserConfirmation: 0,
     //will enable email notifications
-    enableEmailNotifications: 1,
+    enableEmailNotifications: 0,
     //will put all update actions in log folder
-    enableLogs: 1,
-    //[Optional] config for property components
-    propertiesConfig: {
-        //these configs are used as generic configs, which still can be empty!
-        'generic': {
-            //resource types to focus on, can be an array, if not set, all existing types will be shown
-            resourceFocusType: ['http://rdfs.org/ns/void#Dataset'],
-            //only allow to view data -> disable edit
-            readOnly: 0,
-            //if enabled, will categorize properties in different tabs based on propertyCategories
-            useCategories: 0,
-            categories: [''],
-            //config is necessary even if empty config
-            config: {
+    enableLogs: 0,
+    // config = scope + spec
+    // scope is one the 15 combination of dataset, resource, property and object
+    config: {
+        //---------depth 1------------
+        dataset: {
+            'generic': {
+                resourceFocusType: [],
+                //only allow to view data -> disable edit
+                readOnly: 1,
+                //used for pagination in resource list
+                maxNumberOfResourcesOnPage: 20,
+                datasetReactor: ['Dataset']
+            },
+            'https://github.com/ali1k/ld-reactor/blob/master/plugins/authentication/schema/users.ttl#': {
+                readOnly: 0
+            },
+            'http://ld-r.org/datasets/void': {
+                resourceFocusType: ['http://rdfs.org/ns/void#Dataset'],
+                usePropertyCategories: 1,
+                readOnly: 0,
+                propertyCategories: ['overview', 'people', 'date', 'legalAspects', 'technicalAspects', 'structuralAspects']
+            }
+        },
+        resource: {
+            'generic': {
+                //if enabled, will categorize properties in different tabs based on property categories
+                usePropertyCategories: 0,
+                propertyCategories: [],
+                //used when creating random resources
+                dynamicResourceDomain: ['http://example.org'],
+                resourceReactor: ['Resource']
+            }
+        },
+        property: {
+            'generic': {
+                propertyReactor: ['IndividualProperty'],
+                //following are object-based scope:
+                objectReactor: ['IndividualObject'],
+                //to view/edit individual object values
+                objectIViewer: ['BasicIndividualView'],
+                objectIEditor: ['BasicIndividualInput'],
+                extendedOEditor: ['BasicIndividualDetailEdit'],
+                extendedOViewer: ['BasicIndividualDetailView']
+            }
+        },
+        //property value = object
+        object: {
+            'generic': {
 
             }
         },
-        'http://risis.org': {
-            //if enabled, will categorize properties in different tabs based on propertyCategories
-            readOnly: 0,
-            useCategories: 1,
-            categories: ['overview', 'people', 'date', 'legalAspects', 'technicalAspects'],
-            //config is necessary even if empty config
-            config: {
-                'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
-                    //it will not affect the sub properties in detail
-                    isHidden: 1,
+        //---------depth 2------------
+        dataset_resource: {
+
+        },
+        dataset_property: {
+            'http://ld-r.org/datasets/void': {
+                'http://purl.org/dc/terms/spatial': {
+                    label: ['Geographical coverage'],
                     category: ['overview'],
-                    label: ['Type'],
-                    hint: ['Type of the entity.']
-                },
-                'http://purl.org/dc/terms/title': {
-                    label: ['Title'],
-                    category: ['overview'],
-                    hint: ['The title of the dataset described by this document.'],
-                    objectReactorType: ['IndividualObjectReactor'],
-                    dataViewType: ['IndividualDataView'],
-                    viewer: ['BasicIndividualView'],
-                    dataEditType: ['IndividualDataEdit'],
-                    editor: ['BasicIndividualInput']
-                },
-                'http://purl.org/dc/terms/language': {
+                    hint: ['The geographical area covered by the dataset.The same metadata could also be used to document the geographical area covered by an entity contained in the dataset in particular. For example we could say that the dataset covers all Eu countries or covers only France and Italy.'],
                     allowNewValue: 1,
-                    label: ['Dataset Language'],
+                    objectReactor: ['AggregateObject'],
+                    objectAViewer: ['DBpediaGoogleMapView'],
+                    objectIViewer: ['BasicDBpediaView'],
+                    asWikipedia: 1,
+                    objectAEditor: ['BasicAggregateInput'],
+                    objectIEditor: ['DBpediaInput'],
+                    lookupClass: ['Place']
+                },
+                'http://purl.org/dc/terms/creator': {
+                    allowNewValue: 1,
+                    allowExtension: 1,
+                    category: ['people'],
+                    label: ['Creator'],
+                    hint: ['An entity, such as a person, organisation, or service, that is primarily responsible for creating the dataset. The creator should be described using a URI if available, rather than just providing the name as a literal. ORCID provides a useful service for this.'],
+                    objectIEditor: ['DBpediaInput'],
+                    objectIViewer: ['BasicDBpediaView'],
+                    asWikipedia: 1,
+                    extensions: [
+                        {
+                            spec: {
+                                propertyURI: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+                                instances: [{value: 'http://xmlns.com/foaf/0.1/Person', valueType: 'uri'}]
+                            },
+                            config: {
+                                hint: ['Type of the entity'],
+                                label: ['Type'],
+                                category: ['people'],
+                                objectIViewer: ['BasicOptionView'],
+                                objectIEditor: ['BasicOptionInput'],
+                                options: [
+                                    {label: 'Person', value: 'http://xmlns.com/foaf/0.1/Person'},
+                                    {label: 'Organization', value: 'http://xmlns.com/foaf/0.1/Organization'}
+                                ],
+                                defaultValue: ['http://xmlns.com/foaf/0.1/Person'],
+                                allowUserDefinedValue: 1
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'http://www.w3.org/2000/01/rdf-schema#label',
+                                instances: [{value: 'Label', valueType: 'literal'}]
+                            },
+                            config: {
+                                hint: ['A descriptor label for the URI'],
+                                category: ['people'],
+                                label: ['Label']
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'http://xmlns.com/foaf/0.1/mbox',
+                                instances: [{value: 'email address', valueType: 'literal'}]
+                            },
+                            config: {
+                                hint: ['A corresponding email address'],
+                                category: ['people'],
+                                label: ['Email']
+                            }
+                        }
+                    ]
+                },
+                'http://purl.org/dc/terms/subject': {
                     category: ['overview'],
-                    hint: ['The language of the dataset. Resources defined by the Library of Congress (http://id.loc.gov/vocabulary/iso639-1.html, http://id.loc.gov/vocabulary/iso639-2.html) SHOULD be used.'],
-                    viewer: ['LanguageView'],
-                    editor: ['LanguageInput'],
-                    defaultValue: ['http://id.loc.gov/vocabulary/iso639-1/en']
+                    label: ['Keywords'],
+                    hint: ['Tags a dataset with a topic. For the general case, we recommend the use of a DBpedia resource URI (http://dbpedia.org/resource/XXX) to categorise a dataset, where XXX stands for the thing which best describes the main topic of what the dataset is about.'],
+                    allowNewValue: 1,
+                    objectIEditor: ['DBpediaInput'],
+                    objectIViewer: ['BasicDBpediaView'],
+                    asWikipedia: 1,
                 },
                 'http://purl.org/dc/terms/temporal': {
                     label: ['Time coverage'],
@@ -102,224 +179,44 @@ export default {
                         }
                     ]
                 },
-                'http://purl.org/dc/terms/spatial': {
-                    label: ['Geographical coverage'],
+                'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
+                    //it will not affect the sub properties in detail
+                    isHidden: 1,
                     category: ['overview'],
-                    hint: ['The geographical area covered by the dataset.The same metadata could also be used to document the geographical area covered by an entity contained in the dataset in particular. For example we could say that the dataset covers all Eu countries or covers only France and Italy.'],
-                    allowNewValue: 1,
-                    objectReactorType: ['AggregateObjectReactor'],
-                    dataViewType: ['AggregateDataView'],
-                    viewer: ['DBpediaGoogleMapView'],
-                    viewerI: ['BasicDBpediaView'],
-                    asWikipedia: 1,
-                    editor: ['DBpediaInput'],
-                    lookupClass: ['Place']
+                    label: ['Type'],
+                    hint: ['Type of the entity.']
+                },
+                'http://purl.org/dc/terms/title': {
+                    label: ['Title'],
+                    category: ['overview'],
+                    hint: ['The title of the dataset described by this document.'],
+                    objectReactorType: ['IndividualObjectReactor'],
+                    dataViewType: ['IndividualDataView'],
+                    objectIViewer: ['BasicIndividualView'],
+                    objectIEditor: ['BasicIndividualInput']
                 },
                 'http://purl.org/dc/terms/description': {
                     category: ['overview'],
                     label: ['Textual description'],
                     hint: ['A textual description of the dataset.'],
-                    editor: ['BasicTextareaInput']
+                    objectIEditor: ['BasicTextareaInput']
                 },
-                'http://purl.org/dc/terms/subject': {
+                'http://purl.org/dc/terms/language': {
+                    allowNewValue: 1,
+                    label: ['Dataset Language'],
                     category: ['overview'],
-                    label: ['Keywords'],
-                    hint: ['Tags a dataset with a topic. For the general case, we recommend the use of a DBpedia resource URI (http://dbpedia.org/resource/XXX) to categorise a dataset, where XXX stands for the thing which best describes the main topic of what the dataset is about.'],
-                    allowNewValue: 1,
-                    editor: ['DBpediaInput'],
-                    viewer: ['BasicDBpediaView'],
-                    asWikipedia: 1
-                },
-                'http://purl.org/dc/terms/source': {
-                    label: ['Data Source'],
-                    allowNewValue: 1,
-                    category: ['overview'],
-                    hint: ['A related resource from which the dataset is derived. The source should be described using a URI if available, rather than as a literal.']
-                },
-                'http://purl.org/dc/terms/creator': {
-                    allowNewValue: 1,
-                    allowExtension: 1,
-                    category: ['people'],
-                    label: ['Creator'],
-                    hint: ['An entity, such as a person, organisation, or service, that is primarily responsible for creating the dataset. The creator should be described using a URI if available, rather than just providing the name as a literal. ORCID provides a useful service for this.'],
-                    editor: ['DBpediaInput'],
-                    viewer: ['BasicDBpediaView'],
-                    asWikipedia: 1,
-                    extendedViewer: ['BasicIndividualDetailView'],
-                    extensions: [
-                        {
-                            spec: {
-                                propertyURI: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-                                instances: [{value: 'http://xmlns.com/foaf/0.1/Person', valueType: 'uri'}]
-                            },
-                            config: {
-                                hint: ['Type of the entity'],
-                                label: ['Type'],
-                                category: ['people'],
-                                viewer: ['BasicOptionView'],
-                                editor: ['BasicOptionInput'],
-                                options: [
-                                    {label: 'Person', value: 'http://xmlns.com/foaf/0.1/Person'},
-                                    {label: 'Organization', value: 'http://xmlns.com/foaf/0.1/Organization'}
-                                ],
-                                defaultValue: ['http://xmlns.com/foaf/0.1/Person'],
-                                allowUserDefinedValue: 1
-                            }
-                        },
-                        {
-                            spec: {
-                                propertyURI: 'http://www.w3.org/2000/01/rdf-schema#label',
-                                instances: [{value: 'Label', valueType: 'literal'}]
-                            },
-                            config: {
-                                hint: ['A descriptor label for the URI'],
-                                category: ['people'],
-                                label: ['Label']
-                            }
-                        },
-                        {
-                            spec: {
-                                propertyURI: 'http://xmlns.com/foaf/0.1/mbox',
-                                instances: [{value: 'email address', valueType: 'literal'}]
-                            },
-                            config: {
-                                hint: ['A corresponding email address'],
-                                category: ['people'],
-                                label: ['Email']
-                            }
-                        }
-                    ]
-                },
-                'http://purl.org/dc/terms/publisher': {
-                    allowNewValue: 1,
-                    allowExtension: 1,
-                    category: ['people'],
-                    label: ['Publisher'],
-                    hint: ['An entity, such as a person, organisation, or service, that is responsible for making the dataset available. The publisher should be described using a URI if available, rather than just providing the name as a literal.'],
-                    editor: ['DBpediaInput'],
-                    viewer: ['BasicDBpediaView'],
-                    asWikipedia: 1,
-                    extendedViewer: ['BasicIndividualDetailView'],
-                    extensions: [
-                        {
-                            spec: {
-                                propertyURI: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-                                instances: [{value: 'http://xmlns.com/foaf/0.1/Person', valueType: 'uri'}]
-                            },
-                            config: {
-                                hint: ['Type of the entity'],
-                                category: ['people'],
-                                label: ['Type'],
-                                viewer: ['BasicOptionView'],
-                                editor: ['BasicOptionInput'],
-                                options: [
-                                    {label: 'Person', value: 'http://xmlns.com/foaf/0.1/Person'},
-                                    {label: 'Organization', value: 'http://xmlns.com/foaf/0.1/Organization'}
-                                ],
-                                defaultValue: ['http://xmlns.com/foaf/0.1/Person'],
-                                allowUserDefinedValue: 1
-                            }
-                        },
-                        {
-                            spec: {
-                                propertyURI: 'http://www.w3.org/2000/01/rdf-schema#label',
-                                instances: [{value: 'Label', valueType: 'literal'}]
-                            },
-                            config: {
-                                hint: ['A descriptor label for the URI'],
-                                category: ['people'],
-                                label: ['Label']
-                            }
-                        },
-                        {
-                            spec: {
-                                propertyURI: 'http://xmlns.com/foaf/0.1/mbox',
-                                instances: [{value: 'email address', valueType: 'literal'}]
-                            },
-                            config: {
-                                hint: ['A corresponding email address'],
-                                category: ['people'],
-                                label: ['Email']
-                            }
-                        }
-                    ]
-                },
-                'http://purl.org/dc/terms/contributor': {
-                    allowNewValue: 1,
-                    allowExtension: 1,
-                    category: ['people'],
-                    label: ['Contributor'],
-                    hint: ['An entity, such as a person, organisation, or service, that is responsible for making contributions to the dataset. The contributor should be described using a URI if available, rather than just providing the name as a literal.'],
-                    editor: ['DBpediaInput'],
-                    viewer: ['BasicDBpediaView'],
-                    asWikipedia: 1,
-                    extendedViewer: ['BasicIndividualDetailView'],
-                    extensions: [
-                        {
-                            spec: {
-                                propertyURI: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-                                instances: [{value: 'http://xmlns.com/foaf/0.1/Person', valueType: 'uri'}]
-                            },
-                            config: {
-                                hint: ['Type of the entity'],
-                                category: ['people'],
-                                label: ['Type'],
-                                viewer: ['BasicOptionView'],
-                                editor: ['BasicOptionInput'],
-                                options: [
-                                    {label: 'Person', value: 'http://xmlns.com/foaf/0.1/Person'},
-                                    {label: 'Organization', value: 'http://xmlns.com/foaf/0.1/Organization'}
-                                ],
-                                defaultValue: ['http://xmlns.com/foaf/0.1/Person'],
-                                allowUserDefinedValue: 1
-                            }
-                        },
-                        {
-                            spec: {
-                                propertyURI: 'http://www.w3.org/2000/01/rdf-schema#label',
-                                instances: [{value: 'Label', valueType: 'literal'}]
-                            },
-                            config: {
-                                hint: ['A descriptor label for the URI'],
-                                category: ['people'],
-                                label: ['Label']
-                            }
-                        },
-                        {
-                            spec: {
-                                propertyURI: 'http://xmlns.com/foaf/0.1/mbox',
-                                instances: [{value: 'email address', valueType: 'literal'}]
-                            },
-                            config: {
-                                hint: ['A corresponding email address'],
-                                category: ['people'],
-                                label: ['Email']
-                            }
-                        }
-                    ]
-                },
-                'http://purl.org/dc/terms/created': {
-                    label: ['Created date'],
-                    category: ['date'],
-                    hint: ['A point or period of time associated with an event in the life-cycle of the resource. The value should be formatted as date and time format - ISO 8601']
-                },
-                'http://purl.org/dc/terms/issued': {
-                    label: ['Date issued'],
-                    category: ['date'],
-                    hint: ['A point or period of time associated with an event in the life-cycle of the resource. The value should be formatted as date and time format - ISO 8601.']
-                },
-                'http://purl.org/dc/terms/modified': {
-                    label: ['Date modified'],
-                    category: ['date'],
-                    hint: ['A point or period of time associated with an event in the life-cycle of the resource. The value should be formatted as date and time format - ISO 8601']
+                    hint: ['The language of the dataset. Resources defined by the Library of Congress (http://id.loc.gov/vocabulary/iso639-1.html, http://id.loc.gov/vocabulary/iso639-2.html) SHOULD be used.'],
+                    objectIViewer: ['LanguageView'],
+                    objectIEditor: ['LanguageInput'],
+                    defaultValue: ['http://id.loc.gov/vocabulary/iso639-1/en']
                 },
                 'http://purl.org/dc/terms/license': {
                     category: ['legalAspects'],
                     label: ['License'],
                     hint: ['Data without explicit license is a potential legal liability and leaves consumers unclear what the usage conditions are. Therefore, it is very important that publishers make explicit the terms under which the dataset can be used.'],
                     allowNewValue: 1,
-                    viewer: ['BasicOptionView'],
-                    editor: ['BasicOptionInput'],
+                    objectIViewer: ['BasicOptionView'],
+                    objectIEditor: ['BasicOptionInput'],
                     options: [
                         {label: 'Open Data Commons Public Domain Dedication and License (PDDL)', value: 'http://www.opendatacommons.org/licenses/pddl/'},
                         {label: 'Open Data Commons Attribution License', value: 'http://www.opendatacommons.org/licenses/by/'},
@@ -331,87 +228,88 @@ export default {
                     defaultValue: ['http://creativecommons.org/licenses/by-sa/3.0/'],
                     allowUserDefinedValue: 1
                 },
-                'http://purl.org/dc/terms/rights': {
-                    label: ['Rights'],
-                    category: ['legalAspects'],
-                    hint: ['This describes the rights under which the dataset can be used/reused.']
-                },
-                'http://purl.org/dc/terms/format': {
-                    label: ['Dataset File format'],
+                'http://rdf.risis.eu/metadata/table': {
+                    category: ['structuralAspects'],
+                    label: ['Tables'],
+                    hint: ['The specification of tables in your dataset.'],
                     allowNewValue: 1,
-                    category: ['technicalAspects'],
-                    hint: ['Technical features of a dataset.'],
-                    editor: ['MediaTypeInput'],
-                    allowUserDefinedValue: 1
-                },
-                'http://rdfs.org/ns/void#dataDump': {
-                    label: ['Download address'],
-                    category: ['technicalAspects'],
-                    hint: ['If the dataset is available, then its location can be announced using this attribute. If the dataset is split into multiple dumps, then several values of this property can be provided.']
-                },
-                'http://rdfs.org/ns/void#exampleResource': {
-                    label: ['Example of the resource'],
-                    category: ['overview'],
-                    hint: ['For documentation purposes, it can be helpful to name some representative example entities for a dataset. Looking up these entities allows users to quickly get an impression of the kind of data that is present in a dataset.'],
-                    allowNewValue: 1
-                },
-                'http://rdfs.org/ns/void#vocabulary': {
-                    isHidden: 1,
-                    label: ['Vocabulary'],
-                    category: ['overview'],
-                    hint: ['Vocabularies used in the dataset.']
-                },
-                'http://www.w3.org/ns/dcat#byteSize': {
-                    label: ['Size of the dataset'],
-                    category: ['technicalAspects'],
-                    hint: ['The size of the dataset. For example we could say that the dataset is 1.0 GB or 1024.0 MB'],
-                    editor: ['FileSizelInput'],
-                    viewer: ['FileSizeView']
-                },
-                'http://www.w3.org/ns/dcat#accessURL': {
-                    label: ['Access URL'],
-                    category: ['technicalAspects'],
-                    hint: ['A landing page, feed, SPARQL endpoint or other type of resource that gives access to the distribution of the dataset'],
-                    allowNewValue: 1
-                },
-                'http://xmlns.com/foaf/0.1/homepage': {
-                    label: ['Home Page'],
-                    category: ['overview'],
-                    hint: ['Web page where further information about the dataset can be found.']
-                },
-                'http://xmlns.com/foaf/0.1/page': {
-                    label: ['Additional web pages'],
-                    category: ['overview'],
-                    hint: ['Additional web pages with relevant information that can not be considered the homepage of the dataset.'],
-                    allowNewValue: 1
-                },
-                'http://vocab.org/waiver/terms/norms': {
-                    label: ['Terms of use'],
-                    category: ['legalAspects'],
-                    hint: ['Norms are non-binding conditions of use that publishers would like to encourage the users of their data to adopt. representing the community norms for access and use of a resource.']
-                },
-                'http://vocab.org/waiver/terms/waiver': {
-                    label: ['Waiver'],
-                    category: ['legalAspects'],
-                    hint: ['To the extent possible under law, The Example Organisation has waived all copyright and related or neighboring rights to The Example Dataset.'],
-                    editor: ['BasicTextareaInput']
-                },
-                'http://purl.org/pav/version': {
-                    isHidden: 1,
-                    label: ['Version'],
-                    category: ['overview'],
-                    hint: ['The version of the dataset described by this document']
+                    allowExtension: 1,
+                    hasBlankNode: 1,
+                    extensions: [
+                        {
+                            spec: {
+                                propertyURI: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+                                instances: [{value: 'http://rdf.risis.eu/metadata/Table', valueType: 'uri'}]
+                            },
+                            config: {
+                                label: ['Type'],
+                                category: ['structuralAspects'],
+                                objectIViewer: ['BasicOptionView'],
+                                objectIEditor: ['BasicOptionInput'],
+                                options: [
+                                    {label: 'Table', value: 'http://rdf.risis.eu/metadata/Table'},
+                                ],
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'http://xmlns.com/foaf/0.1/name',
+                                instances: [{value: '', valueType: 'literal'}]
+                            },
+                            config: {
+                                label: ['Table Name'],
+                                category: ['structuralAspects'],
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'http://purl.org/dc/terms/description',
+                                instances: [{value: '', valueType: 'literal'}]
+                            },
+                            config: {
+                                label: ['Description'],
+                                objectIEditor: ['BasicTextareaInput'],
+                                category: ['structuralAspects']
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'http://rdf.risis.eu/metadata/records',
+                                instances: [{value: '', valueType: 'literal'}]
+                            },
+                            config: {
+                                label: ['Total Number of Records'],
+                                category: ['structuralAspects'],
+                                placeholder: ['Enter the total number of records...']
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'http://rdf.risis.eu/metadata/attributes',
+                                instances: [{value: '', valueType: 'literal'}]
+                            },
+                            config: {
+                                label: ['Total Number of Attributes'],
+                                category: ['structuralAspects'],
+                                placeholder: ['Enter the total number of attributes...']
+                            }
+                        },
+                        {
+                            spec: {
+                                propertyURI: 'http://rdf.risis.eu/metadata/attribute',
+                                instances: [{value: '', valueType: 'literal'}]
+                            },
+                            config: {
+                                label: ['Attributes'],
+                                category: ['structuralAspects'],
+                                placeholder: ['Enter the attribute name...'],
+                                allowNewValue: 1
+                            }
+                        }
+                    ]
                 }
-
-            }
-        },
-        //for each graph name, you can define custom configs.
-        //if no custom config is defined for a specific graph, the generic config will be used.
-        'http://ld-r.org/users': {
-            //only allow to view data -> disable edit
-            readOnly: 0,
-            useCategories: 0,
-            config: {
+            },
+            'https://github.com/ali1k/ld-reactor/blob/master/plugins/authentication/schema/users.ttl#': {
                 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
                     isHidden: 1
                 },
@@ -431,8 +329,8 @@ export default {
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#password': {
                     label: ['Password'],
-                    viewer: ['PasswordView'],
-                    editor: ['PasswordInput']
+                    objectIViewer: ['PasswordView'],
+                    objectIEditor: ['PasswordInput']
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfGraph': {
                     label: ['Editor of Graph'],
@@ -472,57 +370,41 @@ export default {
                     ]
                 },
                 'http://xmlns.com/foaf/0.1/organization': {
-                    label: ['Institution Name'],
+                    label: ['Organization'],
                     allowNewValue: 1,
-                    viewer: ['BasicDBpediaView'],
-                    editor: ['DBpediaInput']
-                },
-                'http://www.w3.org/2001/vcard-rdf/3.0#ROLE': {
-                    label: ['Position'],
-                    hint: ['Position/Role in the organization. E.g. professor, lecturer, phd student, post doc, researcher, other...']
+                    objectIViewer: ['BasicDBpediaView'],
+                    objectIEditor: ['DBpediaInput']
                 }
-            }
-        }
-    },
-    //for Faceted Browser it is required to fill im the following configuration
-    facetsConfig: {
-        'generic': {
-            list: [
-                'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
-            ],
-            config: {
-
             }
         },
-        'http://risis.eu/cordisH2020': {
-            list: [
-                'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-                'http://risis.eu/cordisH2020/vocab/projectParticipant',
-                'http://risis.eu/cordisH2020/vocab/fundingScheme',
-                'http://risis.eu/cordisH2020/vocab/topic',
-                'http://risis.eu/cordisH2020/vocab/totalCost',
-                'http://risis.eu/cordisH2020/vocab/callID',
-                'http://rdf-vocabulary.ddialliance.org/discovery#startDate',
-                'http://risis.eu/cordisH2020/vocab/durationMonths'
-            ],
-            config: {
-                'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
-                    label: ['Type'],
-                    hint: ['Type of the resource under investigation.']
-                },
-                'http://risis.eu/cordisH2020/vocab/projectParticipant': {
-                    label: ['Participant'],
-                    hasLinkedValue: 1
-                },
-                'http://risis.eu/cordisH2020/vocab/fundingScheme': {
-                    label: ['Funding Scheme'],
-                    hasLinkedValue: 1
-                },
-                'http://risis.eu/cordisH2020/vocab/topic': {
-                    label: ['Topic'],
-                    hasLinkedValue: 1
-                }
-            }
+        dataset_object: {
+
+        },
+        resource_property: {
+
+        },
+        resource_object: {
+
+        },
+        property_object: {
+
+        },
+        //---------depth 3------------
+        dataset_resource_property: {
+
+        },
+        dataset_resource_object: {
+
+        },
+        dataset_property_object: {
+
+        },
+        resource_property_object: {
+
+        },
+        //---------depth 4------------
+        dataset_resource_property_object: {
+
         }
     }
 };

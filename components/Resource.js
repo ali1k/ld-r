@@ -56,16 +56,17 @@ class Resource extends React.Component {
         return property;
     }
     render() {
-        let readOnly;
+        let readOnly = 1;
         let user = this.context.getUser();
         let self = this;
         let accessLevel, isWriteable, configReadOnly;
-        //if readOnly is not defined make it true
-        if(typeof self.props.readOnly === 'undefined'){
-            readOnly = 1;
-        }else{
-            //get readOnly property for the graphName
+        if(self.props.readOnly !== 'undefined'){
             readOnly = self.props.readOnly;
+        }else{
+            //check the config for resource
+            if(self.props.config && self.props.config.readOnly !== 'undefined'){
+                readOnly = self.props.config.readOnly;
+            }
         }
         //create a list of properties
         let list = this.props.properties.map(function(node, index) {

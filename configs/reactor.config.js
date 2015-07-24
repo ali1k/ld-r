@@ -25,7 +25,7 @@ export default {
                 //only allow to view data -> disable edit
                 readOnly: 1,
                 //used for pagination in resource list
-                maxNumberOfResourcesOnPage: 100,
+                maxNumberOfResourcesOnPage: 20,
                 datasetReactor: ['Dataset']
             },
             'http://ld-r.org/users': {
