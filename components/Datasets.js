@@ -28,6 +28,23 @@ class Datasets extends React.Component {
                 }
             }
         });
+        //if only facet is set
+        for(let graph in facets){
+            if(graph !== authGraphName[0] && graph !== 'generic'){
+                if(dss.indexOf(graph) === -1){
+                    brws = '';
+                    dfl = '';
+                    if(graph === defaultGraphName[0]){
+                        dfl = <i className="ui green flag icon" title="default dataset"></i>;
+                    }
+                    if(dss.indexOf(graph) === -1){
+                        brws = <a className="ui label" href={'/browse/' + encodeURIComponent(graph)} title="browse"><i className="zoom icon"></i>browse</a>;
+                        dss.push(graph);
+                        output.push(<div className="ui item" key={graph}> <div className="content"> <i className="ui blue icon cubes"></i> <a href={'/dataset/1/' + encodeURIComponent(graph)} title="go to resource list">{graph}</a> {brws} {dfl}</div> </div>);
+                    }
+                }
+            }
+        }
         let info = <div className="ui blue message">
                         The list contains only the datasets for which at least one <b>config scope</b> is found!
                    </div>;

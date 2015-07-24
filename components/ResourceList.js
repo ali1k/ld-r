@@ -72,7 +72,7 @@ class ResourceList extends React.Component {
         let graphName = this.props.graphName;
         let userAccess, title, list, dbClass = 'blue cube icon';
         if(!this.props.resources.length){
-            list = <div className="ui warning message"><div className="header"> There was no resource in the selected dataset! Either add resources to your dataset or go to another dataset which has resources...</div></div>;
+            list = <div className="ui warning message"><div className="header"> There was no resource in the selected dataset! This might be due to the connection problems. Please check the connection parameters of your dataset's Sparql endpoint or add resources to your dataset...</div></div>;
         }else{
             list = this.props.resources.map((node, index) => {
                 title = node.title ? node.title : (node.label ? node.label : self.getPropertyLabel(node.v));

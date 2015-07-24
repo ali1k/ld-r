@@ -35,10 +35,8 @@ class CheckboxItem extends React.Component {
     render() {
         let title, c;
         let graphName = this.props.graphName;
-        if(this.props.config && this.props.config.browserViewer){
+        if(this.props.config && this.props.config.objectIViewer){
             c = this.props.config;
-            //we simulate viewer for individualDataView
-            c.viewer = this.props.config.browserViewer;
             title = <ObjectIViewer graphName={this.props.graphName} spec={this.props.spec} config={c}/>;
         }else{
             title = this.props.spec.value;
