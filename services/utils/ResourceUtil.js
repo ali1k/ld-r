@@ -138,7 +138,7 @@ class ResourceUtil{
         });
         output.forEach(function(el) {
           if(propIndex[el.propertyURI]){
-            finalOutput.push({spec:{propertyURI: el.propertyURI, property: el.property, config: el.config, instances: propIndex[el.propertyURI]}});
+            finalOutput.push({config: el.config, spec:{propertyURI: el.propertyURI, property: el.property, instances: propIndex[el.propertyURI]}});
             propIndex[el.propertyURI]=null;
           }
         });

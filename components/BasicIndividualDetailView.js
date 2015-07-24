@@ -11,7 +11,7 @@ class BasicIndividualDetailView extends React.Component {
         let list = this.props.spec.extendedViewData.map(function(node, index) {
             let llist = node.spec.instances.map(function(instance, index2){
                 return (
-                    <ObjectIViewer key={index + '_' + index2} spec={instance} config={node.spec.config} graphName={self.props.graphName} resource={self.props.spec.value} property={node.spec.propertyURI}/>
+                    <ObjectIViewer key={index + '_' + index2} spec={instance} config={node.config} graphName={self.props.graphName} resource={self.props.spec.value} property={node.spec.propertyURI}/>
                 );
             });
             return (
@@ -19,7 +19,7 @@ class BasicIndividualDetailView extends React.Component {
                     <div className="ui form grid">
                         <div className="ui horizontal list">
                             <div className="item">
-                                <PropertyHeader spec={node.spec} config={node.spec.config} size="4" />
+                                <PropertyHeader spec={node.spec} config={node.config} size="4" />
                             </div>
                         </div>
                         <div className="ui dividing header"></div>
