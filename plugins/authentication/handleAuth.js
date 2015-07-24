@@ -109,10 +109,10 @@ module.exports = function handleAuthentication(server) {
                          //register as new user
                          console.log('start registration');
                          var rnd = Math.round(+new Date() / 1000);
-                         var resourceURI = generalConfig.userResourceDomain + '/user/' + rnd;
-                         var dresourceURI = generalConfig.userResourceDomain + '/resource/' + rnd;
-                         var dgraphURI = generalConfig.userResourceDomain + '/graph/' + rnd;
-                         var blanknode = generalConfig.userResourceDomain + '/editorship/' + rnd;
+                         var resourceURI = generalConfig.baseResourceDomain + '/user/' + rnd;
+                         var dresourceURI = generalConfig.baseResourceDomain + '/resource/' + rnd;
+                         var dgraphURI = generalConfig.baseResourceDomain + '/graph/' + rnd;
+                         var blanknode = generalConfig.baseResourceDomain + '/editorship/' + rnd;
                          var tmpE= [];
                          var isActive = generalConfig.enableUserConfirmation? 0 : 1;
                          var date = new Date();

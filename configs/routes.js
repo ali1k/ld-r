@@ -2,7 +2,7 @@ import loadDataset from '../actions/loadDataset';
 import loadResource from '../actions/loadResource';
 import loadUsersList from '../actions/loadUsersList';
 import loadFacets from '../actions/loadFacets';
-import {appFullTitle, appShortTitle, authGraphName, userResourceDomain} from '../configs/general';
+import {appFullTitle, appShortTitle, authGraphName, baseResourceDomain} from '../configs/general';
 
 export default {
     home: {
@@ -94,7 +94,7 @@ export default {
         label: 'User',
         action: (context, payload, done) => {
             let category = 0;
-            context.executeAction(loadResource, { dataset: authGraphName, resource: userResourceDomain + '/user/' + decodeURIComponent(payload.get('params').get('id')), category: category}, done);
+            context.executeAction(loadResource, { dataset: authGraphName, resource: baseResourceDomain + '/user/' + decodeURIComponent(payload.get('params').get('id')), category: category}, done);
         }
     },
     users: {

@@ -9,8 +9,8 @@ export default {
     enableAuthentication: 0,
     //graph that stores users data, must be loaded beforehand
     authGraphName: ['http://ld-r.org/users'],
-    //the domain name under which user resources will be defined
-    userResourceDomain: ['http://ld-r.org/user'],
+    //the domain name under which basic dynamic resources and user resources will be defined
+    baseResourceDomain: ['http://ld-r.org'],
     //will allow super users to confirm and activate regiastered users
     enableUserConfirmation: 0,
     //will enable email notifications

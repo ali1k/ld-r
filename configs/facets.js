@@ -102,7 +102,7 @@ export default {
             config: {
                 'http://www.geonames.org/ontology#countryCode': {
                     label: ['Country'],
-                    browserViewer: ['TwoLetterCountryView']
+                    objectIViewer: ['TwoLetterCountryView']
                 }
             }
         },
