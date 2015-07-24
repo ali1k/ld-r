@@ -1,5 +1,5 @@
 import React from 'react';
-import {enableAuthentication} from '../configs/reactor';
+import {enableAuthentication} from '../configs/general';
 import ResourceStore from '../stores/ResourceStore';
 import {connectToStores} from 'fluxible-addons-react';
 import Resource from './Resource';

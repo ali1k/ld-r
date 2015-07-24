@@ -1,6 +1,6 @@
 'use strict';
 import {getHTTPOptions} from './utils/helpers';
-import {defaultGraphName, enableAuthentication} from '../configs/reactor';
+import {defaultGraphName, enableAuthentication} from '../configs/general';
 import DatasetQuery from './sparql/DatasetQuery';
 import DatasetUtil from './utils/DatasetUtil';
 import Configurator from './utils/Configurator';

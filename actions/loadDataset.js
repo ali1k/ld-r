@@ -1,4 +1,4 @@
-import {appFullTitle} from '../configs/reactor';
+import {appFullTitle} from '../configs/general';
 
 export default function loadDataset(context, payload, done) {
     context.service.read('dataset.resourcesByType', payload, {timeout: 20 * 1000}, function (err, res) {

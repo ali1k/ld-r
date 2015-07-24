@@ -16,7 +16,7 @@ import {navigateAction} from 'fluxible-router';
 import handleAuthentication from './plugins/authentication/handleAuth';
 //required for export resources
 import handleExport from './plugins/export/handleExport';
-import {enableAuthentication} from './configs/reactor';
+import {enableAuthentication} from './configs/general';
 import session from 'express-session';
 import hogan from 'hogan-express';
 import debugLib from 'debug';

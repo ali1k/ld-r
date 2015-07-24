@@ -8,10 +8,10 @@ passportConfig.enable(passport);
 var handleEmail = require('../../plugins/email/handleEmail');
 var rp = require('request-promise');
 var config = require('../../configs/server');
-var reactorConfig = require('../../configs/reactor');
+var generalConfig = require('../../configs/general');
 var httpOptions, g;
-if(config.sparqlEndpoint[reactorConfig.authGraphName[0]]){
-    g = reactorConfig.authGraphName[0];
+if(config.sparqlEndpoint[generalConfig.authGraphName[0]]){
+    g = generalConfig.authGraphName[0];
 }else{
     //go for generic SPARQL endpoint
     g = 'generic';
@@ -21,8 +21,8 @@ httpOptions = {
   port: config.sparqlEndpoint[g].port,
   path: config.sparqlEndpoint[g].path
 };
-var appShortTitle = reactorConfig.appShortTitle;
-var appFullTitle = reactorConfig.appFullTitle;
+var appShortTitle = generalConfig.appShortTitle;
+var appFullTitle = generalConfig.appFullTitle;
 
 var outputFormat = 'application/sparql-results+json';
 module.exports = function handleAuthentication(server) {
@@ -57,11 +57,11 @@ module.exports = function handleAuthentication(server) {
         res.redirect('/');
     });
     server.get('/profile/:id', function(req, res) {
-        res.redirect('/dataset/' + encodeURIComponent(reactorConfig.authGraphName)+'/resource/'+ encodeURIComponent(req.params.id));
+        res.redirect('/dataset/' + encodeURIComponent(generalConfig.authGraphName)+'/resource/'+ encodeURIComponent(req.params.id));
     });
     server.get('/confirmation', function(req, res) {
         if(!req.isAuthenticated()){
-            res.render('confirmation', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, needsConfirmation: reactorConfig.enableUserConfirmation});
+            res.render('confirmation', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, needsConfirmation: generalConfig.enableUserConfirmation});
         }else{
             return res.redirect('/');
         }
@@ -93,7 +93,7 @@ module.exports = function handleAuthentication(server) {
              /*jshint multistr: true */
              var query = '\
              PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-             SELECT count(?s) AS ?exists FROM <'+ reactorConfig.authGraphName[0] +'> WHERE { \
+             SELECT count(?s) AS ?exists FROM <'+ generalConfig.authGraphName[0] +'> WHERE { \
                { \
                    ?s a foaf:Person . \
                    ?s foaf:accountName "'+ req.body.username +'" .\
@@ -109,12 +109,12 @@ module.exports = function handleAuthentication(server) {
                          //register as new user
                          console.log('start registration');
                          var rnd = Math.round(+new Date() / 1000);
-                         var resourceURI = reactorConfig.dynamicResourceDomain + '/user/' + rnd;
-                         var dresourceURI = reactorConfig.dynamicResourceDomain + '/resource/' + rnd;
-                         var dgraphURI = reactorConfig.dynamicResourceDomain + '/graph/' + rnd;
-                         var blanknode = reactorConfig.dynamicResourceDomain + '/editorship/' + rnd;
+                         var resourceURI = generalConfig.userResourceDomain + '/user/' + rnd;
+                         var dresourceURI = generalConfig.userResourceDomain + '/resource/' + rnd;
+                         var dgraphURI = generalConfig.userResourceDomain + '/graph/' + rnd;
+                         var blanknode = generalConfig.userResourceDomain + '/editorship/' + rnd;
                          var tmpE= [];
-                         var isActive = reactorConfig.enableUserConfirmation? 0 : 1;
+                         var isActive = generalConfig.enableUserConfirmation? 0 : 1;
                          var date = new Date();
                          var currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
                          /*jshint multistr: true */
@@ -122,18 +122,18 @@ module.exports = function handleAuthentication(server) {
                          PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
                          PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
                          PREFIX dcterms: <http://purl.org/dc/terms/> \
-                         INSERT DATA INTO <'+ reactorConfig.authGraphName[0] +'> { \
+                         INSERT DATA INTO <'+ generalConfig.authGraphName[0] +'> { \
                          <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; foaf:mbox <'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfGraph <'+dgraphURI+'>; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1>;ldr:editorOfProperty <'+blanknode+'2>; ldr:editorOfProperty <'+blanknode+'3>; ldr:editorOfProperty <'+blanknode+'4> .} \
-                         INSERT DATA INTO <'+ reactorConfig.authGraphName[0] +'> { \
+                         INSERT DATA INTO <'+ generalConfig.authGraphName[0] +'> { \
                              <'+blanknode+'1> ldr:resource <'+resourceURI+'> ; ldr:property foaf:firstName . \
                          } \
-                         INSERT DATA INTO <'+ reactorConfig.authGraphName[0] +'> { \
+                         INSERT DATA INTO <'+ generalConfig.authGraphName[0] +'> { \
                              <'+blanknode+'2> ldr:resource <'+resourceURI+'> ; ldr:property foaf:lastName . \
                          } \
-                         INSERT DATA INTO <'+ reactorConfig.authGraphName[0] +'> { \
+                         INSERT DATA INTO <'+ generalConfig.authGraphName[0] +'> { \
                              <'+blanknode+'3> ldr:resource <'+resourceURI+'> ; ldr:property foaf:organization . \
                          } \
-                         INSERT DATA INTO <'+ reactorConfig.authGraphName[0] +'> { \
+                         INSERT DATA INTO <'+ generalConfig.authGraphName[0] +'> { \
                              <'+blanknode+'4> ldr:resource <'+resourceURI+'> ; ldr:property ldr:password . \
                          } \
                          ';
@@ -143,7 +143,7 @@ module.exports = function handleAuthentication(server) {
                          rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(){
                              console.log('User is created!');
                              //send email notifications
-                             if(reactorConfig.enableEmailNotifications){
+                             if(generalConfig.enableEmailNotifications){
                                  handleEmail.sendMail('userRegistration', req.body.email, '', '', '', '');
                              }
                              return res.redirect('/confirmation');

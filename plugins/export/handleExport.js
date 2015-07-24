@@ -1,10 +1,10 @@
 'use strict';
 var rp = require('request-promise');
 var config = require('../../configs/server');
-var reactorConfig = require('../../configs/reactor');
+var generalConfig = require('../../configs/general');
 var httpOptions, g;
-if(config.sparqlEndpoint[reactorConfig.authGraphName[0]]){
-    g = reactorConfig.authGraphName[0];
+if(config.sparqlEndpoint[generalConfig.authGraphName[0]]){
+    g = generalConfig.authGraphName[0];
 }else{
     //go for generic SPARQL endpoint
     g = 'generic';
@@ -14,8 +14,8 @@ httpOptions = {
   port: config.sparqlEndpoint[g].port,
   path: config.sparqlEndpoint[g].path
 };
-var appShortTitle = reactorConfig.appShortTitle;
-var appFullTitle = reactorConfig.appFullTitle;
+var appShortTitle = generalConfig.appShortTitle;
+var appFullTitle = generalConfig.appFullTitle;
 var exportResource = function(format, graphName, resourceURI, req, res) {
     var outputFormat;
     switch (format) {
@@ -78,7 +78,7 @@ module.exports = function handleExport(server) {
         var format = req.params.t;
         var graphName = req.params.g;
         var resourceURI = req.params.r;
-        if(reactorConfig.enableAuthentication){
+        if(generalConfig.enableAuthentication){
             if(!req.isAuthenticated()){
                 res.render('export', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, data:'', errorMsg: 'Permission denied! Please login to system to access the page...'});
             }else{

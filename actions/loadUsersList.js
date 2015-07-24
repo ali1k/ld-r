@@ -1,4 +1,4 @@
-import {appFullTitle} from '../configs/reactor';
+import {appFullTitle} from '../configs/general';
 export default function loadUsersList(context, payload, done) {
     context.service.read('admin.userslist', payload, {}, function (err, res) {
         if (err) {

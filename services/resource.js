@@ -1,6 +1,6 @@
 'use strict';
 import {getHTTPOptions} from './utils/helpers';
-import {defaultGraphName, enableLogs, enableAuthentication, authGraphName} from '../configs/reactor';
+import {defaultGraphName, enableLogs, enableAuthentication, authGraphName} from '../configs/general';
 import ResourceQuery from './sparql/ResourceQuery';
 import ResourceUtil from './utils/ResourceUtil';
 import Configurator from './utils/Configurator';

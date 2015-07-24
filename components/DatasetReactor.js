@@ -1,7 +1,7 @@
 import React from 'react';
 import DatasetStore from '../stores/DatasetStore';
 import {connectToStores} from 'fluxible-addons-react';
-import {enableAuthentication} from '../configs/reactor';
+import {enableAuthentication} from '../configs/general';
 import getResourcesCount from '../actions/getResourcesCount';
 import Dataset from './Dataset';
 

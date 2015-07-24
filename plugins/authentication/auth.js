@@ -1,10 +1,10 @@
 'use strict';
 var rp = require('request-promise');
 var config = require('../../configs/server');
-var reactorConfig = require('../../configs/reactor');
+var generalConfig = require('../../configs/general');
 var httpOptions, g;
-if(config.sparqlEndpoint[reactorConfig.authGraphName[0]]){
-    g = reactorConfig.authGraphName[0];
+if(config.sparqlEndpoint[generalConfig.authGraphName[0]]){
+    g = generalConfig.authGraphName[0];
 }else{
     //go for generic SPARQL endpoint
     g = 'generic';
@@ -35,7 +35,7 @@ module.exports = {
       var query = '\
       PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
       PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-      SELECT ?p ?o ?pr ?pp FROM <'+ reactorConfig.authGraphName[0] +'> WHERE { \
+      SELECT ?p ?o ?pr ?pp FROM <'+ generalConfig.authGraphName[0] +'> WHERE { \
         { \
             <'+id+'> a foaf:Person . \
             <'+id+'> ?p ?o . \
@@ -71,7 +71,7 @@ module.exports = {
             });
             //to not show password in session
             delete user.password;
-            user.graphName = reactorConfig.authGraphName[0];
+            user.graphName = generalConfig.authGraphName[0];
             user.id = id;
             return fn(null, user);
           }
@@ -86,7 +86,7 @@ module.exports = {
       var query = '\
       PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
       PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-      SELECT ?s ?p ?o FROM <'+ reactorConfig.authGraphName[0] +'> WHERE { \
+      SELECT ?s ?p ?o FROM <'+ generalConfig.authGraphName[0] +'> WHERE { \
         { \
             ?s a foaf:Person . \
             ?s foaf:accountName "'+ username +'" .\

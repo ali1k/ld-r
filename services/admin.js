@@ -1,6 +1,6 @@
 'use strict';
 import {getHTTPOptions} from './utils/helpers';
-import {authGraphName, enableAuthentication, enableEmailNotifications} from '../configs/reactor';
+import {authGraphName, enableAuthentication, enableEmailNotifications} from '../configs/general';
 import {sendMail} from '../plugins/email/handleEmail';
 import AdminQuery from './sparql/AdminQuery';
 import AdminUtil from './utils/AdminUtil';
