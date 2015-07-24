@@ -15,7 +15,7 @@ class ResourceUtil{
     }
     parseProperties(body, graphName, resourceURI, category, propertyPath, usePropertyCategories, propertyCategories) {
         let configurator = new Configurator();
-        let configExceptional = {},config = {}, title = '', resourceType = '';
+        let configExceptional = {}, config = {}, title = '', resourceType = '';
         //handle properties config in different levels
         //todo: now only handles level 2 properties should be extended later if needed
         let exceptional = 0;
@@ -52,11 +52,13 @@ class ResourceUtil{
             if(!exceptional){
                 config = configurator.preparePropertyConfig(graphName, resourceURI, el.p.value);
             }else{
-                configExceptional.extensions.forEach(function(ex){
-                    if(ex.spec.propertyURI === el.p.value){
-                        config = ex.config;
-                    }
-                });
+                if(configExceptional && configExceptional.extensions){
+                    configExceptional.extensions.forEach(function(ex){
+                        if(ex.spec.propertyURI === el.p.value){
+                            config = ex.config;
+                        }
+                    });
+                }
             }
             //handle categories
             if(filterByCategory){
@@ -110,7 +112,7 @@ class ResourceUtil{
     parseObjectProperties(body, graphName, resourceURI, propertyURI) {
         let title, objectType = '';
         let configurator = new Configurator();
-        let config, configExceptional = configurator.preparePropertyConfig(graphName, resourceURI, propertyURI);
+        let config = {}, configExceptional = configurator.preparePropertyConfig(graphName, resourceURI, propertyURI);
         let self=this;
         let parsed = JSON.parse(body);
         let output=[], propIndex={}, finalOutput=[];
@@ -123,11 +125,13 @@ class ResourceUtil{
             }else if (el.p.value === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type') {
                 objectType = el.o.value;
             }
-            configExceptional.extensions.forEach(function(ex){
-                if(ex.spec.propertyURI === el.p.value){
-                    config = ex.config;
-                }
-            });
+            if(configExceptional && configExceptional.extensions){
+                configExceptional.extensions.forEach(function(ex){
+                    if(ex.spec.propertyURI === el.p.value){
+                        config = ex.config;
+                    }
+                });
+            }
             let property=self.getPropertyLabel(el.p.value);
             if(propIndex[el.p.value]){
                 propIndex[el.p.value].push({value: el.o.value, valueType: el.o.type, dataType:(el.o.type==='typed-literal'?el.o.datatype:''), extended:parseInt(el.hasExtendedValue.value)});
