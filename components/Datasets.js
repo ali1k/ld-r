@@ -1,5 +1,6 @@
 import React from 'react';
-import {defaultGraphName, authGraphName, config} from '../configs/reactor';
+import {defaultGraphName, authGraphName} from '../configs/general';
+import {config} from '../configs/reactor';
 
 class Datasets extends React.Component {
     componentDidMount() {
