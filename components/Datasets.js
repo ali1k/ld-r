@@ -1,6 +1,7 @@
 import React from 'react';
 import {defaultGraphName, authGraphName} from '../configs/general';
 import {config} from '../configs/reactor';
+import {facets} from '../configs/facets';
 
 class Datasets extends React.Component {
     componentDidMount() {
@@ -8,17 +9,21 @@ class Datasets extends React.Component {
     }
     render() {
         let sources = ['dataset', 'dataset_resource', 'dataset_property', 'dataset_object', 'dataset_resource_property', 'dataset_resource_object', 'dataset_property_object', 'dataset_resource_property_object'];
-        let dss = [], dfl, output = [];
+        let dss = [], dfl, brws, output = [];
         sources.forEach(function(s){
             for(let graph in config[s]){
                 if(graph !== authGraphName[0] && graph !== 'generic'){
                     dfl = '';
+                    brws = '';
                     if(graph === defaultGraphName[0]){
                         dfl = <i className="ui green flag icon" title="default dataset"></i>;
                     }
                     if(dss.indexOf(graph) === -1){
+                        if(facets[graph]){
+                            brws = <a className="ui label" href={'/browse/' + encodeURIComponent(graph)} title="browse"><i className="zoom icon"></i>browse</a>;
+                        }
                         dss.push(graph);
-                        output.push(<div className="ui item" key={graph}> <div className="content"> <i className="ui blue icon cubes"></i> <a href={'/dataset/1/' + encodeURIComponent(graph)} title="go to resource list">{graph}</a> {dfl}</div> </div>);
+                        output.push(<div className="ui item" key={graph}> <div className="content"> <i className="ui blue icon cubes"></i> <a href={'/dataset/1/' + encodeURIComponent(graph)} title="go to resource list">{graph}</a> {brws} {dfl}</div> </div>);
                     }
                 }
             }

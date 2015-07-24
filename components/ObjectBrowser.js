@@ -1,7 +1,7 @@
 import React from 'react';
 import CheckboxItem from './CheckboxItem';
 
-class DataBrowse extends React.Component {
+class ObjectBrowser extends React.Component {
     handleSelect(status, value) {
         this.props.onSelect(status, value);
     }
@@ -9,8 +9,8 @@ class DataBrowse extends React.Component {
         let self = this;
         let browser, browserConfig, output;
         if(this.props.config){
-            if(this.props.config.browser){
-                browserConfig = this.props.config.browser[0];
+            if(this.props.config.objectBrowser){
+                browserConfig = this.props.config.objectBrowser[0];
             }
         }
         switch(browserConfig){
@@ -30,11 +30,11 @@ class DataBrowse extends React.Component {
         }
         output = browser;
         return (
-            <div className="ui" ref="dataBrowseReactor">
+            <div className="ui" ref="objectBrowser">
                 {output}
             </div>
         );
     }
 }
 
-export default DataBrowse;
+export default ObjectBrowser;

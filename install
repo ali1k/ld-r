@@ -4,6 +4,7 @@ echo "Installing configuration files..."
 cp configs/general.config.js configs/general.js
 cp configs/server.config.js configs/server.js
 cp configs/reactor.config.js configs/reactor.js
+cp configs/facets.config.js configs/facets.js
 cp plugins/email/config.sample.js plugins/email/config.js
 
 echo "Installing bower packages..."

@@ -1,7 +1,7 @@
 import React from 'react';
 import Facet from './Facet';
 import {NavLink} from 'fluxible-router';
-import {propertiesConfig, facetsConfig} from '../configs/reactor';
+import {facets} from '../configs/facets';
 import FacetedBrowserStore from '../stores/FacetedBrowserStore';
 import {connectToStores} from 'fluxible-addons-react';
 import loadFacets from '../actions/loadFacets';
@@ -31,26 +31,17 @@ class FacetedBrowser extends React.Component {
         if(!g){
             g = 'generic';
         }
-        let hasFacetConfig = facetsConfig[g] ? (facetsConfig[g].config ? (facetsConfig[g].config[propertyURI] ? 1 : 0) : 0) : 0;
+        let hasFacetConfig = facets[g] ? (facets[g].config ? (facets[g].config[propertyURI] ? 1 : 0) : 0) : 0;
         if(hasFacetConfig){
             //first check the custom facets config
-            selectedConfig = facetsConfig[g].config[propertyURI];
+            selectedConfig = facets[g].config[propertyURI];
         }else{
             //second: check the generic facet config
-            let hasGenericFacetConfig = facetsConfig.generic.config ? (facetsConfig.generic.config[propertyURI] ? 1 : 0) : 0;
+            let hasGenericFacetConfig = facets.generic.config ? (facets.generic.config[propertyURI] ? 1 : 0) : 0;
             if(hasGenericFacetConfig){
-                selectedConfig = facetsConfig.generic.config[propertyURI];
+                selectedConfig = facets.generic.config[propertyURI];
             }else{
-                let hasPropConfig = propertiesConfig ? (propertiesConfig[g] ? (propertiesConfig[g].config ? 1 : 0) : 0) : 0;
-                if(hasPropConfig && propertiesConfig[g].config[propertyURI]){
-                    selectedConfig = propertiesConfig[g].config[propertyURI];
-                }else{
-                    if(propertiesConfig.generic.config[propertyURI]){
-                        selectedConfig = propertiesConfig.generic.config[propertyURI];
-                    }else{
-                        selectedConfig = {};
-                    }
-                }
+                selectedConfig = {};
             }
         }
         return selectedConfig;
@@ -63,10 +54,10 @@ class FacetedBrowser extends React.Component {
         if(!g){
             g = 'generic';
         }
-        if(!facetsConfig[g]){
-            selectedFacetConfig = facetsConfig.generic;
+        if(!facets[g]){
+            selectedFacetConfig = facets.generic;
         }else{
-            selectedFacetConfig = facetsConfig[g];
+            selectedFacetConfig = facets[g];
         }
         //action only if there is a config
         let propConfig;
@@ -186,11 +177,11 @@ class FacetedBrowser extends React.Component {
         return property;
     }
     getBrowsableList(){
-        if(!facetsConfig){
+        if(!facets){
             return 0;
         }
         let graphList = [];
-        for(let prop in facetsConfig) {
+        for(let prop in facets) {
             if(prop !== 'generic'){
                 graphList.push(prop);
             }
@@ -205,7 +196,7 @@ class FacetedBrowser extends React.Component {
         let output;
         let l = this.getBrowsableList();
         if(!l){
-            output = <div className="ui warning message"><div className="header"> There was no datasets to browse! Please add your desired graph names to the <b>facetsConfig</b>.</div></div>;
+            output = <div className="ui warning message"><div className="header"> There was no datasets to browse! Please add your desired graph names to the <b>facets</b>.</div></div>;
         }else{
             output = l.map(function(node, index) {
                 return (

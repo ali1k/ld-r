@@ -52,23 +52,5 @@ class DatasetUtil{
       }
       return total;
     }
-    parseMasterPropertyValues(body) {
-        let self = this;
-        let output=[];
-        let parsed = JSON.parse(body);
-        parsed.results.bindings.forEach(function(el) {
-            output.push( {dataType: el.v.datatype ? el.v.datatype : '', valueType: el.v.type, value: el.v.value, total: el.total.value});
-        });
-        return output;
-    }
-    parseSecondLevelPropertyValues(graphName, body) {
-        let self = this;
-        let output=[];
-        let parsed = JSON.parse(body);
-        parsed.results.bindings.forEach(function(el) {
-            output.push( {v: el.s.value, label: self.getPropertyLabel(el.s.value), g: graphName});
-        });
-        return output;
-    }
 }
 export default DatasetUtil;

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropertyHeader from './PropertyHeader';
-import DataBrowse from './DataBrowse';
+import ObjectBrowser from './ObjectBrowser';
 import SearchInput from 'react-search-input';
 
 class Facet extends React.Component {
@@ -54,7 +54,7 @@ class Facet extends React.Component {
                     </div>
                     <div className="description">
                         <div className="ui form" style={descStyle}>
-                            <DataBrowse shortenURI={true} spec={newSpec} config={this.props.config} onSelect={this.checkItem.bind(this)} graphName={this.props.graphName}/>
+                            <ObjectBrowser shortenURI={true} spec={newSpec} config={this.props.config} onSelect={this.checkItem.bind(this)} graphName={this.props.graphName}/>
                         </div>
                     </div>
                   </div>

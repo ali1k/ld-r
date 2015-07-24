@@ -10,7 +10,7 @@ export default function loadFacets(context, payload, done) {
         context.dispatch('CLEAR_FACETS_SUCCESS', {});
         //used for loading progress indicator
         context.dispatch('START_TASK_FACETS', {});
-        context.service.read('dataset.facetsSecondLevel', payload, {timeout: 20 * 1000}, function (err, res) {
+        context.service.read('facet.facetsSecondLevel', payload, {timeout: 20 * 1000}, function (err, res) {
             //end = new Date().getTime();
             //timeElapsed = end - start;
             if (err) {
@@ -26,7 +26,7 @@ export default function loadFacets(context, payload, done) {
     }else if(payload.mode === 'master'){
         //used for loading progress indicator
         context.dispatch('START_TASK_FACETS', {});
-        context.service.read('dataset.facetsMaster', payload, {timeout: 20 * 1000}, function (err, res) {
+        context.service.read('facet.facetsMaster', payload, {timeout: 20 * 1000}, function (err, res) {
             //end = new Date().getTime();
             //timeElapsed = end - start;
             if (err) {
@@ -39,7 +39,7 @@ export default function loadFacets(context, payload, done) {
     }else if(payload.mode === 'sideEffect'){
         //used for loading progress indicator
         context.dispatch('START_TASK_FACETS', {});
-        context.service.read('dataset.facetsSideEffect', payload, {timeout: 20 * 1000}, function (err, res) {
+        context.service.read('facet.facetsSideEffect', payload, {timeout: 20 * 1000}, function (err, res) {
             //end = new Date().getTime();
             //timeElapsed = end - start;
             if (err) {
@@ -52,7 +52,7 @@ export default function loadFacets(context, payload, done) {
     }else if(payload.mode === 'second'){
         //used for loading progress indicator
         context.dispatch('START_TASK_FACETS', {});
-        context.service.read('dataset.facetsSecondLevel', payload, {timeout: 20 * 1000}, function (err, res) {
+        context.service.read('facet.facetsSecondLevel', payload, {timeout: 20 * 1000}, function (err, res) {
             //end = new Date().getTime();
             //timeElapsed = end - start;
             if (err) {
