@@ -1,6 +1,6 @@
 import React from 'react';
-import BasicAggregateView from './BasicAggregateView';
-import DBpediaGoogleMapView from './more/DBpediaGoogleMapView';
+import BasicAggregateView from './viewer/aggregate/BasicAggregateView';
+import DBpediaGoogleMapView from './viewer/aggregate/DBpediaGoogleMapView';
 
 
 class ObjectAViewer extends React.Component {

@@ -1,6 +1,6 @@
 import React from 'react';
-import ObjectIEditor from './ObjectIEditor';
-import BasicCheckbox from './BasicCheckbox';
+import ObjectIEditor from '../../ObjectIEditor';
+import BasicCheckbox from '../individual/BasicCheckbox';
 
 class BasicAggregateInput extends React.Component {
     constructor(props) {

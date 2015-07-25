@@ -1,8 +1,8 @@
 import React from 'react';
-import {enableAuthentication} from '../configs/general';
-import ResourceStore from '../stores/ResourceStore';
+import {enableAuthentication} from '../../configs/general';
+import ResourceStore from '../../stores/ResourceStore';
 import {connectToStores} from 'fluxible-addons-react';
-import Resource from './Resource';
+import Resource from '../resource/Resource';
 class ResourceReactor extends React.Component {
     constructor(props) {
         super(props);

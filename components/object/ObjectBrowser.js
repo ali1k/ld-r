@@ -1,5 +1,5 @@
 import React from 'react';
-import CheckboxItem from './CheckboxItem';
+import CheckboxItem from './browser/CheckboxItem';
 
 class ObjectBrowser extends React.Component {
     handleSelect(status, value) {

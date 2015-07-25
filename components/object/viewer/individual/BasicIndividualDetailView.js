@@ -1,6 +1,6 @@
 import React from 'react';
-import PropertyHeader from './PropertyHeader';
-import ObjectIViewer from './ObjectIViewer';
+import PropertyHeader from '../../../property/PropertyHeader';
+import ObjectIViewer from '../../ObjectIViewer';
 
 class BasicIndividualDetailView extends React.Component {
     componentDidMount() {

@@ -1,5 +1,5 @@
 import React from 'react';
-import PropertyReactor from './PropertyReactor';
+import PropertyReactor from '../reactors/PropertyReactor';
 import {NavLink} from 'fluxible-router';
 
 class Resource extends React.Component {

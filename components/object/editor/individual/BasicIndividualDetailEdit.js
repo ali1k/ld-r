@@ -1,6 +1,6 @@
 import React from 'react';
-import PropertyHeader from './PropertyHeader';
-import ObjectIEditor from './ObjectIEditor';
+import PropertyHeader from '../../../property/PropertyHeader';
+import ObjectIEditor from '../../ObjectIEditor';
 import BasicIndividualInput from './BasicIndividualInput';
 
 class BasicIndividualDetailEdit extends React.Component {

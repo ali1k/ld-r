@@ -1,6 +1,6 @@
 import React from 'react';
-import BasicCheckbox from './BasicCheckbox';
-import ObjectIViewer from './ObjectIViewer';
+import BasicCheckbox from '../editor/individual/BasicCheckbox';
+import ObjectIViewer from '../ObjectIViewer';
 
 class CheckboxItem extends React.Component {
     constructor(props) {

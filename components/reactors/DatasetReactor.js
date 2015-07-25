@@ -1,9 +1,9 @@
 import React from 'react';
-import DatasetStore from '../stores/DatasetStore';
+import DatasetStore from '../../stores/DatasetStore';
 import {connectToStores} from 'fluxible-addons-react';
-import {enableAuthentication} from '../configs/general';
-import getResourcesCount from '../actions/getResourcesCount';
-import Dataset from './Dataset';
+import {enableAuthentication} from '../../configs/general';
+import getResourcesCount from '../../actions/getResourcesCount';
+import Dataset from '../dataset/Dataset';
 
 class DatasetReactor extends React.Component {
     componentDidMount() {

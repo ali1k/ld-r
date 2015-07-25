@@ -1,5 +1,5 @@
 import React from 'react';
-import BasicAggregateInput from './BasicAggregateInput';
+import BasicAggregateInput from './editor/aggregate/BasicAggregateInput';
 
 class ObjectAEditor extends React.Component {
     handleAggDataEdit(changes){

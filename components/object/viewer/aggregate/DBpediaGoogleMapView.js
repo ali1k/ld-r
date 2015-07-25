@@ -1,9 +1,9 @@
 import React from 'react';
 import {connectToStores} from 'fluxible-addons-react';
 import GoogleMapView from './GoogleMapView';
-import BasicAggregateView from '../BasicAggregateView';
-import DBpediaGMapStore from '../../stores/DBpediaGMapStore';
-import getCoordinates from '../../actions/getCoordinates';
+import BasicAggregateView from './BasicAggregateView';
+import DBpediaGMapStore from '../../../../stores/DBpediaGMapStore';
+import getCoordinates from '../../../../actions/getCoordinates';
 
 class DBpediaGoogleMapView extends React.Component {
     constructor(props) {

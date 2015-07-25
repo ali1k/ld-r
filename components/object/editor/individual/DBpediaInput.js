@@ -1,7 +1,7 @@
 import React from 'react';
 import {provideContext, connectToStores} from 'fluxible-addons-react';
-import lookupDBpedia from '../actions/lookupDBpedia';
-import DBpediaStore from '../stores/DBpediaStore';
+import lookupDBpedia from '../../../../actions/lookupDBpedia';
+import DBpediaStore from '../../../../stores/DBpediaStore';
 
 class DBpediaInput extends React.Component {
     constructor(props) {

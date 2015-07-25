@@ -1,6 +1,6 @@
 import React from 'react';
 import PropertyHeader from './PropertyHeader';
-import ObjectReactor from './ObjectReactor';
+import ObjectReactor from '../reactors/ObjectReactor';
 
 class IndividualProperty extends React.Component {
     constructor(props) {

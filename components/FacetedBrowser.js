@@ -5,8 +5,8 @@ import {facets} from '../configs/facets';
 import FacetedBrowserStore from '../stores/FacetedBrowserStore';
 import {connectToStores} from 'fluxible-addons-react';
 import loadFacets from '../actions/loadFacets';
-import ResourceList from './ResourceList';
-import ResourceListPager from './ResourceListPager';
+import ResourceList from './dataset/ResourceList';
+import ResourceListPager from './dataset/ResourceListPager';
 
 class FacetedBrowser extends React.Component {
     constructor(props) {

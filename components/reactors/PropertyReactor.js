@@ -1,13 +1,13 @@
 import React from 'react';
 import {provideContext} from 'fluxible/addons';
-import deleteIndividualObject from '../actions/deleteIndividualObject';
-import createIndividualObject from '../actions/createIndividualObject';
-import createIndividualObjectDetail from '../actions/createIndividualObjectDetail';
-import updateIndividualObject from '../actions/updateIndividualObject';
-import updateIndividualObjectDetail from '../actions/updateIndividualObjectDetail';
-import updateAggObject from '../actions/updateAggObject';
-import deleteAggObject from '../actions/deleteAggObject';
-import IndividualProperty from './IndividualProperty';
+import deleteIndividualObject from '../../actions/deleteIndividualObject';
+import createIndividualObject from '../../actions/createIndividualObject';
+import createIndividualObjectDetail from '../../actions/createIndividualObjectDetail';
+import updateIndividualObject from '../../actions/updateIndividualObject';
+import updateIndividualObjectDetail from '../../actions/updateIndividualObjectDetail';
+import updateAggObject from '../../actions/updateAggObject';
+import deleteAggObject from '../../actions/deleteAggObject';
+import IndividualProperty from '../property/IndividualProperty';
 
 class PropertyReactor extends React.Component {
     constructor(props) {

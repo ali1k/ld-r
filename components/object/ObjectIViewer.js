@@ -1,10 +1,10 @@
 import React from 'react';
-import BasicIndividualView from './BasicIndividualView';
-import BasicIndividualDetailView from './BasicIndividualDetailView';
-import BasicDBpediaView from './BasicDBpediaView';
-import BasicLinkedIndividualView from './BasicLinkedIndividualView';
-import BasicOptionView from './BasicOptionView';
-import PasswordView from './PasswordView';
+import BasicIndividualView from './viewer/individual/BasicIndividualView';
+import BasicIndividualDetailView from './viewer/individual/BasicIndividualDetailView';
+import BasicDBpediaView from './viewer/individual/BasicDBpediaView';
+import BasicLinkedIndividualView from './viewer/individual/BasicLinkedIndividualView';
+import BasicOptionView from './viewer/individual/BasicOptionView';
+import PasswordView from './viewer/individual/PasswordView';
 import {LanguageView} from 'void-components';
 import {TwoLetterCountryView} from 'void-components';
 

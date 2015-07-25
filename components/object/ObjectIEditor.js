@@ -1,10 +1,10 @@
 import React from 'react';
-import BasicIndividualInput from './BasicIndividualInput';
-import BasicTextareaInput from './BasicTextareaInput';
-import BasicIndividualDetailEdit from './BasicIndividualDetailEdit';
-import BasicOptionInput from './BasicOptionInput';
-import DBpediaInput from './DBpediaInput';
-import PasswordInput from './PasswordInput';
+import BasicIndividualInput from './editor/individual/BasicIndividualInput';
+import BasicTextareaInput from './editor/individual/BasicTextareaInput';
+import BasicIndividualDetailEdit from './editor/individual/BasicIndividualDetailEdit';
+import BasicOptionInput from './editor/individual/BasicOptionInput';
+import DBpediaInput from './editor/individual/DBpediaInput';
+import PasswordInput from './editor/individual/PasswordInput';
 import {LanguageInput} from 'void-components';
 
 class ObjectIEditor extends React.Component {

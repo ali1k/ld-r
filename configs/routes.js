@@ -54,7 +54,7 @@ export default {
         //if no id is provided -> will start by defaultGraphName in reactor.config
         path: '/dataset/:page?/:id?',
         method: 'get',
-        handler: require('../components/DatasetReactor'),
+        handler: require('../components/reactors/DatasetReactor'),
         label: 'Dataset',
         action: (context, payload, done) => {
             let graphName, page;
@@ -72,7 +72,7 @@ export default {
     resource: {
         path: '/dataset/:did/:resource/:rid/:pcategory?/:propertyPath?',
         method: 'get',
-        handler: require('../components/ResourceReactor'),
+        handler: require('../components/reactors/ResourceReactor'),
         label: 'Resource',
         action: (context, payload, done) => {
             //predicate Category
@@ -90,7 +90,7 @@ export default {
     user: {
         path: '/user/:id',
         method: 'get',
-        handler: require('../components/Resource'),
+        handler: require('../components/reactors/ResourceReactor'),
         label: 'User',
         action: (context, payload, done) => {
             let category = 0;

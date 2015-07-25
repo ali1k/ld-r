@@ -1,5 +1,5 @@
 import React from 'react';
-import ObjectIViewer from './ObjectIViewer';
+import ObjectIViewer from '../../ObjectIViewer';
 
 class BasicAggregateView extends React.Component {
     render() {

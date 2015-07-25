@@ -1,10 +1,10 @@
 import React from 'react';
 import {provideContext, connectToStores} from 'fluxible-addons-react';
-import loadObjectProperties from '../actions/loadObjectProperties';
-import IndividualObjectStore from '../stores/IndividualObjectStore';
+import loadObjectProperties from '../../actions/loadObjectProperties';
+import IndividualObjectStore from '../../stores/IndividualObjectStore';
 import {navigateAction} from 'fluxible-router';
-import IndividualObject from './IndividualObject';
-import AggregateObject from './AggregateObject';
+import IndividualObject from '../object/IndividualObject';
+import AggregateObject from '../object/AggregateObject';
 
 class ObjectReactor extends React.Component {
     constructor(props) {
