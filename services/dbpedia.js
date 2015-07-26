@@ -32,12 +32,12 @@ export default {
             let rpPath, uris = params.uris;
             query = queryObject.getPrefixes() + queryObject.getCoordinates(uris);
             // console.log(query);
-            rpPath = DBpediaEndpoint + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
+            rpPath = DBpediaLiveEndpoint + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             rp.get({uri: rpPath}).then(function(res){
                 callback(null, {coordinates: utilObject.parseDBpediaCoordinates(res)});
             }).catch(function () {
                 //last chance: try DBpedia live endpoint!
-                rpPath = DBpediaLiveEndpoint + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
+                rpPath = DBpediaEndpoint + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
                 rp.get({uri: rpPath}).then(function(res){
                     callback(null, {coordinates: utilObject.parseDBpediaCoordinates(res)});
                 }).catch(function (err) {
