@@ -8,131 +8,183 @@ path: docs/componentsCore.html
 <h1 class="ui dividing header">
 Components: Core
 </h1>
+<h2>Dataset Level</h2>
 <div class="ui divided animated list">
-    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/AggregateDataEdit.js">
+    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/dataset/Dataset.js">
+      <i class="puzzle black icon"></i>
+      <div class="content">
+        <div class="header">Dataset</div>
+        <div class="description">Collection of resources.</div>
+      </div>
+    </a>
+    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/dataset/ResourceList.js">
+      <i class="puzzle black icon"></i>
+      <div class="content">
+        <div class="header">ResourceList</div>
+        <div class="description">A simple list of resources.</div>
+      </div>
+    </a>
+    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/dataset/ResourceListPager.js">
+      <i class="puzzle black icon"></i>
+      <div class="content">
+        <div class="header">ResourceListPager</div>
+        <div class="description">Pagination for resource list.</div>
+      </div>
+    </a>
+    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/FacetedBrowser.js">
+      <i class="puzzle black icon"></i>
+      <div class="content">
+        <div class="header">FacetedBrowser</div>
+        <div class="description">For browsing a collection of resources.</div>
+      </div>
+    </a>
+</div>
+
+<h2>Resource Level</h2>
+<div class="ui divided animated list">
+    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/resource/Resource.js">
+      <i class="puzzle green icon"></i>
+      <div class="content">
+        <div class="header">Resource</div>
+        <div class="description">Collection of properties.</div>
+      </div>
+    </a>
+</div>
+
+<h2>Property Level</h2>
+<div class="ui divided animated list">
+    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/property/IndividualProperty.js">
+      <i class="puzzle orange icon"></i>
+      <div class="content">
+        <div class="header">IndividualProperty</div>
+        <div class="description">For handling an individual property of a resource.</div>
+      </div>
+    </a>
+    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/property/PropertyHeader.js">
+      <i class="puzzle orange icon"></i>
+      <div class="content">
+        <div class="header">PropertyHeader</div>
+        <div class="description">Handles the property lable and hint.</div>
+      </div>
+    </a>
+</div>
+<h2>Object Level</h2>
+<div class="ui divided animated list">
+    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/object/IndividualObject.js">
+      <i class="puzzle purple icon"></i>
+      <div class="content">
+        <div class="header">IndividualObject</div>
+        <div class="description">Applies to each individual object of a property.</div>
+      </div>
+    </a>
+    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/object/AggregateObject.js">
+      <i class="puzzle purple icon"></i>
+      <div class="content">
+        <div class="header">AggregateObject</div>
+        <div class="description">Applies to whole objects of a property.</div>
+      </div>
+    </a>
+    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/object/ObjectIEditor.js">
       <i class="puzzle blue icon"></i>
       <div class="content">
-        <div class="header">AggregateDataEdit</div>
+        <div class="header">ObjectIEditor</div>
+        <div class="description">Dispatcher for individual edit components.</div>
+      </div>
+    </a>
+    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/object/ObjectIViewer.js">
+      <i class="puzzle blue icon"></i>
+      <div class="content">
+        <div class="header">ObjectIViewer</div>
+        <div class="description">Dispatcher for individual view components.</div>
+      </div>
+    </a>
+    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/object/ObjectAEditor.js">
+      <i class="puzzle blue icon"></i>
+      <div class="content">
+        <div class="header">ObjectAEditor</div>
         <div class="description">Dispatcher for aggregate edit components.</div>
       </div>
     </a>
-    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/AggregateDataView.js">
+    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/object/ObjectAViewer.js">
       <i class="puzzle blue icon"></i>
       <div class="content">
-        <div class="header">AggregateDataView</div>
+        <div class="header">ObjectAViewer</div>
         <div class="description">Dispatcher for aggregate view components.</div>
       </div>
     </a>
-    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/AggregateObjectReactor.js">
-      <i class="puzzle purple icon"></i>
-      <div class="content">
-        <div class="header">AggregateObjectReactor</div>
-        <div class="description">Applied to whole objects of a property.</div>
-      </div>
+    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/object/ObjectBrowser.js">
+        <i class="puzzle blue icon"></i>
+        <div class="content">
+          <div class="header">ObjectBrowser</div>
+          <div class="description">Dispatcher for browse components.</div>
+        </div>
     </a>
-    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/BasicAggregateInput.js">
-      <i class="puzzle teal icon"></i>
-      <div class="content">
-        <div class="header">BasicAggregateInput</div>
-        <div class="description">Default editor for aggregate objects.</div>
-      </div>
-    </a>
-    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/BasicAggregateView.js">
-      <i class="puzzle teal icon"></i>
-      <div class="content">
-        <div class="header">BasicAggregateView</div>
-        <div class="description">Default viewer for aggregate objects.</div>
-      </div>
-    </a>
-    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/BasicIndividualDetailEdit.js">
-      <i class="puzzle teal icon"></i>
-      <div class="content">
-        <div class="header">BasicIndividualDetailEdit</div>
-        <div class="description">Default editor for extended object mode.</div>
-      </div>
-    </a>
-    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/BasicIndividualDetailView.js">
-      <i class="puzzle teal icon"></i>
-      <div class="content">
-        <div class="header">BasicIndividualDetailView</div>
-        <div class="description">Default viewer for extended object mode.</div>
-      </div>
-    </a>
-    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/BasicIndividualInput.js">
-      <i class="puzzle teal icon"></i>
-      <div class="content">
-        <div class="header">BasicIndividualInput</div>
-        <div class="description">Default editor for individual objects.</div>
-      </div>
-    </a>
-    <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/BasicIndividualView.js">
-      <i class="puzzle teal icon"></i>
-      <div class="content">
-        <div class="header">BasicIndividualView</div>
-        <div class="description">Default viewer for individual objects.</div>
-      </div>
-    </a>
-  <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/CheckboxItem.js">
-    <i class="puzzle teal icon"></i>
-    <div class="content">
-      <div class="header">CheckboxItem</div>
-      <div class="description">Default browser for facets.</div>
+    <div class="item">
+        <h3>Viewer</h3>
+            <h4>Individual</h4>
+            <div class="ui divided animated list">
+                <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/object/viewer/individual/BasicIndividualView.js">
+                  <i class="puzzle teal icon"></i>
+                  <div class="content">
+                    <div class="header">BasicIndividualView</div>
+                    <div class="description">Default viewer for individual objects.</div>
+                  </div>
+                </a>
+                <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/object/viewer/individual/BasicIndividualDetailView.js">
+                  <i class="puzzle teal icon"></i>
+                  <div class="content">
+                    <div class="header">BasicIndividualDetailView</div>
+                    <div class="description">Default viewer for extended object mode.</div>
+                  </div>
+                </a>
+            </div>
+            <h4>Aggregate</h4>
+            <div class="ui divided animated list">
+                <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/viewer/aggregate/BasicAggregateView.js">
+                  <i class="puzzle teal icon"></i>
+                  <div class="content">
+                    <div class="header">BasicAggregateView</div>
+                    <div class="description">Default viewer for aggregate objects.</div>
+                  </div>
+                </a>
+            </div>
+        <h3>Editor</h3>
+            <h4>Individual</h4>
+            <div class="ui divided animated list">
+                <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/editor/individual/BasicIndividualInput.js">
+                  <i class="puzzle teal icon"></i>
+                  <div class="content">
+                    <div class="header">BasicIndividualInput</div>
+                    <div class="description">Default editor for individual objects.</div>
+                  </div>
+                </a>
+                <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/editor/individual/BasicIndividualDetailEdit.js">
+                  <i class="puzzle teal icon"></i>
+                  <div class="content">
+                    <div class="header">BasicIndividualDetailEdit</div>
+                    <div class="description">Default editor for extended object mode.</div>
+                  </div>
+                </a>
+            </div>
+            <h4>Aggregate</h4>
+            <div class="ui divided animated list">
+                <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/editor/aggregate/BasicAggregateInput.js">
+                  <i class="puzzle teal icon"></i>
+                  <div class="content">
+                    <div class="header">BasicAggregateInput</div>
+                    <div class="description">Default editor for aggregate objects.</div>
+                  </div>
+                </a>
+            </div>
+        <h3>Browser</h3>
+        <div class="ui divided animated list">
+            <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/object/browser/CheckboxItem.js">
+            <i class="puzzle teal icon"></i>
+            <div class="content">
+              <div class="header">CheckboxItem</div>
+              <div class="description">Default browser for facets.</div>
+            </div>
+            </a>
+        </div>
     </div>
-  </a>
-  <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/DataBrowse.js">
-    <i class="puzzle blue icon"></i>
-    <div class="content">
-      <div class="header">DataBrowse</div>
-      <div class="description">Dispatcher for browse components.</div>
-    </div>
-  </a>
-  <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/Dataset.js">
-    <i class="puzzle black icon"></i>
-    <div class="content">
-      <div class="header">Dataset</div>
-      <div class="description">Collection of resources.</div>
-    </div>
-  </a>
-  <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/FacetedBrowser.js">
-    <i class="puzzle black icon"></i>
-    <div class="content">
-      <div class="header">FacetedBrowser</div>
-      <div class="description">For browsing a dataset.</div>
-    </div>
-  </a>
-  <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/IndividualDataEdit.js">
-    <i class="puzzle blue icon"></i>
-    <div class="content">
-      <div class="header">IndividualDataEdit</div>
-      <div class="description">Dispatcher for individual edit components.</div>
-    </div>
-  </a>
-  <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/IndividualDataView.js">
-    <i class="puzzle blue icon"></i>
-    <div class="content">
-      <div class="header">IndividualDataView</div>
-      <div class="description">Dispatcher for individual view components.</div>
-    </div>
-  </a>
-  <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/IndividualObjectReactor.js">
-    <i class="puzzle purple icon"></i>
-    <div class="content">
-      <div class="header">IndividualObjectReactor</div>
-      <div class="description">Applied to each individual object of a property.</div>
-    </div>
-  </a>
-  <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/IndividualPropertyReactor.js">
-    <i class="puzzle orange icon"></i>
-    <div class="content">
-      <div class="header">IndividualPropertyReactor</div>
-      <div class="description">For an individual property of a resource.</div>
-    </div>
-  </a>
-  <a class="item" href="https://github.com/ali1k/ld-r/blob/master/components/Resource.js">
-    <i class="puzzle green icon"></i>
-    <div class="content">
-      <div class="header">Resource</div>
-      <div class="description">Collection of properties.</div>
-    </div>
-  </a>
 </div>
