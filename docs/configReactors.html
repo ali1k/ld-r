@@ -12,10 +12,11 @@ Config: Reactors
     <img class="ui centered image animated pulse" src="/assets/img/scopes.jpg" alt="ld-reactor scopes" />
 </div>
 <p>
-    Configs are defined per <b>scope</b>. A scope is one of the 15 combinations of 'dataset', 'resource', 'property' and 'object' hierarchies. The configuration is shaped from traversing the less-specific scope to the more-specific scope.
-    The 'generic'  config for each scope is used if no specific config is defined for a graph.
+    Configs are defined per <b>scope</b>. A scope is one of the 15 combinations of 'dataset', 'resource', 'property' and 'object' hierarchies. The configuration is shaped from traversing the less-specific scope to the more-specific scope.<br/>
+    The 'generic'  config for each scope will be used if no specific config is defined for a graph.
     For each scope, you need to change the following <span class="ui label">parameters</span> in <a class="ui label" href="https://github.com/ali1k/ld-r/blob/master/configs/reactor.config.js">configs/reactor.js</a>:
 </p>
+<h2>Dataset Level</h2>
 <table class="ui celled table">
   <thead>
     <tr>
@@ -26,40 +27,79 @@ Config: Reactors
   </thead>
   <tbody>
     <tr >
+        <td class="warning">datasetReactor</td>
+        <td>Selects the right component for handling a dataset.</td>
+        <td>['Dataset']</td>
+    </tr>
+    <tr >
         <td class="positive">resourceFocusType</td>
         <td>Use this, if you want to focus on properties of specific resource types (i.e. RDF Classes). Multiple entity types can be also set. If no value is set, all existing entity types will be shown.</td>
         <td>['http://rdfs.org/ns/void#Dataset']</td>
+    </tr>
+    <tr >
+        <td class="positive">maxNumberOfResourcesOnPage</td>
+        <td>Indicates the maximum number of resources per dataset to be shown on page.</td>
+        <td>20</td>
+    </tr>
+    <tr>
+      <td class="positive">readOnly</td>
+      <td> If set to '1', will disable editing property values of a specific dataset.</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<h2>Resource Level</h2>
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+      <th>Example value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr >
+        <td class="warning">resourceReactor</td>
+        <td>Selects the right component for handling resources.</td>
+        <td>['Resource']</td>
+    </tr>
+    <tr>
+      <td class="positive">readOnly</td>
+      <td> If set to '1', will disable editing property values of a specific resource.</td>
+      <td>0</td>
+    </tr>
+    <tr >
+      <td class="positive">usePropertyCategories</td>
+      <td>If set to '1', you can categorize properties in different tabs. It is required to define the list of categories beforehand by using <span class="ui label">categories</span>.</td>
+      <td>1</td>
+    </tr>
+    <tr >
+      <td class="positive">propertyCategories</td>
+      <td>List of categories to be used.</td>
+      <td>['general', 'content', 'structural']</td>
+    </tr>
+  </tbody>
+</table>
+<h2>Property Level</h2>
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+      <th>Example value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr >
+        <td class="warning">propertyReactor</td>
+        <td>Selects the right component for handling properties. Can be set to either 'IndividualProperty' or 'AggregateProperty'.</td>
+        <td>['IndividualProperty']</td>
     </tr>
     <tr>
       <td class="positive">readOnly</td>
       <td> If set to '1', will disable editing property values.</td>
       <td>0</td>
     </tr>
-    <tr >
-      <td class="positive">useCategories</td>
-      <td>If set to '1', you can categorize properties in different tabs. It is required to define the list of categories beforehand by using <span class="ui label">categories</span>.</td>
-      <td>1</td>
-    </tr>
-    <tr >
-      <td class="positive">categories</td>
-      <td>List of categories to be used.</td>
-      <td>['general', 'content', 'structural']</td>
-    </tr>
-  </tbody>
-</table>
-<p>
-    After defining the above general property configs, users can define specific configs for each property by using the URI of the property. Main property configs are as following:
-</p>
-
-<table class="ui celled table">
-  <thead>
-    <tr>
-      <th>Parameter</th>
-      <th>Description</th>
-      <th>Example value</th>
-    </tr>
-  </thead>
-  <tbody>
     <tr>
       <td class="positive">category</td>
       <td> If <span class="ui label">useCategories</span> is set to '1', here you have to mention the category name from the list of <span class="ui label">categories</span>.</td>
@@ -105,21 +145,19 @@ Config: Reactors
       <td>If set to '1', will automatically expand blank nodes after initial load.</td>
       <td>1</td>
     </tr>
-    <tr >
-      <td class="warning">datasetReactor</td>
-      <td>Selects the right component for handling a dataset.</td>
-      <td>['Dataset']</td>
+  </tbody>
+</table>
+<h2>Object Level</h2>
+
+<table class="ui celled table">
+  <thead>
+    <tr>
+      <th>Parameter</th>
+      <th>Description</th>
+      <th>Example value</th>
     </tr>
-    <tr >
-      <td class="warning">resourceReactor</td>
-      <td>Selects the right component for handling resources.</td>
-      <td>['Resource']</td>
-    </tr>
-    <tr >
-      <td class="warning">propertyReactor</td>
-      <td>Selects the right component for handling properties. Can be set to either 'IndividualProperty' or 'AggregateProperty'.</td>
-      <td>['IndividualProperty']</td>
-    </tr>
+  </thead>
+  <tbody>
     <tr >
       <td class="warning">objectReactor</td>
       <td>Selects the right component for handling object values. Can be set to either 'IndividualObject' or 'AggregateObject'.</td>
