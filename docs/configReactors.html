@@ -9,8 +9,8 @@ path: docs/configReactors.html
 Config: Reactors
 </h1>
 <p>
-    Properties config are defined per graph. The 'generic' property config will be used if no specific config is defined for a graph.
-    For properties config, you have to change the following <span class="ui label">propertiesConfig</span> in <a class="ui label" href="https://github.com/ali1k/ld-r/blob/master/configs/reactor.config.js">configs/reactor.js</a>:
+    Configs are defined per scope. A scope is one of the 15 combinations of dataset, resource, property and object. The 'generic'  config for each scope is used if no specific config is defined for a graph.
+    For each scope, you need to change the following <span class="ui label">parameters</span> in <a class="ui label" href="https://github.com/ali1k/ld-r/blob/master/configs/reactor.config.js">configs/reactor.js</a>:
 </p>
 <table class="ui celled table">
   <thead>
@@ -102,47 +102,52 @@ Config: Reactors
       <td>1</td>
     </tr>
     <tr >
-      <td class="warning">objectReactorType</td>
-      <td>Selects the right component for handling object values. Can be set to either 'IndividualObjectReactor' or 'AggregateObjectReactor'.</td>
-      <td>['IndividualDataEdit']</td>
+      <td class="warning">datasetReactor</td>
+      <td>Selects the right component for handling a dataset.</td>
+      <td>['Dataset']</td>
     </tr>
     <tr >
-      <td class="warning">dataEditType</td>
-      <td>Selects the right component to dispatch edits.</td>
-      <td>['IndividualObjectReactor']</td>
+      <td class="warning">resourceReactor</td>
+      <td>Selects the right component for handling resources.</td>
+      <td>['Resource']</td>
     </tr>
     <tr >
-      <td class="warning">editor</td>
-      <td>Specifies the right edit component.</td>
-      <td>['BasicIndividualInput']</td>
+      <td class="warning">propertyReactor</td>
+      <td>Selects the right component for handling properties. Can be set to either 'IndividualProperty' or 'AggregateProperty'.</td>
+      <td>['IndividualProperty']</td>
     </tr>
     <tr >
-      <td class="warning">editorI</td>
-      <td>Specifies the right edit component for individual objects in case an aggregate object editor is used.</td>
+      <td class="warning">objectReactor</td>
+      <td>Selects the right component for handling object values. Can be set to either 'IndividualObject' or 'AggregateObject'.</td>
+      <td>['IndividualObject']</td>
+    </tr>
+    <tr >
+      <td class="warning">objectIEditor</td>
+      <td>Specifies the right edit component for an individual object.</td>
       <td>['DBpediaInput']</td>
     </tr>
     <tr >
-      <td class="warning">extendedEditor</td>
+      <td class="warning">objectAEditor</td>
+      <td>Specifies the right edit componen for an aggregate object.</td>
+      <td></td>
+    </tr>
+    <tr >
+      <td class="warning">extendedOEditor</td>
       <td>Specifies the right view when component value is edited in extended mode.</td>
       <td>['BasicIndividualDetailEdit']</td>
     </tr>
     <tr >
-      <td class="warning">dataViewType</td>
-      <td>Selects the right component to dispatch views.</td>
-      <td>['IndividualDataView']</td>
-    </tr>
-    <tr >
-      <td class="warning">viewer</td>
-      <td>Specifies the right view component.</td>
-      <td>['BasicIndividualView']</td>
-    </tr>
-    <tr >
-      <td class="warning">viewerI</td>
-      <td>Specifies the right view component for individual objects in case an aggregate object viewer is used.</td>
+      <td class="warning">objectIViewer</td>
+      <td>Specifies the right view component for an individual object.</td>
       <td>['BasicDBpediaView']</td>
     </tr>
     <tr >
-      <td class="warning">extendedViewer</td>
+      <td class="warning">objectAViewer</td>
+      <td>Specifies the right view component for an aggregate object.</td>
+      <td>['BasicAggregateView']</td>
+    </tr>
+    <tr >
+      <td class="warning">extendedOViewer</td>
       <td>Specifies the right view when component value is extended.</td>
       <td>['BasicIndividualDetailView']</td>
     </tr>
