@@ -77,6 +77,13 @@ class Configurator{
                 output[prop] = config.resource[resourceURI][prop];
             }
         }
+        if(config.dataset_resource[graphName]){
+            if(config.dataset_resource[graphName][resourceURI]){
+                for(let prop in config.dataset_resource[graphName][resourceURI]) {
+                    output[prop] = config.dataset_resource[graphName][resourceURI][prop];
+                }
+            }
+        }
         if(config.property[propertyURI]){
             for(let prop in config.property[propertyURI]) {
                 output[prop] = config.property[propertyURI][prop];
