@@ -10,7 +10,8 @@
   "scripts": {
     "build": "grunt build && node start.js",
     "dev": "grunt",
-    "lint": "eslint ./*.js ./**/*.js"
+    "lint": "eslint ./*.js ./**/*.js",
+    "validate": "npm ls"
   },
   "license": "MIT",
   "dependencies": {
@@ -27,6 +28,7 @@
     "fluxible-plugin-fetchr": "^0.3.4",
     "fluxible-router": "^0.2.1",
     "hogan-express": "^0.5.2",
+    "jscs": "^2.0.0",
     "log": "^1.4.0",
     "nodemailer": "^1.4.0",
     "nodemailer-smtp-transport": "^1.0.3",
@@ -43,22 +45,27 @@
     "void-components": "^1.0.7"
   },
   "devDependencies": {
-    "babel-eslint": "^3.0.1",
+    "babel-eslint": "^4.0.5",
     "babel-loader": "^5.0.0",
     "bundle-loader": "~0.5.0",
-    "eslint": "^0.20.0",
+    "eslint": "^0.24.1",
     "grunt": "~0.4.5",
     "grunt-cli": "~0.1.13",
-    "grunt-concurrent": "~1.0.0",
+    "grunt-concurrent": "^2.0.0",
     "grunt-contrib-clean": "~0.6.0",
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-nodemon": "^0.4.0",
     "grunt-webpack": "^1.0.8",
-    "jscs": "^1.9.0",
+    "jscs": "^2.0.0",
     "json-loader": "~0.5.1",
     "nodemon": "^1.2.1",
-    "precommit-hook": "^2.0.1",
+    "precommit-hook": "^3.0.0",
     "webpack": "^1.4.12",
     "webpack-dev-server": "^1.6.5"
-  }
+  },
+  "pre-commit": [
+    "lint",
+    "validate",
+    "test"
+  ]
 }

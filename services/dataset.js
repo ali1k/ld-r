@@ -21,8 +21,8 @@ export default {
         if (resource === 'dataset.resourcesByType') {
             graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);
             //config handler
-            let config = configurator.prepareDatasetConfig(graphName);
-            let maxOnPage = parseInt(config.maxNumberOfResourcesOnPage);
+            let rconfig = configurator.prepareDatasetConfig(graphName);
+            let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
             if(!maxOnPage){
                 maxOnPage = 20;
             }
@@ -30,14 +30,14 @@ export default {
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
-                    callback(null, {graphName: graphName, resources: [], page: params.page, config: config});
+                    callback(null, {graphName: graphName, resources: [], page: params.page, config: rconfig});
                 }else{
                     user = req.user;
                 }
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getResourcesByType(graphName, config.resourceFocusType, maxOnPage, offset);
+            query = queryObject.getResourcesByType(graphName, rconfig.resourceFocusType, maxOnPage, offset);
             //build http uri
             httpOptions = getHTTPOptions(graphName);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
@@ -47,17 +47,17 @@ export default {
                     graphName: graphName,
                     resources: utilObject.parseResourcesByType(res, graphName),
                     page: params.page,
-                    config: config
+                    config: rconfig
                 });
             }).catch(function (err) {
                 console.log(err);
-                callback(null, {graphName: graphName, resources: [], page: params.page, config: config});
+                callback(null, {graphName: graphName, resources: [], page: params.page, config: rconfig});
             });
         } else if (resource === 'dataset.countResourcesByType') {
             //SPARQL QUERY
             graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);
             //config handler
-            let config = configurator.prepareDatasetConfig(graphName);
+            let rconfig = configurator.prepareDatasetConfig(graphName);
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -68,7 +68,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.countResourcesByType(graphName, config.resourceFocusType);
+            query = queryObject.countResourcesByType(graphName, rconfig.resourceFocusType);
             //build http uri
             httpOptions = getHTTPOptions(graphName);
             rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);

@@ -41,11 +41,11 @@ export default {
                 propertyPath = propertyPath.split(',');
             }
             //config handler
-            let config = configurator.prepareResourceConfig(graphName, resourceURI);
+            let rconfig = configurator.prepareResourceConfig(graphName, resourceURI);
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
-                    callback(null, {graphName: graphName, resourceURI: resourceURI, resourceType: '', currentCategory: 0, propertyPath: [], properties: [], config: config});
+                    callback(null, {graphName: graphName, resourceURI: resourceURI, resourceType: '', currentCategory: 0, propertyPath: [], properties: [], config: rconfig});
                     return 0;
                 }else{
                     user = req.user;
@@ -61,7 +61,7 @@ export default {
             //send request
             rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
                 //exceptional case for user properties: we hide some admin props from normal users
-                let {props, title, resourceType} = utilObject.parseProperties(res, graphName, resourceURI, category, propertyPath, config.usePropertyCategories, config.propertyCategories);
+                let {props, title, resourceType} = utilObject.parseProperties(res, graphName, resourceURI, category, propertyPath, rconfig.usePropertyCategories, rconfig.propertyCategories);
                 if(graphName === authGraphName[0] && !parseInt(user.isSuperUser)){
                     props = utilObject.deleteAdminProperties(props);
                 }
@@ -74,14 +74,14 @@ export default {
                     currentCategory: category,
                     propertyPath: propertyPath,
                     properties: props,
-                    config: config
+                    config: rconfig
                 });
             }).catch(function (err) {
                 console.log(err);
                 if(enableLogs){
                     log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 }
-                callback(null, {graphName: graphName, resourceURI: resourceURI, resourceType: '', title: '', currentCategory: 0, propertyPath: [], properties: [], config: config});
+                callback(null, {graphName: graphName, resourceURI: resourceURI, resourceType: '', title: '', currentCategory: 0, propertyPath: [], properties: [], config: rconfig});
             });
         } else if (resource === 'resource.objectProperties') {
             graphName = params.dataset;

@@ -85,8 +85,8 @@ export default {
         } else if (resource === 'facet.facetsSecondLevel') {
             graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);
             //config handler
-            let config = configurator.prepareDatasetConfig(graphName);
-            let maxOnPage = parseInt(config.maxNumberOfResourcesOnPage);
+            let rconfig = configurator.prepareDatasetConfig(graphName);
+            let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
             if(!maxOnPage){
                 maxOnPage = 20;
             }
