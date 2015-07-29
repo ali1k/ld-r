@@ -287,9 +287,9 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
+            endpointParameters = getEndpointParameters(params.dataset);
             query = queryObject.getPrefixes() + queryObject.getUpdateTriplesQuery(endpointParameters.endpointType, params.dataset, params.resourceURI, params.propertyURI, params.changes);
             //build http uri
-            endpointParameters = getEndpointParameters(params.dataset);
             //send request
             rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
                 if(enableLogs){
