@@ -28,10 +28,11 @@ Config: Server
     </tr>
     <tr>
       <td class="positive">sparqlEndpoint</td>
-      <td>The specification of your SPARQL endpoint. Endpoints are defined per graph. Therefore, you need to specify the graph name of the SPARQL endpoint too. If no endpoint is found for your graph, the config for 'generic' will be used. At the moment only endpoint types 'virtuoso' and 'sesame' are supported.</td>
+      <td>The specification of your SPARQL endpoint. Endpoints are defined per graph. Therefore, you need to specify the graph name of the SPARQL endpoint too. If you aim to use the defualt graph, you still need to assign a URI for the configs of your graph but can set 'useDefaultGraph' parameter to ignore that URI in your queries.
+      If no endpoint is found for your graph, the config for 'generic' will be used. At the moment only endpoint types 'virtuoso' and 'sesame' are supported. Use 'type' parameter to specify the endpoint type (default is set to 'virtuoso').</td>
       <td>
              'http://dbpedia.org': {
-                  host: 'dbpedia.org', port: 80, path: '/sparql', type: 'virtuoso'
+                  host: 'dbpedia.org', port: 80, path: '/sparql', type: 'virtuoso', useDefaultGraph: 0
               }
       </td>
     </tr>
