@@ -24,6 +24,15 @@ class ResourceQuery{
                 return this.updateTriple(graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType);
         }
     }
+    getUpdateTriplesQuery(endpointType, graphName, resourceURI, propertyURI, changes) {
+        switch (endpointType) {
+            case 'sesame':
+                return this.updateTriplesForSesame(graphName, resourceURI, propertyURI, changes);
+                break;
+            default:
+                return this.updateTriples(graphName, resourceURI, propertyURI, changes);
+        }
+    }
     getProperties(graphName, resourceURI) {
         let ex = 'FROM <'+ graphName +'>';
         if(!graphName){
@@ -82,22 +91,6 @@ class ResourceQuery{
         return this.query;
     }
     updateTripleForSesame (graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType) {
-        /*
-        let ex1 = 'FROM <'+ graphName +'>', ex2 = 'INTO <'+ graphName +'>';
-        if(!graphName){
-            ex1 = '';
-            ex2 = '';
-        }
-        if(oldObjectValue){
-            let tmp1 = getQueryDataTypeValue(valueType, dataType, oldObjectValue);
-            let oldValue = tmp1.value;
-            let tmp2 = getQueryDataTypeValue(valueType, dataType, newObjectValue);
-            let newValue = tmp2.value;
-            let dtype = tmp1.dtype;
-          //if we just want to delete a specific value for multi-valued ones
-          this.query = 'DELETE ' + ex1 + ' {<'+ resourceURI +'> <'+ propertyURI +'> ?v} INSERT ' + ex2 + ' { <'+ resourceURI + '> <'+ propertyURI +'> '+ newValue +' } WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?v . FILTER(' + dtype + '(?v)= '+ oldValue +' ) }';
-        }
-        */
         this.query = this.deleteTriple(graphName, resourceURI, propertyURI, oldObjectValue, valueType, dataType) + ';' + this.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType) + ';';
         return this.query;    }
     updateTriples (graphName, resourceURI, propertyURI, changes) {
@@ -105,6 +98,14 @@ class ResourceQuery{
         self.query= '';
         changes.forEach(function(change) {
             self.query = self.query + self.updateTriple(graphName, resourceURI, propertyURI, change.oldValue, change.newValue, change.valueType, change.dataType);
+        });
+        return self.query;
+    }
+    updateTriplesForSesame (graphName, resourceURI, propertyURI, changes) {
+        let self = this;
+        self.query= '';
+        changes.forEach(function(change) {
+            self.query = self.query + self.updateTripleForSesame(graphName, resourceURI, propertyURI, change.oldValue, change.newValue, change.valueType, change.dataType);
         });
         return self.query;
     }
