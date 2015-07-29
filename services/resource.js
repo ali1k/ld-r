@@ -83,7 +83,7 @@ export default {
                 callback(null, {graphName: graphName, resourceURI: resourceURI, resourceType: '', title: '', currentCategory: 0, propertyPath: [], properties: [], config: rconfig});
             });
         } else if (resource === 'resource.objectProperties') {
-            graphName = params.dataset;
+            graphName = (params.dataset !== '0' ? decodeURIComponent(params.dataset) : 0);
             objectURI = params.objectURI;
             propertyURI = params.propertyURI;
             resourceURI = params.resourceURI;
