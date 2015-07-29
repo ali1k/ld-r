@@ -84,7 +84,11 @@ export default {
             if(!propertyPath){
                 propertyPath = [];
             }
-            context.executeAction(loadResource, { dataset: decodeURIComponent(payload.get('params').get('did')), resource: decodeURIComponent(payload.get('params').get('rid')), category: category, propertyPath: propertyPath}, done);
+            let graphName = payload.get('params').get('did');
+            if (!graphName) {
+                graphName = 0;
+            }
+            context.executeAction(loadResource, { dataset: graphName, resource: decodeURIComponent(payload.get('params').get('rid')), category: category, propertyPath: propertyPath}, done);
         }
     },
     user: {
