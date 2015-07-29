@@ -9,6 +9,7 @@ class DatasetQuery{
         PREFIX void: <http://rdfs.org/ns/void#> \
         PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#> \
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \
          ';
         this.query='';
     }
@@ -71,8 +72,7 @@ class DatasetQuery{
                     { '+ st +' \
                     } \
                 } \
-                { OPTIONAL { ?resource dcterms:title ?title } } \
-                { OPTIONAL { ?resource rdfs:label ?label } } \
+                { OPTIONAL { ?resource dcterms:title ?title .} } \
             } LIMIT ' + limit + ' OFFSET ' + offset + ' \
             ';
         }else{
@@ -86,8 +86,7 @@ class DatasetQuery{
                 UNION \
                 { '+ st +' \
                 }\
-                { OPTIONAL { ?resource dcterms:title ?title } } \
-                { OPTIONAL { ?resource rdfs:label ?label } } \
+                { OPTIONAL { ?resource dcterms:title ?title .} } \
             } LIMIT ' + limit + ' OFFSET ' + offset + ' \
             ';
         }
