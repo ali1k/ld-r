@@ -34,7 +34,7 @@ export default {
         if (resource === 'resource.properties') {
             category = params.category;
             //SPARQL QUERY
-            graphName = (params.dataset !== '0' ? decodeURIComponent(params.dataset) : 0);
+            graphName = (params.dataset && params.dataset !== '0' ? decodeURIComponent(params.dataset) : 0);
             resourceURI = params.resource;
             propertyPath = decodeURIComponent(params.propertyPath);
             if(propertyPath.length > 1){
