@@ -9,7 +9,7 @@ import rp from 'request-promise';
 const outputFormat = 'application/sparql-results+json';
 let user;
 /*-----------------------------------*/
-let endpointParameters, graphName, query, queryObject, utilObject, configurator, propertyURI;
+let endpointParameters, cGraphName, graphName, query, queryObject, utilObject, configurator, propertyURI;
 queryObject = new FacetQuery();
 utilObject = new FacetUtil();
 configurator = new Configurator();
@@ -19,7 +19,17 @@ export default {
     // At least one of the CRUD methods is Required
     read: (req, resource, params, config, callback) => {
         if (resource === 'facet.facetsSideEffect') {
-            graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);
+            graphName = (params.id ? decodeURIComponent(params.id) : 0);
+            endpointParameters = getEndpointParameters(graphName);
+            cGraphName = graphName;
+            if(endpointParameters.useDefaultGraph){
+                cGraphName = 0;
+            }else{
+                if(!cGraphName){
+                    graphName = defaultGraphName[0];
+                    cGraphName = defaultGraphName[0];
+                }
+            }
            //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -30,9 +40,8 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getSideEffects(graphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
+            query = queryObject.getSideEffects(cGraphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
             //build http uri
-            endpointParameters = getEndpointParameters(graphName);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 callback(null, {
@@ -46,7 +55,17 @@ export default {
             });
         //handles changes in master level facets
         } else if (resource === 'facet.facetsMaster') {
-            graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);
+            graphName = (params.id ? decodeURIComponent(params.id) : 0);
+            endpointParameters = getEndpointParameters(graphName);
+            cGraphName = graphName;
+            if(endpointParameters.useDefaultGraph){
+                cGraphName = 0;
+            }else{
+                if(!cGraphName){
+                    graphName = defaultGraphName[0];
+                    cGraphName = defaultGraphName[0];
+                }
+            }
            //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -66,9 +85,8 @@ export default {
                 });
                 return 0;
             }
-            query = queryObject.getMasterPropertyValues(graphName, decodeURIComponent(params.selection.value));
+            query = queryObject.getMasterPropertyValues(cGraphName, decodeURIComponent(params.selection.value));
             //build http uri
-            endpointParameters = getEndpointParameters(graphName);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 callback(null, {
@@ -82,7 +100,17 @@ export default {
             });
         //handles changes in second level facets
         } else if (resource === 'facet.facetsSecondLevel') {
-            graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);
+            graphName = (params.id ? decodeURIComponent(params.id) : 0);
+            endpointParameters = getEndpointParameters(graphName);
+            cGraphName = graphName;
+            if(endpointParameters.useDefaultGraph){
+                cGraphName = 0;
+            }else{
+                if(!cGraphName){
+                    graphName = defaultGraphName[0];
+                    cGraphName = defaultGraphName[0];
+                }
+            }
             //config handler
             let rconfig = configurator.prepareDatasetConfig(graphName);
             let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
@@ -101,16 +129,15 @@ export default {
             }
             if(params.mode === 'init'){
                 //get all resources
-                query = queryObject.countSecondLevelPropertyValues(graphName, 0, {});
+                query = queryObject.countSecondLevelPropertyValues(cGraphName, 0, {});
             }else{
-                query = queryObject.countSecondLevelPropertyValues(graphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
+                query = queryObject.countSecondLevelPropertyValues(cGraphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
             }
             // console.log(query);
             //build http uri
-            endpointParameters = getEndpointParameters(graphName);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
-                let query2 = queryObject.getSecondLevelPropertyValues(graphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, maxOnPage, params.page);
+                let query2 = queryObject.getSecondLevelPropertyValues(cGraphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, maxOnPage, params.page);
                  //console.log(query2);
                 rp.get({uri: getHTTPQuery('read', query2, endpointParameters, outputFormat)}).then(function(res2){
                     callback(null, {

@@ -27,8 +27,10 @@ export default {
             if(endpointParameters.useDefaultGraph){
                 cGraphName = 0;
             }else{
-                graphName = defaultGraphName[0];
-                cGraphName = defaultGraphName[0];
+                if(!cGraphName){
+                    graphName = defaultGraphName[0];
+                    cGraphName = defaultGraphName[0];
+                }
             }
             //config handler
             let rconfig = configurator.prepareDatasetConfig(graphName);
@@ -70,8 +72,10 @@ export default {
             if(endpointParameters.useDefaultGraph){
                 cGraphName = 0;
             }else{
-                cGraphName = defaultGraphName[0];
-                graphName = defaultGraphName[0];
+                if(!cGraphName){
+                    graphName = defaultGraphName[0];
+                    cGraphName = defaultGraphName[0];
+                }
             }
             //config handler
             let rconfig = configurator.prepareDatasetConfig(graphName);
