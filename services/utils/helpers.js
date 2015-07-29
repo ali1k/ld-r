@@ -29,8 +29,12 @@ export default {
           port: sparqlEndpoint[g].port,
           path: sparqlEndpoint[g].path
         };
+        let useDefaultGraph = 0;
+        if(sparqlEndpoint[g].useDefaultGraph){
+            useDefaultGraph = 1;
+        }
         let etype = sparqlEndpoint[g].type ? sparqlEndpoint[g].type : 'virtuoso';
-        return {httpOptions: httpOptions, endpointType: etype};
+        return {httpOptions: httpOptions, type: etype, useDefaultGraph: useDefaultGraph};
     },
     getHTTPQuery: function(mode, query, endpointParameters, outputFormat) {
         let url, output = '&Accept=' + encodeURIComponent(outputFormat), ext ='';
@@ -40,7 +44,7 @@ export default {
             qParam = 'update';
             output= '';
         }
-        switch (endpointParameters.endpointType) {
+        switch (endpointParameters.type) {
             case 'virtuoso':
                 url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             break;

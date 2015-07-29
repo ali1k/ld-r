@@ -27,7 +27,7 @@ class DatasetQuery{
             st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
         }
         //go to default graph if no graph name is given
-        if(String(graphName)!==''){
+        if(String(graphName)!=='' && graphName){
             /*jshint multistr: true */
             this.query = '\
             SELECT (count(?resource) AS ?total) WHERE {\
@@ -41,8 +41,8 @@ class DatasetQuery{
             /*jshint multistr: true */
             this.query = '\
             SELECT (count(?resource) AS ?total) WHERE { \
-                    { '+ st +' \
-                    }\
+                { '+ st +' \
+                }\
             }  \
             ';
         }
@@ -63,7 +63,7 @@ class DatasetQuery{
             st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
         }
         //go to default graph if no graph name is given
-        if(String(graphName)!==''){
+        if(String(graphName)!=='' && graphName){
             /*jshint multistr: true */
             this.query = '\
             SELECT DISTINCT ?resource WHERE {\

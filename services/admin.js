@@ -68,9 +68,9 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.activateUser(authGraphName[0], params.resourceURI);
-            //build http uri
             endpointParameters = getEndpointParameters(authGraphName[0]);
+            query = queryObject.activateUser(endpointParameters.type, authGraphName[0], params.resourceURI);
+            //build http uri
             //send request
             rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
                 if(enableEmailNotifications){

@@ -22,7 +22,7 @@ if(enableLogs){
 /*-------------config-------------*/
 const outputFormat = 'application/sparql-results+json';
 /*-----------------------------------*/
-let endpointParameters, category, graphName, propertyURI, resourceURI, objectURI, objectValue, query, queryObject, utilObject, configurator, propertyPath;
+let endpointParameters, category, cGraphName, graphName, propertyURI, resourceURI, objectURI, objectValue, query, queryObject, utilObject, configurator, propertyPath;
 queryObject = new ResourceQuery();
 utilObject = new ResourceUtil();
 configurator = new Configurator();
@@ -35,6 +35,13 @@ export default {
             category = params.category;
             //SPARQL QUERY
             graphName = (params.dataset && params.dataset !== '0' ? decodeURIComponent(params.dataset) : 0);
+            //graph name used for server settings and configs
+            endpointParameters = getEndpointParameters(graphName);
+            //overwrite graph name for the ones with default graph
+            cGraphName = graphName;
+            if(endpointParameters.useDefaultGraph){
+                cGraphName = 0;
+            }
             resourceURI = params.resource;
             propertyPath = decodeURIComponent(params.propertyPath);
             if(propertyPath.length > 1){
@@ -53,10 +60,9 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getPrefixes() + queryObject.getProperties(graphName, resourceURI);
+            query = queryObject.getPrefixes() + queryObject.getProperties(cGraphName, resourceURI);
             // console.log(query);
             //build http uri
-            endpointParameters = getEndpointParameters(graphName);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 //exceptional case for user properties: we hide some admin props from normal users
@@ -83,10 +89,15 @@ export default {
                 callback(null, {graphName: graphName, resourceURI: resourceURI, resourceType: '', title: '', currentCategory: 0, propertyPath: [], properties: [], config: rconfig});
             });
         } else if (resource === 'resource.objectProperties') {
-            graphName = params.dataset;
             objectURI = params.objectURI;
             propertyURI = params.propertyURI;
             resourceURI = params.resourceURI;
+            graphName = params.dataset;
+            endpointParameters = getEndpointParameters(graphName);
+            cGraphName = graphName;
+            if(endpointParameters.useDefaultGraph){
+                cGraphName = 0;
+            }
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -98,9 +109,8 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getPrefixes() + queryObject.getProperties(graphName, objectURI);
+            query = queryObject.getPrefixes() + queryObject.getProperties(cGraphName, objectURI);
             //build http uri
-            endpointParameters = getEndpointParameters(graphName);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 let {props, objectType} = utilObject.parseObjectProperties(res, graphName, resourceURI, propertyURI);
@@ -122,6 +132,12 @@ export default {
     // other methods
      create: (req, resource, params, body, config, callback) => {
          if (resource === 'resource.individualObject') {
+             graphName = params.dataset;
+             endpointParameters = getEndpointParameters(graphName);
+             cGraphName = graphName;
+             if(endpointParameters.useDefaultGraph){
+                 cGraphName = 0;
+             }
              //control access on authentication
              if(enableAuthentication){
                  if(!req.user){
@@ -140,9 +156,8 @@ export default {
              }else{
                  user = {accountName: 'open'};
              }
-             query = queryObject.getPrefixes() + queryObject.addTriple(params.dataset, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
+             query = queryObject.getPrefixes() + queryObject.addTriple(cGraphName, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
              //build http uri
-             endpointParameters = getEndpointParameters(params.dataset);
              //send request
              rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
                  if(enableLogs){
@@ -157,6 +172,12 @@ export default {
                  callback(null, {category: params.category});
              });
          } else if (resource === 'resource.individualObjectDetail') {
+             graphName = params.dataset;
+             endpointParameters = getEndpointParameters(graphName);
+             cGraphName = graphName;
+             if(endpointParameters.useDefaultGraph){
+                 cGraphName = 0;
+             }
              //control access on authentication
              if(enableAuthentication){
                  if(!req.user){
@@ -174,9 +195,8 @@ export default {
              }else{
                  user = {accountName: 'open'};
              }
-             endpointParameters = getEndpointParameters(params.dataset);
              //we should add this resource into user's profile too
-             query = queryObject.getPrefixes() + queryObject.getUpdateObjectTriplesForSesame(endpointParameters.endpointType, params.dataset, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData) + queryObject.addTriple(authGraphName, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', params.newObjectValue, 'uri', '');
+             query = queryObject.getPrefixes() + queryObject.getUpdateObjectTriplesForSesame(endpointParameters.type, cGraphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData) + queryObject.addTriple(authGraphName, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', params.newObjectValue, 'uri', '');
              //build http uri
              //send request
              rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
@@ -195,6 +215,12 @@ export default {
      },
     update: (req, resource, params, body, config, callback) => {
         if (resource === 'resource.individualObject') {
+            graphName = params.dataset;
+            endpointParameters = getEndpointParameters(graphName);
+            cGraphName = graphName;
+            if(endpointParameters.useDefaultGraph){
+                cGraphName = 0;
+            }
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -212,8 +238,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            endpointParameters = getEndpointParameters(params.dataset);
-            query = queryObject.getPrefixes() + queryObject.getUpdateTripleQuery(endpointParameters.endpointType, params.dataset, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType);
+            query = queryObject.getPrefixes() + queryObject.getUpdateTripleQuery(endpointParameters.type, cGraphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType);
             //build http uri
             //send request
             rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
@@ -229,6 +254,12 @@ export default {
                 callback(null, {category: params.category});
             });
         } else if(resource === 'resource.individualObjectDetail'){
+            graphName = params.dataset;
+            endpointParameters = getEndpointParameters(graphName);
+            cGraphName = graphName;
+            if(endpointParameters.useDefaultGraph){
+                cGraphName = 0;
+            }
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -254,7 +285,7 @@ export default {
                 user = {accountName: 'open'};
             }
             endpointParameters = getEndpointParameters(params.dataset);
-            query = queryObject.getPrefixes() + queryObject.getUpdateObjectTriplesForSesame(endpointParameters.endpointType, params.dataset, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData);
+            query = queryObject.getPrefixes() + queryObject.getUpdateObjectTriplesForSesame(endpointParameters.type, cGraphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData);
             //build http uri
             //send request
             rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
@@ -270,6 +301,12 @@ export default {
                 callback(null, {category: params.category});
             });
         } else if(resource === 'resource.aggObject'){
+            graphName = params.dataset;
+            endpointParameters = getEndpointParameters(graphName);
+            cGraphName = graphName;
+            if(endpointParameters.useDefaultGraph){
+                cGraphName = 0;
+            }
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -287,8 +324,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            endpointParameters = getEndpointParameters(params.dataset);
-            query = queryObject.getPrefixes() + queryObject.getUpdateTriplesQuery(endpointParameters.endpointType, params.dataset, params.resourceURI, params.propertyURI, params.changes);
+            query = queryObject.getPrefixes() + queryObject.getUpdateTriplesQuery(endpointParameters.type, cGraphName, params.resourceURI, params.propertyURI, params.changes);
             //build http uri
             //send request
             rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
@@ -307,6 +343,12 @@ export default {
     },
     delete: (req, resource, params, config, callback) => {
         if (resource === 'resource.individualObject') {
+            graphName = params.dataset;
+            endpointParameters = getEndpointParameters(graphName);
+            cGraphName = graphName;
+            if(endpointParameters.useDefaultGraph){
+                cGraphName = 0;
+            }
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -324,9 +366,8 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getPrefixes() + queryObject.deleteTriple(params.dataset, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
+            query = queryObject.getPrefixes() + queryObject.deleteTriple(cGraphName, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
             //build http uri
-            endpointParameters = getEndpointParameters(params.dataset);
             //send request
             rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
                 if(enableLogs){
@@ -341,6 +382,12 @@ export default {
                 callback(null, {category: params.category});
             });
         } else if(resource === 'resource.aggObject') {
+            graphName = params.dataset;
+            endpointParameters = getEndpointParameters(graphName);
+            cGraphName = graphName;
+            if(endpointParameters.useDefaultGraph){
+                cGraphName = 0;
+            }
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -356,9 +403,8 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getPrefixes() + queryObject.deleteTriples(params.dataset, params.resourceURI, params.propertyURI, params.changes);
+            query = queryObject.getPrefixes() + queryObject.deleteTriples(cGraphName, params.resourceURI, params.propertyURI, params.changes);
             //build http uri
-            endpointParameters = getEndpointParameters(params.dataset);
             //send request
             rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
                 if(enableLogs){

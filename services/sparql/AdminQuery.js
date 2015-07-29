@@ -28,13 +28,19 @@ class AdminQuery{
         ';
         return this.prefixes + this.query;
     }
-    activateUser(graphName, resourceURI){
+    activateUser(endpointType, graphName, resourceURI){
         let del = 'DELETE FROM <'+ graphName +'> {<'+ resourceURI +'> ldReactor:isActive ?uri} WHERE { <'+ resourceURI +'> ldReactor:isActive ?uri .}';
         /*jshint multistr: true */
         let ins = '\
         INSERT DATA INTO <'+ graphName +'> { \
         <'+ resourceURI + '> ldReactor:isActive "1" } ';
-        this.query= del + ins;
+        switch (endpointType) {
+            case 'sesame':
+                this.query= del + ';' + ins + ';';            
+                break;
+            default:
+                this.query= del + ins;
+        }
         return this.prefixes + this.query;
     }
 }

@@ -9,7 +9,7 @@ import rp from 'request-promise';
 const outputFormat = 'application/sparql-results+json';
 let user;
 /*-----------------------------------*/
-let endpointParameters, graphName, query, queryObject, utilObject, configurator, propertyURI;
+let endpointParameters, cGraphName, graphName, query, queryObject, utilObject, configurator, propertyURI;
 queryObject = new DatasetQuery();
 utilObject = new DatasetUtil();
 configurator = new Configurator();
@@ -19,7 +19,17 @@ export default {
     // At least one of the CRUD methods is Required
     read: (req, resource, params, config, callback) => {
         if (resource === 'dataset.resourcesByType') {
-            graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);
+            graphName = (params.id ? decodeURIComponent(params.id) : 0);
+            endpointParameters = getEndpointParameters(graphName);
+            //graph name used for server settings and configs
+            cGraphName = graphName;
+            //overwrite graph name for the ones with default graph
+            if(endpointParameters.useDefaultGraph){
+                cGraphName = 0;
+            }else{
+                graphName = defaultGraphName[0];
+                cGraphName = defaultGraphName[0];
+            }
             //config handler
             let rconfig = configurator.prepareDatasetConfig(graphName);
             let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
@@ -37,9 +47,8 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getResourcesByType(graphName, rconfig.resourceFocusType, maxOnPage, offset);
+            query = queryObject.getResourcesByType(cGraphName, rconfig.resourceFocusType, maxOnPage, offset);
             //build http uri
-            endpointParameters = getEndpointParameters(graphName);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 callback(null, {
@@ -54,7 +63,16 @@ export default {
             });
         } else if (resource === 'dataset.countResourcesByType') {
             //SPARQL QUERY
-            graphName = (params.id ? decodeURIComponent(params.id) : defaultGraphName[0]);
+            graphName = (params.id ? decodeURIComponent(params.id) : 0);
+            cGraphName = graphName;
+            endpointParameters = getEndpointParameters(graphName);
+            //overwrite graph name for the ones with default graph
+            if(endpointParameters.useDefaultGraph){
+                cGraphName = 0;
+            }else{
+                cGraphName = defaultGraphName[0];
+                graphName = defaultGraphName[0];
+            }
             //config handler
             let rconfig = configurator.prepareDatasetConfig(graphName);
             //control access on authentication
@@ -67,9 +85,8 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.countResourcesByType(graphName, rconfig.resourceFocusType);
+            query = queryObject.countResourcesByType(cGraphName, rconfig.resourceFocusType);
             //build http uri
-            endpointParameters = getEndpointParameters(graphName);
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 callback(null, {
