@@ -69,23 +69,6 @@ class ResourceQuery{
         }
         return this.query;
     }
-    deleteTripleForSesame(graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
-        let dtype, newValue, tmp = {};
-        let ex = 'FROM <'+ graphName +'>';
-        if(!graphName){
-            ex ='';
-        }
-        if(objectValue){
-            tmp = getQueryDataTypeValue(valueType, dataType, objectValue);
-            newValue = tmp.value;
-            dtype = tmp.dtype;
-          //if we just want to delete a specific value for multi-valued ones
-          this.query = 'DELETE ' + ex + ' {<'+ resourceURI +'> <'+ propertyURI +'> ?v} WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?v . FILTER(' + dtype + '(?v)= '+ newValue +' ) }';
-        }else{
-            this.query = 'DELETE ' + ex + ' {<'+ resourceURI +'> <'+ propertyURI +'> ?z } WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?z } ';
-        }
-        return this.query;
-    }
     deleteTriples(graphName, resourceURI, propertyURI, changes) {
         let self = this;
         self.query= '';
@@ -96,6 +79,22 @@ class ResourceQuery{
     }
     updateTriple (graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType) {
         this.query = this.deleteTriple(graphName, resourceURI, propertyURI, oldObjectValue, valueType, dataType) + this.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType);
+        return this.query;
+    }
+    updateTripleForSesame (graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType) {
+        let ex = 'FROM <'+ graphName +'>';
+        if(!graphName){
+            ex ='';
+        }
+        if(objectValue){
+            tmp = getQueryDataTypeValue(valueType, dataType, objectValue);
+            newValue = tmp.value;
+            dtype = tmp.dtype;
+          //if we just want to delete a specific value for multi-valued ones
+          this.query = 'DELETE ' + ex + ' {<'+ resourceURI +'> <'+ propertyURI +'> ?v} ' + this.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType) + ' WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?v . FILTER(' + dtype + '(?v)= '+ newValue +' ) }';
+        }else{
+            this.query = 'DELETE ' + ex + ' {<'+ resourceURI +'> <'+ propertyURI +'> ?z } ' + this.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType) + ' WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?z }';
+        }
         return this.query;
     }
     updateTriples (graphName, resourceURI, propertyURI, changes) {
