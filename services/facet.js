@@ -1,5 +1,5 @@
 'use strict';
-import {getHTTPOptions} from './utils/helpers';
+import {getEndpointParameters, getHTTPQuery} from './utils/helpers';
 import {defaultGraphName, enableAuthentication} from '../configs/general';
 import FacetQuery from './sparql/FacetQuery';
 import FacetUtil from './utils/FacetUtil';
@@ -9,7 +9,7 @@ import rp from 'request-promise';
 const outputFormat = 'application/sparql-results+json';
 let user;
 /*-----------------------------------*/
-let httpOptions, rpPath, graphName, query, queryObject, utilObject, configurator, propertyURI;
+let endpointParameters, graphName, query, queryObject, utilObject, configurator, propertyURI;
 queryObject = new FacetQuery();
 utilObject = new FacetUtil();
 configurator = new Configurator();
@@ -31,11 +31,10 @@ export default {
                 user = {accountName: 'open'};
             }
             query = queryObject.getSideEffects(graphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
-            httpOptions = getHTTPOptions(graphName);
-            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
-            // console.log(query);
+            //build http uri
+            endpointParameters = getEndpointParameters(graphName);
             //send request
-            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
+            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     page: 1,
@@ -68,10 +67,10 @@ export default {
                 return 0;
             }
             query = queryObject.getMasterPropertyValues(graphName, decodeURIComponent(params.selection.value));
-            httpOptions = getHTTPOptions(graphName);
-            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
+            //build http uri
+            endpointParameters = getEndpointParameters(graphName);
             //send request
-            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
+            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     page: 1,
@@ -107,14 +106,13 @@ export default {
                 query = queryObject.countSecondLevelPropertyValues(graphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
             }
             // console.log(query);
-            httpOptions = getHTTPOptions(graphName);
-            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
+            //build http uri
+            endpointParameters = getEndpointParameters(graphName);
             //send request
-            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
+            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
                 let query2 = queryObject.getSecondLevelPropertyValues(graphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, maxOnPage, params.page);
                  //console.log(query2);
-                let rpPath2 = httpOptions.path + '?query=' + encodeURIComponent(query2) + '&format=' + encodeURIComponent(outputFormat);
-                rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath2}).then(function(res2){
+                rp.get({uri: getHTTPQuery(query2, endpointParameters, outputFormat)}).then(function(res2){
                     callback(null, {
                         graphName: graphName,
                         page: params.page,

@@ -1,5 +1,5 @@
 'use strict';
-import {getHTTPOptions} from './utils/helpers';
+import {getEndpointParameters, getHTTPQuery} from './utils/helpers';
 import {defaultGraphName, enableAuthentication} from '../configs/general';
 import DatasetQuery from './sparql/DatasetQuery';
 import DatasetUtil from './utils/DatasetUtil';
@@ -9,7 +9,7 @@ import rp from 'request-promise';
 const outputFormat = 'application/sparql-results+json';
 let user;
 /*-----------------------------------*/
-let httpOptions, rpPath, graphName, query, queryObject, utilObject, configurator, propertyURI;
+let endpointParameters, graphName, query, queryObject, utilObject, configurator, propertyURI;
 queryObject = new DatasetQuery();
 utilObject = new DatasetUtil();
 configurator = new Configurator();
@@ -39,10 +39,9 @@ export default {
             }
             query = queryObject.getResourcesByType(graphName, rconfig.resourceFocusType, maxOnPage, offset);
             //build http uri
-            httpOptions = getHTTPOptions(graphName);
-            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
+            endpointParameters = getEndpointParameters(graphName);
             //send request
-            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
+            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     resources: utilObject.parseResourcesByType(res, graphName),
@@ -70,10 +69,9 @@ export default {
             }
             query = queryObject.countResourcesByType(graphName, rconfig.resourceFocusType);
             //build http uri
-            httpOptions = getHTTPOptions(graphName);
-            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
+            endpointParameters = getEndpointParameters(graphName);
             //send request
-            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
+            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     total: utilObject.parseCountResourcesByType(res)

@@ -16,6 +16,34 @@ export default {
         };
         return httpOptions;
     },
+    getEndpointParameters: function(graphName) {
+        let httpOptions, g;
+        if(sparqlEndpoint[graphName]){
+            g = graphName;
+        }else{
+            //go for generic SPARQL endpoint
+            g = 'generic';
+        }
+        httpOptions = {
+          host: sparqlEndpoint[g].host,
+          port: sparqlEndpoint[g].port,
+          path: sparqlEndpoint[g].path
+        };
+        let etype = sparqlEndpoint[g].type ? sparqlEndpoint[g].type : 'virtuoso';
+        return {httpOptions: httpOptions, endpointType: etype};
+    },
+    getHTTPQuery: function(query, endpointParameters, outputFormat) {
+        let url;
+        switch (endpointParameters.endpointType) {
+            case 'virtuoso':
+                url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
+            break;
+            case 'sesame':
+                url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '?query=' + encodeURIComponent(query) + '&Accept=' + encodeURIComponent(outputFormat);
+            break;
+        }
+        return url;
+    },
     getQueryDataTypeValue(valueType, dataType, objectValue) {
         let newValue, dtype;
         switch (valueType) {

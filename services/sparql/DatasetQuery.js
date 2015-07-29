@@ -40,11 +40,9 @@ class DatasetQuery{
         }else{
             /*jshint multistr: true */
             this.query = '\
-            SELECT count(?resource) AS ?total WHERE { \
-                { GRAPH ?graphName \
+            SELECT (count(?resource) AS ?total) WHERE { \
                     { '+ st +' \
                     }\
-                } \
             }  \
             ';
         }
@@ -83,6 +81,9 @@ class DatasetQuery{
                     { '+ st +' \
                     }\
                 } \
+                UNION \
+                { '+ st +' \
+                }\
             } LIMIT ' + limit + ' OFFSET ' + offset + ' \
             ';
         }

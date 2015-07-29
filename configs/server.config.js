@@ -4,7 +4,7 @@ export default {
     serverPort: [4000],
     sparqlEndpoint: {
         'generic': {
-            host: 'localhost', port: 8890, path: '/sparql'
+            host: 'localhost', port: 8890, path: '/sparql', type: 'virtuoso'
         }
     },
     dbpediaLookupService: [

@@ -1,5 +1,5 @@
 'use strict';
-import {getHTTPOptions} from './utils/helpers';
+import {getEndpointParameters, getHTTPQuery} from './utils/helpers';
 import {authGraphName, enableAuthentication, enableEmailNotifications} from '../configs/general';
 import {sendMail} from '../plugins/email/handleEmail';
 import AdminQuery from './sparql/AdminQuery';
@@ -9,7 +9,7 @@ import rp from 'request-promise';
 let user;
 const outputFormat = 'application/sparql-results+json';
 /*-----------------------------------*/
-let httpOptions, rpPath, graphName, query, queryObject, utilObject;
+let endpointParameters, graphName, query, queryObject, utilObject;
 queryObject = new AdminQuery();
 utilObject = new AdminUtil();
 
@@ -35,10 +35,9 @@ export default {
             }
             query = queryObject.getUsers(graphName);
             //build http uri
-            httpOptions = getHTTPOptions(graphName);
-            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
+            endpointParameters = getEndpointParameters(graphName);
             //send request
-            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
+            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     users: utilObject.parseUsers(res)
@@ -71,10 +70,9 @@ export default {
             }
             query = queryObject.activateUser(authGraphName[0], params.resourceURI);
             //build http uri
-            httpOptions = getHTTPOptions(authGraphName[0]);
-            rpPath = httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
+            endpointParameters = getEndpointParameters(authGraphName[0]);
             //send request
-            rp.get({uri: 'http://' + httpOptions.host + ':' + httpOptions.port + rpPath}).then(function(res){
+            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
                 if(enableEmailNotifications){
                     sendMail('userActivation', '', params.email, '', '', '');
                 }
