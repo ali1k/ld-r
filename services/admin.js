@@ -72,7 +72,7 @@ export default {
             //build http uri
             endpointParameters = getEndpointParameters(authGraphName[0]);
             //send request
-            rp.get({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
                 if(enableEmailNotifications){
                     sendMail('userActivation', '', params.email, '', '', '');
                 }
