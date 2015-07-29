@@ -58,7 +58,7 @@ export default {
             //build http uri
             endpointParameters = getEndpointParameters(graphName);
             //send request
-            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 //exceptional case for user properties: we hide some admin props from normal users
                 let {props, title, resourceType} = utilObject.parseProperties(res, graphName, resourceURI, category, propertyPath, rconfig.usePropertyCategories, rconfig.propertyCategories);
                 if(graphName === authGraphName[0] && !parseInt(user.isSuperUser)){
@@ -102,7 +102,7 @@ export default {
             //build http uri
             endpointParameters = getEndpointParameters(graphName);
             //send request
-            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 let {props, objectType} = utilObject.parseObjectProperties(res, graphName, resourceURI, propertyURI);
                 callback(null, {
                     objectURI: objectURI,
@@ -144,7 +144,7 @@ export default {
              //build http uri
              endpointParameters = getEndpointParameters(params.dataset);
              //send request
-             rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
+             rp.get({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
                  if(enableLogs){
                      log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                  }
@@ -179,7 +179,7 @@ export default {
              //build http uri
              endpointParameters = getEndpointParameters(params.dataset);
              //send request
-             rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
+             rp.get({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
                  if(enableLogs){
                      log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                  }
@@ -216,7 +216,7 @@ export default {
             //build http uri
             endpointParameters = getEndpointParameters(params.dataset);
             //send request
-            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
                 if(enableLogs){
                     log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                 }
@@ -257,7 +257,7 @@ export default {
             //build http uri
             endpointParameters = getEndpointParameters(params.dataset);
             //send request
-            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
                 if(enableLogs){
                     log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                 }
@@ -291,7 +291,7 @@ export default {
             //build http uri
             endpointParameters = getEndpointParameters(params.dataset);
             //send request
-            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
                 if(enableLogs){
                     log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                 }
@@ -328,7 +328,7 @@ export default {
             //build http uri
             endpointParameters = getEndpointParameters(params.dataset);
             //send request
-            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
                 if(enableLogs){
                     log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                 }
@@ -360,7 +360,7 @@ export default {
             //build http uri
             endpointParameters = getEndpointParameters(params.dataset);
             //send request
-            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
                 if(enableLogs){
                     log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                 }

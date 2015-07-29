@@ -34,7 +34,7 @@ export default {
             //build http uri
             endpointParameters = getEndpointParameters(graphName);
             //send request
-            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     page: 1,
@@ -70,7 +70,7 @@ export default {
             //build http uri
             endpointParameters = getEndpointParameters(graphName);
             //send request
-            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     page: 1,
@@ -109,10 +109,10 @@ export default {
             //build http uri
             endpointParameters = getEndpointParameters(graphName);
             //send request
-            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 let query2 = queryObject.getSecondLevelPropertyValues(graphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, maxOnPage, params.page);
                  //console.log(query2);
-                rp.get({uri: getHTTPQuery(query2, endpointParameters, outputFormat)}).then(function(res2){
+                rp.get({uri: getHTTPQuery('read', query2, endpointParameters, outputFormat)}).then(function(res2){
                     callback(null, {
                         graphName: graphName,
                         page: params.page,

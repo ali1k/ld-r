@@ -41,7 +41,7 @@ export default {
             //build http uri
             endpointParameters = getEndpointParameters(graphName);
             //send request
-            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     resources: utilObject.parseResourcesByType(res, graphName),
@@ -71,7 +71,7 @@ export default {
             //build http uri
             endpointParameters = getEndpointParameters(graphName);
             //send request
-            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     total: utilObject.parseCountResourcesByType(res)

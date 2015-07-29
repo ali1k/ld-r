@@ -32,14 +32,17 @@ export default {
         let etype = sparqlEndpoint[g].type ? sparqlEndpoint[g].type : 'virtuoso';
         return {httpOptions: httpOptions, endpointType: etype};
     },
-    getHTTPQuery: function(query, endpointParameters, outputFormat) {
-        let url;
+    getHTTPQuery: function(mode, query, endpointParameters, outputFormat) {
+        let url, ext;
+        if(mode === 'update'){
+            ext = '/statements';
+        }
         switch (endpointParameters.endpointType) {
             case 'virtuoso':
                 url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             break;
             case 'sesame':
-                url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '?query=' + encodeURIComponent(query) + '&Accept=' + encodeURIComponent(outputFormat);
+                url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + ext + '?query=' + encodeURIComponent(query) + '&Accept=' + encodeURIComponent(outputFormat);
             break;
         }
         return url;

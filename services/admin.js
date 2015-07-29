@@ -37,7 +37,7 @@ export default {
             //build http uri
             endpointParameters = getEndpointParameters(graphName);
             //send request
-            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     users: utilObject.parseUsers(res)
@@ -72,7 +72,7 @@ export default {
             //build http uri
             endpointParameters = getEndpointParameters(authGraphName[0]);
             //send request
-            rp.get({uri: getHTTPQuery(query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
                 if(enableEmailNotifications){
                     sendMail('userActivation', '', params.email, '', '', '');
                 }
