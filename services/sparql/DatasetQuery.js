@@ -72,7 +72,8 @@ class DatasetQuery{
                     { '+ st +' \
                     } \
                 } \
-                { OPTIONAL { ?resource dcterms:title ?title .} } \
+                OPTIONAL { ?resource dcterms:title ?title .}  \
+                OPTIONAL { ?resource rdfs:label ?label .}  \
             } LIMIT ' + limit + ' OFFSET ' + offset + ' \
             ';
         }else{
@@ -86,7 +87,8 @@ class DatasetQuery{
                 UNION \
                 { '+ st +' \
                 }\
-                { OPTIONAL { ?resource dcterms:title ?title .} } \
+                OPTIONAL { ?resource dcterms:title ?title .}  \
+                OPTIONAL { ?resource rdfs:label ?label .}  \
             } LIMIT ' + limit + ' OFFSET ' + offset + ' \
             ';
         }
