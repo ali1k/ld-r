@@ -33,7 +33,7 @@ export default {
         return {httpOptions: httpOptions, endpointType: etype};
     },
     getHTTPQuery: function(mode, query, endpointParameters, outputFormat) {
-        let url, ext;
+        let url, ext ='';
         if(mode === 'update'){
             ext = '/statements';
         }
