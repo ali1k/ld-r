@@ -16,9 +16,13 @@ class ResourceQuery{
         return this.prefixes;
     }
     getProperties(graphName, resourceURI) {
+        let ex = 'FROM <'+ graphName +'>';
+        if(!graphName){
+            ex ='';
+        }
         /*jshint multistr: true */
         this.query = '\
-        SELECT ?p ?o (count(?extendedVal) AS ?hasExtendedValue) FROM <'+ graphName +'> WHERE { \
+        SELECT ?p ?o (count(?extendedVal) AS ?hasExtendedValue) ' + ex + ' WHERE { \
         <'+ resourceURI + '> ?p ?o . \
         OPTIONAL {?o ?uri ?extendedVal .} \
     } GROUP BY ?p ?o ORDER BY ?p ?o';
