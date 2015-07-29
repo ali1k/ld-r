@@ -66,17 +66,19 @@ class DatasetQuery{
         if(String(graphName)!=='' && graphName){
             /*jshint multistr: true */
             this.query = '\
-            SELECT DISTINCT ?resource WHERE {\
+            SELECT DISTINCT ?resource ?title ?label WHERE {\
                 { GRAPH <' + graphName + '> \
                     { '+ st +' \
                     } \
                 } \
+                { OPTIONAL { ?resource dcterms:title ?title } } \
+                { OPTIONAL { ?resource rdfs:label ?label } } \
             } LIMIT ' + limit + ' OFFSET ' + offset + ' \
             ';
         }else{
             /*jshint multistr: true */
             this.query = '\
-            SELECT DISTINCT ?resource ?graphName WHERE { \
+            SELECT DISTINCT ?resource ?title ?label ?graphName WHERE { \
                 { GRAPH ?graphName \
                     { '+ st +' \
                     }\
@@ -84,6 +86,8 @@ class DatasetQuery{
                 UNION \
                 { '+ st +' \
                 }\
+                { OPTIONAL { ?resource dcterms:title ?title } } \
+                { OPTIONAL { ?resource rdfs:label ?label } } \
             } LIMIT ' + limit + ' OFFSET ' + offset + ' \
             ';
         }
