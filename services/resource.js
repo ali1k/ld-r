@@ -212,7 +212,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getPrefixes() + queryObject.updateTriple(params.dataset, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType);
+            query = queryObject.getPrefixes() + queryObject.getUpdateTripleQuery(endpointParameters.type, params.dataset, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType);
             //build http uri
             endpointParameters = getEndpointParameters(params.dataset);
             //send request

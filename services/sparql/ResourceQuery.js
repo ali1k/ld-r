@@ -15,6 +15,15 @@ class ResourceQuery{
     getPrefixes() {
         return this.prefixes;
     }
+    getUpdateTripleQuery(endpointType, graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType) {
+        switch (endpointType) {
+            case 'sesame':
+                return this.updateTripleForSesame(graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType);
+                break;
+            default:
+                return this.updateTriple(graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType);
+        }
+    }
     getProperties(graphName, resourceURI) {
         let ex = 'FROM <'+ graphName +'>';
         if(!graphName){
@@ -44,6 +53,23 @@ class ResourceQuery{
       return this.query;
     }
     deleteTriple(graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
+        let dtype, newValue, tmp = {};
+        let ex = 'FROM <'+ graphName +'>';
+        if(!graphName){
+            ex ='';
+        }
+        if(objectValue){
+            tmp = getQueryDataTypeValue(valueType, dataType, objectValue);
+            newValue = tmp.value;
+            dtype = tmp.dtype;
+          //if we just want to delete a specific value for multi-valued ones
+          this.query = 'DELETE ' + ex + ' {<'+ resourceURI +'> <'+ propertyURI +'> ?v} WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?v . FILTER(' + dtype + '(?v)= '+ newValue +' ) }';
+        }else{
+            this.query = 'DELETE ' + ex + ' {<'+ resourceURI +'> <'+ propertyURI +'> ?z } WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?z } ';
+        }
+        return this.query;
+    }
+    deleteTripleForSesame(graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
         let dtype, newValue, tmp = {};
         let ex = 'FROM <'+ graphName +'>';
         if(!graphName){

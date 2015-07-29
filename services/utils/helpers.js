@@ -34,15 +34,17 @@ export default {
     },
     getHTTPQuery: function(mode, query, endpointParameters, outputFormat) {
         let url, ext ='';
+        let qParam= 'query';
         if(mode === 'update'){
             ext = '/statements';
+            qParam = 'update';
         }
         switch (endpointParameters.endpointType) {
             case 'virtuoso':
                 url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             break;
             case 'sesame':
-                url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + ext + '?query=' + encodeURIComponent(query) + '&Accept=' + encodeURIComponent(outputFormat);
+                url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + ext + '?' + qParam + '=' + encodeURIComponent(query) + '&Accept=' + encodeURIComponent(outputFormat);
             break;
         }
         return url;
