@@ -82,6 +82,7 @@ class ResourceQuery{
         return this.query;
     }
     updateTripleForSesame (graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType) {
+        /*
         let ex1 = 'FROM <'+ graphName +'>', ex2 = 'INTO <'+ graphName +'>';
         if(!graphName){
             ex1 = '';
@@ -96,8 +97,9 @@ class ResourceQuery{
           //if we just want to delete a specific value for multi-valued ones
           this.query = 'DELETE ' + ex1 + ' {<'+ resourceURI +'> <'+ propertyURI +'> ?v} INSERT ' + ex2 + ' { <'+ resourceURI + '> <'+ propertyURI +'> '+ newValue +' } WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?v . FILTER(' + dtype + '(?v)= '+ oldValue +' ) }';
         }
-        return this.query;
-    }
+        */
+        this.query = this.deleteTriple(graphName, resourceURI, propertyURI, oldObjectValue, valueType, dataType) + ';' + this.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType) + ';';
+        return this.query;    }
     updateTriples (graphName, resourceURI, propertyURI, changes) {
         let self = this;
         self.query= '';

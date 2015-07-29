@@ -30,7 +30,7 @@ class DatasetQuery{
         if(String(graphName)!==''){
             /*jshint multistr: true */
             this.query = '\
-            SELECT count(?resource) AS ?total WHERE {\
+            SELECT (count(?resource) AS ?total) WHERE {\
                 { GRAPH <' + graphName + '> \
                     { '+ st +' \
                     } \
