@@ -21,7 +21,7 @@ class ResourceQuery{
         SELECT ?p ?o (count(?extendedVal) AS ?hasExtendedValue) FROM <'+ graphName +'> WHERE { \
         <'+ resourceURI + '> ?p ?o . \
         OPTIONAL {?o ?uri ?extendedVal .} \
-      } ORDER BY ?p ?o';
+    } GROUP BY ?p ?o ORDER BY ?p ?o';
       return this.query;
     }
     addTriple (graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
