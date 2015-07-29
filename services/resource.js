@@ -212,9 +212,9 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
+            endpointParameters = getEndpointParameters(params.dataset);
             query = queryObject.getPrefixes() + queryObject.getUpdateTripleQuery(endpointParameters.type, params.dataset, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType);
             //build http uri
-            endpointParameters = getEndpointParameters(params.dataset);
             //send request
             rp.get({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
                 if(enableLogs){
