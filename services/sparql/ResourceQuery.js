@@ -86,12 +86,12 @@ class ResourceQuery{
         if(!graphName){
             ex ='';
         }
-        if(objectValue){
-            tmp = getQueryDataTypeValue(valueType, dataType, objectValue);
+        if(oldObjectValue){
+            tmp = getQueryDataTypeValue(valueType, dataType, oldObjectValue);
             newValue = tmp.value;
             dtype = tmp.dtype;
           //if we just want to delete a specific value for multi-valued ones
-          this.query = 'DELETE ' + ex + ' {<'+ resourceURI +'> <'+ propertyURI +'> ?v} ' + this.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType) + ' WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?v . FILTER(' + dtype + '(?v)= '+ newValue +' ) }';
+          this.query = 'DELETE ' + ex + ' {<'+ resourceURI +'> <'+ propertyURI +'> ?v} ' + this.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType) + ' WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?v . FILTER(' + dtype + '(?v)= '+ oldObjectValue +' ) }';
         }else{
             this.query = 'DELETE ' + ex + ' {<'+ resourceURI +'> <'+ propertyURI +'> ?z } ' + this.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType) + ' WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?z }';
         }
