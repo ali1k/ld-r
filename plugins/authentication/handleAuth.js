@@ -93,7 +93,7 @@ module.exports = function handleAuthentication(server) {
              /*jshint multistr: true */
              var query = '\
              PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-             SELECT count(?s) AS ?exists FROM <'+ generalConfig.authGraphName[0] +'> WHERE { \
+             SELECT ( COUNT(?s) AS ?exists ) FROM <'+ generalConfig.authGraphName[0] +'> WHERE { \
                { \
                    ?s a foaf:Person . \
                    ?s foaf:accountName "'+ req.body.username +'" .\

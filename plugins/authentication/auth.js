@@ -43,9 +43,10 @@ module.exports = {
         } \
       } \
       ';
-      var rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
       //send request
-      rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+      var endpoint = this.getEndpointParameters([generalConfig.authGraphName[0]]);
+      var rpPath = this.getHTTPQuery('read', query, endpoint, outputFormat);
+      rp.get({uri: rpPath}).then(function(res){
           var parsed = JSON.parse(res);
           var user={};
           user.editorOfGraph=[];
@@ -80,6 +81,44 @@ module.exports = {
           return fn(null, null);
       });
   },
+  getEndpointParameters: function(graphName) {
+        let httpOptions, g;
+        if(config.sparqlEndpoint[graphName]){
+            g = graphName;
+        }else{
+            //go for generic SPARQL endpoint
+            g = 'generic';
+        }
+        httpOptions = {
+          host: config.sparqlEndpoint[g].host,
+          port: config.sparqlEndpoint[g].port,
+          path: config.sparqlEndpoint[g].path
+        };
+        let useDefaultGraph = 0;
+        if(config.sparqlEndpoint[g].useDefaultGraph){
+            useDefaultGraph = 1;
+        }
+        let etype = config.sparqlEndpoint[g].type ? config.sparqlEndpoint[g].type : 'virtuoso';
+        return {httpOptions: httpOptions, type: etype, useDefaultGraph: useDefaultGraph};
+  },
+  getHTTPQuery: function(mode, query, endpointParameters, outputFormat) {
+        let url, output = '&Accept=' + encodeURIComponent(outputFormat), ext ='';
+        let qParam= 'query';
+        if(mode === 'update'){
+            ext = '/statements';
+            qParam = 'update';
+            output= '';
+        }
+        switch (endpointParameters.type) {
+            case 'virtuoso':
+                url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
+            break;
+            case 'sesame':
+                url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + ext + '?' + qParam + '=' + encodeURIComponent(query) + output;
+            break;
+        }
+        return url;
+  },
   findByUsername: function(username, fn){
       var self=this;
       /*jshint multistr: true */
@@ -94,9 +133,10 @@ module.exports = {
         } \
       } \
       ';
-      var rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+      var endpoint = this.getEndpointParameters([generalConfig.authGraphName[0]]);
+      var rpPath = this.getHTTPQuery('read', query, endpoint, outputFormat);
       //send request
-      rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(res){
+      rp.get({uri: rpPath}).then(function(res){
           var parsed = JSON.parse(res);
           var user={};
           if(parsed.results.bindings.length){
