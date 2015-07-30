@@ -22,14 +22,14 @@ class FacetQuery{
                     { '+ st +' \
                     } \
                 } \
-            } \
+            } GROUP BY ?v \
             ';
         }else{
             this.query = '\
             SELECT (count(?s) AS ?total) ?v WHERE {\
                 { '+ st +' \
-                } \
-            } \
+            }  \
+            } GROUP BY ?v \
             ';
         }
         return this.prefixes + this.query;
@@ -91,7 +91,7 @@ class FacetQuery{
                     { '+ st +' \
                     } \
                 } \
-            } \
+            } GROUP BY ?v \
             ';
         }else{
             /*jshint multistr: true */
@@ -99,7 +99,7 @@ class FacetQuery{
             SELECT (count(?s) AS ?total) ?v WHERE {\
                 { '+ st +' \
                 } \
-            } \
+            } GROUP BY ?v \
             ';
         }
         return this.prefixes + this.query;
