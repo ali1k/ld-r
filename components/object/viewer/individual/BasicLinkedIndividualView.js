@@ -24,6 +24,9 @@ class BasicLinkedIndividualView extends React.Component {
             }
             if(this.props.config.shortenURI && this.isHTTPURI(val)){
                 val = this.getTitlefromURI(val);
+                if(!val){
+                    val = this.props.spec.value;
+                }
             }
         }
         outputDIV = <NavLink routeName="resource" className="ui label" href={'/dataset/' + encodeURIComponent(graphName) + '/resource/' + encodeURIComponent(this.props.spec.value) + '/' + this.props.category + '/' + encodeURIComponent(this.props.propertyPath)}>
