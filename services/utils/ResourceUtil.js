@@ -49,13 +49,16 @@ class ResourceUtil{
                 resourceType = el.o.value;
             }
             //-------------------
-            if(!exceptional){
-                config = configurator.preparePropertyConfig(graphName, resourceURI, el.p.value);
-            }else{
+            config = configurator.preparePropertyConfig(graphName, resourceURI, el.p.value);
+            if(exceptional){
                 if(configExceptional && configExceptional.extensions){
                     configExceptional.extensions.forEach(function(ex){
                         if(ex.spec.propertyURI === el.p.value){
-                            config = ex.config;
+                            for(let cp in ex.config) {
+                                //overwrite config with extension config
+                                config[cp] = ex.config[cp];
+                            }
+
                         }
                     });
                 }
