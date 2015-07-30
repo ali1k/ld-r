@@ -22,34 +22,53 @@ class IndividualObject extends React.Component {
     }
     shouldNavigate(){
         let yes = 0;
-        if(this.props.spec.extended && this.props.config && this.props.config.extensions){
-            this.props.config.extensions.forEach(function(el, i) {
-                if(el.config.allowExtension || el.config.allowNewValue){
-                    yes = 1;
-                    return yes;
-                }
-            });
-        }else{
-            yes = 0;
+        if(this.state.isExtendedView) {
+            //after expansion
+            if(this.props.spec.extendedViewData){
+                this.props.spec.extendedViewData.forEach(function(el, i) {
+                    if(el.spec.instances.length > 1){
+                        yes = 1;
+                        return yes;
+                    }
+                });
+            }else{
+                yes = 0;
+                return yes;
+            }
+        }else {
+            if(this.props.spec.extended && this.props.config && this.props.config.extensions){
+                this.props.config.extensions.forEach(function(el, i) {
+                    if(el.config.allowExtension || el.config.allowNewValue){
+                        yes = 1;
+                        return yes;
+                    }
+                });
+            }else{
+                yes = 0;
+                return yes;
+            }
         }
         return yes;
+    }
+    navigateToNewTab() {
+        let category = 0;
+        if(this.props.config && this.props.config.category){
+            category = this.props.config.category;
+        }
+        this.context.executeAction(navigateAction, {
+            url: '/dataset/' + encodeURIComponent(this.props.graphName) + '/resource/' + encodeURIComponent(this.props.spec.value) + '/' + category + '/' + encodeURIComponent([this.props.resource, this.props.property])
+        });
     }
     handleEdit() {
         //navigate to a new windows if it has multi-valued objects or extended objects
         if(this.shouldNavigate()){
-            let category = 0;
-            if(this.props.config && this.props.config.category){
-                category = this.props.config.category;
-            }
-            this.context.executeAction(navigateAction, {
-                url: '/dataset/' + encodeURIComponent(this.props.graphName) + '/resource/' + encodeURIComponent(this.props.spec.value) + '/' + category + '/' + encodeURIComponent([this.props.resource, this.props.property])
-            });
+            this.navigateToNewTab();
         }else{
             //check if it is extended
-            if(this.props.spec.extended && !this.state.isExtendedView){
-                this.props.onShowDetail(this.props.spec.value);
-                this.setState({isExtendedView: 1});
-            }
+            // if(this.props.spec.extended && !this.state.isExtendedView){
+            //     this.props.onShowDetail(this.props.spec.value);
+            //     this.setState({isExtendedView: 1});
+            // }
             this.setState({inEditMode: 1});
         }
     }

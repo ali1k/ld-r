@@ -30,7 +30,7 @@ class ObjectIViewer extends React.Component {
             }
         }
         //always go for linked view when it has extensions
-        if(this.props.config && this.props.config.allowExtension && this.props.spec.extended){
+        if(this.props.config && this.props.spec.extended){
             viewerConfig = 'BasicLinkedIndividualView';
             propertyPath = [this.props.resource, this.props.property];
         }
