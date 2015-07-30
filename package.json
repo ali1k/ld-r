@@ -60,8 +60,8 @@
     "json-loader": "~0.5.1",
     "nodemon": "^1.4.0",
     "precommit-hook": "^3.0.0",
-    "webpack": "^1.4.12",
-    "webpack-dev-server": "^1.6.5"
+    "webpack": "^1.10.5",
+    "webpack-dev-server": "^1.10.1"
   },
   "pre-commit": [
     "lint",
