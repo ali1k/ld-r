@@ -1,6 +1,8 @@
 'use strict';
+import ResourceQuery from './ResourceQuery';
 class AdminQuery{
     constructor() {
+        this.queryObject = new ResourceQuery();
         /*jshint multistr: true */
         this.prefixes = '\
         PREFIX ldReactor: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
@@ -29,18 +31,7 @@ class AdminQuery{
         return this.prefixes + this.query;
     }
     activateUser(endpointType, graphName, resourceURI){
-        let del = 'DELETE FROM <'+ graphName +'> {<'+ resourceURI +'> ldReactor:isActive ?uri} WHERE { <'+ resourceURI +'> ldReactor:isActive ?uri .}';
-        /*jshint multistr: true */
-        let ins = '\
-        INSERT DATA INTO <'+ graphName +'> { \
-        <'+ resourceURI + '> ldReactor:isActive "1" } ';
-        switch (endpointType) {
-            case 'sesame':
-                this.query= del + ';' + ins + ';';            
-                break;
-            default:
-                this.query= del + ins;
-        }
+        this.query = this.queryObject.getUpdateTripleQuery(endpointType, graphName, resourceURI, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isActive', '0', '1', 'literal', '');
         return this.prefixes + this.query;
     }
 }
