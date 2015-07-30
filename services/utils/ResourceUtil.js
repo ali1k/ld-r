@@ -118,6 +118,7 @@ class ResourceUtil{
         let output=[], propIndex={}, finalOutput=[];
         if(parsed.results.bindings.length){
           parsed.results.bindings.forEach(function(el) {
+              config = {};
             if(el.p.value === 'http://purl.org/dc/terms/title'){
                 title = el.o.value;
             }else if(el.p.value === 'http://www.w3.org/2000/01/rdf-schema#label'){
