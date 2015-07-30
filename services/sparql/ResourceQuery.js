@@ -197,10 +197,10 @@ class ResourceQuery{
     }
     updateObjectTriplesForSesame (graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType, detailData) {
         let self=this;
-        self.query = self.deleteTriple(graphName, resourceURI, propertyURI, oldObjectValue, valueType, dataType) + ';' + self.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType) + ';';
+        self.query = self.deleteTripleForSesame (graphName, resourceURI, propertyURI, oldObjectValue, valueType, dataType) + ';' + self.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType) + ';';
         for (let propURI in detailData) {
-            self.query = self.query + self.deleteTriple(graphName, oldObjectValue, propURI, '', detailData[propURI].valueType, detailData[propURI].dataType)+ ';';
-            self.query = self.query + self.addTriple(graphName, newObjectValue, propURI, detailData[propURI].value, detailData[propURI].valueType, detailData[propURI].dataType)+ ';';
+            self.query = self.query + self.deleteTripleForSesame (graphName, oldObjectValue, propURI, '', detailData[propURI].valueType, detailData[propURI].dataType)+ ';';
+            self.query = self.query + self.addTripleForSesame (graphName, newObjectValue, propURI, detailData[propURI].value, detailData[propURI].valueType, detailData[propURI].dataType)+ ';';
         }
         return self.query;
     }
