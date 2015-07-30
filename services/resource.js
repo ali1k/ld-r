@@ -195,8 +195,11 @@ export default {
              }else{
                  user = {accountName: 'open'};
              }
-             //we should add this resource into user's profile too
-             query = queryObject.getPrefixes() + queryObject.getUpdateObjectTriplesForSesame(endpointParameters.type, cGraphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData) + queryObject.addTriple(authGraphName, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', params.newObjectValue, 'uri', '');
+             query = queryObject.getPrefixes() + queryObject.getUpdateObjectTriplesForSesame(endpointParameters.type, cGraphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData);
+            //we should add this resource into user's profile too
+             if(enableAuthentication){
+                 query = query + queryObject.addTriple(authGraphName, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', params.newObjectValue, 'uri', '');
+             }
              //build http uri
              //send request
              rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
