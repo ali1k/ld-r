@@ -156,7 +156,7 @@ export default {
              }else{
                  user = {accountName: 'open'};
              }
-             query = queryObject.getPrefixes() + queryObject.addTriple(cGraphName, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
+             query = queryObject.getPrefixes() + queryObject.getAddTripleQuery(endpointParameters, cGraphName, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
              //build http uri
              //send request
              rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
@@ -198,7 +198,7 @@ export default {
              query = queryObject.getPrefixes() + queryObject.getUpdateObjectTriplesForSesame(endpointParameters.type, cGraphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData);
             //we should add this resource into user's profile too
              if(enableAuthentication){
-                 query = query + queryObject.addTriple(authGraphName, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', params.newObjectValue, 'uri', '');
+                 query = query + queryObject.getAddTripleQuery(endpointParameters, authGraphName, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', params.newObjectValue, 'uri', '');
              }
              //build http uri
              //send request
@@ -369,7 +369,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getPrefixes() + queryObject.deleteTriple(cGraphName, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
+            query = queryObject.getPrefixes() + queryObject.getDeleteTripleQuery(endpointParameters, cGraphName, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
             //build http uri
             //send request
             rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
@@ -406,7 +406,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getPrefixes() + queryObject.deleteTriples(cGraphName, params.resourceURI, params.propertyURI, params.changes);
+            query = queryObject.getPrefixes() + queryObject.getDeleteTriplesQuery(endpointParameters, cGraphName, params.resourceURI, params.propertyURI, params.changes);
             //build http uri
             //send request
             rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
