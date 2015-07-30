@@ -1,5 +1,6 @@
 'use strict';
 //required for authentication
+var helper = require('./auth-helper')
 var passwordHash = require('password-hash');
 var passport = require ('passport');
 var passportConfig = require('./passport-config');
@@ -100,9 +101,10 @@ module.exports = function handleAuthentication(server) {
                } \
              } \
              ';
-             var rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
+             var endpoint = helper.getEndpointParameters([generalConfig.authGraphName[0]]);
+             var rpPath = helper.getHTTPQuery('read', query, endpoint, outputFormat);
              //send request
-             rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(resq){
+             rp.get({uri: rpPath}).then(function(resq){
                  var parsed = JSON.parse(resq);
                  if(parsed.results.bindings.length){
                      if(parsed.results.bindings[0].exists.value ==='0'){
@@ -137,10 +139,8 @@ module.exports = function handleAuthentication(server) {
                              <'+blanknode+'4> ldr:resource <'+resourceURI+'> ; ldr:property ldr:password . \
                          } \
                          ';
-                        //  console.log(query);
-                         rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
-
-                         rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(){
+                         rpPath = helper.getHTTPQuery('update', query, endpoint, outputFormat);
+                         rp.get({uri: rpPath}).then(function(){
                              console.log('User is created!');
                              //send email notifications
                              if(generalConfig.enableEmailNotifications){
