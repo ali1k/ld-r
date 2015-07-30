@@ -58,32 +58,32 @@ class ResourceQuery{
     addTriple (graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
         //todo: consider different value types
       let newValue, tmp = {};
-      let ex = 'INTO <'+ graphName +'>';
+      let graph = 'GRAPH <'+ graphName +'> {';
       if(!graphName){
-          ex ='';
+          graph ='{';
       }
       tmp = getQueryDataTypeValue(valueType, dataType, objectValue);
       newValue = tmp.value;
       /*jshint multistr: true */
       this.query = '\
-      INSERT DATA ' + ex + ' { \
-      <'+ resourceURI + '> <'+ propertyURI +'> '+ newValue +' } ';
+      INSERT DATA { \
+      ' + graph  +'<'+ resourceURI + '> <'+ propertyURI +'> '+ newValue +' } }';
       return this.query;
     }
     deleteTriple(graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
         let dtype, newValue, tmp = {};
-        let ex = 'FROM <'+ graphName +'>';
+        let graph = 'GRAPH <'+ graphName +'> {';
         if(!graphName){
-            ex ='';
+            graph ='{';
         }
         if(objectValue){
             tmp = getQueryDataTypeValue(valueType, dataType, objectValue);
             newValue = tmp.value;
             dtype = tmp.dtype;
           //if we just want to delete a specific value for multi-valued ones
-          this.query = 'DELETE ' + ex + ' {<'+ resourceURI +'> <'+ propertyURI +'> ?v} WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?v . FILTER(' + dtype + '(?v)= '+ newValue +' ) }';
+          this.query = 'DELETE  { '+ graph  +'<'+ resourceURI +'> <'+ propertyURI +'> ?v} } WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?v . FILTER(' + dtype + '(?v)= '+ newValue +' ) } ';
         }else{
-            this.query = 'DELETE ' + ex + ' {<'+ resourceURI +'> <'+ propertyURI +'> ?z } WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?z } ';
+            this.query = 'DELETE { ' + graph + '<'+ resourceURI +'> <'+ propertyURI +'> ?z } } WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?z }';
         }
         return this.query;
     }

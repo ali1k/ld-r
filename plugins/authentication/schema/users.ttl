@@ -14,7 +14,7 @@
       foaf:firstName "Admin" ;
       foaf:lastName "User" ;
       foaf:organization <http://dbpedia.org/resource/VU_University_Amsterdam>;
-      foaf:mbox <a.khalili@vu.nl> ;
+      foaf:mbox <mailto:a.khalili@vu.nl> ;
       foaf:homepage <http://ali1k.com> ;
       foaf:accountName "admin" ;
       #password: demo1234
