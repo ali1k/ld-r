@@ -58,7 +58,6 @@ class ResourceUtil{
                                 //overwrite config with extension config
                                 config[cp] = ex.config[cp];
                             }
-
                         }
                     });
                 }
@@ -121,7 +120,7 @@ class ResourceUtil{
         let output=[], propIndex={}, finalOutput=[];
         if(parsed.results.bindings.length){
           parsed.results.bindings.forEach(function(el) {
-              config = {};
+            config = configurator.preparePropertyConfig(graphName, resourceURI, el.p.value);
             if(el.p.value === 'http://purl.org/dc/terms/title'){
                 title = el.o.value;
             }else if(el.p.value === 'http://www.w3.org/2000/01/rdf-schema#label'){
@@ -132,7 +131,10 @@ class ResourceUtil{
             if(configExceptional && configExceptional.extensions){
                 configExceptional.extensions.forEach(function(ex){
                     if(ex.spec.propertyURI === el.p.value){
-                        config = ex.config;
+                        for(let cp in ex.config) {
+                            //overwrite config with extension config
+                            config[cp] = ex.config[cp];
+                        }
                     }
                 });
             }
