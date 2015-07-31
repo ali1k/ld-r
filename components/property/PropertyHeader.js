@@ -17,9 +17,9 @@ class PropertyHeader extends React.Component {
         if(this.props.config && this.props.config.label){
             label = this.props.config.label;
         }
-        titleDIV = <a href={this.props.spec.propertyURI} target="_blank"> {label} </a>;
+        titleDIV = <a style={{color:'rgb(98, 91, 95)'}} href={this.props.spec.propertyURI} target="_blank"> {label} </a>;
         if(this.props.config && this.props.config.hint){
-            hintDIV = <a className="hint" data-content={this.props.config.hint[0]}> <i className="item circle info icon link"></i> </a>;
+            hintDIV = <a style={{color:'rgb(98, 91, 95)'}} className="hint" data-content={this.props.config.hint[0]}> <i className="item circle info icon link"></i> </a>;
         }
         switch(this.props.size){
             case '1':

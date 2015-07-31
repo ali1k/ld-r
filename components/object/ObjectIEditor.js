@@ -67,7 +67,7 @@ class ObjectIEditor extends React.Component {
         }
         return (
             <div className="ui" ref="objectIEditor">
-                {hideObject ? '' : <div className="ui attached secondary segment"> {editor} </div>}
+                {hideObject ? '' : <div className="ui attached message"> {editor} </div>}
                 {extendedEditor}
             </div>
         );
