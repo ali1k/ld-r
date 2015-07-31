@@ -1,7 +1,7 @@
 import React from 'react';
 import PropertyReactor from '../reactors/PropertyReactor';
 import {NavLink} from 'fluxible-router';
-
+import URIUtil from '../utils/URIUtil';
 class Resource extends React.Component {
     constructor(props) {
         super(props);
@@ -42,18 +42,6 @@ class Resource extends React.Component {
         }else{
             return {access: true, type: 'full'};
         }
-    }
-    getPropertyLabel(uri) {
-        let property = '';
-        let tmp = uri;
-        let tmp2 = tmp.split('#');
-        if(tmp2.length > 1){
-            property = tmp2[1];
-        }else{
-            tmp2 = tmp.split('/');
-            property = tmp2[tmp2.length - 1];
-        }
-        return property;
     }
     render() {
         let readOnly = 1;
@@ -155,7 +143,7 @@ class Resource extends React.Component {
             breadcrumb = <div className="ui large breadcrumb">
                           <a className="section" href={'/dataset/' + encodeURIComponent(self.props.graphName) + '/resource/' + encodeURIComponent(self.props.propertyPath[0])}>{self.props.propertyPath[0]}</a>
                           <i className="right chevron icon divider"></i>
-                          <div className="active section">{self.getPropertyLabel(self.props.propertyPath[1])}</div>
+                          <div className="active section">{URIUtil.getURILabel(self.props.propertyPath[1])}</div>
                         </div>;
         }
         return (
