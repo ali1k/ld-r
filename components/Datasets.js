@@ -21,7 +21,7 @@ class Datasets extends React.Component {
         sources.forEach(function(s){
             for(let graph in config[s]){
                 //check if it readOnly
-                color = 'blue';
+                color = 'black';
                 focus = '';
                 if(s === 'dataset'){
                     if(config[s][graph].readOnly === 0){
@@ -39,7 +39,7 @@ class Datasets extends React.Component {
                     }
                     if(dss.indexOf(graph) === -1){
                         if(facets[graph]){
-                            brws = <a className="ui label" href={'/browse/' + encodeURIComponent(graph)} title="browse"><i className="zoom icon"></i>browse</a>;
+                            brws = <a className="ui grey label" href={'/browse/' + encodeURIComponent(graph)} title="browse"><i className="zoom icon"></i>browse</a>;
                         }
                         dss.push(graph);
                         output.push(<div className="ui item" key={graph}> <div className="content"> <i className={'ui icon cubes ' + color} ></i> <a className="ui blank link" href={'/dataset/1/' + encodeURIComponent(graph)} title="go to resource list">{graph}</a> {focus} {brws} {dfl}</div> </div>);

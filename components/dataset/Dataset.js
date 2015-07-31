@@ -33,7 +33,7 @@ class Dataset extends React.Component {
                 <div className="ui column">
                     <div className="ui segment top attached">
                         <h3>{this.props.total ? <span className="ui big black circular label">{this.addCommas(this.props.total)}</span> : ''} Resources of type {typeSt} in {this.props.graphName ? <a href={this.props.graphName}>{this.props.graphName}</a> : ' all local datasets'}</h3>
-                        <ResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} graphName={this.props.graphName} isBig={true} />
+                        <ResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} graphName={this.props.graphName} isBig={true} config={this.props.config}/>
                     </div>
                     <div className= "ui secondary segment bottom attached">
                         <ResourceListPager graphName={this.props.graphName} total={this.props.total} threshold={10} currentPage={this.props.page} maxNumberOfResourcesOnPage={this.props.config.maxNumberOfResourcesOnPage}/>

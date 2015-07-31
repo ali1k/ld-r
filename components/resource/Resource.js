@@ -107,8 +107,8 @@ class Resource extends React.Component {
             }
             tabsDIV = this.props.config.propertyCategories.map(function(node, index) {
                 return (
-                    <NavLink key={index} routeName="resource" href={'/dataset/' + encodeURIComponent(self.props.graphName) + '/resource/' + encodeURIComponent(self.props.resource) + '/' + node + '/' + encodeURIComponent(self.props.propertyPath)}>
-                      <div className={(node === currentCategory ? 'item link active' : 'item link')}> {node} </div>
+                    <NavLink className={(node === currentCategory ? 'item link active' : 'item link')} key={index} routeName="resource" href={'/dataset/' + encodeURIComponent(self.props.graphName) + '/resource/' + encodeURIComponent(self.props.resource) + '/' + node + '/' + encodeURIComponent(self.props.propertyPath)}>
+                      {node}
                     </NavLink>
                 );
             });
@@ -152,7 +152,7 @@ class Resource extends React.Component {
                     {breadcrumb}
                     <h2>
                         {this.props.isComplete ? '' : <img src="/assets/img/loader.gif" alt="loading..."/>}
-                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.graphName) + '/' + encodeURIComponent(this.props.resource)}><i className="black icon cube"></i></a> <a href={this.props.resource} target="_blank">{this.props.title}</a>
+                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.graphName) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon cube"></i></a> <a href={this.props.resource} target="_blank">{this.props.title}</a>
                     </h2>
                     {mainDIV}
                 </div>

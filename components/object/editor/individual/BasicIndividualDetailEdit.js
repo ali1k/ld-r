@@ -32,7 +32,7 @@ class BasicIndividualDetailEdit extends React.Component {
             });
             return (
                 <div className="item" key={index}>
-                    <div className="ui form grid">
+                    <div className="ui">
                         <div className="ui horizontal list">
                             <div className="item">
                                 <PropertyHeader spec={node.spec} config={node.config} size="4" />

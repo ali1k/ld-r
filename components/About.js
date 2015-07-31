@@ -29,13 +29,18 @@ class About extends React.Component {
                                           tel (+31)-20-598 7731/7718
                                       </div>
                                       <div className="item">
-                                        <div className="ui label">
+                                        <div className="ui label animated zoomIn">
                                           <a href="mailto:frank.van.harmelen@vu.nl"><i className="mail icon"></i> Prof. &nbsp; Frank van Harmelen &nbsp; &nbsp; &nbsp; &nbsp;</a>
                                         </div>
                                       </div>
                                       <div className="item">
-                                        <div className="ui label">
+                                        <div className="ui label animated zoomIn">
                                           <a href="mailto:a.khalili@vu.nl@vu.nl"><i className="mail icon"></i> Dr. &nbsp; Ali Khalili &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</a>
+                                        </div>
+                                      </div>
+                                      <div className="item">
+                                        <div className="ui label animated zoomIn">
+                                          <a href="mailto:a.loizou@vu.nl"><i className="mail icon"></i> Dr. &nbsp; Antoins Loizou &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</a>
                                         </div>
                                       </div>
                                     </div>

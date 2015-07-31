@@ -29,7 +29,7 @@ class ResourceListPager extends React.Component {
             totalPages = Math.ceil(this.props.total / maxOnPage);
             if(totalPages > threshold){
                 //first page
-                pageList.push(self.buildLink(1, 'purple', 'step backward icon'));
+                pageList.push(self.buildLink(1, 'grey', 'step backward icon'));
                 if(currentPage - Math.round(threshold / 2) <= 0){
                     startI = 1;
                 }else{
@@ -43,7 +43,7 @@ class ResourceListPager extends React.Component {
                     }
                 }
                 //last page
-                pageList.push(self.buildLink(totalPages, 'purple', 'step forward icon'));
+                pageList.push(self.buildLink(totalPages, 'grey', 'step forward icon'));
             }else{
                 for (i = 1; i <= totalPages; i++) {
                     if(i === currentPage){
