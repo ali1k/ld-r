@@ -2,20 +2,34 @@ import React from 'react';
 import {defaultGraphName, authGraphName} from '../configs/general';
 import {config} from '../configs/reactor';
 import {facets} from '../configs/facets';
-
+import URIUtil from './utils/URIUtil';
 class Datasets extends React.Component {
     componentDidMount() {
 
     }
+    prepareFocusList(list) {
+        let out = [];
+        list.forEach(function(f, i){
+            out.push(<a key={i} href={f} target="_blank">{URIUtil.getURILabel(f)} </a>);
+        });
+        return out;
+    }
     render() {
+        let self = this;
         let sources = ['dataset', 'dataset_resource', 'dataset_property', 'dataset_object', 'dataset_resource_property', 'dataset_resource_object', 'dataset_property_object', 'dataset_resource_property_object'];
-        let dss = [], dfl, brws, color, output = [];
+        let dss = [], dfl, brws, color, output = [], focus = '';
         sources.forEach(function(s){
             for(let graph in config[s]){
                 //check if it readOnly
                 color = 'blue';
-                if(s === 'dataset' && config[s][graph].readOnly === 0){
-                    color = 'green';
+                focus = '';
+                if(s === 'dataset'){
+                    if(config[s][graph].readOnly === 0){
+                        color = 'green';
+                    }
+                    if(config[s][graph].resourceFocusType && config[s][graph].resourceFocusType.length){
+                        focus = <span className="ui small circular label"> {self.prepareFocusList(config[s][graph].resourceFocusType)} </span>;
+                    }
                 }
                 if(graph !== authGraphName[0] && graph !== 'generic'){
                     dfl = '';
@@ -28,7 +42,7 @@ class Datasets extends React.Component {
                             brws = <a className="ui label" href={'/browse/' + encodeURIComponent(graph)} title="browse"><i className="zoom icon"></i>browse</a>;
                         }
                         dss.push(graph);
-                        output.push(<div className="ui item" key={graph}> <div className="content"> <i className={'ui icon cubes ' + color} ></i> <a href={'/dataset/1/' + encodeURIComponent(graph)} title="go to resource list">{graph}</a> {brws} {dfl}</div> </div>);
+                        output.push(<div className="ui item" key={graph}> <div className="content"> <i className={'ui icon cubes ' + color} ></i> <a className="ui blank link" href={'/dataset/1/' + encodeURIComponent(graph)} title="go to resource list">{graph}</a> {focus} {brws} {dfl}</div> </div>);
                     }
                 }
             }
