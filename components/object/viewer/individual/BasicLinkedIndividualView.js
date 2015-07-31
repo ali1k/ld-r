@@ -3,10 +3,18 @@ import {NavLink} from 'fluxible-router';
 
 class BasicLinkedIndividualView extends React.Component {
     getTitlefromURI(uri) {
-        if(uri){
-            var tmp = uri.split('/');
-            return tmp[tmp.length - 1];
+        let property = '';
+        let tmp = uri;
+        let tmp2 = tmp.split('#');
+        if(tmp2.length > 1){
+            property = tmp2[1];
+        }else{
+            tmp2 = tmp.split('/');
+            property = tmp2[tmp2.length - 1];
+            tmp2 = property.split(':');
+            property = tmp2[tmp2.length - 1];
         }
+        return property;
     }
     isHTTPURI(uri){
         if(uri.search('http://') !== -1){
