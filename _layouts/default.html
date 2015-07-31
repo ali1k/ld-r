@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="Ali Khalili">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.12.0/semantic.min.css" charset="utf-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.0.7/semantic.min.css" charset="utf-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.3.0/animate.min.css" charset="utf-8">
     <link rel="shortcut icon" href="assets/ico/favicon.ico">
     <style>
@@ -15,7 +15,7 @@
   <body>
     <div>
         <nav class="ui blue menu inverted navbar page grid" id="topmenu">
-                <a class="brand item" href="/"><img class="ui mini image" src="/assets/img/ld-reactor.gif" alt="ld-reactor" /></a>
+                <a class="brand item" href="/"><img class="ui mini image" style="height:20px;width:20px;" src="/assets/img/ld-reactor.gif" alt="ld-reactor" /></a>
                 <a class="item" href="/">LD-R</a>
                 <a class="item" href="/docs/quickstart.html" data-section="quickstart">
                   Quick Start
@@ -23,12 +23,14 @@
                 <a class="item" href="/docs/demo.html" data-section="demo">
                   Demo
                 </a>
-                <a href="http://github.com/ali1k/ld-r"><div class="ui right item link">
-                        <i class="github circle icon"></i> Github
-                </div></a>
-                <a href="https://github.com/ali1k/ld-r/archive/master.zip"><div class="ui right item link">
-                        <i class="download icon"></i> Download
-                </div></a>
+                <div class="right menu">
+                    <a href="https://github.com/ali1k/ld-r/archive/master.zip"><div class="ui item link">
+                            <i class="download icon"></i> Download
+                    </div></a>
+                    <a href="http://github.com/ali1k/ld-r"><div class="ui item link">
+                            <i class="github circle icon"></i> Github
+                    </div></a>
+                </div>
         </nav>
           <div class="ui doubling page grid">
             <div class="four wide column">
@@ -85,9 +87,8 @@
             <div class="twelve wide column">
                 <div class="ui segment">
                     {{content}}
-                    <div class="ui basic mini button right floated">
-                        <a href="https://github.com/ali1k/ld-r/blob/gh-pages/{{page.path}}"><i class="ui edit icon"></i> Edit page on Github</a>
-                    </div>
+                    <br/>
+                    <a class="ui bottom right attached label" href="https://github.com/ali1k/ld-r/blob/gh-pages/{{page.path}}"><i class="ui edit icon"></i> Edit page on Github</a>
                 </div>
             </div>
           </div>
