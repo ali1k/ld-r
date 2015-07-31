@@ -1,21 +1,9 @@
 import React from 'react';
 import ResourceList from './ResourceList';
 import ResourceListPager from './ResourceListPager';
-
+import URIUtil from '../utils/URIUtil';
 class Dataset extends React.Component {
     componentDidMount() {
-    }
-    getPropertyLabel(uri) {
-        let property = '';
-        let tmp = uri;
-        let tmp2 = tmp.split('#');
-        if(tmp2.length > 1){
-            property = tmp2[1];
-        }else{
-            tmp2 = tmp.split('/');
-            property = tmp2[tmp2.length - 1];
-        }
-        return property;
     }
     addCommas(n){
         let rx = /(\d+)(\d{3})/;
@@ -35,7 +23,7 @@ class Dataset extends React.Component {
                 typeSt = <span className="ui black label"> Everything </span>;
             }else{
                 resourceFocusType.forEach(function(uri) {
-                    typesLink.push(<a key={uri} className="ui black label" target="_blank" href={uri}> {self.getPropertyLabel(uri)} </a>);
+                    typesLink.push(<a key={uri} className="ui black label" target="_blank" href={uri}> {URIUtil.getURILabel(uri)} </a>);
                 });
                 typeSt = typesLink;
             }

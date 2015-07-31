@@ -1,6 +1,6 @@
 import React from 'react';
 import {NavLink} from 'fluxible-router';
-
+import URIUtil from '../utils/URIUtil';
 class ResourceList extends React.Component {
     componentDidMount() {
     }
@@ -54,18 +54,6 @@ class ResourceList extends React.Component {
             return {access: true, type: 'full'};
         }
     }
-    getPropertyLabel(uri) {
-        let property = '';
-        let tmp = uri;
-        let tmp2 = tmp.split('#');
-        if(tmp2.length > 1){
-            property = tmp2[1];
-        }else{
-            tmp2 = tmp.split('/');
-            property = tmp2[tmp2.length - 1];
-        }
-        return property;
-    }
     render() {
         let self = this;
         let user = this.context.getUser();
@@ -75,7 +63,7 @@ class ResourceList extends React.Component {
             list = <div className="ui warning message"><div className="header"> There was no resource in the selected dataset! This might be due to the connection problems. Please check the connection parameters of your dataset's Sparql endpoint or add resources to your dataset...</div></div>;
         }else{
             list = this.props.resources.map((node, index) => {
-                title = node.title ? node.title : (node.label ? node.label : self.getPropertyLabel(node.v));
+                title = node.title ? node.title : (node.label ? node.label : URIUtil.getURILabel(node.v));
                 if(!self.props.enableAuthentication) {
                     dbClass = 'green cube icon';
                 }else{
