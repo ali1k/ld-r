@@ -1,12 +1,18 @@
 import React from 'react';
-
+import URIUtil from '../../../utils/URIUtil';
 class BasicIndividualView extends React.Component {
     render() {
-        let outputDIV;
+        let val, outputDIV;
+        val = this.props.spec.value;
         if(this.props.spec.valueType === 'uri'){
-            outputDIV = <a href={this.props.spec.value} target="_blank"> {this.props.spec.value} </a>;
+            if(this.props.config){
+                if(this.props.config.shortenURI){
+                    val = '<' + URIUtil.getURILabel(val) + '>';
+                }
+            }
+            outputDIV = <a href={this.props.spec.value} target="_blank"> {val} </a>;
         }else{
-            outputDIV = <span> {this.props.spec.value} </span>;
+            outputDIV = <span> {val} </span>;
         }
         return (
             <div className="ui" ref="basicIndividualView">

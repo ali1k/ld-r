@@ -1,7 +1,7 @@
 import React from 'react';
 import BasicCheckbox from '../editor/individual/BasicCheckbox';
 import ObjectIViewer from '../ObjectIViewer';
-
+import URIUtil from '../../utils/URIUtil';
 class CheckboxItem extends React.Component {
     constructor(props) {
         super(props);
@@ -10,20 +10,6 @@ class CheckboxItem extends React.Component {
     checkBox(status) {
         this.props.onCheck(status, this.props.spec.value);
         this.setState({isActive: status});
-    }
-    getURILabel(uri) {
-        let property = '';
-        let tmp = uri;
-        let tmp2 = tmp.split('#');
-        if(tmp2.length > 1){
-            property = tmp2[1];
-        }else{
-            tmp2 = tmp.split('/');
-            property = tmp2[tmp2.length - 1];
-            tmp2 = property.split(':');
-            property = tmp2[tmp2.length - 1];
-        }
-        return property;
     }
     addCommas(n){
         let rx = /(\d+)(\d{3})/;
@@ -45,7 +31,7 @@ class CheckboxItem extends React.Component {
             if(this.props.spec.label){
                 title = this.props.spec.label;
             }else if(this.props.shortenURI){
-                title = this.getURILabel(this.props.spec.value);
+                title = URIUtil.getURILabel(this.props.spec.value);
             }
             if(this.props.spec.valueType === 'uri'){
                 if(this.props.config && this.props.config.hasLinkedValue){

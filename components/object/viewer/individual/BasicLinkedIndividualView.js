@@ -1,28 +1,7 @@
 import React from 'react';
 import {NavLink} from 'fluxible-router';
-
+import URIUtil from '../../../utils/URIUtil';
 class BasicLinkedIndividualView extends React.Component {
-    getTitlefromURI(uri) {
-        let property = '';
-        let tmp = uri;
-        let tmp2 = tmp.split('#');
-        if(tmp2.length > 1){
-            property = tmp2[1];
-        }else{
-            tmp2 = tmp.split('/');
-            property = tmp2[tmp2.length - 1];
-            tmp2 = property.split(':');
-            property = tmp2[tmp2.length - 1];
-        }
-        return property;
-    }
-    isHTTPURI(uri){
-        if(uri.search('http://') !== -1){
-            return true;
-        }else{
-            return false;
-        }
-    }
     render() {
         let outputDIV, val = this.props.spec.value;
         let graphName = this.props.graphName;
@@ -30,8 +9,8 @@ class BasicLinkedIndividualView extends React.Component {
             if(this.props.config.linkedGraph){
                 graphName = this.props.config.linkedGraph[0];
             }
-            if(this.props.config.shortenURI && this.isHTTPURI(val)){
-                val = this.getTitlefromURI(val);
+            if(this.props.config.shortenURI){
+                val = URIUtil.getURILabel(val);
                 if(!val){
                     val = this.props.spec.value;
                 }

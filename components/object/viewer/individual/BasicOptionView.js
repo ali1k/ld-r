@@ -1,4 +1,5 @@
 import React from 'react';
+import URIUtil from '../../../utils/URIUtil';
 
 class BasicOptionView extends React.Component {
     prepareOption(value){
@@ -16,6 +17,11 @@ class BasicOptionView extends React.Component {
     render() {
         let outputDIV, label = this.prepareOption(this.props.spec.value);
         if(this.props.spec.valueType === 'uri'){
+            if(this.props.config){
+                if(this.props.config.shortenURI){
+                    label = '<' + URIUtil.getURILabel(label) + '>';
+                }
+            }
             outputDIV = <a href={this.props.spec.value} target="_blank"> {label} </a>;
         }else{
             outputDIV = <span> {label} </span>;
