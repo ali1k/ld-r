@@ -11,6 +11,9 @@ class URIUtil{
             tmp2 = property.split(':');
             property = tmp2[tmp2.length - 1];
         }
+        if(!property){
+            property = uri;
+        }
         return property;
     }
 }
