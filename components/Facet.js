@@ -48,7 +48,7 @@ class Facet extends React.Component {
                             <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.props.config} size="3" />
                         </div>
                     </div>
-                    <div className="ui dividing header"></div>
+                    <div className="ui divider"></div>
                     <div className="meta">
 
                     </div>

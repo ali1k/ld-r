@@ -66,7 +66,7 @@ class ResourceList extends React.Component {
                 title = node.title ? node.title : (node.label ? node.label : URIUtil.getURILabel(node.v));
                 if(!self.props.enableAuthentication) {
                     dbClass = 'black cube icon';
-                    if(typeof self.props.config.readOnly !== 'undefined' && !self.props.config.readOnly){
+                    if(self.props.config && typeof self.props.config.readOnly !== 'undefined' && !self.props.config.readOnly){
                        dbClass = 'green cube icon';
                     }
                 }else{
