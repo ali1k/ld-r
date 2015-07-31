@@ -32,9 +32,12 @@ class Nav extends React.Component {
                     <NavLink routeName="about" className="item" activeClass="active">About {appShortTitle} </NavLink>
                     <NavLink routeName="datasets" className="item" activeClass="active" href="/datasets"> Datasets</NavLink>
                     <div className="right menu">
-                        <div className="item" onClick={this.showHelpModal}>
+                        <div className="item link" onClick={this.showHelpModal}>
                                 <i className="small help circle icon"></i>
                         </div>
+                        <a href="http://github.com/ali1k/ld-r" className="ui item link">
+                                <i className="github circle icon"></i> Github
+                        </a>
                         {userMenu}
                     </div>
             </nav>
