@@ -234,7 +234,7 @@ class FacetedBrowser extends React.Component {
             let resourceDIV;
             if(this.props.FacetedBrowserStore.total){
                 resourceDIV = <div className="ui segment">
-                                <h3 className="ui dividing header">
+                                <h3 className="ui header">
                                     Resources <span className="ui blue circular label">{this.addCommas(this.props.FacetedBrowserStore.total)}</span>
                                 {this.props.FacetedBrowserStore.isComplete ? '' : <img src="/assets/img/loader.gif" alt="loading..."/>}
                                  </h3>
