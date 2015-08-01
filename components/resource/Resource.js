@@ -6,6 +6,12 @@ class Resource extends React.Component {
     constructor(props) {
         super(props);
     }
+    componentDidMount() {
+        //scroll to top of the page
+        let body = $("html, body");
+        body.stop().animate({scrollTop:0}, '500', 'swing', function() {
+        });
+    }
     includesProperty(list, resource, property) {
         let out = false;
         list.forEach(function(el) {
