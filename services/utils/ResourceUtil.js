@@ -10,6 +10,8 @@ class ResourceUtil{
         }else{
             tmp2=tmp.split('/');
             property=tmp2[tmp2.length-1];
+            tmp2 = property.split(':');
+            property = tmp2[tmp2.length - 1];
         }
         return property;
     }
