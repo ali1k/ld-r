@@ -69,7 +69,7 @@ class ObjectIViewer extends React.Component {
             hideObject = 1;
         }
         return (
-            <div className="ui" ref="objectIViewer">
+            <div className="ui" ref="objectIViewer" onClick={this.props.onObjectClick}>
                 {hideObject ? <span itemProp={this.props.property}></span> : <div itemProp={this.props.property} className="ui attached message"> {viewer} </div>}
                 {extendedViewer}
             </div>

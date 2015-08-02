@@ -75,6 +75,12 @@ class IndividualObject extends React.Component {
     handleAddDetails() {
         this.setState({inEditMode: 1, isExtendedView: 1});
     }
+    //when clicked on object div
+    handleOnObjectClick() {
+        if(!this.props.readOnly){
+            this.handleEdit();
+        }
+    }
     handleDataEdit(value) {
         this.setState({objectValue: value});
     }
@@ -164,7 +170,7 @@ class IndividualObject extends React.Component {
         if (this.state.inEditMode) {
             dataEditType = <ObjectIEditor isDefault={false} resource={this.props.resource} property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)} onEnterPress={this.handleSave.bind(this)}/>;
         }else{
-            dataViewType = <ObjectIViewer graphName={this.props.graphName} spec={this.props.spec} config={this.props.config} resource={this.props.resource} property={this.props.property}/>;
+            dataViewType = <ObjectIViewer onObjectClick={this.handleOnObjectClick.bind(this)} graphName={this.props.graphName} spec={this.props.spec} config={this.props.config} resource={this.props.resource} property={this.props.property}/>;
         }
         let editDIV, saveDIV, undoDIV, detailDIV, deleteDIV;
         //disable edit in readOnly mode
