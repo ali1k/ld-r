@@ -130,92 +130,92 @@ export default {
 
     },
     // other methods
-     create: (req, resource, params, body, config, callback) => {
-         if (resource === 'resource.individualObject') {
-             graphName = params.dataset;
-             endpointParameters = getEndpointParameters(graphName);
-             cGraphName = graphName;
-             if(endpointParameters.useDefaultGraph){
-                 cGraphName = 0;
-             }
-             //control access on authentication
-             if(enableAuthentication){
-                 if(!req.user){
-                     callback(null, {category: params.category});
-                     return 0;
-                 }else{
-                     //check if user permitted to do the update action
-                     user = req.user;
-                     accessLevel = utilObject.checkAccess(user, params.dataset, params.resourceURI, params.propertyURI);
-                     if(!accessLevel.access){
-                         //action not allowed!
-                         callback(null, {category: params.category});
-                         return 0;
-                     }
-                 }
-             }else{
-                 user = {accountName: 'open'};
-             }
-             query = queryObject.getPrefixes() + queryObject.getAddTripleQuery(endpointParameters, cGraphName, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
-             //build http uri
-             //send request
-             rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
-                 if(enableLogs){
-                     log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
-                 }
-                 callback(null, {category: params.category});
-             }).catch(function (err) {
-                 console.log(err);
-                 if(enableLogs){
-                     log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
-                 }
-                 callback(null, {category: params.category});
-             });
-         } else if (resource === 'resource.individualObjectDetail') {
-             graphName = params.dataset;
-             endpointParameters = getEndpointParameters(graphName);
-             cGraphName = graphName;
-             if(endpointParameters.useDefaultGraph){
-                 cGraphName = 0;
-             }
-             //control access on authentication
-             if(enableAuthentication){
-                 if(!req.user){
-                     callback(null, {category: params.category});
-                     return 0;
-                 }else{
-                     user = req.user;
-                     accessLevel = utilObject.checkAccess(user, params.dataset, params.resourceURI, params.propertyURI);
-                     if(!accessLevel.access){
-                         //action not allowed!
-                         callback(null, {category: params.category});
-                         return 0;
-                     }
-                 }
-             }else{
-                 user = {accountName: 'open'};
-             }
-             query = queryObject.getPrefixes() + queryObject.getUpdateObjectTriplesForSesame(endpointParameters.type, cGraphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData);
+    create: (req, resource, params, body, config, callback) => {
+        if (resource === 'resource.individualObject') {
+            graphName = params.dataset;
+            endpointParameters = getEndpointParameters(graphName);
+            cGraphName = graphName;
+            if(endpointParameters.useDefaultGraph){
+                cGraphName = 0;
+            }
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {category: params.category});
+                    return 0;
+                }else{
+                    //check if user permitted to do the update action
+                    user = req.user;
+                    accessLevel = utilObject.checkAccess(user, params.dataset, params.resourceURI, params.propertyURI);
+                    if(!accessLevel.access){
+                        //action not allowed!
+                        callback(null, {category: params.category});
+                        return 0;
+                    }
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            query = queryObject.getPrefixes() + queryObject.getAddTripleQuery(endpointParameters, cGraphName, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
+            //build http uri
+            //send request
+            rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
+                if(enableLogs){
+                    log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                }
+                callback(null, {category: params.category});
+            }).catch(function (err) {
+                console.log(err);
+                if(enableLogs){
+                    log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                }
+                callback(null, {category: params.category});
+            });
+        } else if (resource === 'resource.individualObjectDetail') {
+            graphName = params.dataset;
+            endpointParameters = getEndpointParameters(graphName);
+            cGraphName = graphName;
+            if(endpointParameters.useDefaultGraph){
+                cGraphName = 0;
+            }
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {category: params.category});
+                    return 0;
+                }else{
+                    user = req.user;
+                    accessLevel = utilObject.checkAccess(user, params.dataset, params.resourceURI, params.propertyURI);
+                    if(!accessLevel.access){
+                        //action not allowed!
+                        callback(null, {category: params.category});
+                        return 0;
+                    }
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            query = queryObject.getPrefixes() + queryObject.getUpdateObjectTriplesForSesame(endpointParameters.type, cGraphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData);
             //we should add this resource into user's profile too
-             if(enableAuthentication){
-                 query = query + queryObject.getAddTripleQuery(endpointParameters, authGraphName, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', params.newObjectValue, 'uri', '');
-             }
-             //build http uri
-             //send request
-             rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
-                 if(enableLogs){
-                     log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
-                 }
-                 callback(null, {category: params.category});
-             }).catch(function (err) {
-                 console.log(err);
-                 if(enableLogs){
-                     log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
-                 }
-                 callback(null, {category: params.category});
-             });
-         }
-     },
+            if(enableAuthentication){
+                query = query + queryObject.getAddTripleQuery(endpointParameters, authGraphName, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', params.newObjectValue, 'uri', '');
+            }
+            //build http uri
+            //send request
+            rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
+                if(enableLogs){
+                    log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                }
+                callback(null, {category: params.category});
+            }).catch(function (err) {
+                console.log(err);
+                if(enableLogs){
+                    log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                }
+                callback(null, {category: params.category});
+            });
+        }
+    },
     update: (req, resource, params, body, config, callback) => {
         if (resource === 'resource.individualObject') {
             graphName = params.dataset;

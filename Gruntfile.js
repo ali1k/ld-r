@@ -24,14 +24,14 @@ module.exports = function (grunt) {
             dev: require('./webpack.config').dev
         },
         uglify: {
-          options: {
-            mangle: false
-          },
-          myTarget: {
-            files: {
-              'build/js/main.js': ['build/js/main.js']
+            options: {
+                mangle: false
+            },
+            myTarget: {
+                files: {
+                    'build/js/main.js': ['build/js/main.js']
+                }
             }
-          }
         }
     });
 
