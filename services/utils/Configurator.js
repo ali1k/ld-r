@@ -33,11 +33,6 @@ class Configurator{
                 output[prop] = config.dataset[graphName][prop];
             }
         }
-        if(config.resource[resourceURI]){
-            for(let prop in config.resource[resourceURI]) {
-                output[prop] = config.resource[resourceURI][prop];
-            }
-        }
         //check resource Type scope as well
         for(let res in config.resource) {
             if(config.resource[res].treatAsResourceType){
@@ -46,6 +41,11 @@ class Configurator{
                         output[prop] = config.resource[res][prop];
                     }
                 }
+            }
+        }
+        if(config.resource[resourceURI]){
+            for(let prop in config.resource[resourceURI]) {
+                output[prop] = config.resource[resourceURI][prop];
             }
         }
         if(config.dataset_resource[graphName]){
@@ -95,11 +95,6 @@ class Configurator{
                 output[prop] = config.dataset[graphName][prop];
             }
         }
-        if(config.resource[resourceURI]){
-            for(let prop in config.resource[resourceURI]) {
-                output[prop] = config.resource[resourceURI][prop];
-            }
-        }
         //check resource Type scope as well
         for(let res in config.resource) {
             if(config.resource[res].treatAsResourceType){
@@ -108,6 +103,11 @@ class Configurator{
                         output[prop] = config.resource[res][prop];
                     }
                 }
+            }
+        }
+        if(config.resource[resourceURI]){
+            for(let prop in config.resource[resourceURI]) {
+                output[prop] = config.resource[resourceURI][prop];
             }
         }
         if(config.dataset_resource[graphName]){
