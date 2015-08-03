@@ -47,12 +47,10 @@ export default {
             if(propertyPath.length > 1){
                 propertyPath = propertyPath.split(',');
             }
-            //config handler
-            let rconfig = configurator.prepareResourceConfig(graphName, resourceURI);
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
-                    callback(null, {graphName: graphName, resourceURI: resourceURI, resourceType: '', currentCategory: 0, propertyPath: [], properties: [], config: rconfig});
+                    callback(null, {graphName: graphName, resourceURI: resourceURI, resourceType: '', currentCategory: 0, propertyPath: [], properties: [], config: {}});
                     return 0;
                 }else{
                     user = req.user;
@@ -66,7 +64,7 @@ export default {
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
                 //exceptional case for user properties: we hide some admin props from normal users
-                let {props, title, resourceType} = utilObject.parseProperties(res, graphName, resourceURI, category, propertyPath, rconfig.usePropertyCategories, rconfig.propertyCategories);
+                let {props, title, resourceType, rconfig} = utilObject.parseProperties(res, graphName, resourceURI, category, propertyPath);
                 if(graphName === authGraphName[0] && !parseInt(user.isSuperUser)){
                     props = utilObject.deleteAdminProperties(props);
                 }
@@ -86,7 +84,7 @@ export default {
                 if(enableLogs){
                     log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 }
-                callback(null, {graphName: graphName, resourceURI: resourceURI, resourceType: '', title: '', currentCategory: 0, propertyPath: [], properties: [], config: rconfig});
+                callback(null, {graphName: graphName, resourceURI: resourceURI, resourceType: '', title: '', currentCategory: 0, propertyPath: [], properties: [], config: {}});
             });
         } else if (resource === 'resource.objectProperties') {
             objectURI = params.objectURI;

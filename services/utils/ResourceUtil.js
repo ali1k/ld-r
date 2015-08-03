@@ -15,25 +15,42 @@ class ResourceUtil{
         }
         return property;
     }
-    parseProperties(body, graphName, resourceURI, category, propertyPath, usePropertyCategories, propertyCategories) {
+    parseProperties(body, graphName, resourceURI, category, propertyPath) {
         let configurator = new Configurator();
         let configExceptional = {}, config = {}, title = '', resourceType = '';
+        let filterByCategory=0, self=this;
+        let parsed = JSON.parse(body);
+        let output=[], propIndex={}, finalOutput=[];
+        if(parsed.head.vars[0]=== 'callret-0'){
+          //no results!
+          return [];
+        }else{
+            parsed.results.bindings.forEach(function(el) {
+                //see if we can find a suitable title for resource
+                if(el.p.value === 'http://purl.org/dc/terms/title'){
+                    title = el.o.value;
+                }else if(el.p.value === 'http://www.w3.org/2000/01/rdf-schema#label'){
+                    title = el.o.value;
+                }else if (el.p.value === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type') {
+                    resourceType = el.o.value;
+                }
+            });
+        }
         //handle properties config in different levels
         //todo: now only handles level 2 properties should be extended later if needed
         let exceptional = 0;
         if(propertyPath && propertyPath.length){
             //it is only for property path
-            configExceptional = configurator.preparePropertyConfig(graphName, resourceURI, propertyPath[1]);
+            configExceptional = configurator.preparePropertyConfig(graphName, resourceURI, resourceType, propertyPath[1]);
             exceptional = 1;
         }
-        let filterByCategory=0, self=this;
-        let parsed = JSON.parse(body);
-        let output=[], propIndex={}, finalOutput=[];
-        if(usePropertyCategories){
+        //resource config
+        let rconfig = configurator.prepareResourceConfig(graphName, resourceURI, resourceType);
+        if(rconfig.usePropertyCategories){
             //allow filter by category
             if(!category){
                 //get first category as default
-                category = propertyCategories[0];
+                category = rconfig.propertyCategories[0];
             }
             filterByCategory=1;
         }
@@ -42,16 +59,7 @@ class ResourceUtil{
           return [];
         }else{
           parsed.results.bindings.forEach(function(el) {
-            //see if we can find a suitable title for resource
-            if(el.p.value === 'http://purl.org/dc/terms/title'){
-                title = el.o.value;
-            }else if(el.p.value === 'http://www.w3.org/2000/01/rdf-schema#label'){
-                title = el.o.value;
-            }else if (el.p.value === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type') {
-                resourceType = el.o.value;
-            }
-            //-------------------
-            config = configurator.preparePropertyConfig(graphName, resourceURI, el.p.value);
+            config = configurator.preparePropertyConfig(graphName, resourceURI, resourceType, el.p.value);
             if(exceptional){
                 if(configExceptional && configExceptional.extensions){
                     configExceptional.extensions.forEach(function(ex){
@@ -87,7 +95,7 @@ class ResourceUtil{
               propIndex[el.propertyURI]=null;
             }
           });
-          return {props: finalOutput, title: title, resourceType: resourceType};
+          return {props: finalOutput, title: title, resourceType: resourceType, rconfig: rconfig};
         }
     }
     buildConfigFromExtensions(extensions) {

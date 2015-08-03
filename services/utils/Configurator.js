@@ -19,7 +19,7 @@ class Configurator{
         }
         return output;
     }
-    prepareResourceConfig(graphName, resourceURI) {
+    prepareResourceConfig(graphName, resourceURI, resourceType) {
         let config = this.cloneConfig(this.config);
         //default config
         let output = config.dataset.generic;
@@ -38,10 +38,33 @@ class Configurator{
                 output[prop] = config.resource[resourceURI][prop];
             }
         }
+        //check resource Type scope as well
+        for(let res in config.resource) {
+            if(config.resource[res].treatAsResourceType){
+                if(resourceType === res){
+                    for(let prop in config.resource[res]) {
+                        output[prop] = config.resource[res][prop];
+                    }
+                }
+            }
+        }
         if(config.dataset_resource[graphName]){
             if(config.dataset_resource[graphName][resourceURI]){
+                //apply config on resource URI
                 for(let prop in config.dataset_resource[graphName][resourceURI]) {
                     output[prop] = config.dataset_resource[graphName][resourceURI][prop];
+                }
+            }else{
+                //check if there is config on resource type
+                //apply config on a specific resource type
+                for(let res in config.dataset_resource[graphName]) {
+                    if(config.dataset_resource[graphName][res].treatAsResourceType){
+                        if(resourceType === res){
+                            for(let prop in config.dataset_resource[graphName][res]) {
+                                output[prop] = config.dataset_resource[graphName][res][prop];
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -55,7 +78,7 @@ class Configurator{
         }
         return finalOutput;
     }
-    preparePropertyConfig(graphName, resourceURI, propertyURI) {
+    preparePropertyConfig(graphName, resourceURI, resourceType, propertyURI) {
         let config = this.cloneConfig(this.config);
         //default config
         let output = config.dataset.generic;
@@ -77,10 +100,33 @@ class Configurator{
                 output[prop] = config.resource[resourceURI][prop];
             }
         }
+        //check resource Type scope as well
+        for(let res in config.resource) {
+            if(config.resource[res].treatAsResourceType){
+                if(resourceType === res){
+                    for(let prop in config.resource[res]) {
+                        output[prop] = config.resource[res][prop];
+                    }
+                }
+            }
+        }
         if(config.dataset_resource[graphName]){
             if(config.dataset_resource[graphName][resourceURI]){
+                //apply config on resource URI
                 for(let prop in config.dataset_resource[graphName][resourceURI]) {
                     output[prop] = config.dataset_resource[graphName][resourceURI][prop];
+                }
+            }else{
+                //check if there is config on resource type
+                //apply config on a specific resource type
+                for(let res in config.dataset_resource[graphName]) {
+                    if(config.dataset_resource[graphName][res].treatAsResourceType){
+                        if(resourceType === res){
+                            for(let prop in config.dataset_resource[graphName][res]) {
+                                output[prop] = config.dataset_resource[graphName][res][prop];
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -114,7 +160,7 @@ class Configurator{
         }
         let finalOutput = {};
         //remove irrelevant attributes from config
-        let irrels = ['resourceFocusType', 'maxNumberOfResourcesOnPage', 'datasetReactor', 'usePropertyCategories', 'propertyCategories', 'resourceReactor'];
+        let irrels = ['resourceFocusType', 'maxNumberOfResourcesOnPage', 'datasetReactor', 'usePropertyCategories', 'propertyCategories', 'resourceReactor', 'treatAsResourceType'];
         for(let prop in output) {
             if(irrels.indexOf(prop) == -1) {
                 finalOutput[prop] = output[prop];
