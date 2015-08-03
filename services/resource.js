@@ -369,7 +369,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getPrefixes() + queryObject.getDeleteTripleQuery(endpointParameters, cGraphName, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
+            query = queryObject.getPrefixes() + queryObject.getDeleteTripleQuery(endpointParameters.type, cGraphName, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
             //build http uri
             //send request
             rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
