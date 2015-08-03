@@ -1,6 +1,6 @@
 'use strict';
 //required for authentication
-var helper = require('./auth-helper')
+var helper = require('./auth-helper');
 var passwordHash = require('password-hash');
 var passport = require ('passport');
 var passportConfig = require('./passport-config');

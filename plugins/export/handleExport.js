@@ -1,22 +1,15 @@
 'use strict';
 var rp = require('request-promise');
-var config = require('../../configs/server');
 var generalConfig = require('../../configs/general');
-var httpOptions, g;
-if(config.sparqlEndpoint[generalConfig.authGraphName[0]]){
-    g = generalConfig.authGraphName[0];
-}else{
-    //go for generic SPARQL endpoint
-    g = 'generic';
-}
-httpOptions = {
-  host: config.sparqlEndpoint[g].host,
-  port: config.sparqlEndpoint[g].port,
-  path: config.sparqlEndpoint[g].path
-};
+var helper = require('../authentication/auth-helper')
+
 var appShortTitle = generalConfig.appShortTitle;
 var appFullTitle = generalConfig.appFullTitle;
+
 var exportResource = function(format, graphName, resourceURI, req, res) {
+    var endpoint = helper.getEndpointParameters([graphName]);
+    var httpOptions= endpoint.httpOptions;
+    var useDefaultGraph = endpoint.useDefaultGraph;
     var outputFormat;
     switch (format) {
         case 'RDF/XML':
@@ -31,19 +24,23 @@ var exportResource = function(format, graphName, resourceURI, req, res) {
         default:
             outputFormat = 'text/plain';
     }
+    var ext = 'FROM <'+graphName+'>';
+    if(useDefaultGraph){
+        ext = '';
+    }
     /*jshint multistr: true */
     var query = '\
     PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
     PREFIX ldReactor: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
-    CONSTRUCT {<http://'+req.headers.host+'/dataset/'+encodeURIComponent(graphName)+'/resource/'+encodeURIComponent(resourceURI)+'> foaf:primaryTopic <'+resourceURI+'> . ?s ?p ?o . ?o ?sp ?spo .} FROM <'+graphName+'> WHERE { \
+    CONSTRUCT {<http://'+req.headers.host+'/dataset/'+encodeURIComponent(graphName)+'/resource/'+encodeURIComponent(resourceURI)+'> foaf:primaryTopic <'+resourceURI+'> . ?s ?p ?o . ?o ?sp ?spo .} '+ext+' WHERE { \
     <'+resourceURI+'> ?p ?o . \
     ?s ?p ?o .\
     OPTIONAL {?o ?sp ?spo .}\
     FILTER(?p != ldReactor:password) \
     } \
     ';
-    var rpPath = httpOptions.path+'?query='+ encodeURIComponent(query)+ '&format='+encodeURIComponent(outputFormat);
-    rp.get({uri: 'http://'+httpOptions.host+':'+httpOptions.port+ rpPath}).then(function(result){
+    var rpPath = helper.getHTTPQuery('read', query, endpoint, outputFormat);
+    rp.get({uri: rpPath}).then(function(result){
         res.set({
           'Content-Type': outputFormat,
           'Content-Length': result.length
