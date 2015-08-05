@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import {NavLink} from 'fluxible-router';
-import {appFullTitle, appShortTitle} from '../configs/general';
+import {appFullTitle, appShortTitle, enableAuthentication} from '../configs/general';
 
 class Nav extends React.Component {
     componentDidMount(){
@@ -16,15 +16,19 @@ class Nav extends React.Component {
         let user = this.context.getUser();
         // console.log(user);
         let userMenu;
-        if(user){
-            userMenu = <div className="ui right dropdown item">
-                            {user.accountName} <i className="dropdown icon"></i>
-                            <div className="menu">
-                                <NavLink className="item" routeName="resource" href={'/dataset/' + encodeURIComponent(user.graphName) + '/resource/' + encodeURIComponent(user.id)}>Profile</NavLink>
-                                {parseInt(user.isSuperUser) ? <NavLink className="item" routeName="users" href="/users">Users List</NavLink> : ''}
-                                <a href="/logout" className="item">Logout</a>
-                            </div>
-                        </div>;
+        if(enableAuthentication){
+            if(user){
+                userMenu = <div className="ui right dropdown item">
+                                {user.accountName} <i className="dropdown icon"></i>
+                                <div className="menu">
+                                    <NavLink className="item" routeName="resource" href={'/dataset/' + encodeURIComponent(user.graphName) + '/resource/' + encodeURIComponent(user.id)}>Profile</NavLink>
+                                    {parseInt(user.isSuperUser) ? <NavLink className="item" routeName="users" href="/users">Users List</NavLink> : ''}
+                                    <a href="/logout" className="item">Logout</a>
+                                </div>
+                            </div>;
+            }else{
+                userMenu = <div className="ui right item"> <a className="ui mini circular teal button" href="/login">Sign-in</a> &nbsp;  <a href="/register" className="ui mini circular yellow button">Register</a> </div>;
+            }
         }
         return (
             <nav ref="defaultNavbar" className="ui blue menu inverted navbar page grid">

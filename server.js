@@ -26,6 +26,7 @@ import app from './app';
 import HtmlComponent from './components/DefaultHTMLLayout';
 const htmlComponent = React.createFactory(HtmlComponent);
 const debug = debugLib('linked-data-reactor');
+const publicRoutes = ['/', '/about'];
 let createElement = require('fluxible-addons-react').createElementWithContext;
 
 const server = express();
@@ -72,7 +73,7 @@ server.use((req, res, next) => {
     //check user credentials
     //stop fluxible rendering if not authorized
     if(enableAuthentication){
-        if(!req.isAuthenticated()){
+        if(!req.isAuthenticated() && publicRoutes.indexOf(req.url) === -1){
             //store referrer in session
             req.session.redirectTo = req.url;
             return res.redirect('/login');
