@@ -1,6 +1,6 @@
 {
   "name": "linked-data-reactor",
-  "version": "0.3.15",
+  "version": "0.3.16",
   "description": "Linked Data Reactor",
   "private": false,
   "repository": {
@@ -28,7 +28,6 @@
     "fluxible-plugin-fetchr": "^0.3.4",
     "fluxible-router": "^0.2.1",
     "hogan-express": "^0.5.2",
-    "jscs": "^2.0.0",
     "log": "^1.4.0",
     "nodemailer": "^1.4.0",
     "nodemailer-smtp-transport": "^1.0.3",
