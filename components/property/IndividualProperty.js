@@ -53,7 +53,7 @@ class IndividualProperty extends React.Component {
                 newValueDIV = <div className="ui list">
                                     <div className="item">
                                         <div onClick={this.handleNewIndividualObject.bind(this)} className="medium ui basic icon labeled button">
-                                            <i className="plus square large blue icon "></i> &nbsp; Add another <strong> {propLabel} </strong>
+                                            <i className="plus square large blue icon "></i> &nbsp; Add <strong> {propLabel} </strong>
                                         </div>
                                     </div>
                                     <br/>
