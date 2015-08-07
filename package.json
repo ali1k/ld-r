@@ -52,6 +52,7 @@
     "grunt-cli": "~0.1.13",
     "grunt-concurrent": "^2.0.1",
     "grunt-contrib-clean": "~0.6.0",
+    "grunt-contrib-cssmin": "^0.13.0",
     "grunt-contrib-uglify": "^0.9.1",
     "grunt-nodemon": "^0.4.0",
     "grunt-webpack": "^1.0.11",

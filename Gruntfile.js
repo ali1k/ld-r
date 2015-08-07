@@ -32,6 +32,13 @@ module.exports = function (grunt) {
                     'build/js/main.js': ['build/js/main.js']
                 }
             }
+        },
+        cssmin : {
+            compress : {
+                files : {
+                    'build/css/main.css': ['assets/css/**/*.css']
+                }
+            }
         }
     });
 
@@ -41,10 +48,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-nodemon');
     grunt.loadNpmTasks('grunt-webpack');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
 
     // tasks
-    grunt.registerTask('build', ['clean:build', 'webpack:build', 'uglify']);
-    grunt.registerTask('default', ['clean:build', 'concurrent:dev']);
+    grunt.registerTask('build', ['clean:build', 'cssmin', 'webpack:build', 'uglify']);
+    grunt.registerTask('default', ['clean:build', 'cssmin', 'concurrent:dev']);
     grunt.registerTask('compress', ['uglify']);
+    grunt.registerTask('style', ['cssmin']);
     grunt.registerTask('clogs', ['clean:logs']);
 };
