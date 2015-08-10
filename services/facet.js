@@ -112,7 +112,7 @@ export default {
                 }
             }
             //config handler
-            let rconfig = configurator.prepareDatasetConfig(graphName);
+            let rconfig = configurator.prepareDatasetConfig(1, graphName);
             let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
             if(!maxOnPage){
                 maxOnPage = 20;

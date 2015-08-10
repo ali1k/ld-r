@@ -41,11 +41,11 @@ class ResourceUtil{
         let exceptional = 0;
         if(propertyPath && propertyPath.length){
             //it is only for property path
-            configExceptional = configurator.preparePropertyConfig(graphName, resourceURI, resourceType, propertyPath[1]);
+            configExceptional = configurator.preparePropertyConfig(1, graphName, resourceURI, resourceType, propertyPath[1]);
             exceptional = 1;
         }
         //resource config
-        let rconfig = configurator.prepareResourceConfig(graphName, resourceURI, resourceType);
+        let rconfig = configurator.prepareResourceConfig(1, graphName, resourceURI, resourceType);
         if(rconfig.usePropertyCategories){
             //allow filter by category
             if(!category){
@@ -59,7 +59,7 @@ class ResourceUtil{
           return [];
         }else{
           parsed.results.bindings.forEach(function(el) {
-            config = configurator.preparePropertyConfig(graphName, resourceURI, resourceType, el.p.value);
+            config = configurator.preparePropertyConfig(1, graphName, resourceURI, resourceType, el.p.value);
             if(exceptional){
                 if(configExceptional && configExceptional.extensions){
                     configExceptional.extensions.forEach(function(ex){
@@ -124,13 +124,13 @@ class ResourceUtil{
     parseObjectProperties(body, graphName, resourceURI, propertyURI) {
         let title, objectType = '';
         let configurator = new Configurator();
-        let config = {}, configExceptional = configurator.preparePropertyConfig(graphName, resourceURI, 0, propertyURI);
+        let config = {}, configExceptional = configurator.preparePropertyConfig(1, graphName, resourceURI, 0, propertyURI);
         let self=this;
         let parsed = JSON.parse(body);
         let output=[], propIndex={}, finalOutput=[];
         if(parsed.results.bindings.length){
           parsed.results.bindings.forEach(function(el) {
-            config = configurator.preparePropertyConfig(graphName, resourceURI, 0, el.p.value);
+            config = configurator.preparePropertyConfig(1, graphName, resourceURI, 0, el.p.value);
             if(el.p.value === 'http://purl.org/dc/terms/title'){
                 title = el.o.value;
             }else if(el.p.value === 'http://www.w3.org/2000/01/rdf-schema#label'){

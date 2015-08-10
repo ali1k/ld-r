@@ -3,7 +3,6 @@ import {getEndpointParameters, getHTTPQuery} from './utils/helpers';
 import {defaultGraphName, enableLogs, enableAuthentication, authGraphName} from '../configs/general';
 import ResourceQuery from './sparql/ResourceQuery';
 import ResourceUtil from './utils/ResourceUtil';
-import Configurator from './utils/Configurator';
 import rp from 'request-promise';
 import fs from 'fs';
 import Log from 'log';
@@ -25,7 +24,6 @@ const outputFormat = 'application/sparql-results+json';
 let endpointParameters, category, cGraphName, graphName, propertyURI, resourceURI, objectURI, objectValue, query, queryObject, utilObject, configurator, propertyPath;
 queryObject = new ResourceQuery();
 utilObject = new ResourceUtil();
-configurator = new Configurator();
 
 export default {
     name: 'resource',
