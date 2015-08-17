@@ -43,6 +43,7 @@ export default {
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {graphName: graphName, resources: [], page: params.page, config: rconfig});
+                    return 0;
                 }else{
                     user = req.user;
                 }
@@ -83,6 +84,7 @@ export default {
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {graphName: graphName, total: 0});
+                    return 0;
                 }else{
                     user = req.user;
                 }
