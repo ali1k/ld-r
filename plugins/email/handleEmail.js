@@ -2,6 +2,16 @@
 var nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
 var config = require('./config.js');
+//parses the email string
+var getEmail = function(st){
+    if(st.indexOf('mailto:') === -1){
+        //not found
+        return st;
+    }else{
+        var tmp = st.split('mailto:');
+        return tmp [1];
+    }
+}
 module.exports = {
     sendMail: function(type, from, to, subject, text, html){
         switch (type) {
@@ -26,8 +36,8 @@ module.exports = {
         var transporter = nodemailer.createTransport(smtpTransport(config.emailConfig));
         // send mail
         transporter.sendMail({
-            from: from,
-            to: to,
+            from: getEmail(from),
+            to: getEmail(to),
             subject: subject,
             text: text
         }, function(error, info){
