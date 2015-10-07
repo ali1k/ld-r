@@ -128,7 +128,7 @@ class FacetQuery{
         return this.prefixes + this.query;
     }
     getSecondLevelPropertyValues(graphName, propertyURI, prevSelection, limit, offset) {
-        let noffset = ((offset-1) < 0) ? 0 : (offset-1);
+        let noffset = (offset-1)*limit;
         let st = this.getMultipleFilters(prevSelection);
         if(String(graphName)!=='' && graphName){
             /*jshint multistr: true */
