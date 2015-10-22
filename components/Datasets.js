@@ -1,4 +1,5 @@
 import React from 'react';
+import {navigateAction} from 'fluxible-router';
 import {defaultGraphName, authGraphName, enableAuthentication} from '../configs/general';
 import {config} from '../configs/reactor';
 import {facets} from '../configs/facets';
@@ -14,11 +15,21 @@ class Datasets extends React.Component {
         });
         return out;
     }
+    displayResource(){
+        let resourceURI = React.findDOMNode(this.refs.resourceURI).value;
+        let datasetURI = React.findDOMNode(this.refs.datasetURI).value;
+        let output = '/dataset/' + encodeURIComponent(datasetURI) + '/resource/' + encodeURIComponent(resourceURI);
+        if(resourceURI){
+            this.context.executeAction(navigateAction, {
+                url: output
+            });
+        }
+    }
     render() {
         let self = this;
         let user = this.context.getUser();
         let sources = ['dataset', 'dataset_resource', 'dataset_property', 'dataset_object', 'dataset_resource_property', 'dataset_resource_object', 'dataset_property_object', 'dataset_resource_property_object'];
-        let dss = [], dfl, brws, color, output = [], focus = '';
+        let dss = [], dfl, brws, color, optionsList, output = [], focus = '';
         let info = <div className="ui blue message">
                         The list contains only the datasets for which at least one <b>config scope</b> is found!
                    </div>;
@@ -80,6 +91,9 @@ class Datasets extends React.Component {
                 }
             }
         }
+        optionsList = dss.map(function(option, index) {
+            return <option key={index} value={(option)}> {option} </option>;
+        });
         return (
             <div className="ui page grid" ref="datasets">
                 <div className="ui column">
@@ -90,12 +104,20 @@ class Datasets extends React.Component {
                             {output}
                         </div>
                     </div>
+                    <div className="ui violet message form">
+                        <select ref="datasetURI" className="ui search dropdown">
+                            {optionsList}
+                        </select>
+                        <input ref="resourceURI" type="text" className="input" placeholder="Enter the URI of the resource e.g. http://dbpedia.org/resource/VU_University_Amsterdam"/>
+                        <button className="fluid ui grey button" onClick={this.displayResource.bind(this)}>Display the specified resource</button>
+                    </div>
                 </div>
             </div>
         );
     }
 }
 Datasets.contextTypes = {
+    executeAction: React.PropTypes.func.isRequired,
     getUser: React.PropTypes.func
 };
 export default Datasets;
