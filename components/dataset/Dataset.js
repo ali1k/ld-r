@@ -32,7 +32,7 @@ class Dataset extends React.Component {
             <div className="ui page grid" ref="dataset">
                 <div className="ui column">
                     <div className="ui segment top attached">
-                        <h3>{this.props.total ? <span className="ui big black circular label">{this.addCommas(this.props.total)}</span> : ''} Resources of type {typeSt} in {this.props.graphName ? <a href={this.props.graphName}>{this.props.graphName}</a> : ' all local datasets'}</h3>
+                        <h3>{this.props.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.graphName)}><span className="ui big black circular label">{this.addCommas(this.props.total)}</span></a> : ''} Resources of type {typeSt} in {this.props.graphName ? <a href={this.props.graphName}>{this.props.graphName}</a> : ' all local datasets'}</h3>
                         <ResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} graphName={this.props.graphName} isBig={true} config={this.props.config}/>
                     </div>
                     <div className= "ui secondary segment bottom attached">

@@ -104,6 +104,7 @@ class Datasets extends React.Component {
                             {output}
                         </div>
                     </div>
+                    {dss.length ?
                     <div className="ui violet message form">
                         <select ref="datasetURI" className="ui search dropdown">
                             {optionsList}
@@ -111,6 +112,7 @@ class Datasets extends React.Component {
                         <input ref="resourceURI" type="text" className="input" placeholder="Enter the URI of the resource e.g. http://dbpedia.org/resource/VU_University_Amsterdam"/>
                         <button className="fluid ui grey button" onClick={this.displayResource.bind(this)}>Display the specified resource</button>
                     </div>
+                     : ''}
                 </div>
             </div>
         );

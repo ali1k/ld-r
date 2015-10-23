@@ -63,7 +63,7 @@ class UsersList extends React.Component {
           <div className="ui page grid">
             <div className="row">
               <div className="column">
-                <h1 className="ui header"><span className="ui big black circular label">{i}</span> Registered Users</h1>
+                <h1 className="ui header"><a target="_blank" href={'/export/NTriples/' + encodeURIComponent(currentComponent.props.UserStore.graphName)}><span className="ui big black circular label">{i}</span></a> Registered Users</h1>
                   <div className="ui segment">
                     <div className="ui huge divided animated list">
                       {list}

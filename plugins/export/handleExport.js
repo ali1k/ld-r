@@ -28,16 +28,17 @@ var exportResource = function(format, graphName, resourceURI, req, res) {
     if(useDefaultGraph){
         ext = '';
     }
+    var primaryTopic = '<http://'+req.headers.host+'/dataset/'+encodeURIComponent(graphName)+'> foaf:primaryTopic <'+graphName+'> . ?s ?p ?o .';
+    var selectPhrase = '?s ?p ?o .';
+    if(resourceURI){
+        selectPhrase = '<'+resourceURI+'> ?p ?o . ?s ?p ?o . OPTIONAL {?o ?sp ?spo .} FILTER(?p != ldReactor:password)';
+        primaryTopic = '<http://'+req.headers.host+'/dataset/'+encodeURIComponent(graphName)+'/resource/'+encodeURIComponent(resourceURI)+'> foaf:primaryTopic <'+resourceURI+'> . ?s ?p ?o . ?o ?sp ?spo .';
+    }
     /*jshint multistr: true */
     var query = '\
     PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
     PREFIX ldReactor: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
-    CONSTRUCT {<http://'+req.headers.host+'/dataset/'+encodeURIComponent(graphName)+'/resource/'+encodeURIComponent(resourceURI)+'> foaf:primaryTopic <'+resourceURI+'> . ?s ?p ?o . ?o ?sp ?spo .} '+ext+' WHERE { \
-    <'+resourceURI+'> ?p ?o . \
-    ?s ?p ?o .\
-    OPTIONAL {?o ?sp ?spo .}\
-    FILTER(?p != ldReactor:password) \
-    } \
+    CONSTRUCT {'+primaryTopic+'} '+ext+' WHERE { ' + selectPhrase + ' } LIMIT 70000 \
     ';
     var rpPath = helper.getHTTPQuery('read', query, endpoint, outputFormat);
     rp.get({uri: rpPath}).then(function(result){
@@ -71,7 +72,7 @@ var exportResource = function(format, graphName, resourceURI, req, res) {
     */
 }
 module.exports = function handleExport(server) {
-    server.get('/export/:t/:g/:r', function(req, res) {
+    server.get('/export/:t/:g/:r?', function(req, res) {
         var format = req.params.t;
         var graphName = req.params.g;
         var resourceURI = req.params.r;
@@ -79,7 +80,16 @@ module.exports = function handleExport(server) {
             if(!req.isAuthenticated()){
                 res.render('export', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, data:'', errorMsg: 'Permission denied! Please login to system to access the page...'});
             }else{
-                exportResource(format, graphName, resourceURI, req, res);
+                if(resourceURI){
+                    exportResource(format, graphName, resourceURI, req, res);
+                }else{
+                    //only super users can export in batch mode
+                    if(req.user.isSuperUser === '1'){
+                        exportResource(format, graphName, resourceURI, req, res);
+                    }else{
+                        res.render('export', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, data:'', errorMsg: 'Permission denied! You do not have enough permission to access the page...'});
+                    }
+                }
             }
         }else{
             exportResource(format, graphName, resourceURI, req, res);
