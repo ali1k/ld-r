@@ -30,7 +30,7 @@ class CheckboxItem extends React.Component {
             title = this.props.spec.value;
             if(this.props.spec.label){
                 title = this.props.spec.label;
-            }else if(this.props.shortenURI){
+            }else if(this.props.shortenURI && !(this.props.config && this.props.config.shortenURI === 0)){
                 title = URIUtil.getURILabel(this.props.spec.value);
             }
             if(this.props.spec.valueType === 'uri'){
