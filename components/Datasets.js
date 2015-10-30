@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import {navigateAction} from 'fluxible-router';
 import {defaultGraphName, authGraphName, enableAuthentication} from '../configs/general';
 import {config} from '../configs/reactor';
@@ -16,8 +17,8 @@ class Datasets extends React.Component {
         return out;
     }
     displayResource(){
-        let resourceURI = React.findDOMNode(this.refs.resourceURI).value;
-        let datasetURI = React.findDOMNode(this.refs.datasetURI).value;
+        let resourceURI = ReactDOM.findDOMNode(this.refs.resourceURI).value;
+        let datasetURI = ReactDOM.findDOMNode(this.refs.datasetURI).value;
         let output = '/dataset/' + encodeURIComponent(datasetURI) + '/resource/' + encodeURIComponent(resourceURI);
         if(resourceURI){
             this.context.executeAction(navigateAction, {

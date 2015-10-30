@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import {provideContext, connectToStores} from 'fluxible-addons-react';
 import lookupDBpedia from '../../../../actions/lookupDBpedia';
 import DBpediaStore from '../../../../stores/DBpediaStore';
@@ -16,7 +17,7 @@ class DBpediaInput extends React.Component {
     }
     componentDidMount() {
         if(!this.props.noFocus){
-            React.findDOMNode(this.refs.basicIndividualInput).focus();
+            ReactDOM.findDOMNode(this.refs.basicIndividualInput).focus();
         }
     }
     handleKeyDown(evt) {
@@ -51,14 +52,14 @@ class DBpediaInput extends React.Component {
 
     }
     emptySuggesstions() {
-        let currentComp = this.refs.dbpediaLookup.getDOMNode();
+        let currentComp = this.refs.dbpediaLookup;
         /*global $*/
         $(currentComp).find('.transition').removeClass('visible');
         this.props.DBpediaStore.suggestions = [];
     }
     handleChange(event) {
         let term = event.target.value;
-        let currentComp = this.refs.dbpediaLookup.getDOMNode();
+        let currentComp = this.refs.dbpediaLookup;
         this.setState({value: term});
         this.props.onDataEdit(term);
         //handle autocomplete here

@@ -17,16 +17,16 @@ class DefaultHTMLLayout extends React.Component {
             </head>
             <body>
                 <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
+                <script dangerouslySetInnerHTML={{__html: this.props.state}}></script>
+                <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+                <script src="/bower_components/semantic-ui/dist/components/transition.min.js"></script>
+                <script src="/bower_components/semantic-ui/dist/components/popup.min.js"></script>
+                <script src="/bower_components/semantic-ui/dist/components/dropdown.min.js"></script>
+                <script src="/bower_components/semantic-ui/dist/components/checkbox.min.js"></script>
+                <script src="/bower_components/semantic-ui/dist/components/dimmer.min.js"></script>
+                <script src="/bower_components/semantic-ui/dist/components/modal.min.js"></script>
+                <script src="/public/js/main.js"></script>
             </body>
-            <script dangerouslySetInnerHTML={{__html: this.props.state}}></script>
-            <script src="/bower_components/jquery/dist/jquery.min.js"></script>
-            <script src="/bower_components/semantic-ui/dist/components/transition.min.js"></script>
-            <script src="/bower_components/semantic-ui/dist/components/popup.min.js"></script>
-            <script src="/bower_components/semantic-ui/dist/components/dropdown.min.js"></script>
-            <script src="/bower_components/semantic-ui/dist/components/checkbox.min.js"></script>
-            <script src="/bower_components/semantic-ui/dist/components/dimmer.min.js"></script>
-            <script src="/bower_components/semantic-ui/dist/components/modal.min.js"></script>
-            <script src="/public/js/main.js"></script>
             </html>
         );
     }

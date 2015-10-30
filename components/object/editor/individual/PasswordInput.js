@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import passwordHash from 'password-hash';
 
 class PasswordInput extends React.Component {
@@ -11,7 +12,7 @@ class PasswordInput extends React.Component {
     }
     componentDidMount() {
         if(!this.props.noFocus){
-            React.findDOMNode(this.refs.passwordInput).focus();
+            ReactDOM.findDOMNode(this.refs.passwordInput).focus();
         }
     }
     handleKeyDown(evt) {

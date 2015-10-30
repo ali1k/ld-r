@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import BasicIndividualInput from './BasicIndividualInput';
 
 class BasicOptionInput extends React.Component {
@@ -14,7 +15,7 @@ class BasicOptionInput extends React.Component {
     }
     componentDidMount() {
         if(!this.props.noFocus){
-            React.findDOMNode(this.refs.basicInputSelect).focus();
+            ReactDOM.findDOMNode(this.refs.basicInputSelect).focus();
         }
     }
 

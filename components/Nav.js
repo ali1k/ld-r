@@ -5,7 +5,7 @@ import {appFullTitle, appShortTitle, enableAuthentication} from '../configs/gene
 
 class Nav extends React.Component {
     componentDidMount(){
-        let currentComp = this.refs.defaultNavbar.getDOMNode();
+        let currentComp = this.refs.defaultNavbar;
         $(currentComp).find('.ui.dropdown').dropdown();
     }
     showHelpModal() {

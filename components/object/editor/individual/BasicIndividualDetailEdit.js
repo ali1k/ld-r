@@ -9,7 +9,7 @@ class BasicIndividualDetailEdit extends React.Component {
         this.state = {};
     }
     componentDidMount() {
-        let currentComp = this.refs.detailPropertiesEdit.getDOMNode();
+        let currentComp = this.refs.detailPropertiesEdit;
     }
     handleDataEdit(value){
         this.props.onDataEdit(value);

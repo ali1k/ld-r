@@ -8,7 +8,7 @@ class About extends React.Component {
                 <div className="column">
                     <div className="ui segment content">
                         <h2 className="ui header">About</h2>
-                        <p>
+                        <div>
                             Documentation is available at <a href="http://ld-r.org">http://ld-r.org</a>. <br/>LD-Reactor is developed by:
                             <div className="blue ui card item">
                               <div className="content">
@@ -41,7 +41,7 @@ class About extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        </p>
+                    </div>
                     </div>
                 </div>
                 </div>

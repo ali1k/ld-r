@@ -5,13 +5,18 @@
  * and the application is rendered via React.
  */
 import express from 'express';
-import csrf from 'csurf';
+import compression from 'compression';
 import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
-import favicon from 'serve-favicon';
 import path from 'path';
 import serialize from 'serialize-javascript';
 import {navigateAction} from 'fluxible-router';
+import debugLib from 'debug';
+import React from 'react';
+import ReactDOM from 'react-dom/server';
+
+import csrf from 'csurf';
+import cookieParser from 'cookie-parser';
+import favicon from 'serve-favicon';
 //required for authentication
 import handleAuthentication from './plugins/authentication/handleAuth';
 //required for export resources
@@ -19,15 +24,15 @@ import handleExport from './plugins/export/handleExport';
 import {enableAuthentication} from './configs/general';
 import session from 'express-session';
 import hogan from 'hogan-express';
-import debugLib from 'debug';
-import React from 'react';
 import serverConfig from './configs/server';
 import app from './app';
 import HtmlComponent from './components/DefaultHTMLLayout';
+import { createElementWithContext } from 'fluxible-addons-react';
+
+const env = process.env.NODE_ENV;
 const htmlComponent = React.createFactory(HtmlComponent);
 const debug = debugLib('linked-data-reactor');
 const publicRoutes = ['/', '/about'];
-let createElement = require('fluxible-addons-react').createElementWithContext;
 
 const server = express();
 // we need this because "cookie" is true in csrfProtection
@@ -79,7 +84,7 @@ server.use((req, res, next) => {
             return res.redirect('/login');
         }
     }
-    let context = app.createContext({
+    const context = app.createContext({
         req: req // The fetchr plugin depends on this
         // xhrContext: {
         //     _csrf: req.csrfToken() // Make sure all XHR requests have the CSRF token
@@ -91,7 +96,7 @@ server.use((req, res, next) => {
         url: req.url
     }, (err) => {
         if (err) {
-            if (err.status && err.status === 404) {
+            if (err.statusCode && err.statusCode === 404) {
                 next();
             } else {
                 next(err);
@@ -103,11 +108,14 @@ server.use((req, res, next) => {
         const exposed = 'window.App=' + serialize(app.dehydrate(context)) + ';';
 
         debug('Rendering Application component into html');
-        const html = React.renderToStaticMarkup(htmlComponent({
+        const markup = ReactDOM.renderToString(createElementWithContext(context));
+        const htmlElement = React.createElement(HtmlComponent, {
+            clientFile: env === 'production' ? 'main.min.js' : 'main.js',
             context: context.getComponentContext(),
             state: exposed,
-            markup: React.renderToString(createElement(context))
-        }));
+            markup: markup
+        });
+        const html = ReactDOM.renderToStaticMarkup(htmlElement);
 
         debug('Sending markup');
         res.type('html');

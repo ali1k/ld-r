@@ -4,7 +4,7 @@ import ObjectIViewer from '../../ObjectIViewer';
 
 class BasicIndividualDetailView extends React.Component {
     componentDidMount() {
-        let currentComp = this.refs.detailProperties.getDOMNode();
+        let currentComp = this.refs.detailProperties;
     }
     render() {
         let self = this;

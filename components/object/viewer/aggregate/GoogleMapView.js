@@ -1,6 +1,5 @@
-import React from 'react/addons';
-import {GoogleMaps, Marker} from "react-google-maps";
-const {update} = React.addons;
+import React from 'react';
+import {GoogleMap, Marker} from "react-google-maps";
 class GoogleMapView extends React.Component {
       constructor (...args) {
         super(...args);
@@ -8,11 +7,16 @@ class GoogleMapView extends React.Component {
           markers: this.props.markers
         };
       }
-      render () {
-        const {props, state} = this,
-              {googleMapsApi} = props;
+      toMarker (marker, index) {
         return (
-          <GoogleMaps containerProps={{
+          <Marker
+            position={marker.position}
+            key={marker.key} />
+        );
+      }
+      render () {
+        return (
+          <GoogleMap containerProps={{
               style: {
                   minHeight: "200px",
                   minWidth: "200px"
@@ -23,18 +27,10 @@ class GoogleMapView extends React.Component {
               "undefined" !== typeof google ? google.maps : null
             }
             zoom={this.props.zoomLevel}
-            center={this.props.center}>
-            {state.markers.map(toMarker, this)}
-          </GoogleMaps>
+            center={this.props.center} >
+            {this.state.markers.map(this.toMarker, this)}
+          </GoogleMap>
         );
-
-        function toMarker (marker, index) {
-          return (
-            <Marker
-              position={marker.position}
-              key={marker.key} />
-          );
-        }
       }
 }
 

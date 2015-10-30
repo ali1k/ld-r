@@ -3,7 +3,7 @@ var React = require('react');
 
 class PropertyHeader extends React.Component {
     componentDidMount() {
-        let currentComp = this.refs.propertyHeader.getDOMNode();
+        let currentComp = this.refs.propertyHeader;
         //enable hints
         /*global $*/
         $(currentComp).find('.hint')

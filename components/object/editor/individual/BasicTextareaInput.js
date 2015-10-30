@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 class BasicTextareaInput extends React.Component {
     constructor(props) {
@@ -13,7 +14,7 @@ class BasicTextareaInput extends React.Component {
     }
     componentDidMount() {
         if(!this.props.noFocus){
-            React.findDOMNode(this.refs.basicTextareaInput).focus();
+            ReactDOM.findDOMNode(this.refs.basicTextareaInput).focus();
         }
     }
     getRandomNumber() {

@@ -1,4 +1,3 @@
-import React from 'react';
 import Fluxible from 'fluxible';
 import fetchrPlugin from 'fluxible-plugin-fetchr';
 import authPlugin from './plugins/authentication';
