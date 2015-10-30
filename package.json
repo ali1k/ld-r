@@ -42,7 +42,7 @@
     "serialize-javascript": "^1.1.2",
     "serve-favicon": "^2.3.0",
     "valid-url": "^1.0.9",
-    "void-components": "^1.0.8"
+    "void-components": "^1.0.9"
   },
   "devDependencies": {
     "babel": "^5.8.21",
