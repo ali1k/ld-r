@@ -11,7 +11,7 @@
   "license": "MIT",
   "homepage": "http://risis.eu",
   "dependencies": {
-    "semantic-ui": "~2.0.7",
-    "animate.css": "~3.3.0"
+    "semantic": "semantic-ui#~2.1.6",
+    "animate.css": "~3.4.0"
   }
 }
