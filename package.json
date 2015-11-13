@@ -7,6 +7,10 @@
     "type": "git",
     "url": "https://github.com/ali1k/ld-r.git"
   },
+  "author": {
+      "name":"Ali Khalili",
+      "url": "http://ali1k.com"
+  },
   "scripts": {
     "build": "webpack --config webpack.config.production.js && NODE_ENV=production npm start",
     "dev": "node webpack-dev-server.js",
