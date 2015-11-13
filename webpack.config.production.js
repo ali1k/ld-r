@@ -3,17 +3,15 @@ var path = require('path');
 
 var webpackConfig = {
     resolve: {
-        extensions: ['', '.js', '.jsx']
+        extensions: ['', '.js']
     },
     entry: [
-        'webpack-dev-server/client?http://localhost:3000',
-        'webpack/hot/only-dev-server',
         './client.js'
     ],
     output: {
         path: path.resolve('./build/js'),
         publicPath: '/public/js/',
-        filename: 'main.js'
+        filename: 'main.min.js'
     },
     module: {
         loaders: [
@@ -21,7 +19,6 @@ var webpackConfig = {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
                 loaders: [
-                    require.resolve('react-hot-loader'),
                     require.resolve('babel-loader')
                 ]
             },
@@ -32,15 +29,19 @@ var webpackConfig = {
         setImmediate: false
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
-                NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+                NODE_ENV: JSON.stringify('production')
+            }
+        }),
+        new webpack.optimize.DedupePlugin(),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
             }
         })
     ],
-    devtool: 'eval'
+    devtool: 'source-map'
 };
 
 module.exports = webpackConfig;
