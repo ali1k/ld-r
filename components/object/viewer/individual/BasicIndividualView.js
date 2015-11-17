@@ -6,7 +6,9 @@ class BasicIndividualView extends React.Component {
         val = this.props.spec.value;
         if(this.props.spec.valueType === 'uri'){
             if(this.props.config){
-                if(this.props.config.shortenURI){
+                if(this.props.config.truncateURI){
+                    val = '<' + URIUtil.truncateMiddle(val, 50, '') + '>';
+                }else if (this.props.config.shortenURI) {
                     val = '<' + URIUtil.getURILabel(val) + '>';
                 }
             }
