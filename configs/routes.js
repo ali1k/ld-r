@@ -32,7 +32,7 @@ export default {
         label: 'Faceted Browser',
         action: (context, payload, done) => {
             let graphName, page;
-            graphName = payload.get('params').get('id');
+            graphName = payload.params.id;
             if (!graphName) {
                 graphName = 0;
             }
@@ -58,8 +58,8 @@ export default {
         label: 'Dataset',
         action: (context, payload, done) => {
             let graphName, page;
-            graphName = payload.get('params').get('id');
-            page = payload.get('params').get('page');
+            graphName = payload.params.id;
+            page = payload.params.page;
             if (!graphName) {
                 graphName = 0;
             }
@@ -76,19 +76,19 @@ export default {
         label: 'Resource',
         action: (context, payload, done) => {
             //predicate Category
-            let category = payload.get('params').get('pcategory');
+            let category = payload.params.pcategory;
             if(!category){
                 category = 0;
             }
-            let propertyPath = payload.get('params').get('propertyPath');
+            let propertyPath = payload.params.propertyPath;
             if(!propertyPath){
                 propertyPath = [];
             }
-            let graphName = payload.get('params').get('did');
+            let graphName = payload.params.did;
             if (!graphName) {
                 graphName = 0;
             }
-            context.executeAction(loadResource, { dataset: graphName, resource: decodeURIComponent(payload.get('params').get('rid')), category: category, propertyPath: propertyPath}, done);
+            context.executeAction(loadResource, { dataset: graphName, resource: decodeURIComponent(payload.params.rid), category: category, propertyPath: propertyPath}, done);
         }
     },
     user: {
@@ -98,7 +98,7 @@ export default {
         label: 'User',
         action: (context, payload, done) => {
             let category = 0;
-            context.executeAction(loadResource, { dataset: authGraphName, resource: baseResourceDomain + '/user/' + decodeURIComponent(payload.get('params').get('id')), category: category}, done);
+            context.executeAction(loadResource, { dataset: authGraphName, resource: baseResourceDomain + '/user/' + decodeURIComponent(payload.params.id), category: category}, done);
         }
     },
     users: {
