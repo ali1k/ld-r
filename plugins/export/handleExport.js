@@ -31,8 +31,8 @@ var exportResource = function(format, graphName, resourceURI, req, res) {
     var primaryTopic = '<http://'+req.headers.host+'/dataset/'+encodeURIComponent(graphName)+'> foaf:primaryTopic <'+graphName+'> . ?s ?p ?o .';
     var selectPhrase = '?s ?p ?o .';
     if(resourceURI){
-        selectPhrase = '<'+resourceURI+'> ?p ?o . ?s ?p ?o . OPTIONAL {?o ?sp ?spo .} FILTER(?p != ldReactor:password)';
-        primaryTopic = '<http://'+req.headers.host+'/dataset/'+encodeURIComponent(graphName)+'/resource/'+encodeURIComponent(resourceURI)+'> foaf:primaryTopic <'+resourceURI+'> . ?s ?p ?o . ?o ?sp ?spo .';
+        selectPhrase = '<'+resourceURI+'> ?p ?o . OPTIONAL {?o ?sp ?spo .} FILTER(?p != ldReactor:password)';
+        primaryTopic = '<http://'+req.headers.host+'/dataset/'+encodeURIComponent(graphName)+'/resource/'+encodeURIComponent(resourceURI)+'> foaf:primaryTopic <'+resourceURI+'> . <'+resourceURI+'> ?p ?o . ?o ?sp ?spo .';
     }
     /*jshint multistr: true */
     var query = '\
