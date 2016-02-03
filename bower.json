@@ -1,15 +1,15 @@
 {
-  "name": "Linked Data Reactor",
-  "version": "0.1.0",
+  "name": "linked-data-reactor",
+  "version": "0.4.6",
+  "description": "Linked Data Reactor",
   "authors": [
     "ali1k <hyperir@gmail.com>"
   ],
-  "description": "Reactive Linked Data Components",
   "moduleType": [
     "node"
   ],
-  "license": "MIT",
-  "homepage": "http://risis.eu",
+  "license": "Apache version 2.0",
+  "homepage": "http://ld-r.org",
   "dependencies": {
     "semantic": "semantic-ui#~2.1.6",
     "animate.css": "~3.4.0"
