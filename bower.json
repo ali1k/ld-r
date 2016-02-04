@@ -8,7 +8,7 @@
   "moduleType": [
     "node"
   ],
-  "license": "Apache version 2.0",
+  "license": "Apache-2.0",
   "homepage": "http://ld-r.org",
   "dependencies": {
     "semantic": "semantic-ui#~2.1.6",
