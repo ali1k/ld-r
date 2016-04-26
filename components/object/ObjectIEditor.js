@@ -5,7 +5,7 @@ import BasicIndividualDetailEdit from './editor/individual/BasicIndividualDetail
 import BasicOptionInput from './editor/individual/BasicOptionInput';
 import DBpediaInput from './editor/individual/DBpediaInput';
 import PasswordInput from './editor/individual/PasswordInput';
-import {LanguageInput} from 'void-components';
+import LanguageInput from './editor/individual/LanguageInput';
 
 class ObjectIEditor extends React.Component {
     handleDataEdit(value){

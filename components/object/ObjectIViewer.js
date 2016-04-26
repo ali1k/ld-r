@@ -6,8 +6,8 @@ import BasicDBpediaView from './viewer/individual/BasicDBpediaView';
 import BasicLinkedIndividualView from './viewer/individual/BasicLinkedIndividualView';
 import BasicOptionView from './viewer/individual/BasicOptionView';
 import PasswordView from './viewer/individual/PasswordView';
-import {LanguageView} from 'void-components';
-import {TwoLetterCountryView} from 'void-components';
+import LanguageView from './viewer/individual/LanguageView';
+import TwoLetterCountryView from './viewer/individual/TwoLetterCountryView';
 
 class ObjectIViewer extends React.Component {
     render() {
