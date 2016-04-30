@@ -12,6 +12,9 @@
   "homepage": "http://ld-r.org",
   "dependencies": {
     "semantic": "semantic-ui#~2.1.6",
-    "animate.css": "~3.4.0"
+    "animate.css": "~3.4.0",
+    "es6-shim": "^0.35.0",
+    "es5-shim": "^4.5.8",
+    "json3": "^3.3.2"
   }
 }
