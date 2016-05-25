@@ -1,19 +1,24 @@
-var webpack = require('webpack');
-var path = require('path');
+let webpack = require('webpack');
+let path = require('path');
 
-var webpackConfig = {
+let webpackConfig = {
     resolve: {
         extensions: ['', '.js', '.jsx']
     },
-    entry: [
-        'webpack-dev-server/client?http://localhost:3000',
-        'webpack/hot/only-dev-server',
-        './client.js'
-    ],
+    entry: {
+        main: [
+            'webpack-dev-server/client?http://localhost:3000',
+            'webpack/hot/only-dev-server',
+            './client.js'
+        ],
+        vendor: [
+            'react', 'react-dom', 'async', 'fluxible', 'fluxible-addons-react', 'fluxible-plugin-fetchr', 'fluxible-router'
+        ]
+    },
     output: {
         path: path.resolve('./build/js'),
         publicPath: '/public/js/',
-        filename: 'main.js'
+        filename: '[name].js'
     },
     module: {
         loaders: [
@@ -33,6 +38,11 @@ var webpackConfig = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
+        new webpack.optimize.CommonsChunkPlugin({
+            name: 'vendor',
+            minChunks: Infinity,
+            filename: '[name].bundle.js'
+        }),
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
             'process.env': {

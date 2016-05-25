@@ -31,7 +31,10 @@ class DefaultHTMLLayout extends React.Component {
                 <script src="/bower_components/semantic/dist/components/checkbox.min.js"></script>
                 <script src="/bower_components/semantic/dist/components/dimmer.min.js"></script>
                 <script src="/bower_components/semantic/dist/components/modal.min.js"></script>
-                <script src={'/public/js/' + this.props.clientFile}>></script>
+                {/* All external vendors bundle*/}
+                <script src={'/public/js/vendor.bundle.js'}></script>
+                {/* Main app bundle */}
+                <script src={'/public/js/' + this.props.clientFile}></script>
             </body>
             </html>
         );

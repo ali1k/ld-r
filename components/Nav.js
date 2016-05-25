@@ -32,7 +32,7 @@ class Nav extends React.Component {
         }
         return (
             <nav ref="defaultNavbar" className="ui blue menu inverted navbar page grid">
-                    <NavLink routeName="home" className="brand item" activeClass="active"><img style={{height: '20', width: '20'}} className="ui mini image" src="/assets/img/ld-reactor.gif" alt="ld-reactor" /></NavLink>
+                    <NavLink routeName="home" className="brand item" activeClass="active"><img style={{height: 20, width: 20}} className="ui mini image" src="/assets/img/ld-reactor.gif" alt="ld-reactor" /></NavLink>
                     <NavLink routeName="about" className="item" activeClass="active">About {appShortTitle} </NavLink>
                     <NavLink routeName="datasets" className="item" activeClass="active" href="/datasets"> Datasets</NavLink>
                     <div className="right menu">
