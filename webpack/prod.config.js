@@ -18,7 +18,7 @@ let webpackConfig = {
     output: {
         path: path.resolve('./build/js'),
         publicPath: '/public/js/',
-        filename: '[name].min.js'
+        filename: '[name].js'
     },
     module: {
         loaders: [
