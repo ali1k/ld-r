@@ -1,6 +1,8 @@
 'use strict';
-var React = require('react');
-var ApplicationStore = require('../stores/ApplicationStore');
+import React from 'react';
+import ApplicationStore from '../stores/ApplicationStore';
+import ga from '../plugins/googleAnalytics/ga';
+import {googleAnalyticsID} from '../configs/general';
 
 class DefaultHTMLLayout extends React.Component {
     render() {
@@ -13,6 +15,7 @@ class DefaultHTMLLayout extends React.Component {
                 <link href="/bower_components/semantic/dist/semantic.min.css" rel="stylesheet" type="text/css" />
                 <link href="/bower_components/animate.css/animate.min.css" rel="stylesheet" type="text/css" />
                 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+                { googleAnalyticsID && <script dangerouslySetInnerHTML={ {__html: ga.replace('{googleAnalyticsID}', googleAnalyticsID)} } /> }
             </head>
             <body>
                 <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
