@@ -1,6 +1,6 @@
 {
   "name": "linked-data-reactor",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Linked Data Reactor",
   "private": false,
   "repository": {
@@ -13,8 +13,10 @@
   },
   "scripts": {
     "build": "webpack --config ./webpack/prod.config.js && NODE_ENV=production npm start",
+    "build:windows": "webpack --config ./webpack/prod.config.js && set NODE_ENV=production && npm start",
     "build:nostart": "webpack --config ./webpack/prod.config.js",
     "dev": "node ./webpack/dev-server.js",
+    "dev:windows": "set HOST=127.0.0.1 && set PORT=3000 && node ./webpack/dev-server.js",
     "lint": "eslint ./*.js ./**/*.js",
     "start": "node start.js",
     "validate": "npm ls"
