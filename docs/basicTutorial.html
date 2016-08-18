@@ -224,3 +224,54 @@ Go to the directoy where you have installed your LD-R instance and open your fav
 <div>
     <img class="ui centered image" src="/assets/img/basicTutorial/t9.png" alt="t9" />
 </div>
+<h2>Let's do some config in the Property level...</h2>
+<p>
+  Similar to the Dataset and Resource configurations, we can customize the way properties of a resource are rendered on the page.
+  To do this, you need to go to <code class="ui label">configs/reactor.js</code> and in the part related to properties, add your changes:
+</p>
+<pre style="background:#002240;color:#fff">        property: {
+            <span style="color:#3ad900">'</span>generic<span style="color:#3ad900">'</span>: {
+                propertyReactor: [<span style="color:#3ad900">'</span>IndividualProperty<span style="color:#3ad900">'</span>],
+                <span style="color:#08f;font-style:italic"><span style="color:#e1efff">//</span>following are object-based scope:</span>
+                objectReactor: [<span style="color:#3ad900">'</span>IndividualObject<span style="color:#3ad900">'</span>],
+                <span style="color:#08f;font-style:italic"><span style="color:#e1efff">//</span>to view/edit individual object values</span>
+                objectIViewer: [<span style="color:#3ad900">'</span>BasicIndividualView<span style="color:#3ad900">'</span>],
+                objectIEditor: [<span style="color:#3ad900">'</span>BasicIndividualInput<span style="color:#3ad900">'</span>],
+                extendedOEditor: [<span style="color:#3ad900">'</span>BasicIndividualDetailEdit<span style="color:#3ad900">'</span>],
+                extendedOViewer: [<span style="color:#3ad900">'</span>BasicIndividualDetailView<span style="color:#3ad900">'</span>],
+                shortenURI: <span style="color:#ff628c">1</span>
+            },
+            <span style="color:#3ad900">'</span>http://dbpedia.org/ontology/abstract<span style="color:#3ad900">'</span>: {
+                category: [<span style="color:#3ad900">'</span>General<span style="color:#3ad900">'</span>],
+                label: [<span style="color:#3ad900">'</span>Description<span style="color:#3ad900">'</span>]
+            },
+            <span style="color:#3ad900">'</span>http://dbpedia.org/ontology/address<span style="color:#3ad900">'</span>: {
+                category: [<span style="color:#3ad900">'</span>General<span style="color:#3ad900">'</span>],
+                label: [<span style="color:#3ad900">'</span>Address<span style="color:#3ad900">'</span>]
+            },
+            <span style="color:#3ad900">'</span>http://dbpedia.org/ontology/country<span style="color:#3ad900">'</span>: {
+                category: [<span style="color:#3ad900">'</span>General<span style="color:#3ad900">'</span>],
+                label: [<span style="color:#3ad900">'</span>Country<span style="color:#3ad900">'</span>]
+            },
+            <span style="color:#3ad900">'</span>http://dbpedia.org/ontology/foundingYear<span style="color:#3ad900">'</span>: {
+                category: [<span style="color:#3ad900">'</span>Specific<span style="color:#3ad900">'</span>],
+                label: [<span style="color:#3ad900">'</span>Funding Year<span style="color:#3ad900">'</span>]
+            },
+            <span style="color:#3ad900">'</span>http://dbpedia.org/ontology/numberOfStudents<span style="color:#3ad900">'</span>: {
+                category: [<span style="color:#3ad900">'</span>Specific<span style="color:#3ad900">'</span>],
+                label: [<span style="color:#3ad900">'</span>Number of Students<span style="color:#3ad900">'</span>]
+            },
+            <span style="color:#3ad900">'</span>http://dbpedia.org/ontology/numberOfGraduateStudents<span style="color:#3ad900">'</span>: {
+                category: [<span style="color:#3ad900">'</span>Specific<span style="color:#3ad900">'</span>],
+                label: [<span style="color:#3ad900">'</span>Number of Graduate Students<span style="color:#3ad900">'</span>]
+            }
+        },
+</pre>
+<p>
+  This will move some determined properties (identified by their URIs) to their corresponding category.
+  We can also change the label in which the property name is displayed. For exmaple, use 'Description' instead of 'abstract'.
+  Now if you view the previous resource again, you will see the properties (if any) with their values under the correct category:
+</p>
+<div>
+    <img class="ui centered image" src="/assets/img/basicTutorial/t10.png" alt="t10" />
+</div>
