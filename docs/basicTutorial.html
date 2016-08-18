@@ -42,3 +42,18 @@ Go to the directoy where you have installed your LD-R instance and open your fav
   The first config you need to set is in the <code class="ui label">configs/server.js</code> in order to be able to connect to a SPARQL endpoint.
   The default server configuration looks like this:
 </p>
+<pre style="background:#000;color:#f8f8f8">export <span style="color:#e28964">default</span> {
+    serverPort<span style="color:#e28964">:</span> [<span style="color:#3387cc">4000</span>],
+    sparqlEndpoint<span style="color:#e28964">:</span> {
+        'generic'<span style="color:#e28964">:</span> {
+            host<span style="color:#e28964">:</span> 'localhost', port<span style="color:#e28964">:</span> <span style="color:#3387cc">8890</span>, path<span style="color:#e28964">:</span> '<span style="color:#e28964">/</span>sparql', <span style="color:#e28964">type</span><span style="color:#e28964">:</span> 'virtuoso'
+        }
+    },
+    dbpediaLookupService<span style="color:#e28964">:</span> [
+        { host<span style="color:#e28964">:</span> '<span style="color:#dad085">lookup</span><span style="color:#e28964">.</span>dbpedia<span style="color:#e28964">.</span>org' }
+    ]
+};
+</pre>
+
+
+
