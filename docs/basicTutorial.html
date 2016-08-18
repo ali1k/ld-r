@@ -136,3 +136,14 @@ Go to the directoy where you have installed your LD-R instance and open your fav
 <div>
     <img class="ui centered image" src="/assets/img/basicTutorial/t5.png" alt="t5" />
 </div>
+<p>
+  You can also provide multiple focus types if needed. For instance to also list the resource of type dbpedia:EducationalInstitution :
+</p>
+<pre style="background:#002240;color:#fff">            <span style="color:#3ad900">'</span>http://live.dbpedia.org/sparql<span style="color:#3ad900">'</span>: {
+                resourceFocusType: [<span style="color:#3ad900">'</span>http://dbpedia.org/ontology/University<span style="color:#3ad900">'</span>, <span style="color:#3ad900">'</span>http://dbpedia.org/ontology/EducationalInstitution<span style="color:#3ad900">'</span>],
+            },
+</pre>
+<p>This will result in more resources to be dispaled:</p>
+<div>
+    <img class="ui centered image" src="/assets/img/basicTutorial/t6.png" alt="t6" />
+</div>
