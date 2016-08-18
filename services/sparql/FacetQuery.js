@@ -79,7 +79,7 @@ class FacetQuery{
         st = st + ' FILTER (' + filters.join(' && ') + ') ';
         if(!filters.length){
             //no constrain is selected
-            st = '?s rdf:type ?o .';
+            st = '?s rdf:type ?type .';
         }
 
         //---to support resource focus types

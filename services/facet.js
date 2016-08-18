@@ -139,7 +139,7 @@ export default {
             }else{
                 query = queryObject.countSecondLevelPropertyValues(cGraphName, rftconfig, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
             }
-            // console.log(query);
+            //console.log(query);
             //build http uri
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
