@@ -109,3 +109,26 @@ Go to the directoy where you have installed your LD-R instance and open your fav
   LD-R supports configurations in different levels. With the above lines, we set the configs for datasets. 
   Now, if you visit <a href="http://localhost:3000/datasets">http://localhost:3000/datasets</a>, you should already see the DBpedia graph listed there:
 </p>
+<div>
+    <img class="ui centered image" src="/assets/img/basicTutorial/t3.png" alt="t3" />
+</div>
+<p>
+  and by clicking on the dataset, you should already get a long list of all resources on DBpedia:
+</p>
+<div>
+    <img class="ui centered image" src="/assets/img/basicTutorial/t4.png" alt="t4" />
+</div>
+<p>
+  you can also click on the resources and see their data displayed by the basic LD-R rendering.
+</p>
+<p>
+  Let's say the LD-R to only list the resources of a certain type e.g. University. To enable this, add a config in the <code class="ui label">configs/reactor.js</code> for resourceFocusType:
+</p>
+<pre style="background:#002240;color:#fff">            <span style="color:#08f;font-style:italic"><span style="color:#e1efff">//</span>added focus on a specific entity type</span>
+            <span style="color:#3ad900">'</span>http://live.dbpedia.org/sparql<span style="color:#3ad900">'</span>: {
+                resourceFocusType: [<span style="color:#3ad900">'</span>http://dbpedia.org/ontology/University<span style="color:#3ad900">'</span>],
+            },
+</pre>
+<p>
+  This will tell the default Dataset viewer to only display the resources of type dbpedia:University .
+</p>
