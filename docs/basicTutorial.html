@@ -188,3 +188,28 @@ Go to the directoy where you have installed your LD-R instance and open your fav
     <img class="ui centered image" src="/assets/img/basicTutorial/t8.png" alt="t8" />
 </div>
 <p>Depending on the size of data and the performance of your triple store, the speed of rendering the selected facets may vary.</p>
+<h2>Let's do some config in the Resource level...</h2>
+<p>
+  The previous configs were employing the LD-R Dataset reactor.
+  We can also have configs on the way resources are rendered on the page.
+  For example, we can categorize the properties listed for a resource for better readability and understanding.
+  Going back to our DBpedia example, Let's say we want to present two categories of properties namely 'General' and 'Specific'.
+  To apply this, you need to open <code class="ui label">configs/reactor.js</code> and add the resource config as following:
+</p>
+<pre style="background:#002240;color:#fff">        resource: {
+            <span style="color:#3ad900">'</span>generic<span style="color:#3ad900">'</span>: {
+                <span style="color:#08f;font-style:italic"><span style="color:#e1efff">//</span>if enabled, will categorize properties in different tabs based on property categories</span>
+                usePropertyCategories: <span style="color:#ff628c">0</span>,
+                propertyCategories: [],
+                <span style="color:#08f;font-style:italic"><span style="color:#e1efff">//</span>used when creating random resources</span>
+                dynamicResourceDomain: [<span style="color:#3ad900">'</span>http://example.org<span style="color:#3ad900">'</span>],
+                resourceReactor: [<span style="color:#3ad900">'</span>Resource<span style="color:#3ad900">'</span>]
+            },
+            <span style="color:#08f;font-style:italic"><span style="color:#e1efff">//</span>added categories for resource properties</span>
+            <span style="color:#3ad900">'</span>http://dbpedia.org/ontology/EducationalInstitution<span style="color:#3ad900">'</span>: {
+                treatAsResourceType: <span style="color:#ff628c">1</span>,
+                usePropertyCategories: <span style="color:#ff628c">1</span>,
+                propertyCategories: [<span style="color:#3ad900">'</span>General<span style="color:#3ad900">'</span>, <span style="color:#3ad900">'</span>Specific<span style="color:#3ad900">'</span>]
+            },
+        },
+</pre>
