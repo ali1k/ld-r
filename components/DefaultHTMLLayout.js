@@ -15,7 +15,6 @@ class DefaultHTMLLayout extends React.Component {
                 <link href="/bower_components/semantic/dist/semantic.min.css" rel="stylesheet" type="text/css" />
                 <link href="/bower_components/animate.css/animate.min.css" rel="stylesheet" type="text/css" />
                 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-                { googleAnalyticsID && <script dangerouslySetInnerHTML={ {__html: ga.replace('{googleAnalyticsID}', googleAnalyticsID)} } /> }
             </head>
             <body>
                 <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
@@ -38,6 +37,7 @@ class DefaultHTMLLayout extends React.Component {
                 <script src={'/public/js/vendor.bundle.js'}></script>
                 {/* Main app bundle */}
                 <script src={'/public/js/' + this.props.clientFile}></script>
+                { googleAnalyticsID && <script dangerouslySetInnerHTML={ {__html: ga.replace('{googleAnalyticsID}', googleAnalyticsID)} } /> }
             </body>
             </html>
         );
