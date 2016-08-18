@@ -17,7 +17,7 @@ class ResourceUtil{
     }
     parseProperties(body, graphName, resourceURI, category, propertyPath) {
         let configurator = new Configurator();
-        let configExceptional = {}, config = {}, title = '', resourceType = '';
+        let configExceptional = {}, config = {}, title = '', resourceType = [];
         let filterByCategory=0, self=this;
         let parsed = JSON.parse(body);
         let output=[], propIndex={}, finalOutput=[];
@@ -32,7 +32,7 @@ class ResourceUtil{
                 }else if(el.p.value === 'http://www.w3.org/2000/01/rdf-schema#label'){
                     title = el.o.value;
                 }else if (el.p.value === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type') {
-                    resourceType = el.o.value;
+                    resourceType.push(el.o.value);
                 }
             });
         }
