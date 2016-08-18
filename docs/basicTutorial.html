@@ -42,18 +42,38 @@ Go to the directoy where you have installed your LD-R instance and open your fav
   The first config you need to set is in the <code class="ui label">configs/server.js</code> in order to be able to connect to a SPARQL endpoint.
   The default server configuration looks like this:
 </p>
-<pre style="background:#000;color:#f8f8f8">export <span style="color:#e28964">default</span> {
-    serverPort<span style="color:#e28964">:</span> [<span style="color:#3387cc">4000</span>],
-    sparqlEndpoint<span style="color:#e28964">:</span> {
-        'generic'<span style="color:#e28964">:</span> {
-            host<span style="color:#e28964">:</span> 'localhost', port<span style="color:#e28964">:</span> <span style="color:#3387cc">8890</span>, path<span style="color:#e28964">:</span> '<span style="color:#e28964">/</span>sparql', <span style="color:#e28964">type</span><span style="color:#e28964">:</span> 'virtuoso'
+<pre style="background:#002240;color:#fff"><span style="color:#ffee80">export</span> <span style="color:#ff9d00">default</span> {
+    serverPort: [<span style="color:#ff628c">4000</span>],
+    sparqlEndpoint: {
+        <span style="color:#3ad900">'</span>generic<span style="color:#3ad900">'</span>: {
+            host: <span style="color:#3ad900">'</span>localhost<span style="color:#3ad900">'</span>, port: <span style="color:#ff628c">8890</span>, path: <span style="color:#3ad900">'</span>/sparql<span style="color:#3ad900">'</span>, type: <span style="color:#3ad900">'</span>virtuoso<span style="color:#3ad900">'</span>
         }
     },
-    dbpediaLookupService<span style="color:#e28964">:</span> [
-        { host<span style="color:#e28964">:</span> '<span style="color:#dad085">lookup</span><span style="color:#e28964">.</span>dbpedia<span style="color:#e28964">.</span>org' }
+    dbpediaLookupService: [
+        { host: <span style="color:#3ad900">'</span>lookup.dbpedia.org<span style="color:#3ad900">'</span> }
     ]
-};
+}<span style="color:#e1efff">;</span>
 </pre>
-
+<p>
+  There is always a 'generic' configuration for the SPARQL Endpoint which will be used in case no other configurations are defined.
+  It means if you already have a triple store such as 'Virtuoso' installed/running on your localhost, you can use it right away.
+  For our tutorial, let's add a new endpoint configuration for DBpedia:
+</p>
+<pre style="background:#002240;color:#fff"><span style="color:#ffee80">export</span> <span style="color:#ff9d00">default</span> {
+    serverPort: [<span style="color:#ff628c">4000</span>],
+    sparqlEndpoint: {
+        <span style="color:#3ad900">'</span>generic<span style="color:#3ad900">'</span>: {
+            host: <span style="color:#3ad900">'</span>localhost<span style="color:#3ad900">'</span>, port: <span style="color:#ff628c">8890</span>, path: <span style="color:#3ad900">'</span>/sparql<span style="color:#3ad900">'</span>, type: <span style="color:#3ad900">'</span>virtuoso<span style="color:#3ad900">'</span>
+        },
+        <span style="color:#08f;font-style:italic"><span style="color:#e1efff">//</span>added a new endpoint</span>
+        <span style="color:#3ad900">'</span>http://live.dbpedia.org<span style="color:#3ad900">'</span>: {
+            host: <span style="color:#3ad900">'</span>live.dbpedia.org<span style="color:#3ad900">'</span>, port: <span style="color:#ff628c">80</span>, path: <span style="color:#3ad900">'</span>/sparql<span style="color:#3ad900">'</span>, useDefaultGraph: <span style="color:#ff628c">1</span>, type: <span style="color:#3ad900">'</span>virtuoso<span style="color:#3ad900">'</span>
+        },
+    },
+    dbpediaLookupService: [
+        { host: <span style="color:#3ad900">'</span>lookup.dbpedia.org<span style="color:#3ad900">'</span> }
+    ]
+}<span style="color:#e1efff">;</span>
+</pre>
 
 
