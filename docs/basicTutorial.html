@@ -66,7 +66,7 @@ Go to the directoy where you have installed your LD-R instance and open your fav
             host: <span style="color:#3ad900">'</span>localhost<span style="color:#3ad900">'</span>, port: <span style="color:#ff628c">8890</span>, path: <span style="color:#3ad900">'</span>/sparql<span style="color:#3ad900">'</span>, type: <span style="color:#3ad900">'</span>virtuoso<span style="color:#3ad900">'</span>
         },
         <span style="color:#08f;font-style:italic"><span style="color:#e1efff">//</span>added a new endpoint</span>
-        <span style="color:#3ad900">'</span>http://live.dbpedia.org<span style="color:#3ad900">'</span>: {
+        <span style="color:#3ad900">'</span>http://live.dbpedia.org/sparql<span style="color:#3ad900">'</span>: {
             host: <span style="color:#3ad900">'</span>live.dbpedia.org<span style="color:#3ad900">'</span>, port: <span style="color:#ff628c">80</span>, path: <span style="color:#3ad900">'</span>/sparql<span style="color:#3ad900">'</span>, useDefaultGraph: <span style="color:#ff628c">1</span>, type: <span style="color:#3ad900">'</span>virtuoso<span style="color:#3ad900">'</span>
         },
     },
@@ -75,5 +75,9 @@ Go to the directoy where you have installed your LD-R instance and open your fav
     ]
 }<span style="color:#e1efff">;</span>
 </pre>
-
+<p>
+  I have chosen to use the live dbpedia endpoint for this tutorial but you can also use http://dbpedia.org/sparql as well (if it is up and running!).
+  The type of triple store is 'virtuoso' and I will use the default graph for data. If you don't specify the default graph name, the identifier for the endpoint (in this case 'http://live.dbpedia.org/sparql') is used as the graph name.
+  More info about the possible parameters and values for server config is available <a href="configServer.html">here</a>.
+</p>
 
