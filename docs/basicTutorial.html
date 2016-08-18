@@ -295,3 +295,22 @@ Go to the directoy where you have installed your LD-R instance and open your fav
   To know more about these advanced features, have a look at <a href="configReactors.html">reactors config page</a>.
 </div>
 <h2>It is now only about viewing data, you can also edit Linked Data...</h2>
+<p>
+  One of the cool features of LD-R is to allow users to edit Linked Data.
+  By default, the content on LD-R is read-only. To enable editing of a dataset, you need to add the following config in <code class="ui label">configs/reactor.js</code>:
+</p>
+<pre style="background:#002240;color:#fff">            <span style="color:#08f;font-style:italic"><span style="color:#e1efff">//</span>allow editing of resources</span>
+            <span style="color:#3ad900">'</span>http://live.dbpedia.org/sparql<span style="color:#3ad900">'</span>: {
+                readOnly: <span style="color:#ff628c">0</span>,
+                resourceFocusType: [<span style="color:#3ad900">'</span>http://dbpedia.org/ontology/University<span style="color:#3ad900">'</span>, <span style="color:#3ad900">'</span>http://dbpedia.org/ontology/EducationalInstitution<span style="color:#3ad900">'</span>],
+            },
+</pre>
+<p>
+  Now, if you go to a resource, you will see the edit button next to the value fields:
+</p>
+<div>
+    <img class="ui centered image" src="/assets/img/basicTutorial/t12.png" alt="t12" />
+</div>
+<div>
+    <img class="ui centered image" src="/assets/img/basicTutorial/t13.png" alt="t13" />
+</div>
