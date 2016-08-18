@@ -137,7 +137,7 @@ Go to the directoy where you have installed your LD-R instance and open your fav
     <img class="ui centered image" src="/assets/img/basicTutorial/t5.png" alt="t5" />
 </div>
 <p>
-  You can also provide multiple focus types if needed. For instance to also list the resource of type dbpedia:EducationalInstitution :
+  You can also provide multiple focus types if needed. For instance to also list the resources of type dbpedia:EducationalInstitution :
 </p>
 <pre style="background:#002240;color:#fff">            <span style="color:#3ad900">'</span>http://live.dbpedia.org/sparql<span style="color:#3ad900">'</span>: {
                 resourceFocusType: [<span style="color:#3ad900">'</span>http://dbpedia.org/ontology/University<span style="color:#3ad900">'</span>, <span style="color:#3ad900">'</span>http://dbpedia.org/ontology/EducationalInstitution<span style="color:#3ad900">'</span>],
@@ -146,4 +146,43 @@ Go to the directoy where you have installed your LD-R instance and open your fav
 <p>This will result in more resources to be dispaled:</p>
 <div>
     <img class="ui centered image" src="/assets/img/basicTutorial/t6.png" alt="t6" />
+</div>
+<p>
+  The above example was about basic viewing in the dataset level. Another component which can be used to explore data in the dataset level is the faceted browser.
+  In order to activate the faceted browser, you need to set the config in <code class="ui label">configs/facets.js</code> file.
+  Let's add some facets on the DBpedia dataset:
+</p>
+<pre style="background:#002240;color:#fff"><span style="color:#ffee80">export</span> <span style="color:#ff9d00">default</span> {
+    facets: {
+        <span style="color:#3ad900">'</span>generic<span style="color:#3ad900">'</span>: {
+            list: [
+                <span style="color:#3ad900">'</span>http://www.w3.org/1999/02/22-rdf-syntax-ns#type<span style="color:#3ad900">'</span>
+            ],
+            config: {
+
+            }
+        },
+        <span style="color:#08f;font-style:italic"><span style="color:#e1efff">//</span>adding facets for dbpedia</span>
+        <span style="color:#3ad900">'</span>http://live.dbpedia.org<span style="color:#3ad900">'</span>: {
+            list: [
+                <span style="color:#3ad900">'</span>http://www.w3.org/1999/02/22-rdf-syntax-ns#type<span style="color:#3ad900">'</span>, <span style="color:#3ad900">'</span>http://dbpedia.org/ontology/country<span style="color:#3ad900">'</span>, <span style="color:#3ad900">'</span>http://dbpedia.org/property/established<span style="color:#3ad900">'</span>, <span style="color:#3ad900">'</span>http://dbpedia.org/ontology/numberOfStudents<span style="color:#3ad900">'</span>
+            ],
+            config: {
+
+            }
+        },
+
+    }
+}<span style="color:#e1efff">;</span>
+
+</pre>
+<p>
+  After adding the facet, you should now see the <button class="ui button">browse</button> button next to the dataset's name:
+</p>
+<div>
+    <img class="ui centered image" src="/assets/img/basicTutorial/t7.png" alt="t7" />
+</div>
+<p>After clicking on the browse button, you should get a list of facets to explore the dataset:</p>
+<div>
+    <img class="ui centered image" src="/assets/img/basicTutorial/t8.png" alt="t8" />
 </div>
