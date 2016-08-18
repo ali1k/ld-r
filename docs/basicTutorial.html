@@ -213,6 +213,14 @@ Go to the directoy where you have installed your LD-R instance and open your fav
             },
         },
 </pre>
+<p>
+  As you see, similar to dataset's config, here you get a generic config for resources which is used when no specific config for resources is defined.
+  There are two ways to config resources: specify the resource by its URI or use the rdf:type property of the resource to apply configs to all resources of that specific type.
+  In our case, we apply the config to all resources of type dbpedia:EducationalInstitution .
+  We enable using property categories and add two possible values for property categories.
+  Now, if you look at an example resource of EducationalInstitution, you will get two different tabs for property categories, but still with empty values.
+  That is because you need to specify which properties should go under which categories.
+</p>
 <div>
     <img class="ui centered image" src="/assets/img/basicTutorial/t9.png" alt="t9" />
 </div>
