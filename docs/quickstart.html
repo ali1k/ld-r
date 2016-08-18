@@ -1,37 +1,73 @@
----
-layout: default
-title: Quick Start
-section: quickstart
-path: docs/quickstart.html
----
+--- layout: default title: Quick Start section: quickstart path: docs/quickstart.html ---
 
 <h1 class="ui dividing header">
 Quick Start
 </h1>
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
-<p>
-    You should have installed <a href="https://nodejs.org/">NodeJS</a>, <a href="https://github.com/npm/npm">npm</a>, <a href="http://bower.io/">bower</a> and <a href="https://webpack.github.io/"> Webpack</a> on your system as prerequisite, then:
+<p> You need to install <a href="https://nodejs.org/">NodeJS</a> in order to run the LD-R platform.
+    <ol>
+        <li>
+            Go to <a href="https://nodejs.org/">NodeJS</a> and download the latest version (> 6.0.0) of Node for your operating system.
+        </li>
+        <li>
+            Once you installed the Node, open your command line terminal and do <code class="ui label">node --version</code> to make sure that you have the right version of Node.
+        </li>
+        <li>
+            Node provides <a href="https://github.com/npm/npm">npm</a> as its package manager. Now that you have installed Node, you should be able to check the npm as well: <code class="ui label">npm --version</code>
+        </li>
+        <li>
+            [Optional] I usually use <a href="https://www.npmjs.com/package/n">n</a> to take care of different versions of Node on my machine. It is a magical npm package which makes your life with Node much easier! You can do <code class="ui label">npm install -g n</code> and then simply type <code class="ui label">n</code> to see all the versions of NodeJS installed on your machine. By running <code class="ui label">n latest</code> you can always get the latest version of Node! Isn't it cool?!
+        </li>
+        <li>
+            Using npm, you should globally install <a href="http://bower.io/">bower</a> and <a href="https://webpack.github.io/"> Webpack</a> packages which are used in LD-R to build the application. In order to install those packages, simply run <code class="ui label">npm install webpack -g</code> and <code class="ui label">npm install bower -g</code>.
+        </li>
+        <li>
+            The next step is to clone the LD-R repository from Github: <code class="ui label">git clone https://github.com/ali1k/ld-r.git</code>
+        </li>
+        <li>
+            Go to the LD-R folder (or any name you have chosen while cloning the repo): <code class="ui label">cd ld-r</code>
+        </li>
+        <li>
+            Here is where the pain for winddows users start! If you are on a Unix-based OS, simply run <code class="ui label">./install</code> and wait for everything to be settled.
+            If you are a windows user, you have to do the following steps manually:
+            <ol>
+                <li>
+                    run <code class="ui label">npm install</code> and wait for all the magic of Node to install the required dependencies!
+                </li>
+                <li>
+                    run <code class="ui label">bower install</code> to install the main styling libraries.
+                </li>
+                <li>
+                    You would need to copy/rename some config files which are git-ignored:
+                    <ul>
+                        <li>
+                            Make a copy of <code class="ui label">configs/general.config.js</code> and rename it to <code class="ui label">configs/general.js</code>
+                        </li>
+                        <li>
+                            Make a copy of <code class="ui label">configs/server.config.js</code> and rename it to <code class="ui label">configs/server.js</code>
+                        </li>
+                        <li>
+                            Make a copy of <code class="ui label">configs/reactor.config.js</code> and rename it to <code class="ui label">configs/reactor.js</code>
+                        </li>
+                        <li>
+                            Make a copy of <code class="ui label">configs/facets.config.js</code> and rename it to <code class="ui label">configs/facets.js</code>
+                        </li>
+                        <li>
+                            We are almost there! the last change: Make a copy of <code class="ui label">plugins/email/config.sample.js</code> and rename it to <code class="ui label">plugins/email/config.js</code>
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+        </li>
+    </ol>
 </p>
-<p>
-    Clone the repository: <code class="ui label">git clone https://github.com/ali1k/ld-r.git</code>
-</p>
-<p> and simply run <code class="ui label">./install</code> script</p>
-
-<h2>
-<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration</h2>
-<p>Fill in general settings for your application at <code class="ui label">configs/general.js</code>.</p>
-
-<p>Fill in appropriate values for server port, URLs of your SPARQL endpoint and DBpedia lookup service at <code class="ui label">configs/server.js</code>.</p>
-
-<p>Fill in appropriate settings for your UI reactors at <code class="ui label">configs/reactor.js</code>.</p>
-
-<p>Fill in appropriate settings for the faceted browser at <code class="ui label">configs/facets.js</code>.</p>
 
 <h2>
 <a id="run-in-production-mode" class="anchor" href="#run-in-production-mode" aria-hidden="true"><span class="octicon octicon-link"></span></a>Run in Production Mode</h2>
 
 <p><code class="ui label">npm run build</code></p>
+<p>(* windows users) <code class="ui label">npm run build:windows</code></p>
 
 <p>check server at <code class="ui label">localhost:4000</code></p>
 
@@ -39,4 +75,17 @@ Quick Start
 <a id="development-mode" class="anchor" href="#development-mode" aria-hidden="true"><span class="octicon octicon-link"></span></a>Development Mode</h2>
 
 <p><code class="ui label">npm run dev</code></p>
+<p>(* windows users) <code class="ui label">npm run dev:windows</code></p>
 <p>check server at <code class="ui label">localhost:3000</code></p>
+
+<h2>
+<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration</h2>
+<p>
+    The power of LD-R reveals when configuring the platform. Check the available configs for each component on the LD-R documentation page.
+    Fill in general settings for your application at <code class="ui label">configs/general.js</code>.</p>
+
+<p>Fill in appropriate values for server port, URLs of your SPARQL endpoint and DBpedia lookup service at <code class="ui label">configs/server.js</code>.</p>
+
+<p>Fill in appropriate settings for your UI reactors at <code class="ui label">configs/reactor.js</code>.</p>
+
+<p>Fill in appropriate settings for the faceted browser at <code class="ui label">configs/facets.js</code>.</p>
