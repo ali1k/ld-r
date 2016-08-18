@@ -40,7 +40,9 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getSideEffects(cGraphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
+            //resource focus type
+            let rftconfig = configurator.getResourceFocusType(graphName);
+            query = queryObject.getSideEffects(cGraphName, rftconfig, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
             //build http uri
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
@@ -85,7 +87,9 @@ export default {
                 });
                 return 0;
             }
-            query = queryObject.getMasterPropertyValues(cGraphName, decodeURIComponent(params.selection.value));
+            //resource focus type
+            let rftconfig = configurator.getResourceFocusType(graphName);
+            query = queryObject.getMasterPropertyValues(cGraphName, rftconfig, decodeURIComponent(params.selection.value));
             //build http uri
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
@@ -113,6 +117,8 @@ export default {
             }
             //config handler
             let rconfig = configurator.prepareDatasetConfig(1, graphName);
+            //resource focus type
+            let rftconfig = configurator.getResourceFocusType(graphName);
             let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
             if(!maxOnPage){
                 maxOnPage = 20;
@@ -129,19 +135,20 @@ export default {
             }
             if(params.mode === 'init'){
                 //get all resources
-                query = queryObject.countSecondLevelPropertyValues(cGraphName, 0, {});
+                query = queryObject.countSecondLevelPropertyValues(cGraphName, rftconfig, 0, {});
             }else{
-                query = queryObject.countSecondLevelPropertyValues(cGraphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
+                query = queryObject.countSecondLevelPropertyValues(cGraphName, rftconfig, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
             }
             // console.log(query);
             //build http uri
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
-                let query2 = queryObject.getSecondLevelPropertyValues(cGraphName, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, maxOnPage, params.page);
+                let query2 = queryObject.getSecondLevelPropertyValues(cGraphName, rftconfig, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, maxOnPage, params.page);
                  //console.log(query2);
                 rp.get({uri: getHTTPQuery('read', query2, endpointParameters, outputFormat)}).then(function(res2){
                     callback(null, {
                         graphName: graphName,
+                        resourceFocusType: rftconfig,
                         page: params.page,
                         facets: {items: utilObject.parseSecondLevelPropertyValues(graphName, res2)},
                         total: utilObject.parseCountResourcesByType(res)

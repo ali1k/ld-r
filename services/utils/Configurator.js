@@ -1,5 +1,6 @@
 'use strict';
 import {config} from '../../configs/reactor';
+
 class Configurator{
     constructor() {
         this.config = config;
@@ -184,6 +185,13 @@ class Configurator{
             }
         }
         return finalOutput;
+    }
+    getResourceFocusType(graphName){
+        let out = [];
+        if(config.dataset[graphName] && config.dataset[graphName].resourceFocusType){
+            out = config.dataset[graphName].resourceFocusType;
+        }
+        return out;
     }
 }
 export default Configurator;
