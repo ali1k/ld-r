@@ -5,6 +5,9 @@ export default {
     sparqlEndpoint: {
         'generic': {
             host: 'localhost', port: 8890, path: '/sparql', type: 'virtuoso'
+        },
+        'http://localhost:5820/testDB/query': {
+            host: 'localhost', port: 5820, path: '/testDB/query', useDefaultGraph: 1, type: 'sesame'
         }
     },
     dbpediaLookupService: [

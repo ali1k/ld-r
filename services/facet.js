@@ -7,6 +7,7 @@ import Configurator from './utils/Configurator';
 import rp from 'request-promise';
 /*-------------config-------------*/
 const outputFormat = 'application/sparql-results+json';
+const headers = {'Accept': 'application/sparql-results+json'};
 let user;
 /*-----------------------------------*/
 let endpointParameters, cGraphName, graphName, query, queryObject, utilObject, configurator, propertyURI;
@@ -45,7 +46,7 @@ export default {
             query = queryObject.getSideEffects(cGraphName, rftconfig, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
             //build http uri
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat), headers: headers}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     page: 1,
@@ -92,7 +93,7 @@ export default {
             query = queryObject.getMasterPropertyValues(cGraphName, rftconfig, decodeURIComponent(params.selection.value));
             //build http uri
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat), headers: headers}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     page: 1,
@@ -142,7 +143,7 @@ export default {
             //console.log(query);
             //build http uri
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat), headers: headers}).then(function(res){
                 let query2 = queryObject.getSecondLevelPropertyValues(cGraphName, rftconfig, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, maxOnPage, params.page);
                  //console.log(query2);
                 rp.get({uri: getHTTPQuery('read', query2, endpointParameters, outputFormat)}).then(function(res2){

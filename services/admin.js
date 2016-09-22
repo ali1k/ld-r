@@ -7,6 +7,7 @@ import AdminUtil from './utils/AdminUtil';
 import rp from 'request-promise';
 /*-------------config-------------*/
 let user;
+const headers = {'Accept': 'application/sparql-results+json'};
 const outputFormat = 'application/sparql-results+json';
 /*-----------------------------------*/
 let endpointParameters, graphName, query, queryObject, utilObject;
@@ -37,7 +38,7 @@ export default {
             //build http uri
             endpointParameters = getEndpointParameters(graphName);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat), headers: headers}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     users: utilObject.parseUsers(res)

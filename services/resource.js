@@ -20,6 +20,7 @@ if(enableLogs){
 }
 /*-------------config-------------*/
 const outputFormat = 'application/sparql-results+json';
+const headers = {'Accept': 'application/sparql-results+json'};
 /*-----------------------------------*/
 let endpointParameters, category, cGraphName, graphName, propertyURI, resourceURI, objectURI, objectValue, query, queryObject, utilObject, configurator, propertyPath;
 queryObject = new ResourceQuery();
@@ -60,7 +61,7 @@ export default {
             // console.log(query);
             //build http uri
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat), headers: headers}).then(function(res){
                 //exceptional case for user properties: we hide some admin props from normal users
                 let {props, title, resourceType, rconfig} = utilObject.parseProperties(res, graphName, resourceURI, category, propertyPath);
                 if(graphName === authGraphName[0] && !parseInt(user.isSuperUser)){
@@ -108,7 +109,7 @@ export default {
             query = queryObject.getPrefixes() + queryObject.getProperties(cGraphName, objectURI);
             //build http uri
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat), headers: headers}).then(function(res){
                 let {props, objectType} = utilObject.parseObjectProperties(res, graphName, resourceURI, propertyURI);
                 callback(null, {
                     objectURI: objectURI,
