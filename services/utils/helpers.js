@@ -33,8 +33,12 @@ export default {
         if(sparqlEndpoint[g].useDefaultGraph){
             useDefaultGraph = 1;
         }
+        let useReasoning = 0;
+        if(sparqlEndpoint[g].useReasoning){
+            useReasoning = 1;
+        }
         let etype = sparqlEndpoint[g].type ? sparqlEndpoint[g].type : 'virtuoso';
-        return {httpOptions: httpOptions, type: etype, useDefaultGraph: useDefaultGraph};
+        return {httpOptions: httpOptions, type: etype, useDefaultGraph: useDefaultGraph, useReasoning: useReasoning};
     },
     getHTTPQuery: function(mode, query, endpointParameters, outputFormat) {
         let url, output = '&Accept=' + encodeURIComponent(outputFormat), ext ='';
@@ -44,12 +48,16 @@ export default {
             qParam = 'update';
             output= '';
         }
+        let reasoningParam = '';
+        if(endpointParameters.useReasoning){
+            reasoningParam= '&reasoning=true';
+        }
         switch (endpointParameters.type) {
             case 'virtuoso':
-                url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
+                url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat) + reasoningParam;
             break;
             case 'sesame':
-                url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + ext + '?' + qParam + '=' + encodeURIComponent(query) + output;
+                url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + ext + '?' + qParam + '=' + encodeURIComponent(query) + reasoningParam + output;
             break;
         }
         return url;
