@@ -146,7 +146,7 @@ export default {
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat), headers: headers}).then(function(res){
                 let query2 = queryObject.getSecondLevelPropertyValues(cGraphName, rftconfig, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, maxOnPage, params.page);
                  //console.log(query2);
-                rp.get({uri: getHTTPQuery('read', query2, endpointParameters, outputFormat)}).then(function(res2){
+                rp.get({uri: getHTTPQuery('read', query2, endpointParameters, outputFormat), headers: headers}).then(function(res2){
                     callback(null, {
                         graphName: graphName,
                         resourceFocusType: rftconfig,
