@@ -61,7 +61,7 @@ class Datasets extends React.Component {
                                 brws = <a className="ui grey label" href={'/browse/' + encodeURIComponent(graph)} title="browse"><i className="zoom icon"></i>browse</a>;
                             }
                             dss.push(graph);
-                            output.push(<div className="ui item" key={graph}> <div className="content"> <i className={'ui icon cubes ' + color} ></i> <a className="ui blank link" href={'/dataset/1/' + encodeURIComponent(graph)} title="go to resource list">{graph}</a> {focus} {brws} {dfl}</div> </div>);
+                            output.push(<div className="ui item" key={graph}> <div className="content"> <i className={'ui icon cubes ' + color} ></i> <a className="ui blank link" href={'/dataset/1/' + encodeURIComponent(graph)} title="go to resource list">{config[s][graph].datasetLabel ? config[s][graph].datasetLabel : graph}</a> {focus} {brws} {dfl}</div> </div>);
                         }
                     }
                 }
