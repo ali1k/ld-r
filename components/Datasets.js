@@ -100,7 +100,7 @@ class Datasets extends React.Component {
                 <div className="ui column">
                     {dss.length ? <div>{info}</div> : ''}
                     <div className="ui segment">
-                        <h1>Datasets</h1>
+                        <h2><span className="ui big black circular label">{dss.length}</span> Datasets</h2>
                         <div className="ui big divided list">
                             {output}
                         </div>
