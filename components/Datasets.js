@@ -93,7 +93,7 @@ class Datasets extends React.Component {
             }
         }
         optionsList = dss.map(function(option, index) {
-            return <option key={index} value={(option)}> {option} </option>;
+            return <option key={index} value={(option)}> {config.dataset[option].datasetLabel ? config.dataset[option].datasetLabel : option} </option>;
         });
         return (
             <div className="ui page grid" ref="datasets">
