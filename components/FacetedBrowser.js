@@ -2,6 +2,7 @@ import React from 'react';
 import Facet from './Facet';
 import {NavLink} from 'fluxible-router';
 import {facets} from '../configs/facets';
+import {config} from '../configs/reactor';
 import FacetedBrowserStore from '../stores/FacetedBrowserStore';
 import {connectToStores} from 'fluxible-addons-react';
 import loadFacets from '../actions/loadFacets';
@@ -232,10 +233,15 @@ class FacetedBrowser extends React.Component {
             let resSize = showFactes ? 'seven' : 'eleven';
             let facetsDIV = showFactes ? <div className="ui stackable five wide column">{list}</div> : '';
             let resourceDIV;
+
+            let datasetTitle = <a target="_blank" href={this.props.FacetedBrowserStore.graphName}> {this.props.FacetedBrowserStore.graphName} </a>;
+            if(config.dataset && config.dataset[this.props.FacetedBrowserStore.graphName] && config.dataset[this.props.FacetedBrowserStore.graphName].datasetLabel){
+                datasetTitle = <a target="_blank" href={this.props.FacetedBrowserStore.graphName}> {config.dataset[this.props.FacetedBrowserStore.graphName].datasetLabel} </a>;
+            }
             if(this.props.FacetedBrowserStore.total){
                 resourceDIV = <div className="ui segment">
                                 <h3 className="ui header">
-                                    {this.props.FacetedBrowserStore.isComplete ? '' : <img src="/assets/img/loader.gif" alt="loading..."/>} <span className="ui blue circular label">{this.addCommas(this.props.FacetedBrowserStore.total)}</span> Resources from <a href={this.props.FacetedBrowserStore.graphName} target="_blank">{this.props.FacetedBrowserStore.graphName}</a> 
+                                    {this.props.FacetedBrowserStore.isComplete ? '' : <img src="/assets/img/loader.gif" alt="loading..."/>} <span className="ui blue circular label">{this.addCommas(this.props.FacetedBrowserStore.total)}</span> Resources from {datasetTitle}
 
                                  </h3>
                                 <ResourceList resources={this.props.FacetedBrowserStore.resources} graphName={this.props.FacetedBrowserStore.graphName} OpenInNewTab={true} isBig={!showFactes}/>
