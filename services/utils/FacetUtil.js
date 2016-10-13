@@ -37,7 +37,7 @@ class FacetUtil{
         let output=[];
         let parsed = JSON.parse(body);
         parsed.results.bindings.forEach(function(el) {
-            output.push( {v: el.s.value, label: self.getPropertyLabel(el.s.value), g: graphName});
+            output.push( {v: el.s.value, label: self.getPropertyLabel(el.s.value), title: (el.title && el.title.value ? el.title.value : ''), g: graphName});
         });
         return output;
     }

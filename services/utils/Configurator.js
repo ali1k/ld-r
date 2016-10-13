@@ -193,9 +193,12 @@ class Configurator{
         return finalOutput;
     }
     getResourceFocusType(graphName){
-        let out = [];
+        let out = {'type':[], 'labelProperty': []};
         if(config.dataset[graphName] && config.dataset[graphName].resourceFocusType){
-            out = config.dataset[graphName].resourceFocusType;
+            out['type'] = config.dataset[graphName].resourceFocusType;
+            if(config.dataset[graphName].resourceLabelProperty && config.dataset[graphName].resourceLabelProperty.length){
+                out['labelProperty'] = [config.dataset[graphName].resourceLabelProperty[0]];
+            }
         }
         return out;
     }

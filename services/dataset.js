@@ -51,7 +51,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getResourcesByType(cGraphName, rconfig.resourceFocusType, maxOnPage, offset);
+            query = queryObject.getResourcesByType(cGraphName, rconfig, maxOnPage, offset);
             //build http uri
             //send request
             rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat), headers: headers}).then(function(res){

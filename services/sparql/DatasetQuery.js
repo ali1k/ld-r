@@ -49,7 +49,17 @@ class DatasetQuery{
         }
         return this.prefixes + this.query;
     }
-    getResourcesByType(graphName, type, limit, offset) {
+    getResourcesByType(graphName, rconfig, limit, offset) {
+        let type = rconfig.resourceFocusType;
+        let resourceLabelProperty;
+        if(rconfig.resourceLabelProperty){
+            resourceLabelProperty = rconfig.resourceLabelProperty;
+        }
+        //specify the right label for resources
+        let optPhase = 'OPTIONAL { ?resource dcterms:title ?title .} ';
+        if(resourceLabelProperty && resourceLabelProperty.length){
+            optPhase = 'OPTIONAL { ?resource <' + resourceLabelProperty[0] + '> ?title .} ';
+        }
         let st = '?resource a <'+ type + '> .';
         //will get all the types
         if(!type.length || (type.length && !type[0]) ){
@@ -71,8 +81,7 @@ class DatasetQuery{
                 { GRAPH <' + graphName + '> \
                     { '+ st +' \
                     } \
-                } \
-                OPTIONAL { ?resource dcterms:title ?title .}  \
+                } '+ optPhase +'\
                 OPTIONAL { ?resource rdfs:label ?label .}  \
             } LIMIT ' + limit + ' OFFSET ' + offset + ' \
             ';

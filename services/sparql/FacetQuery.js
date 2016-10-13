@@ -151,23 +151,32 @@ class FacetQuery{
         }
         return this.prefixes + this.query;
     }
-    getSecondLevelPropertyValues(graphName, type, propertyURI, prevSelection, limit, offset) {
+    getSecondLevelPropertyValues(graphName, rtconfig, propertyURI, prevSelection, limit, offset) {
+        let type = rtconfig.type;
+        let labelProperty = rtconfig.labelProperty;
+        let selectStr = '';
+        let titleStr = '';
         let noffset = (offset-1)*limit;
+        //add labels for entities
+        if(labelProperty.length){
+            selectStr = ' ?title ';
+            titleStr = ' OPTIONAL {?s <'+labelProperty[0]+'> ?title .} ';
+        }
         let st = this.getMultipleFilters(prevSelection, type);
         if(String(graphName)!=='' && graphName){
             /*jshint multistr: true */
             this.query = '\
-            SELECT DISTINCT ?s WHERE {\
+            SELECT DISTINCT ?s ' + selectStr + ' WHERE {\
                 { GRAPH <' + graphName + '> \
-                    { '+ st +' \
+                    { '+ st + titleStr +' \
                     } \
                 } \
             } LIMIT ' + limit + ' OFFSET ' + noffset;
         }else{
             /*jshint multistr: true */
             this.query = '\
-            SELECT DISTINCT ?s WHERE {\
-                { '+ st +' \
+            SELECT DISTINCT ?s ' + selectStr + ' WHERE {\
+                { '+ st + titleStr +' \
                 } \
             } LIMIT ' + limit + ' OFFSET ' + noffset;
         }
