@@ -17,8 +17,8 @@
     "build:nostart": "webpack --config ./webpack/prod.config.js",
     "dev": "node ./webpack/dev-server.js",
     "dev:dashboard": "DASHBOARD=1 webpack-dashboard -- webpack-dev-server --config ./webpack/dev-server.js",
-    "dev:windows:dashboard": "set HOST=127.0.0.1 && set PORT=3000 && set DASHBOARD=1 && webpack-dashboard -- webpack-dev-server --config ./webpack/dev-server.js",
-    "dev:windows": "set HOST=127.0.0.1 && set PORT=3000 && node ./webpack/dev-server.js",
+    "dev:windows:dashboard": "set HOST=127.0.0.1 && set PORT=3000 && set DASHBOARD=1 && set NODE_ENV=dev && webpack-dashboard -- webpack-dev-server --config ./webpack/dev-server.js",
+    "dev:windows": "set HOST=127.0.0.1 && set PORT=3000 && set NODE_ENV=dev && node ./webpack/dev-server.js",
     "lint": "eslint ./*.js ./**/*.js",
     "start": "node start.js",
     "validate": "npm ls"
