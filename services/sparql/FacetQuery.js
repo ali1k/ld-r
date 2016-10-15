@@ -156,11 +156,22 @@ class FacetQuery{
         let labelProperty = rtconfig.labelProperty;
         let selectStr = '';
         let titleStr = '';
+        let bindPhase = '';
         let noffset = (offset-1)*limit;
         //add labels for entities
         if(labelProperty.length){
             selectStr = ' ?title ';
-            titleStr = ' OPTIONAL {?s <'+labelProperty[0]+'> ?title .} ';
+            if(labelProperty.length === 1){
+                titleStr = 'OPTIONAL { ?resource <' + labelProperty[0] + '> ?title .} ';
+            }else {
+                titleStr = '';
+                let tmpA = [];
+                labelProperty.forEach(function(prop, index) {
+                    titleStr = titleStr + 'OPTIONAL { ?resource <' + prop + '> ?vp'+index+' .} ';
+                    tmpA.push('?vp' + index);
+                });
+                bindPhase = ' BIND(CONCAT('+tmpA.join(',"-",')+') AS ?title) '
+            }
         }
         let st = this.getMultipleFilters(prevSelection, type);
         if(String(graphName)!=='' && graphName){
@@ -168,7 +179,7 @@ class FacetQuery{
             this.query = '\
             SELECT DISTINCT ?s ' + selectStr + ' WHERE {\
                 { GRAPH <' + graphName + '> \
-                    { '+ st + titleStr +' \
+                    { '+ st + titleStr + bindPhase +' \
                     } \
                 } \
             } LIMIT ' + limit + ' OFFSET ' + noffset;
@@ -176,7 +187,7 @@ class FacetQuery{
             /*jshint multistr: true */
             this.query = '\
             SELECT DISTINCT ?s ' + selectStr + ' WHERE {\
-                { '+ st + titleStr +' \
+                { '+ st + titleStr + bindPhase + ' \
                 } \
             } LIMIT ' + limit + ' OFFSET ' + noffset;
         }

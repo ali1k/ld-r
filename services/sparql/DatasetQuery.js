@@ -57,8 +57,19 @@ class DatasetQuery{
         }
         //specify the right label for resources
         let optPhase = 'OPTIONAL { ?resource dcterms:title ?title .} ';
+        let bindPhase = '';
         if(resourceLabelProperty && resourceLabelProperty.length){
-            optPhase = 'OPTIONAL { ?resource <' + resourceLabelProperty[0] + '> ?title .} ';
+            if(resourceLabelProperty.length === 1){
+                optPhase = 'OPTIONAL { ?resource <' + resourceLabelProperty[0] + '> ?title .} ';
+            }else {
+                optPhase = '';
+                let tmpA = [];
+                resourceLabelProperty.forEach(function(prop, index) {
+                    optPhase = optPhase + 'OPTIONAL { ?resource <' + prop + '> ?vp'+index+' .} ';
+                    tmpA.push('?vp' + index);
+                });
+                bindPhase = ' BIND(CONCAT('+tmpA.join(',"-",')+') AS ?title) '
+            }
         }
         let st = '?resource a <'+ type + '> .';
         //will get all the types
@@ -80,9 +91,9 @@ class DatasetQuery{
             SELECT DISTINCT ?resource ?title ?label WHERE {\
                 { GRAPH <' + graphName + '> \
                     { '+ st +' \
+                    OPTIONAL { ?resource rdfs:label ?label .} '+ optPhase + bindPhase +' \
                     } \
-                } '+ optPhase +'\
-                OPTIONAL { ?resource rdfs:label ?label .}  \
+                }\
             } LIMIT ' + limit + ' OFFSET ' + offset + ' \
             ';
         }else{
@@ -91,13 +102,13 @@ class DatasetQuery{
             SELECT DISTINCT ?resource ?title ?label ?graphName WHERE { \
                 { GRAPH ?graphName \
                     { '+ st +' \
+                    OPTIONAL { ?resource rdfs:label ?label .} '+ optPhase + bindPhase +' \
                     }\
                 } \
                 UNION \
                 { '+ st +' \
+                    OPTIONAL { ?resource rdfs:label ?label .} '+ optPhase + bindPhase +' \
                 }\
-                OPTIONAL { ?resource dcterms:title ?title .}  \
-                OPTIONAL { ?resource rdfs:label ?label .}  \
             } LIMIT ' + limit + ' OFFSET ' + offset + ' \
             ';
         }

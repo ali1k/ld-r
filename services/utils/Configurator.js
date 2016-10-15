@@ -197,7 +197,7 @@ class Configurator{
         if(config.dataset[graphName] && config.dataset[graphName].resourceFocusType){
             out['type'] = config.dataset[graphName].resourceFocusType;
             if(config.dataset[graphName].resourceLabelProperty && config.dataset[graphName].resourceLabelProperty.length){
-                out['labelProperty'] = [config.dataset[graphName].resourceLabelProperty[0]];
+                out['labelProperty'] = config.dataset[graphName].resourceLabelProperty;
             }
         }
         return out;
