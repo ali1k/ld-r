@@ -89,13 +89,29 @@ class ResourceUtil{
             }
             output.push({propertyURI:el.p.value, property: property, instances:[], config: config});
           });
-          output.forEach(function(el) {
-            if(propIndex[el.propertyURI]){
-              finalOutput.push({propertyURI: el.propertyURI, property: el.property, config: el.config, instances: propIndex[el.propertyURI]});
-              propIndex[el.propertyURI]=null;
+            output.forEach(function(el) {
+                if(propIndex[el.propertyURI]){
+                    finalOutput.push({propertyURI: el.propertyURI, property: el.property, config: el.config, instances:    propIndex[el.propertyURI]});
+                    propIndex[el.propertyURI]=null;
+                }
+            });
+          //make the right title for resource if propertyLabel is defined in config
+            let newTitel = title;
+            if(rconfig && rconfig.resourceLabelProperty && rconfig.resourceLabelProperty.length){
+                newTitel = '';
+                let tmpArr=[];
+                finalOutput.forEach(function(el) {
+                    if(rconfig.resourceLabelProperty.indexOf(el.propertyURI) !== -1){
+                        tmpArr.push(el.instances[0].value);
+                    }
+                });
+                if(tmpArr.length){
+                    newTitel = tmpArr.join('-');
+                }else{
+                    newTitel = title;
+                }
             }
-          });
-          return {props: finalOutput, title: title, resourceType: resourceType, rconfig: rconfig};
+            return {props: finalOutput, title: newTitel, resourceType: resourceType, rconfig: rconfig};
         }
     }
     buildConfigFromExtensions(extensions) {
