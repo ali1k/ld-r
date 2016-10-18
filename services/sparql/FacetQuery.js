@@ -162,12 +162,12 @@ class FacetQuery{
         if(labelProperty.length){
             selectStr = ' ?title ';
             if(labelProperty.length === 1){
-                titleStr = 'OPTIONAL { ?resource <' + labelProperty[0] + '> ?title .} ';
+                titleStr = 'OPTIONAL { ?s <' + labelProperty[0] + '> ?title .} ';
             }else {
                 titleStr = '';
                 let tmpA = [];
                 labelProperty.forEach(function(prop, index) {
-                    titleStr = titleStr + 'OPTIONAL { ?resource <' + prop + '> ?vp'+index+' .} ';
+                    titleStr = titleStr + 'OPTIONAL { ?s <' + prop + '> ?vp'+index+' .} ';
                     tmpA.push('?vp' + index);
                 });
                 bindPhase = ' BIND(CONCAT('+tmpA.join(',"-",')+') AS ?title) '
