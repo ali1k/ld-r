@@ -18,8 +18,8 @@ class ResourceQuery{
     getPrefixes() {
         return this.prefixes;
     }
-    getAddTripleQuery(endpointType, graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
-        switch (endpointType) {
+    getAddTripleQuery(endpointParameters, graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
+        switch (endpointParameters.type) {
             case 'sesame':
                 return this.addTripleForSesame(graphName, resourceURI, propertyURI, objectValue, valueType, dataType);
                 break;
@@ -27,8 +27,8 @@ class ResourceQuery{
                 return this.addTriple(graphName, resourceURI, propertyURI, objectValue, valueType, dataType);
         }
     }
-    getDeleteTripleQuery(endpointType, graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
-        switch (endpointType) {
+    getDeleteTripleQuery(endpointParameters, graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
+        switch (endpointParameters.type) {
             case 'sesame':
                 return this.deleteTripleForSesame(graphName, resourceURI, propertyURI, objectValue, valueType, dataType);
                 break;
@@ -37,8 +37,8 @@ class ResourceQuery{
                 return this.deleteTriple(graphName, resourceURI, propertyURI, objectValue, valueType, dataType);
         }
     }
-    getDeleteTriplesQuery(endpointType, graphName, resourceURI, propertyURI, changes) {
-        switch (endpointType) {
+    getDeleteTriplesQuery(endpointParameters, graphName, resourceURI, propertyURI, changes) {
+        switch (endpointParameters.type) {
             case 'sesame':
                 return this.deleteTriplesForSesame(graphName, resourceURI, propertyURI, changes);
                 break;
@@ -46,8 +46,8 @@ class ResourceQuery{
                 return this.deleteTriples(graphName, resourceURI, propertyURI, changes);
         }
     }
-    getUpdateTripleQuery(endpointType, graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType) {
-        switch (endpointType) {
+    getUpdateTripleQuery(endpointParameters, graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType) {
+        switch (endpointParameters.type) {
             case 'sesame':
                 return this.updateTripleForSesame(graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType);
                 break;
@@ -55,8 +55,8 @@ class ResourceQuery{
                 return this.updateTriple(graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType);
         }
     }
-    getUpdateTriplesQuery(endpointType, graphName, resourceURI, propertyURI, changes) {
-        switch (endpointType) {
+    getUpdateTriplesQuery(endpointParameters, graphName, resourceURI, propertyURI, changes) {
+        switch (endpointParameters.type) {
             case 'sesame':
                 return this.updateTriplesForSesame(graphName, resourceURI, propertyURI, changes);
                 break;
@@ -64,8 +64,8 @@ class ResourceQuery{
                 return this.updateTriples(graphName, resourceURI, propertyURI, changes);
         }
     }
-    getUpdateObjectTriplesForSesame(endpointType, graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType, detailData) {
-        switch (endpointType) {
+    getUpdateObjectTriplesForSesame(endpointParameters, graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType, detailData) {
+        switch (endpointParameters.type) {
             case 'sesame':
                 return this.updateObjectTriplesForSesame(graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType, detailData);
                 break;

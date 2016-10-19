@@ -15,10 +15,10 @@ class FacetQuery{
          ';
         this.query='';
     }
-    getMasterPropertyValues(graphName, type, propertyURI) {
+    getMasterPropertyValues(endpointParameters, graphName, type, propertyURI) {
         let st = '?s <'+ propertyURI + '>  ?v.';
         //---to support resource focus types
-        let st_extra = this.makeExtraTypeFilters(type);
+        let st_extra = this.makeExtraTypeFilters(endpointParameters, type);
         st = st + ' ' + st_extra;
         if(String(graphName)!=='' && graphName){
             /*jshint multistr: true */
@@ -40,8 +40,8 @@ class FacetQuery{
         }
         return this.prefixes + this.query;
     }
-    getMultipleFilters(prevSelection, type) {
-        let st = '', filters, tmp, i = 0, hasURIVal = 0, hasLiteralVal = 0, typedLiteralVal = '';
+    getMultipleFilters(endpointParameters, prevSelection, type) {
+        let st = '', filters, tmp, tmp2, i = 0, hasURIVal = 0, hasLiteralVal = 0, typedLiteralVal = '';
         let typeVal = {};
         filters = [];
         for (let key in prevSelection) {
@@ -67,12 +67,45 @@ class FacetQuery{
                     prevSelection[key].forEach(function(el){
                         tmp.push('"' + el.value + '"');
                     });
-                    filters.push('str(?v' + i + ') IN ('+ tmp.join(',') +')');
+                    if(endpointParameters.type === 'sesame'){
+                        ///---for sesame
+                        tmp2 = [];
+                        tmp.forEach(function(fl){
+                            tmp2.push('?v' + i + '=' + fl);
+                        });
+                        filters.push('(' + tmp2.join(' || ') + ')');
+                        //---------------
+                    }else{
+                        //for virtuoso
+                        filters.push('str(?v' + i + ') IN ('+ tmp.join(',') +')');
+                    }
                 }else{
                     if(hasURIVal){
-                        filters.push('?v' + i + ' IN ('+ tmp.join(',') +')');
+                        if(endpointParameters.type === 'sesame'){
+                            ///---for sesame
+                            tmp2 = [];
+                            tmp.forEach(function(fl){
+                                tmp2.push('?v' + i + '=' + fl);
+                            });
+                            filters.push('(' + tmp2.join(' || ') + ')');
+                            //---------------
+                        }else{
+                            //for virtuoso
+                            filters.push('?v' + i + ' IN ('+ tmp.join(',') +')');
+                        }
                     }else{
-                        filters.push(typedLiteralVal+'(?v' + i + ') IN ('+ tmp.join(',') +')');
+                        if(endpointParameters.type === 'sesame'){
+                            ///---for sesame
+                            tmp2 = [];
+                            tmp.forEach(function(fl){
+                                tmp2.push('?v' + i + '=' + fl);
+                            });
+                            filters.push('(' + tmp2.join(' || ') + ')');
+                            //---------------
+                        }else{
+                            //for virtuoso
+                            filters.push(typedLiteralVal+'(?v' + i + ') IN ('+ tmp.join(',') +')');
+                        }
                     }
                 }
                 //---------
@@ -86,10 +119,10 @@ class FacetQuery{
         }
 
         //---to support resource focus types
-        let st_extra = this.makeExtraTypeFilters(type);
+        let st_extra = this.makeExtraTypeFilters(endpointParameters, type);
         return st + st_extra;
     }
-    makeExtraTypeFilters(type){
+    makeExtraTypeFilters(endpointParameters, type){
         //---to support resource focus types
         let st_extra = ' ?s a <'+ type + '> .';
         //will get all the types
@@ -97,18 +130,29 @@ class FacetQuery{
             st_extra = '';
         }
         //if we have multiple type, get all of them
-        let typeURIs = [];
-        if(type.length > 1){
+        let tmp2, typeURIs = [];
+        if(type && type.length > 1){
             type.forEach(function(uri) {
                 typeURIs.push('<' + uri + '>');
             });
-            st_extra = ' ?s a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
+            if(endpointParameters.type === 'sesame'){
+                ///---for sesame
+                tmp2 = [];
+                typeURIs.forEach(function(fl){
+                    tmp2.push('?type=' + fl);
+                });
+                st_extra = ' ?s a ?type . FILTER (' + tmp2.join(' || ') + ')';
+                //---------------
+            }else{
+                //---for virtuoso
+                st_extra = ' ?s a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
+            }
         }
         //-----------------------------------------------
         return st_extra;
     }
-    getSideEffects(graphName, type, propertyURI, prevSelection) {
-        let st = this.getMultipleFilters(prevSelection, type);
+    getSideEffects(endpointParameters, graphName, type, propertyURI, prevSelection) {
+        let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
         st = st + '?s <'+ propertyURI + '>  ?v.';
         if(String(graphName)!=='' && graphName){
             /*jshint multistr: true */
@@ -131,8 +175,8 @@ class FacetQuery{
         }
         return this.prefixes + this.query;
     }
-    countSecondLevelPropertyValues(graphName, type, propertyURI, prevSelection) {
-        let st = this.getMultipleFilters(prevSelection, type);
+    countSecondLevelPropertyValues(endpointParameters, graphName, type, propertyURI, prevSelection) {
+        let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
         if(String(graphName)!=='' && graphName){
             /*jshint multistr: true */
             this.query = '\
@@ -154,7 +198,7 @@ class FacetQuery{
         }
         return this.prefixes + this.query;
     }
-    getSecondLevelPropertyValues(graphName, rtconfig, propertyURI, prevSelection, limit, offset) {
+    getSecondLevelPropertyValues(endpointParameters, graphName, rtconfig, propertyURI, prevSelection, limit, offset) {
         let type = rtconfig.type;
         let labelProperty = rtconfig.labelProperty;
         let selectStr = '';
@@ -162,21 +206,21 @@ class FacetQuery{
         let bindPhase = '';
         let noffset = (offset-1)*limit;
         //add labels for entities
-        if(labelProperty.length){
+        if(labelProperty && labelProperty.length){
             selectStr = ' ?title ';
             if(labelProperty.length === 1){
-                titleStr = 'OPTIONAL { ?s <' + labelProperty[0] + '> ?title .} ';
+                titleStr = 'OPTIONAL { ?resource <' + labelProperty[0] + '> ?title .} ';
             }else {
                 titleStr = '';
                 let tmpA = [];
                 labelProperty.forEach(function(prop, index) {
-                    titleStr = titleStr + 'OPTIONAL { ?s <' + prop + '> ?vp'+index+' .} ';
+                    titleStr = titleStr + 'OPTIONAL { ?resource <' + prop + '> ?vp'+index+' .} ';
                     tmpA.push('?vp' + index);
                 });
                 bindPhase = ' BIND(CONCAT('+tmpA.join(',"-",')+') AS ?title) '
             }
         }
-        let st = this.getMultipleFilters(prevSelection, type);
+        let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
         if(String(graphName)!=='' && graphName){
             /*jshint multistr: true */
             this.query = '\
