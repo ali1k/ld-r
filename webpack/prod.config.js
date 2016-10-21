@@ -2,6 +2,7 @@ let webpack = require('webpack');
 let path = require('path');
 let StatsWriterPlugin = require('webpack-stats-plugin').StatsWriterPlugin;
 let Visualizer = require('webpack-visualizer-plugin');
+let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 let webpackConfig = {
     resolve: {
@@ -12,7 +13,7 @@ let webpackConfig = {
             './client.js'
         ],
         vendor: [
-            'react', 'react-dom', 'async', 'fluxible', 'fluxible-addons-react', 'fluxible-plugin-fetchr', 'fluxible-router'
+            'react', 'react-dom', 'async', 'fluxible', 'fluxible-addons-react', 'fluxible-plugin-fetchr', 'fluxible-router', 'moment', 'rc-calendar'
         ]
     },
     output: {
@@ -29,16 +30,21 @@ let webpackConfig = {
                     require.resolve('babel-loader')
                 ]
             },
-            { test: /\.json$/, loader: 'json-loader'}
+            { test: /\.json$/, loader: 'json-loader'},
+            { test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css') }
         ]
     },
     node: {
         setImmediate: false
     },
     plugins: [
+        // css files from the extract-text-plugin loader
+        new ExtractTextPlugin('../css/vendor.bundle.css'),
+
         new webpack.DefinePlugin({
             'process.env': {
-                NODE_ENV: JSON.stringify('production')
+                NODE_ENV: JSON.stringify('production'),
+                BROWSER: JSON.stringify('true')
             }
         }),
         new webpack.optimize.DedupePlugin(),

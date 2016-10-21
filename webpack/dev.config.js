@@ -1,5 +1,8 @@
 let webpack = require('webpack');
 let path = require('path');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const host = process.env.HOST || '0.0.0.0';
+const port = (process.env.PORT + 1) || 3001;
 
 let webpackConfig = {
     resolve: {
@@ -7,12 +10,9 @@ let webpackConfig = {
     },
     entry: {
         main: [
-            'webpack-dev-server/client?http://localhost:3000',
+            'webpack-dev-server/client?http://' + host + ':' + port,
             'webpack/hot/only-dev-server',
             './client.js'
-        ],
-        vendor: [
-            'react', 'react-dom', 'async', 'fluxible', 'fluxible-addons-react', 'fluxible-plugin-fetchr', 'fluxible-router'
         ]
     },
     output: {
@@ -30,23 +30,22 @@ let webpackConfig = {
                     require.resolve('babel-loader')
                 ]
             },
-            { test: /\.json$/, loader: 'json-loader'}
+            { test: /\.json$/, loader: 'json-loader'},
+            { test: /\.css$/, loader: 'style-loader!css-loader' }
         ]
     },
     node: {
         setImmediate: false
     },
     plugins: [
+        // css files from the extract-text-plugin loader
+        new ExtractTextPlugin('../css/vendor.bundle.css'),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-            minChunks: Infinity,
-            filename: '[name].bundle.js'
-        }),
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
             'process.env': {
-                NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+                NODE_ENV: JSON.stringify('dev'),
+                BROWSER: JSON.stringify('true')
             }
         })
     ],

@@ -113,6 +113,7 @@ server.use((req, res, next) => {
             //clientFile: env === 'production' ? 'main.min.js' : 'main.js',
             //use main.js for both dev and prod modes
             clientFile: 'main.js',
+            addAssets: (env === 'production'),
             context: context.getComponentContext(),
             state: exposed,
             markup: markup
@@ -125,9 +126,9 @@ server.use((req, res, next) => {
         res.end();
     });
 });
-
 const port = process.env.PORT || serverConfig.serverPort[0] || 3000;
 server.listen(port);
+//todo: fix the port issue on windows
 console.log('Listening on port ' + port);
 
 export default server;
