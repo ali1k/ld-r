@@ -10,7 +10,7 @@ let webpackConfig = {
     },
     entry: {
         main: [
-            'webpack-dev-server/client?http://' + host + ':' + port,
+            'webpack-dev-server/client?http://' + host + ':3000',
             'webpack/hot/only-dev-server',
             './client.js'
         ]
