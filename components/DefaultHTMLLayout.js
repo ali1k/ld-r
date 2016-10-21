@@ -14,8 +14,9 @@ class DefaultHTMLLayout extends React.Component {
                 <meta name="viewport" content="width=device-width, user-scalable=no" />
                 <link href="/bower_components/semantic/dist/semantic.min.css" rel="stylesheet" type="text/css" />
                 <link href="/bower_components/animate.css/animate.min.css" rel="stylesheet" type="text/css" />
+                {/* Vendors css bundle */
+                    this.props.addAssets ? <link href="/public/css/vendor.bundle.css" rel="stylesheet" type="text/css" />: <style></style>}
                 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-                {this.props.addAssets ? <link href="/public/css/vendor.bundle.css" rel="stylesheet" type="text/css" />: ''}
             </head>
             <body>
                 <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
@@ -34,8 +35,8 @@ class DefaultHTMLLayout extends React.Component {
                 <script src="/bower_components/semantic/dist/components/checkbox.min.js"></script>
                 <script src="/bower_components/semantic/dist/components/dimmer.min.js"></script>
                 <script src="/bower_components/semantic/dist/components/modal.min.js"></script>
-                {/* All external vendors bundle*/}
-                {this.props.addAssets ? <script src={'/public/js/vendor.bundle.js'}></script> : ''}
+                {/* All external vendors bundle*/
+                    this.props.addAssets ? <script src={'/public/js/vendor.bundle.js'}></script> : ''}
                 {/* Main app bundle */}
                 <script src={'/public/js/' + this.props.clientFile}></script>
                 { googleAnalyticsID && <script dangerouslySetInnerHTML={ {__html: ga.replace('{googleAnalyticsID}', googleAnalyticsID)} } /> }
