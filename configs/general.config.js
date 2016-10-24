@@ -9,6 +9,9 @@ export default {
     enableAuthentication: 0,
     //graph that stores users data, must be loaded beforehand
     authGraphName: ['http://ld-r.org/users'],
+    //if enabled will allow a recaptcha box in the registration form
+    //note: if it is enabled, you need to set the key parameteres for recaptcha in the  server.js file
+    useGoogleRecaptcha: 0,
     //the domain name under which basic dynamic resources and user resources will be defined
     baseResourceDomain: ['http://ld-r.org'],
     //will allow super users to confirm and activate regiastered users

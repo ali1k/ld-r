@@ -12,5 +12,11 @@ export default {
     },
     dbpediaLookupService: [
         { host: 'lookup.dbpedia.org' }
-    ]
+    ],
+    //it is used only if you enabled recaptcha feature for user authentication
+    //get keys from https://www.google.com/recaptcha
+    googleRecaptchaService: {
+        siteKey: ['put your google recaptcha site key here...'],
+        secretKey: ['put your google recaptcha secret key here...']
+    }
 };

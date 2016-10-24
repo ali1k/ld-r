@@ -18,9 +18,9 @@ if(config.sparqlEndpoint[generalConfig.authGraphName[0]]){
     g = 'generic';
 }
 httpOptions = {
-  host: config.sparqlEndpoint[g].host,
-  port: config.sparqlEndpoint[g].port,
-  path: config.sparqlEndpoint[g].path
+    host: config.sparqlEndpoint[g].host,
+    port: config.sparqlEndpoint[g].port,
+    path: config.sparqlEndpoint[g].path
 };
 var appShortTitle = generalConfig.appShortTitle;
 var appFullTitle = generalConfig.appFullTitle;
@@ -35,7 +35,7 @@ module.exports = function handleAuthentication(server) {
         }else{
             return res.redirect('/');
         }
-     });
+    });
     server.post('/login', function(req, res, next) {
         let redirectTo = req.session.redirectTo ? req.session.redirectTo : '/';
         delete req.session.redirectTo;
@@ -66,15 +66,26 @@ module.exports = function handleAuthentication(server) {
         }else{
             return res.redirect('/');
         }
-     });
+    });
     server.get('/register', function(req, res) {
+        let recaptchaSiteKey = '';
+        if(generalConfig.useGoogleRecaptcha && config.googleRecaptchaService){
+            recaptchaSiteKey = config.googleRecaptchaService.siteKey[0];
+        }
         if(!req.isAuthenticated()){
-            res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle});
+            res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, recaptchaSiteKey: recaptchaSiteKey});
         }else{
             return res.redirect('/');
         }
-     });
+    });
      server.post('/register', function(req, res, next) {
+         let recaptchaSiteKey = '';
+         let recaptchaSecretKey = '';
+         if(generalConfig.useGoogleRecaptcha && config.googleRecaptchaService){
+             recaptchaSiteKey = config.googleRecaptchaService.siteKey[0];
+             recaptchaSecretKey = config.googleRecaptchaService.secretKey[0];
+         }
+
          let error= '';
          if(req.body.password !== req.body.cpassword){
              error = 'Error! password mismatch...';
@@ -87,89 +98,116 @@ module.exports = function handleAuthentication(server) {
          }
          if(error){
              console.log(error);
-             res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, data: req.body, errorMsg: 'Error... '+error});
+             res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, recaptchaSiteKey: recaptchaSiteKey, data: req.body, errorMsg: 'Error... '+error});
          }else{
              //successfull
-             //first check if user already exists
-             /*jshint multistr: true */
-             var query = '\
-             PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-             SELECT ( COUNT(?s) AS ?exists ) FROM <'+ generalConfig.authGraphName[0] +'> WHERE { \
-               { \
-                   ?s a foaf:Person . \
-                   ?s foaf:accountName "'+ req.body.username +'" .\
-               } \
-             } \
-             ';
-             var endpoint = helper.getEndpointParameters([generalConfig.authGraphName[0]]);
-             var rpPath = helper.getHTTPQuery('read', query, endpoint, outputFormat);
-             //send request
-             rp.get({uri: rpPath}).then(function(resq){
-                 var parsed = JSON.parse(resq);
-                 if(parsed.results.bindings.length){
-                     if(parsed.results.bindings[0].exists.value ==='0'){
-                         //register as new user
-                         console.log('start registration');
-                         var rnd = Math.round(+new Date() / 1000);
-                         var resourceURI = generalConfig.baseResourceDomain + '/user/' + rnd;
-                         var dresourceURI = generalConfig.baseResourceDomain + '/resource/' + rnd;
-                         var dgraphURI = generalConfig.baseResourceDomain + '/graph/' + rnd;
-                         var blanknode = generalConfig.baseResourceDomain + '/editorship/' + rnd;
-                         var tmpE= [];
-                         var isActive = generalConfig.enableUserConfirmation? 0 : 1;
-                         var date = new Date();
-                         var currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
-                         if(endpoint.type === 'sesame'){
-                             /*jshint multistr: true */
-                             query = '\
-                             PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
-                             PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-                             PREFIX dcterms: <http://purl.org/dc/terms/> \
-                             INSERT DATA { GRAPH <'+ generalConfig.authGraphName[0] +'> { \
-                             <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; foaf:mbox <mailto:'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfGraph <'+dgraphURI+'>; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1>;ldr:editorOfProperty <'+blanknode+'2>; ldr:editorOfProperty <'+blanknode+'3>; ldr:editorOfProperty <'+blanknode+'4> . \
-                             <'+blanknode+'1> ldr:resource <'+resourceURI+'> ; ldr:property foaf:firstName . \
-                             <'+blanknode+'2> ldr:resource <'+resourceURI+'> ; ldr:property foaf:lastName . \
-                             <'+blanknode+'3> ldr:resource <'+resourceURI+'> ; ldr:property foaf:organization . \
-                             <'+blanknode+'4> ldr:resource <'+resourceURI+'> ; ldr:property ldr:password . \
-                            }} \
-                             ';
-                         }else {
-                             /*jshint multistr: true */
-                             query = '\
-                             PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
-                             PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-                             PREFIX dcterms: <http://purl.org/dc/terms/> \
-                             INSERT DATA INTO <'+ generalConfig.authGraphName[0] +'> { \
-                             <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; foaf:mbox <mailto:'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfGraph <'+dgraphURI+'>; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1>;ldr:editorOfProperty <'+blanknode+'2>; ldr:editorOfProperty <'+blanknode+'3>; ldr:editorOfProperty <'+blanknode+'4> . \
-                             <'+blanknode+'1> ldr:resource <'+resourceURI+'> ; ldr:property foaf:firstName . \
-                             <'+blanknode+'2> ldr:resource <'+resourceURI+'> ; ldr:property foaf:lastName . \
-                             <'+blanknode+'3> ldr:resource <'+resourceURI+'> ; ldr:property foaf:organization . \
-                             <'+blanknode+'4> ldr:resource <'+resourceURI+'> ; ldr:property ldr:password . \
-                             } \
-                             ';
-                         }
-                         rpPath = helper.getHTTPQuery('update', query, endpoint, outputFormat);
-                         rp.post({uri: rpPath}).then(function(){
-                             console.log('User is created!');
-                             //send email notifications
-                             if(generalConfig.enableEmailNotifications){
-                                 handleEmail.sendMail('userRegistration', req.body.email, '', '', '', '');
-                             }
-                             return res.redirect('/confirmation');
-                         }).catch(function (err2) {
-                             console.log(err2);
-                         });
+             //check recaptcha if enabled
+             if(recaptchaSiteKey){
+                 let recaptchaValidationURL = 'https://www.google.com/recaptcha/api/siteverify';
+                 let recpostOptions = {
+                     method: 'POST',
+                     uri: recaptchaValidationURL + '?secret='+recaptchaSecretKey + '&response=' + encodeURIComponent(req.body['g-recaptcha-response'])
+                 };
+                 rp(recpostOptions).then(function(recres){
+                     let recapRes = JSON.parse(recres);
+                     //console.log(recapRes);
+                     if(recapRes.success !== undefined && !recapRes.success){
+                         //error in recaptcha validation
+                         res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, recaptchaSiteKey: recaptchaSiteKey, data: req.body, errorMsg: 'Error... Captcha is not validated! You seem to be a robot...'});
+                         return 0;
                      }else{
-                         res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, data: req.body, errorMsg: 'Error... User already exists!'});
-                         console.log('User already exists!');
+                         addUserQueries(req, res, recaptchaSiteKey);
                      }
+                 }).catch(function (errRecap) {
+                     console.log(errRecap);
+                 });
+             }else{
+                 addUserQueries(req, res, recaptchaSiteKey);
+             }
 
-                 }else{
-                     res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, data: req.body, errorMsg: 'Error... Unknown Error!'});
-                 }
-             }).catch(function (errq) {
-                 console.log(errq);
-             });
          }
      });
 };
+var addUserQueries = function (req, res, recaptchaSiteKey){
+    //first check if user already exists
+    /*jshint multistr: true */
+    var query = '\
+    PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
+    SELECT ( COUNT(?s) AS ?exists ) FROM <'+ generalConfig.authGraphName[0] +'> WHERE { \
+      { \
+          ?s a foaf:Person . \
+          ?s foaf:accountName "'+ req.body.username +'" .\
+      } \
+    } \
+    ';
+
+    var endpoint = helper.getEndpointParameters([generalConfig.authGraphName[0]]);
+    var rpPath = helper.getHTTPQuery('read', query, endpoint, outputFormat);
+    //send request
+    rp.get({uri: rpPath}).then(function(resq){
+        var parsed = JSON.parse(resq);
+        if(parsed.results.bindings.length){
+            if(parsed.results.bindings[0].exists.value ==='0'){
+                //register as new user
+                console.log('start registration');
+                var rnd = Math.round(+new Date() / 1000);
+                var resourceURI = generalConfig.baseResourceDomain + '/user/' + rnd;
+                var dresourceURI = generalConfig.baseResourceDomain + '/resource/' + rnd;
+                var dgraphURI = generalConfig.baseResourceDomain + '/graph/' + rnd;
+                var blanknode = generalConfig.baseResourceDomain + '/editorship/' + rnd;
+                var tmpE= [];
+                var isActive = generalConfig.enableUserConfirmation? 0 : 1;
+                var date = new Date();
+                var currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
+                if(endpoint.type === 'sesame'){
+                    /*jshint multistr: true */
+                    query = '\
+                    PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
+                    PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
+                    PREFIX dcterms: <http://purl.org/dc/terms/> \
+                    INSERT DATA { GRAPH <'+ generalConfig.authGraphName[0] +'> { \
+                    <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; foaf:mbox <mailto:'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfGraph <'+dgraphURI+'>; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1>;ldr:editorOfProperty <'+blanknode+'2>; ldr:editorOfProperty <'+blanknode+'3>; ldr:editorOfProperty <'+blanknode+'4> . \
+                    <'+blanknode+'1> ldr:resource <'+resourceURI+'> ; ldr:property foaf:firstName . \
+                    <'+blanknode+'2> ldr:resource <'+resourceURI+'> ; ldr:property foaf:lastName . \
+                    <'+blanknode+'3> ldr:resource <'+resourceURI+'> ; ldr:property foaf:organization . \
+                    <'+blanknode+'4> ldr:resource <'+resourceURI+'> ; ldr:property ldr:password . \
+                   }} \
+                    ';
+                }else {
+                    /*jshint multistr: true */
+                    query = '\
+                    PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
+                    PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
+                    PREFIX dcterms: <http://purl.org/dc/terms/> \
+                    INSERT DATA INTO <'+ generalConfig.authGraphName[0] +'> { \
+                    <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; foaf:mbox <mailto:'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfGraph <'+dgraphURI+'>; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1>;ldr:editorOfProperty <'+blanknode+'2>; ldr:editorOfProperty <'+blanknode+'3>; ldr:editorOfProperty <'+blanknode+'4> . \
+                    <'+blanknode+'1> ldr:resource <'+resourceURI+'> ; ldr:property foaf:firstName . \
+                    <'+blanknode+'2> ldr:resource <'+resourceURI+'> ; ldr:property foaf:lastName . \
+                    <'+blanknode+'3> ldr:resource <'+resourceURI+'> ; ldr:property foaf:organization . \
+                    <'+blanknode+'4> ldr:resource <'+resourceURI+'> ; ldr:property ldr:password . \
+                    } \
+                    ';
+                }
+                rpPath = helper.getHTTPQuery('update', query, endpoint, outputFormat);
+                rp.post({uri: rpPath}).then(function(){
+                    console.log('User is created!');
+                    //send email notifications
+                    if(generalConfig.enableEmailNotifications){
+                        handleEmail.sendMail('userRegistration', req.body.email, '', '', '', '');
+                    }
+                    return res.redirect('/confirmation');
+                }).catch(function (err2) {
+                    console.log(err2);
+                });
+            }else{
+                res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, recaptchaSiteKey: recaptchaSiteKey, data: req.body, errorMsg: 'Error... User already exists!'});
+                console.log('User already exists!');
+            }
+
+        }else{
+            res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, recaptchaSiteKey: recaptchaSiteKey, data: req.body, errorMsg: 'Error... Unknown Error!'});
+        }
+    }).catch(function (errq) {
+        console.log(errq);
+    });
+}
