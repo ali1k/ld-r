@@ -13,6 +13,8 @@ class ResourceUtil{
             tmp2 = property.split(':');
             property = tmp2[tmp2.length - 1];
         }
+        //make first letter capital case
+        property = property.charAt(0).toUpperCase() + property.slice(1);
         return property;
     }
     parseProperties(body, graphName, resourceURI, category, propertyPath) {

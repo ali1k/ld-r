@@ -1,6 +1,5 @@
 let webpack = require('webpack');
 let path = require('path');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
 const host = process.env.HOST || '0.0.0.0';
 const port = (process.env.PORT + 1) || 3001;
 
@@ -38,8 +37,6 @@ let webpackConfig = {
         setImmediate: false
     },
     plugins: [
-        // css files from the extract-text-plugin loader
-        new ExtractTextPlugin('../css/vendor.bundle.css'),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
