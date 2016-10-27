@@ -12,7 +12,7 @@ class BasicImageView extends React.Component {
                 styleCl['width'] = this.props.config.imageWidth;
             }
         }
-        if(this.props.spec.valueType === 'uri'){
+        if(this.props.spec.valueType === 'uri' || val.indexOf('http:') !== -1){
             outputDIV = <a href={val} target="_blank"> <img className="ui centered rounded image" style={styleCl} src={val} alt={val} /> </a>;
         }else{
             outputDIV = <span> {val} </span>;
