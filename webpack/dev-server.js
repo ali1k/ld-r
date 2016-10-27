@@ -17,10 +17,10 @@ const options = {
     publicPath: config.output.publicPath,
     proxy: {
         '*': { target: `http://${host}:${devPort}` }
+    },
+    stats: {
+        colors: true
     }
-    //stats: {
-        //colors: true
-    //}
 };
 
 const compiler = webpack(config);
