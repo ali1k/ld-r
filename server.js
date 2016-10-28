@@ -35,8 +35,12 @@ const debug = debugLib('linked-data-reactor');
 const publicRoutes = ['/', '/about'];
 
 const host = process.env.HOST ? process.env.HOST : '0.0.0.0';
-const mainPort = process.env.PORT ? parseInt(process.env.PORT) : 3000;
-const devPort = process.env.PORT ? parseInt(process.env.PORT) + 1 : 3001;
+let port = 3000 ;
+if(env === 'production'){
+    port = process.env.PORT ? process.env.PORT : (serverConfig.serverPort ? serverConfig.serverPort[0] : 3000);
+}else{
+    port = process.env.PORT ? process.env.PORT : 3001;
+}
 
 const server = express();
 // we need this because "cookie" is true in csrfProtection
@@ -131,8 +135,8 @@ server.use((req, res, next) => {
     });
 });
 
-server.listen(devPort);
+server.listen(port);
 //todo: fix the port issue on windows
-console.log('Listening on port ' + devPort);
+console.log('Listening on port ' + port);
 
 export default server;
