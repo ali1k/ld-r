@@ -1,7 +1,9 @@
 let webpack = require('webpack');
 let path = require('path');
+
 const host = process.env.HOST || '0.0.0.0';
-const port = (process.env.PORT + 1) || 3001;
+const mainPort = (process.env.PORT) || 3000;
+const devPort = (process.env.PORT + 1) || 3001;
 
 let webpackConfig = {
     resolve: {
@@ -9,7 +11,7 @@ let webpackConfig = {
     },
     entry: {
         main: [
-            'webpack-dev-server/client?http://' + host + ':3000',
+            'webpack-dev-server/client?http://' + host + ':' + mainPort,
             'webpack/hot/only-dev-server',
             './client.js'
         ]
