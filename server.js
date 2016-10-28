@@ -131,8 +131,8 @@ server.use((req, res, next) => {
     });
 });
 
-server.listen(mainPort);
+server.listen(devPort);
 //todo: fix the port issue on windows
-console.log('Listening on port ' + mainPort);
+console.log('Listening on port ' + devPort);
 
 export default server;
