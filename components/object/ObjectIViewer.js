@@ -31,8 +31,8 @@ class ObjectIViewer extends React.Component {
                     extendedViewer = <BasicIndividualDetailView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
             }
         }
-        //always go for linked view when it has extensions
-        if(this.props.config && this.props.spec.extended){
+        //always go for linked view when it has extensions (and when BasicIndividualView is selected)
+        if(this.props.config && this.props.spec.extended && viewerConfig ==='BasicIndividualView'){
             viewerConfig = 'BasicLinkedIndividualView';
             propertyPath = [this.props.resource, this.props.property];
         }
