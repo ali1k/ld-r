@@ -34,6 +34,10 @@ const htmlComponent = React.createFactory(HtmlComponent);
 const debug = debugLib('linked-data-reactor');
 const publicRoutes = ['/', '/about'];
 
+const host = process.env.HOST ? process.env.HOST : '0.0.0.0';
+const mainPort = process.env.PORT ? parseInt(process.env.PORT) : 3000;
+const devPort = process.env.PORT ? parseInt(process.env.PORT) + 1 : 3001;
+
 const server = express();
 // we need this because "cookie" is true in csrfProtection
 server.use(cookieParser());
@@ -126,9 +130,9 @@ server.use((req, res, next) => {
         res.end();
     });
 });
-const port = process.env.PORT || serverConfig.serverPort[0] || 3000;
-server.listen(port);
+
+server.listen(mainPort);
 //todo: fix the port issue on windows
-console.log('Listening on port ' + port);
+console.log('Listening on port ' + mainPort);
 
 export default server;
