@@ -39,7 +39,7 @@ let port = 3000 ;
 if(env === 'production'){
     port = process.env.PORT ? process.env.PORT : (serverConfig.serverPort ? serverConfig.serverPort[0] : 3000);
 }else{
-    port = process.env.PORT ? process.env.PORT : 3001;
+    port = process.env.PORT ? parseInt(process.env.PORT) + 1 : 3001;
 }
 
 const server = express();

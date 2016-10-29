@@ -12,8 +12,14 @@ export default {
                 maxNumberOfResourcesOnPage: 20,
                 datasetReactor: ['Dataset']
             },
+            //authentication graph
             'http://ld-r.org/users': {
                 readOnly: 0
+            },
+            //example reactor config
+            'http://live.dbpedia.org/sparql': {
+                readOnly: 1,
+                resourceFocusType: ['http://dbpedia.org/ontology/University']
             }
         },
         resource: {

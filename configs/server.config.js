@@ -6,8 +6,13 @@ export default {
         'generic': {
             host: 'localhost', port: 8890, path: '/sparql', type: 'virtuoso'
         },
+        //Example config to connect a Sesame-based triple store e.g. Stardog
         'http://localhost:5820/testDB/query': {
             host: 'localhost', port: 5820, path: '/testDB/query', useDefaultGraph: 1, type: 'sesame', useReasoning: 1
+        },
+        //Example for connecting to a Virtuoso triple store
+        'http://live.dbpedia.org/sparql': {
+            host: 'live.dbpedia.org', port: 80, path: '/sparql', useDefaultGraph: 1, type: 'virtuoso'
         }
     },
     dbpediaLookupService: [
