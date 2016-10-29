@@ -43,7 +43,7 @@ export default {
     },
     //build the write URI and params for different SPARQL endpoints
     getHTTPQuery: function(mode, query, endpointParameters, outputFormat) {
-        let outputObject = {url: '', params: {}};
+        let outputObject = {uri: '', params: {}};
 
         if(endpointParameters.useReasoning){
             outputObject.params['reasoning'] = 'true';
@@ -52,13 +52,13 @@ export default {
         switch (endpointParameters.type) {
         case 'virtuoso':
 
-            outputObject.url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+            outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
             outputObject.params['query'] = query;
             outputObject.params['format'] = outputFormat;
 
             break;
         case 'stardog':
-            outputObject.url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+            outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
             outputObject.params['query'] = query;
             outputObject.params['Accept'] = outputFormat;
 
@@ -67,11 +67,11 @@ export default {
         case 'sesame':
             if(mode === 'update'){
                 ext = '';
-                outputObject.url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '/statements';
+                outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '/statements';
                 outputObject.params['update'] = query;
             }else{
                 outputObject.params['query'] = query;
-                outputObject.url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
                 outputObject.params['Accept'] = outputFormat;
             }
 
@@ -81,8 +81,8 @@ export default {
     },
     ///builds the HTTP get URL for SPARQL requests
     getHTTPGetURL(object){
-        let url = object.url + '?' + queryString.stringify(object.params);
-        return url;
+        let uri = object.uri + '?' + queryString.stringify(object.params);
+        return uri;
     },
     getQueryDataTypeValue(valueType, dataType, objectValue) {
         let newValue, dtype;

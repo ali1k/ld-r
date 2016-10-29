@@ -73,7 +73,8 @@ export default {
             query = queryObject.activateUser(endpointParameters.type, authGraphName[0], params.resourceURI);
             //build http uri
             //send request
-            rp.post({uri: getHTTPGetURL(getHTTPQuery('update', query, endpointParameters, outputFormat))}).then(function(res){
+            HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
+            rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
                 if(enableEmailNotifications){
                     sendMail('userActivation', '', params.email, '', '', '');
                 }
