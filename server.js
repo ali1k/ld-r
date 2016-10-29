@@ -136,7 +136,11 @@ server.use((req, res, next) => {
 });
 
 server.listen(port);
-//todo: fix the port issue on windows
-console.log('Listening on port ' + port);
+if(env === 'production'){
+    console.log('[production environment] Check your application on http://%s:%s', host, port);
+}else{
+    console.log('[development environment] Proxy server listening on port ' + port);
+    console.log('[development environment] Check your application on http://%s:%s', host, port-1);
+}
 
 export default server;

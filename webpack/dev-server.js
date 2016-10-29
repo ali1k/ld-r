@@ -32,5 +32,5 @@ if(process.env.DASHBOARD){
 new WebpackDevServer(compiler, options).listen(mainPort, host,  () => {
     shell.env.PORT = shell.env.PORT || mainPort;
     shell.exec('"./node_modules/.bin/nodemon" start.js -e js,jsx',  () => {});
-    console.log('Webpack development server listening on %s:%s', host, mainPort);
+    console.log('Webpack development server listening on http://%s:%s', host, mainPort);
 });
