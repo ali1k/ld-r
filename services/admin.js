@@ -1,5 +1,5 @@
 'use strict';
-import {getEndpointParameters, getHTTPQuery} from './utils/helpers';
+import {getEndpointParameters, getHTTPQuery, getHTTPGetURL} from './utils/helpers';
 import {authGraphName, enableAuthentication, enableEmailNotifications} from '../configs/general';
 import {sendMail} from '../plugins/email/handleEmail';
 import AdminQuery from './sparql/AdminQuery';
@@ -38,7 +38,7 @@ export default {
             //build http uri
             endpointParameters = getEndpointParameters(graphName);
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat), headers: headers}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     users: utilObject.parseUsers(res)
@@ -73,7 +73,7 @@ export default {
             query = queryObject.activateUser(endpointParameters.type, authGraphName[0], params.resourceURI);
             //build http uri
             //send request
-            rp.post({uri: getHTTPQuery('update', query, endpointParameters, outputFormat)}).then(function(res){
+            rp.post({uri: getHTTPGetURL(getHTTPQuery('update', query, endpointParameters, outputFormat))}).then(function(res){
                 if(enableEmailNotifications){
                     sendMail('userActivation', '', params.email, '', '', '');
                 }

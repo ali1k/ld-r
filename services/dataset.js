@@ -1,5 +1,5 @@
 'use strict';
-import {getEndpointParameters, getHTTPQuery} from './utils/helpers';
+import {getEndpointParameters, getHTTPQuery, getHTTPGetURL} from './utils/helpers';
 import {defaultGraphName, enableAuthentication} from '../configs/general';
 import DatasetQuery from './sparql/DatasetQuery';
 import DatasetUtil from './utils/DatasetUtil';
@@ -54,7 +54,7 @@ export default {
             query = queryObject.getResourcesByType(cGraphName, rconfig, maxOnPage, offset);
             //build http uri
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat), headers: headers}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     resources: utilObject.parseResourcesByType(res, graphName),
@@ -95,7 +95,7 @@ export default {
             query = queryObject.countResourcesByType(cGraphName, rconfig.resourceFocusType);
             //build http uri
             //send request
-            rp.get({uri: getHTTPQuery('read', query, endpointParameters, outputFormat), headers: headers}).then(function(res){
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                 callback(null, {
                     graphName: graphName,
                     total: utilObject.parseCountResourcesByType(res)

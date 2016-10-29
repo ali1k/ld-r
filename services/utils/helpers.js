@@ -1,5 +1,6 @@
 import {sparqlEndpoint} from '../../configs/server';
 import validUrl from 'valid-url';
+import queryString from 'query-string';
 export default {
     getHTTPOptions: function(graphName) {
         let httpOptions, g;
@@ -40,34 +41,47 @@ export default {
         let etype = sparqlEndpoint[g].type ? sparqlEndpoint[g].type : 'virtuoso';
         return {httpOptions: httpOptions, type: etype, useDefaultGraph: useDefaultGraph, useReasoning: useReasoning};
     },
+    //build the write URI and params for different SPARQL endpoints
     getHTTPQuery: function(mode, query, endpointParameters, outputFormat) {
-        let url, ext ='';
-        let qParam= 'query';
-        let output = '';
-        if(mode === 'update'){
-            ext = '/statements';
-            qParam = 'update';
-            output= '';
-        }
-        let reasoningParam = '';
+        let outputObject = {url: '', params: {}};
+
         if(endpointParameters.useReasoning){
-            reasoningParam= '&reasoning=true';
+            outputObject.params['reasoning'] = 'true';
         }
+
         switch (endpointParameters.type) {
         case 'virtuoso':
-            output = '&format=' + encodeURIComponent(outputFormat);
-            url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '?query=' + encodeURIComponent(query) + reasoningParam + output ;
+
+            outputObject.url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+            outputObject.params['query'] = query;
+            outputObject.params['format'] = outputFormat;
+
             break;
         case 'stardog':
-            output = '&Accept=' + encodeURIComponent(outputFormat);
-            url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '?query=' + encodeURIComponent(query) + reasoningParam + output;
+            outputObject.url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+            outputObject.params['query'] = query;
+            outputObject.params['Accept'] = outputFormat;
+
             break;
         //todo: check the differences for other triple stores
         case 'sesame':
-            output = '&Accept=' + encodeURIComponent(outputFormat);
-            url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + ext + '?' + qParam + '=' + encodeURIComponent(query) + reasoningParam + output;
+            if(mode === 'update'){
+                ext = '';
+                outputObject.url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '/statements';
+                outputObject.params['update'] = query;
+            }else{
+                outputObject.params['query'] = query;
+                outputObject.url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                outputObject.params['Accept'] = outputFormat;
+            }
+
             break;
         }
+        return outputObject;
+    },
+    ///builds the HTTP get URL for SPARQL requests
+    getHTTPGetURL(object){
+        let url = object.url + '?' + queryString.stringify(object.params);
         return url;
     },
     getQueryDataTypeValue(valueType, dataType, objectValue) {
