@@ -91,9 +91,9 @@ Go to the directoy where you have installed your LD-R instance and open your fav
 </p>
 <div class="ui info message">
   <i class="ui big yellow info icon"></i>
-  If you want to connect to a Sesame-based triple store e.g. <a href="http://stardog.com/">Stardog</a>, You can use the following server configuration:
+  If you want to connect to a another type of triple store e.g. <a href="http://stardog.com/">Stardog</a>, You can use the following server configuration:
   <pre style="background:#002240;color:#fff">        'http<span style="color:#ff9d00">://</span>localhost<span style="color:#ff9d00">:</span><span style="color:#ff628c">5820</span><span style="color:#ff9d00">/</span>tutorial<span style="color:#ff9d00">/</span>query'<span style="color:#ff9d00">:</span> {
-            host<span style="color:#ff9d00">:</span> 'localhost'<span style="color:#e1efff">,</span> port<span style="color:#ff9d00">:</span> <span style="color:#ff628c">5820</span><span style="color:#e1efff">,</span> path<span style="color:#ff9d00">:</span> '<span style="color:#ff9d00">/</span>tutorial<span style="color:#ff9d00">/</span>query'<span style="color:#e1efff">,</span> useDefaultGraph<span style="color:#ff9d00">:</span> <span style="color:#ff628c">1</span><span style="color:#e1efff">,</span> <span style="color:#ff9d00">type</span><span style="color:#ff9d00">:</span> 'sesame'
+            host<span style="color:#ff9d00">:</span> 'localhost'<span style="color:#e1efff">,</span> port<span style="color:#ff9d00">:</span> <span style="color:#ff628c">5820</span><span style="color:#e1efff">,</span> path<span style="color:#ff9d00">:</span> '<span style="color:#ff9d00">/</span>tutorial<span style="color:#ff9d00">/</span>query'<span style="color:#e1efff">,</span> useDefaultGraph<span style="color:#ff9d00">:</span> <span style="color:#ff628c">1</span><span style="color:#e1efff">,</span> <span style="color:#ff9d00">type</span><span style="color:#ff9d00">:</span> 'stardog'
         }
   </pre>
  You would just need to use the correct port (if it is not 5820) and add your database name (replace the 'tutorial' with your own database name).
