@@ -67,7 +67,7 @@ class FacetQuery{
                     prevSelection[key].forEach(function(el){
                         tmp.push('"' + el.value + '"');
                     });
-                    if(endpointParameters.type === 'sesame'){
+                    if(endpointParameters.type === 'stardog' || endpointParameters.type === 'sesame'){
                         ///---for sesame
                         tmp2 = [];
                         tmp.forEach(function(fl){
@@ -81,7 +81,7 @@ class FacetQuery{
                     }
                 }else{
                     if(hasURIVal){
-                        if(endpointParameters.type === 'sesame'){
+                        if(endpointParameters.type === 'stardog' || endpointParameters.type === 'sesame'){
                             ///---for sesame
                             tmp2 = [];
                             tmp.forEach(function(fl){
@@ -94,7 +94,7 @@ class FacetQuery{
                             filters.push('?v' + i + ' IN ('+ tmp.join(',') +')');
                         }
                     }else{
-                        if(endpointParameters.type === 'sesame'){
+                        if(endpointParameters.type === 'stardog' || endpointParameters.type === 'sesame'){
                             ///---for sesame
                             tmp2 = [];
                             tmp.forEach(function(fl){
@@ -135,7 +135,7 @@ class FacetQuery{
             type.forEach(function(uri) {
                 typeURIs.push('<' + uri + '>');
             });
-            if(endpointParameters.type === 'sesame'){
+            if(endpointParameters.type === 'stardog' || endpointParameters.type === 'sesame'){
                 ///---for sesame
                 tmp2 = [];
                 typeURIs.forEach(function(fl){
