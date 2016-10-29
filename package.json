@@ -15,7 +15,7 @@
     "build": "webpack --config ./webpack/prod.config.js && NODE_ENV=production npm start",
     "build:windows": "webpack --config ./webpack/prod.config.js && set NODE_ENV=production && npm start",
     "build:nostart": "webpack --config ./webpack/prod.config.js",
-    "dev": "NODE_ENV=dev node ./webpack/dev-server.js",
+    "dev": "node ./webpack/dev-server.js",
     "dev:dashboard": "NODE_ENV=dev DASHBOARD=1 webpack-dashboard -- webpack-dev-server --config ./webpack/dev-server.js",
     "dev:windows:dashboard": "set HOST=localhost && set PORT=3000 && set DASHBOARD=1 && set NODE_ENV=dev && webpack-dashboard -- webpack-dev-server --config ./webpack/dev-server.js",
     "dev:windows": "set HOST=localhost && set PORT=3000 && set NODE_ENV=dev && node ./webpack/dev-server.js",
