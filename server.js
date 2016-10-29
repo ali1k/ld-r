@@ -34,7 +34,7 @@ const htmlComponent = React.createFactory(HtmlComponent);
 const debug = debugLib('linked-data-reactor');
 const publicRoutes = ['/', '/about'];
 
-const host = process.env.HOST ? process.env.HOST : '0.0.0.0';
+const host = process.env.HOST ? process.env.HOST : 'localhost';
 let port = 3000 ;
 if(env === 'production'){
     port = process.env.PORT ? process.env.PORT : (serverConfig.serverPort ? serverConfig.serverPort[0] : 3000);
