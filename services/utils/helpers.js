@@ -41,8 +41,9 @@ export default {
         return {httpOptions: httpOptions, type: etype, useDefaultGraph: useDefaultGraph, useReasoning: useReasoning};
     },
     getHTTPQuery: function(mode, query, endpointParameters, outputFormat) {
-        let url, output = '&Accept=' + encodeURIComponent(outputFormat), ext ='';
+        let url, ext ='';
         let qParam= 'query';
+        let output = '';
         if(mode === 'update'){
             ext = '/statements';
             qParam = 'update';
@@ -54,13 +55,16 @@ export default {
         }
         switch (endpointParameters.type) {
         case 'virtuoso':
-            url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat) + reasoningParam;
+            output = '&format=' + encodeURIComponent(outputFormat);
+            url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '?query=' + encodeURIComponent(query) + reasoningParam + output ;
             break;
         case 'stardog':
+            output = '&Accept=' + encodeURIComponent(outputFormat);
             url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '?query=' + encodeURIComponent(query) + reasoningParam + output;
             break;
         //todo: check the differences for other triple stores
         case 'sesame':
+            output = '&Accept=' + encodeURIComponent(outputFormat);
             url = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + ext + '?' + qParam + '=' + encodeURIComponent(query) + reasoningParam + output;
             break;
         }

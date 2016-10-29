@@ -6,7 +6,7 @@ export default {
         'generic': {
             host: 'localhost', port: 8890, path: '/sparql', type: 'virtuoso'
         },
-        //Example config to connect a Stardog
+        //Example config for connecting to a Stardog triple store
         'http://localhost:5820/testDB/query': {
             host: 'localhost', port: 5820, path: '/testDB/query', useDefaultGraph: 1, type: 'stardog', useReasoning: 1
         },
