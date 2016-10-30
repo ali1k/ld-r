@@ -65,7 +65,7 @@ class FacetedBrowser extends React.Component {
         if(selectedFacetConfig.list){
             selectedFacetConfig.list.forEach(function(el) {
                 propConfig = self.getPropertyConfig(graphName, el);
-                properties.push({label: (propConfig ? (propConfig.label ? propConfig.label : 0) : 0), value: el, valueType: 'uri'});
+                properties.push({label: (propConfig ? (propConfig.label ? propConfig.label : self.getPropertyLabel(el)) : self.getPropertyLabel(el)), value: el, valueType: 'uri'});
             });
         }
         return properties;
@@ -175,6 +175,8 @@ class FacetedBrowser extends React.Component {
             tmp2 = tmp.split('/');
             property = tmp2[tmp2.length - 1];
         }
+        //make first letter capital case
+        property = property.charAt(0).toUpperCase() + property.slice(1);
         return property;
     }
     getBrowsableList(){

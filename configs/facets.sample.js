@@ -8,33 +8,14 @@ export default {
 
             }
         },
-        'http://risis.eu/cordisH2020': {
+        //Example Faceted Browser for DBpedia universities
+        'http://live.dbpedia.org/sparql': {
             list: [
-                'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-                'http://risis.eu/cordisH2020/vocab/projectParticipant',
-                'http://risis.eu/cordisH2020/vocab/fundingScheme',
-                'http://risis.eu/cordisH2020/vocab/topic',
-                'http://risis.eu/cordisH2020/vocab/totalCost',
-                'http://risis.eu/cordisH2020/vocab/callID',
-                'http://rdf-vocabulary.ddialliance.org/discovery#startDate',
-                'http://risis.eu/cordisH2020/vocab/durationMonths'
+                'http://www.w3.org/1999/02/22-rdf-syntax-ns#type', 'http://dbpedia.org/ontology/country', 'http://dbpedia.org/property/established'
             ],
             config: {
-                'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
-                    label: ['Type'],
-                    hint: ['Type of the resource under investigation.']
-                },
-                'http://risis.eu/cordisH2020/vocab/projectParticipant': {
-                    label: ['Participant'],
-                    hasLinkedValue: 1
-                },
-                'http://risis.eu/cordisH2020/vocab/fundingScheme': {
-                    label: ['Funding Scheme'],
-                    hasLinkedValue: 1
-                },
-                'http://risis.eu/cordisH2020/vocab/topic': {
-                    label: ['Topic'],
-                    hasLinkedValue: 1
+                'http://dbpedia.org/property/established': {
+                    label: ['Established Year']
                 }
             }
         }
