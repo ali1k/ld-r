@@ -10,7 +10,7 @@ Quick Start
 </h1>
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
-<p> You need to install <a href="https://nodejs.org/">NodeJS</a> in order to run the LD-R platform.
+<p> In order to run the LD-R platform:
     <ol>
         <li>
             Go to <a href="https://nodejs.org/">NodeJS</a> and download the latest version (> 6.0.0) of Node for your operating system.
@@ -26,6 +26,9 @@ Quick Start
         </li>
         <li>
             Using npm, you should globally install <a href="http://bower.io/">bower</a> and <a href="https://webpack.github.io/"> Webpack</a> packages which are used in LD-R to build the application. In order to install those packages, simply run <code class="ui label">npm install webpack -g</code> and then <code class="ui label">npm install bower -g</code>.
+        </li>
+        <li>
+            Download <a href="https://git-scm.com/downloads">Git</a> for your operating system.
         </li>
         <li>
             The next step is to clone the LD-R repository from Github: <code class="ui label">git clone https://github.com/ali1k/ld-r.git</code>
@@ -47,16 +50,16 @@ Quick Start
                     You would need to copy/rename some config files which are git-ignored (*be careful that in windows you might need to make sure that renaming the file also changes the type of the file to js. You can open the files in Notepad and do 'Save as..'. Then, use double quotes surrounding the title e.g. "server.js" to save the file as js! crazy? isn't it?!):
                     <ul>
                         <li>
-                            Make a copy of <code class="ui label">configs/general.config.js</code> and rename it to <code class="ui label">configs/general.js</code>
+                            Make a copy of <code class="ui label">configs/general.sample.js</code> and rename it to <code class="ui label">configs/general.js</code>
                         </li>
                         <li>
-                            Make a copy of <code class="ui label">configs/server.config.js</code> and rename it to <code class="ui label">configs/server.js</code>
+                            Make a copy of <code class="ui label">configs/server.sample.js</code> and rename it to <code class="ui label">configs/server.js</code>
                         </li>
                         <li>
-                            Make a copy of <code class="ui label">configs/reactor.config.js</code> and rename it to <code class="ui label">configs/reactor.js</code>
+                            Make a copy of <code class="ui label">configs/reactor.sample.js</code> and rename it to <code class="ui label">configs/reactor.js</code>
                         </li>
                         <li>
-                            Make a copy of <code class="ui label">configs/facets.config.js</code> and rename it to <code class="ui label">configs/facets.js</code>
+                            Make a copy of <code class="ui label">configs/facets.sample.js</code> and rename it to <code class="ui label">configs/facets.js</code>
                         </li>
                         <li>
                             We are almost there! the last change: Make a copy of <code class="ui label">plugins/email/config.sample.js</code> and rename it to <code class="ui label">plugins/email/config.js</code>
