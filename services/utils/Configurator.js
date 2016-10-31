@@ -1,5 +1,7 @@
 'use strict';
 import {config} from '../../configs/reactor';
+import DynamicConfigurator from '../../plugins/dynamicConfiguration/DynamicConfigurator';
+let dynamicConfigurator = new DynamicConfigurator();
 
 class Configurator{
     constructor() {
@@ -125,6 +127,11 @@ class Configurator{
         for(let prop in tmp) {
             output[prop] = tmp[prop];
         }
+
+        //dynamic configurations
+        let dynamicConfig = dynamicConfigurator.prepareDynamicPropertyConfig(graphName, resourceURI, resourceType, propertyURI);
+        //-----------------------
+
         if(config.property[propertyURI]){
             for(let prop in config.property[propertyURI]) {
                 output[prop] = config.property[propertyURI][prop];
