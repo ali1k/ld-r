@@ -1,0 +1,25 @@
+@prefix : <https://github.com/ali1k/ld-reactor/blob/master/plugins/dynamicConfiguration/schema/configs.ttl#> .
+@prefix ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+
+#Property config
+<https://ld-r.org/config/1> a ldr:ReactorConfig;
+      ldr:scope "P" ;
+      rdfs:label """foaf:depiction to BasicImageView""" ;
+      ldr:property foaf:depiction ;
+      ldr:objectIViewer "BasicImageView" .
+#Dataset-Property config
+<https://ld-r.org/config/2> a ldr:ReactorConfig;
+        ldr:scope "DP" ;
+        rdfs:label """DBpedia foaf:depiction to BasicImageView""" ;
+        ldr:dataset <http://live.dbpedia.org/sparql> ;
+        ldr:property foaf:depiction ;
+        ldr:objectIViewer "BasicImageView" .

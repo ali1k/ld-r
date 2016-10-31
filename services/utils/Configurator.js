@@ -6,32 +6,32 @@ class Configurator{
         this.config = config;
     }
     cloneConfig(a) {
-       return JSON.parse(JSON.stringify(a));
+        return JSON.parse(JSON.stringify(a));
     }
     //collects the generic config based on the depth provided
     prepareGenericConfig(depth) {
-       let config = this.cloneConfig(this.config);
-       let output = {};
-       if(depth < 1 || depth > 4){
-           return output;
-       }
-       output = config.dataset.generic;
-       if(depth > 1){
-           for(let prop in config.resource.generic) {
-               output[prop] = config.resource.generic[prop];
-           }
-       }
-       if(depth > 2){
-           for(let prop in config.property.generic) {
-               output[prop] = config.property.generic[prop];
-           }
-       }
-       if(depth > 3){
-           for(let prop in config.object.generic) {
-               output[prop] = config.object.generic[prop];
-           }
-       }
-       return output;
+        let config = this.cloneConfig(this.config);
+        let output = {};
+        if(depth < 1 || depth > 4){
+            return output;
+        }
+        output = config.dataset.generic;
+        if(depth > 1){
+            for(let prop in config.resource.generic) {
+                output[prop] = config.resource.generic[prop];
+            }
+        }
+        if(depth > 2){
+            for(let prop in config.property.generic) {
+                output[prop] = config.property.generic[prop];
+            }
+        }
+        if(depth > 3){
+            for(let prop in config.object.generic) {
+                output[prop] = config.object.generic[prop];
+            }
+        }
+        return output;
     }
     prepareDatasetConfig(useGeneric, graphName) {
         let config = this.cloneConfig(this.config);
