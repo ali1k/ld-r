@@ -3,11 +3,11 @@ import {getEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services
 import rp from 'request-promise';
 
 class DynamicConfigurator {
-    prepareDynamicPropertyConfig(graphName, resourceURI, resourceType, propertyURI) {
+    prepareDynamicPropertyConfig(graphName, resourceURI, resourceType, propertyURI, callback) {
         let config = {property: {}, dataset_property: {}, resource_property: {}, dataset_resource_property: {}};
         //do not config if disabled
         if(!enableDynamicConfiguration){
-            return config;
+            callback(config);
         }
         //start config
         //query the triple store for property configs
@@ -40,12 +40,11 @@ class DynamicConfigurator {
         rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
             //console.log(res);
             config = self.parsePropertyConfigs(config, propertyURI, res);
-            return config;
+            callback(config);
         }).catch(function (err) {
             console.log(err);
-            return config;
+            callback(config);
         });
-        return config;
     }
     parsePropertyConfigs(config, propertyURI, body) {
         let output = config;

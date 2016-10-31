@@ -104,7 +104,7 @@ class Configurator{
         }
         let finalOutput = {};
         //remove irrelevant attributes from config
-        let irrels = ['resourceFocusType', 'maxNumberOfResourcesOnPage', 'datasetReactor'];
+        let irrels = ['resourceFocusType', 'maxNumberOfResourcesOnPage', 'datasetReactor', 'datasetLabel', 'resourceLabelProperty'];
         for(let prop in output) {
             if(irrels.indexOf(prop) === -1) {
                 finalOutput[prop] = output[prop];
@@ -128,9 +128,10 @@ class Configurator{
             output[prop] = tmp[prop];
         }
 
-        //dynamic configurations
-        let dynamicConfig = dynamicConfigurator.prepareDynamicPropertyConfig(graphName, resourceURI, resourceType, propertyURI);
-        //-----------------------
+        //retrieve all dynamic property configs stored in the triple store
+        dynamicConfigurator.prepareDynamicPropertyConfig(graphName, resourceURI, resourceType, propertyURI, (dynamicConfig)=> {
+            //console.log(dynamicConfig);
+        });
 
         if(config.property[propertyURI]){
             for(let prop in config.property[propertyURI]) {
@@ -162,7 +163,7 @@ class Configurator{
         }
         let finalOutput = {};
         //remove irrelevant attributes from config
-        let irrels = ['resourceFocusType', 'maxNumberOfResourcesOnPage', 'datasetReactor', 'usePropertyCategories', 'propertyCategories', 'resourceReactor', 'treatAsResourceType'];
+        let irrels = ['resourceFocusType', 'maxNumberOfResourcesOnPage', 'datasetReactor', 'usePropertyCategories', 'propertyCategories', 'resourceReactor', 'treatAsResourceType', 'datasetLabel', 'resourceLabelProperty'];
         for(let prop in output) {
             if(irrels.indexOf(prop) == -1) {
                 finalOutput[prop] = output[prop];
@@ -182,6 +183,7 @@ class Configurator{
             output = this.prepareGenericConfig(4);
         }
         let tmp = this.preparePropertyConfig(0, graphName, resourceURI, resourceType, propertyURI);
+
         //owerwrite generic ones
         for(let prop in tmp) {
             output[prop] = tmp[prop];
