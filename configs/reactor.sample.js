@@ -100,6 +100,10 @@ export default {
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#treatAsResourceType': {
                     label: ['Treat as Resource Type'],
                     hint: ['If set to true, will consider resource URI as type URI for resource'],
+                    objectIViewer:['ToggleView'],
+                    objectIEditor:['ToggleEdit'],
+                    onValue: ['1'],
+                    offValue: ['0']
                 }
             },
             //for user page

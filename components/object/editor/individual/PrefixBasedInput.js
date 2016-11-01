@@ -17,7 +17,7 @@ class PrefixBasedInput extends React.Component {
     }
     componentDidMount() {
         if (!this.props.noFocus) {
-            ReactDOM.findDOMNode(this.refs.basicIndividualInput).focus();
+            ReactDOM.findDOMNode(this.refs.prefixBasedInput).focus();
         }
     }
     handleKeyDown(evt) {
