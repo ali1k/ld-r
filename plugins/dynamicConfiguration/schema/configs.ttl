@@ -10,10 +10,16 @@
 @prefix dbr: <http://dbpedia.org/resource/> .
 @prefix dbo: <http://dbpedia.org/ontology/> .
 
-#Resource config
-<https://ld-r.org/config/14> a ldr:ReactorConfig;
+#Resource URI config
+<https://ld-r.org/config/14a> a ldr:ReactorConfig;
       ldr:scope "R" ;
-      rdfs:label """foaf:Person to PersonResource""" ;
+      rdfs:label """dbr:Frank_van_Harmelen to PersonResource""" ;
+      ldr:resource dbr:Frank_van_Harmelen ;
+      ldr:resourceReactor "PersonResource" .
+#Resource Type config
+<https://ld-r.org/config/14b> a ldr:ReactorConfig;
+      ldr:scope "R" ;
+      rdfs:label """foaf:Person types to PersonResource""" ;
       ldr:resource foaf:Person ;
       ldr:treatAsResourceType "1" ;
       ldr:resourceReactor "PersonResource" .
