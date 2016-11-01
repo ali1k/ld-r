@@ -16,6 +16,12 @@ export default {
             'http://ld-r.org/users': {
                 readOnly: 0
             },
+            'http://ld-r.org/configurations': {
+                readOnly: 0,
+                resourceFocusType: ['https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#ReactorConfig'],
+                datasetLabel: ['LD-R Configurations'],
+                resourceLabelProperty: ['http://www.w3.org/2000/01/rdf-schema#label']
+            },
             //example reactor config
             'http://live.dbpedia.org/sparql': {
                 readOnly: 1,

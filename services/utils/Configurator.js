@@ -275,12 +275,17 @@ class Configurator{
 
 
     }
-    getResourceFocusType(graphName){
+    getResourceFocusType(cnf, graphName){
         let out = {'type':[], 'labelProperty': []};
-        if(config.dataset[graphName] && config.dataset[graphName].resourceFocusType){
-            out['type'] = config.dataset[graphName].resourceFocusType;
-            if(config.dataset[graphName].resourceLabelProperty && config.dataset[graphName].resourceLabelProperty.length){
-                out['labelProperty'] = config.dataset[graphName].resourceLabelProperty;
+        if(cnf && cnf.resourceFocusType){
+            out['type'] = cnf.resourceFocusType;
+            if(cnf.resourceLabelProperty && cnf.resourceLabelProperty.length){
+                out['labelProperty'] = cnf.resourceLabelProperty;
+            } else if(config.dataset[graphName] && config.dataset[graphName].resourceFocusType){
+                out['type'] = config.dataset[graphName].resourceFocusType;
+                if(config.dataset[graphName].resourceLabelProperty && config.dataset[graphName].resourceLabelProperty.length){
+                    out['labelProperty'] = config.dataset[graphName].resourceLabelProperty;
+                }
             }
         }
         return out;

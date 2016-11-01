@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import {NavLink} from 'fluxible-router';
-import {appFullTitle, appShortTitle, enableAuthentication} from '../configs/general';
+import {appFullTitle, appShortTitle, enableAuthentication, enableDynamicConfiguration, configGraphName} from '../configs/general';
 
 class Nav extends React.Component {
     componentDidMount(){
@@ -39,6 +39,11 @@ class Nav extends React.Component {
                         <div className="item link" onClick={this.showHelpModal}>
                                 <i className="small help circle icon"></i>
                         </div>
+                        {enableDynamicConfiguration ?
+                            <a href={'/browse/' + encodeURIComponent(configGraphName)} className="ui item link" title="Configuration Manager">
+                                <i className="ui black settings icon"></i>
+                            </a>
+                        : ''}
                         <a href="http://github.com/ali1k/ld-r" className="ui item link">
                                 <i className="github circle icon"></i> Github
                         </a>

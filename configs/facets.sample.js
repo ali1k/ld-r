@@ -8,6 +8,20 @@ export default {
 
             }
         },
+        //Configuration Manager: change the graph name if you use another name in your general.js config
+        'http://ld-r.org/configurations': {
+            list: [
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#scope', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#dataset', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resource', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#property'
+            ],
+            config: {
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#dataset': {
+                    shortenURI: 0
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#property': {
+                    shortenURI: 0
+                }
+            }
+        },
         //Example Faceted Browser for DBpedia universities
         'http://live.dbpedia.org/sparql': {
             list: [

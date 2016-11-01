@@ -42,7 +42,7 @@ export default {
                 user = {accountName: 'open'};
             }
             //resource focus type
-            let rftconfig = configurator.getResourceFocusType(graphName);
+            let rftconfig = configurator.getResourceFocusType(0, graphName);
             query = queryObject.getSideEffects(endpointParameters, cGraphName, rftconfig.type, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
             //build http uri
             //send request
@@ -89,7 +89,7 @@ export default {
                 return 0;
             }
             //resource focus type
-            let rftconfig = configurator.getResourceFocusType(graphName);
+            let rftconfig = configurator.getResourceFocusType(0, graphName);
             query = queryObject.getMasterPropertyValues(endpointParameters, cGraphName, rftconfig.type, decodeURIComponent(params.selection.value));
             //build http uri
             //send request
@@ -117,9 +117,10 @@ export default {
                 }
             }
             //config handler
-            configurator.prepareDatasetConfig(1, graphName, (rconfig)=> {
+            configurator.prepareDatasetConfig(1, cGraphName, (rconfig)=> {
                 //resource focus type
-                let rftconfig = configurator.getResourceFocusType(graphName);
+                let rftconfig = configurator.getResourceFocusType(rconfig, cGraphName);
+
                 let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
                 if(!maxOnPage){
                     maxOnPage = 20;
@@ -127,7 +128,7 @@ export default {
                //control access on authentication
                 if(enableAuthentication){
                     if(!req.user){
-                        callback(null, {graphName: graphName, facets: {}, total: 0, page: 1});
+                        callback(null, {graphName: cGraphName, facets: {}, total: 0, page: 1});
                     }else{
                         user = req.user;
                     }

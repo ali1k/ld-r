@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {navigateAction} from 'fluxible-router';
-import {defaultGraphName, authGraphName, enableAuthentication} from '../configs/general';
+import {defaultGraphName, authGraphName, enableAuthentication, configGraphName} from '../configs/general';
 import {config} from '../configs/reactor';
 import {facets} from '../configs/facets';
 import URIUtil from './utils/URIUtil';
@@ -50,7 +50,7 @@ class Datasets extends React.Component {
                             focus = <span className="ui small circular label"> {self.prepareFocusList(config[s][graph].resourceFocusType)} </span>;
                         }
                     }
-                    if(graph !== authGraphName[0] && graph !== 'generic'){
+                    if(graph !== authGraphName[0] && graph !== configGraphName[0] && graph !== 'generic'){
                         dfl = '';
                         brws = '';
                         if(graph === defaultGraphName[0]){
@@ -68,7 +68,7 @@ class Datasets extends React.Component {
             });
             //if only facet is set
             for(let graph in facets){
-                if(graph !== authGraphName[0] && graph !== 'generic'){
+                if(graph !== authGraphName[0] && graph !== configGraphName[0] && graph !== 'generic'){
                     if(dss.indexOf(graph) === -1){
                         brws = '';
                         dfl = '';
