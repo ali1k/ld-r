@@ -51,6 +51,7 @@ class Configurator{
         callback (output);
     }
     prepareResourceConfig(useGeneric, graphName, resourceURI, resourceType, callback) {
+        //resource type can be a set of values
         if(!Array.isArray(resourceType)){
             resourceType=[resourceType];
         }
@@ -65,52 +66,69 @@ class Configurator{
             for(let prop in tmp) {
                 output[prop] = tmp[prop];
             }
-            //go to user-defined scopes
-            //it goes from less-specific to most-specific config
-            //check resource Type scope as well
-            for(let res in config.resource) {
-                if(config.resource[res].treatAsResourceType){
-                    if(resourceType.indexOf(res) !== -1){
-                        for(let prop in config.resource[res]) {
-                            output[prop] = config.resource[res][prop];
-                        }
-                    }
-                }
-            }
-            if(config.resource[resourceURI]){
-                for(let prop in config.resource[resourceURI]) {
-                    output[prop] = config.resource[resourceURI][prop];
-                }
-            }
-            if(config.dataset_resource[graphName]){
-                if(config.dataset_resource[graphName][resourceURI]){
-                    //apply config on resource URI
-                    for(let prop in config.dataset_resource[graphName][resourceURI]) {
-                        output[prop] = config.dataset_resource[graphName][resourceURI][prop];
-                    }
-                }else{
-                    //check if there is config on resource type
-                    //apply config on a specific resource type
-                    for(let res in config.dataset_resource[graphName]) {
-                        if(config.dataset_resource[graphName][res].treatAsResourceType){
-                            if(resourceType.indexOf(res) !== -1){
-                                for(let prop in config.dataset_resource[graphName][res]) {
-                                    output[prop] = config.dataset_resource[graphName][res][prop];
-                                }
+            //retrieve all dynamic resource configs stored in the triple store
+            dynamicConfigurator.prepareDynamicResourceConfig(graphName, resourceURI, resourceType, (dynamicConfig)=> {
+                //console.log(dynamicConfig);
+                //go to user-defined scopes
+                //it goes from less-specific to most-specific config
+                //check resource Type scope as well
+                for(let res in config.resource) {
+                    if(config.resource[res].treatAsResourceType){
+                        if(resourceType.indexOf(res) !== -1){
+                            for(let prop in config.resource[res]) {
+                                output[prop] = config.resource[res][prop];
                             }
                         }
                     }
                 }
-            }
-            let finalOutput = {};
-            //remove irrelevant attributes from config
-            let irrels = ['resourceFocusType', 'maxNumberOfResourcesOnPage', 'datasetReactor', 'datasetLabel', 'resourceLabelProperty'];
-            for(let prop in output) {
-                if(irrels.indexOf(prop) === -1) {
-                    finalOutput[prop] = output[prop];
+                if(config.resource[resourceURI]){
+                    for(let prop in config.resource[resourceURI]) {
+                        output[prop] = config.resource[resourceURI][prop];
+                    }
+                } else if(dynamicConfig.resource[resourceURI]) {
+                    for(let prop in dynamicConfig.resource[resourceURI]) {
+                        output[prop] = dynamicConfig.resource[resourceURI][prop];
+                    }
                 }
-            }
-            callback(finalOutput);
+                if(config.dataset_resource[graphName]){
+                    if(config.dataset_resource[graphName][resourceURI]){
+                        //apply config on resource URI
+                        for(let prop in config.dataset_resource[graphName][resourceURI]) {
+                            output[prop] = config.dataset_resource[graphName][resourceURI][prop];
+                        }
+                    }else{
+                        //check if there is config on resource type
+                        //apply config on a specific resource type
+                        for(let res in config.dataset_resource[graphName]) {
+                            if(config.dataset_resource[graphName][res].treatAsResourceType){
+                                if(resourceType.indexOf(res) !== -1){
+                                    for(let prop in config.dataset_resource[graphName][res]) {
+                                        output[prop] = config.dataset_resource[graphName][res][prop];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }else if(dynamicConfig.dataset_resource[graphName]) {
+                    if(dynamicConfig.dataset_resource[graphName][resourceURI]){
+                        //apply config on resource URI
+                        for(let prop in dynamicConfig.dataset_resource[graphName][resourceURI]) {
+                            output[prop] = dynamicConfig.dataset_resource[graphName][resourceURI][prop];
+                        }
+                    }
+                }
+                let finalOutput = {};
+                //remove irrelevant attributes from config
+                let irrels = ['resourceFocusType', 'maxNumberOfResourcesOnPage', 'datasetReactor', 'datasetLabel', 'resourceLabelProperty'];
+                for(let prop in output) {
+                    if(irrels.indexOf(prop) === -1) {
+                        finalOutput[prop] = output[prop];
+                    }
+                }
+                callback(finalOutput);
+
+            })
+
         });
 
     }

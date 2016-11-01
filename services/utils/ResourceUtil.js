@@ -47,6 +47,7 @@ class ResourceUtil {
         }
         //resource config
         configurator.prepareResourceConfig(1, graphName, resourceURI, resourceType, (rconfig)=> {
+            //console.log(rconfig);
             if (rconfig.usePropertyCategories) {
                 //allow filter by category
                 if (!category) {

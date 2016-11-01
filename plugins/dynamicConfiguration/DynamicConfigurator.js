@@ -3,6 +3,70 @@ import {getEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services
 import rp from 'request-promise';
 
 class DynamicConfigurator {
+    prepareDynamicResourceConfig(graphName, resourceURI, resourceType, callback) {
+        let config = {resource: {}, dataset_resource: {}};
+        //do not config if disabled
+        if(!enableDynamicConfiguration){
+            callback(config);
+        }
+        let typeFilter = [];
+        resourceType.forEach(function(el) {
+            typeFilter.push(`?resource=<${el}>`);
+        });
+        let typeFilterStr = '';
+        if(typeFilter.length){
+            typeFilterStr = '(' + typeFilter.join(' || ') + ') && ';
+        }
+        //start config
+        //query the triple store for property configs
+        const prefixes = `
+            PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            PREFIX owl: <http://www.w3.org/2002/07/owl#>
+        `;
+        const query = `
+        SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?treatAsResourceType ?settingValue WHERE { GRAPH <${configGraphName}> {
+                {
+                ?config a ldr:ReactorConfig ;
+                        ldr:resource ?resource ;
+                        ldr:treatAsResourceType "1" ;
+                        ldr:treatAsResourceType ?treatAsResourceType ;
+                        ldr:scope ?scope ;
+                        rdfs:label ?label ;
+                        ?setting ?settingValue .
+                        OPTIONAL { ?config ldr:dataset ?dataset . }
+                        FILTER (${typeFilterStr}  ?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
+                }
+                UNION
+                {
+                ?config a ldr:ReactorConfig ;
+                        ldr:resource <${resourceURI}> ;
+                        ldr:scope ?scope ;
+                        rdfs:label ?label ;
+                        ?setting ?settingValue .
+                        OPTIONAL { ?config ldr:dataset ?dataset . }
+                        OPTIONAL { ?config ldr:treatAsResourceType ?treatAsResourceType . }
+                        FILTER (?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
+                }
+        }   } ORDER BY DESC(?treatAsResourceType)
+        `;
+        const endpointParameters = getEndpointParameters(configGraphName);
+        const headers = {'Accept': 'application/sparql-results+json'};
+        const outputFormat = 'application/sparql-results+json';
+        //send request
+        //console.log(prefixes + query);
+        let self = this;
+        rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+            //console.log(res);
+            config = self.parseResourceConfigs(config, resourceURI, res);
+            callback(config);
+        }).catch(function (err) {
+            console.log(err);
+            callback(config);
+        });
+
+    }
     prepareDynamicPropertyConfig(graphName, resourceURI, resourceType, propertyURI, callback) {
         let config = {property: {}, dataset_property: {}, resource_property: {}, dataset_resource_property: {}};
         //do not config if disabled
@@ -116,6 +180,44 @@ class DynamicConfigurator {
                         output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][el.setting.value.split('#')[1]] = [];
                     }
                     output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                }
+
+            }
+        });
+        return output;
+    }
+    parseResourceConfigs(config, resourceURI, body) {
+        let output = config;
+        let parsed = JSON.parse(body);
+        parsed.results.bindings.forEach(function(el) {
+            if(el.scope.value === 'R'){
+                if(!output.resource[resourceURI]){
+                    output.resource[resourceURI] = {};
+                }
+                //assume that all values will be stored in an array expect 0, 1 values
+                if(String(el.settingValue.value) === '0' || String(el.settingValue.value) === '1'){
+                    output.resource[resourceURI][el.setting.value.split('#')[1]]= parseInt(el.settingValue.value);
+                }else{
+                    if(!output.resource[resourceURI][el.setting.value.split('#')[1]]){
+                        output.resource[resourceURI][el.setting.value.split('#')[1]] = []
+                    }
+                    output.resource[resourceURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                }
+            } else if(el.scope.value === 'DR'){
+                if(!output.dataset_resource[el.dataset.value]){
+                    output.dataset_resource[el.dataset.value] = {};
+                }
+                if(!output.dataset_resource[el.dataset.value][resourceURI]){
+                    output.dataset_resource[el.dataset.value][resourceURI] = {};
+                }
+                //assume that all values will be stored in an array expect 0, 1 values
+                if(String(el.settingValue.value) === '0' || String(el.settingValue.value) === '1'){
+                    output.dataset_resource[el.dataset.value][resourceURI][el.setting.value.split('#')[1]] = parseInt(el.settingValue.value);
+                }else{
+                    if(!output.dataset_resource[el.dataset.value][resourceURI][el.setting.value.split('#')[1]]){
+                        output.dataset_resource[el.dataset.value][resourceURI][el.setting.value.split('#')[1]] = [];
+                    }
+                    output.dataset_resource[el.dataset.value][resourceURI][el.setting.value.split('#')[1]].push( el.settingValue.value);
                 }
 
             }
