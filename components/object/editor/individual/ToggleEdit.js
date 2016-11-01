@@ -32,10 +32,12 @@ class ToggleEdit extends React.Component {
         let val = this.props.spec.value;
         return (
             <div ref="toggleEdit">
+                {String(this.state.value) !== String(this['onValue']) ? this.state.value : ''}
                 <div className="ui fitted toggle checkbox" title={val}>
                   <input type="checkbox" value={this.state.value} onChange={this.handleChange.bind(this)} checked ={String(this.state.value) === String(this['onValue'])}/>
                   <label>{this.state.value}</label>
-                </div> {this.state.value}
+                </div>
+                {String(this.state.value) === String(this['onValue']) ? this.state.value : ''}
             </div>
         );
     }

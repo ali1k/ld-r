@@ -22,10 +22,12 @@ class ToggleView extends React.Component {
         val = this.props.spec.value;
         return (
             <div ref="toggleView">
+                {(String(val) !== String(onValue)) ? val : ''}
                 <div className="ui fitted toggle read-only checkbox" title={val}>
                   <input type="checkbox" defaultChecked={(String(val) === String(onValue))}/>
                   <label>{val}</label>
-                </div> {val}
+                </div>
+                {(String(val) === String(onValue)) ? val : ''}
             </div>
         );
     }
