@@ -10,14 +10,21 @@
 @prefix dbr: <http://dbpedia.org/resource/> .
 @prefix dbo: <http://dbpedia.org/ontology/> .
 
+#Resource config
+<https://ld-r.org/config/14> a ldr:ReactorConfig;
+      ldr:scope "R" ;
+      rdfs:label """foaf:Person to PersonResource""" ;
+      ldr:resource foaf:Person ;
+      ldr:treatAsResourceType "1" ;
+      ldr:resourceReactor "PersonResource" .
 #Property config
-<https://ld-r.org/config/1> a ldr:ReactorConfig;
+<https://ld-r.org/config/12> a ldr:ReactorConfig;
       ldr:scope "P" ;
-      rdfs:label """foaf:depiction to BasicImageView""" ;
-      ldr:property foaf:depiction ;
+      rdfs:label """foaf:thumbnail/dbo:thumbnail to BasicImageView""" ;
+      ldr:property foaf:thumbnail, dbo:thumbnail ;
       ldr:objectIViewer "BasicImageView" .
 #Dataset-Property config
-<https://ld-r.org/config/2> a ldr:ReactorConfig;
+<https://ld-r.org/config/11> a ldr:ReactorConfig;
         ldr:scope "DP" ;
         rdfs:label """DBpedia foaf:depiction to BasicImageView""" ;
         ldr:dataset <http://live.dbpedia.org/sparql> ;
