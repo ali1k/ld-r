@@ -84,15 +84,18 @@ export default {
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#dataset': {
                     shortenURI: 0,
-                    objectIViewer: ['PrefixBasedView']
+                    objectIViewer: ['PrefixBasedView'],
+                    objectIEditor: ['PrefixBasedInput']
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#property': {
                     shortenURI: 0,
-                    objectIViewer: ['PrefixBasedView']
+                    objectIViewer: ['PrefixBasedView'],
+                    objectIEditor: ['PrefixBasedInput']
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resource': {
                     shortenURI: 0,
-                    objectIViewer: ['PrefixBasedView']
+                    objectIViewer: ['PrefixBasedView'],
+                    objectIEditor: ['PrefixBasedInput']
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#treatAsResourceType': {
                     label: ['Treat as Resource Type'],
