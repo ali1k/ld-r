@@ -34,37 +34,39 @@ export default {
                 }
             }
             //config handler
-            let rconfig = configurator.prepareDatasetConfig(1, graphName);
-            let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
-            if(!maxOnPage){
-                maxOnPage = 20;
-            }
-            let offset = (params.page - 1) * maxOnPage;
-            //control access on authentication
-            if(enableAuthentication){
-                if(!req.user){
-                    callback(null, {graphName: graphName, resources: [], page: params.page, config: rconfig});
-                    return 0;
-                }else{
-                    user = req.user;
+            configurator.prepareDatasetConfig(1, graphName, (rconfig)=> {
+                let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
+                if(!maxOnPage){
+                    maxOnPage = 20;
                 }
-            }else{
-                user = {accountName: 'open'};
-            }
-            query = queryObject.getResourcesByType(cGraphName, rconfig, maxOnPage, offset);
-            //build http uri
-            //send request
-            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
-                callback(null, {
-                    graphName: graphName,
-                    resources: utilObject.parseResourcesByType(res, graphName),
-                    page: params.page,
-                    config: rconfig
+                let offset = (params.page - 1) * maxOnPage;
+                //control access on authentication
+                if(enableAuthentication){
+                    if(!req.user){
+                        callback(null, {graphName: graphName, resources: [], page: params.page, config: rconfig});
+                        return 0;
+                    }else{
+                        user = req.user;
+                    }
+                }else{
+                    user = {accountName: 'open'};
+                }
+                query = queryObject.getResourcesByType(cGraphName, rconfig, maxOnPage, offset);
+                //build http uri
+                //send request
+                rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                    callback(null, {
+                        graphName: graphName,
+                        resources: utilObject.parseResourcesByType(res, graphName),
+                        page: params.page,
+                        config: rconfig
+                    });
+                }).catch(function (err) {
+                    console.log(err);
+                    callback(null, {graphName: graphName, resources: [], page: params.page, config: rconfig});
                 });
-            }).catch(function (err) {
-                console.log(err);
-                callback(null, {graphName: graphName, resources: [], page: params.page, config: rconfig});
             });
+
         } else if (resource === 'dataset.countResourcesByType') {
             //SPARQL QUERY
             graphName = (params.id ? decodeURIComponent(params.id) : 0);
@@ -80,31 +82,32 @@ export default {
                 }
             }
             //config handler
-            let rconfig = configurator.prepareDatasetConfig(1, graphName);
-            //control access on authentication
-            if(enableAuthentication){
-                if(!req.user){
-                    callback(null, {graphName: graphName, total: 0});
-                    return 0;
+            configurator.prepareDatasetConfig(1, graphName, (rconfig)=> {
+                //control access on authentication
+                if(enableAuthentication){
+                    if(!req.user){
+                        callback(null, {graphName: graphName, total: 0});
+                        return 0;
+                    }else{
+                        user = req.user;
+                    }
                 }else{
-                    user = req.user;
+                    user = {accountName: 'open'};
                 }
-            }else{
-                user = {accountName: 'open'};
-            }
-            query = queryObject.countResourcesByType(cGraphName, rconfig.resourceFocusType);
-            //build http uri
-            //send request
-            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
-                callback(null, {
-                    graphName: graphName,
-                    total: utilObject.parseCountResourcesByType(res)
+                query = queryObject.countResourcesByType(cGraphName, rconfig.resourceFocusType);
+                //build http uri
+                //send request
+                rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                    callback(null, {
+                        graphName: graphName,
+                        total: utilObject.parseCountResourcesByType(res)
+                    });
+                }).catch(function (err) {
+                    console.log(err);
+                    callback(null, {graphName: graphName, total: 0});
                 });
-            }).catch(function (err) {
-                console.log(err);
-                callback(null, {graphName: graphName, total: 0});
             });
-            //used to update other facets based on a change in a facet
+
         }
     }
     // other methods

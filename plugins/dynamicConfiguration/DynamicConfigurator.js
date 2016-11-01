@@ -54,7 +54,15 @@ class DynamicConfigurator {
                 if(!output.property[propertyURI]){
                     output.property[propertyURI] = {};
                 }
-                output.property[propertyURI][el.setting.value.split('#')[1]] = el.settingValue.value;
+                //assume that all values will be stored in an array expect 0, 1 values
+                if(String(el.settingValue.value) === '0' || String(el.settingValue.value) === '1'){
+                    output.property[propertyURI][el.setting.value.split('#')[1]]= parseInt(el.settingValue.value);
+                }else{
+                    if(!output.property[propertyURI][el.setting.value.split('#')[1]]){
+                        output.property[propertyURI][el.setting.value.split('#')[1]] = []
+                    }
+                    output.property[propertyURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                }
             } else if(el.scope.value === 'DP'){
                 if(!output.dataset_property[el.dataset.value]){
                     output.dataset_property[el.dataset.value] = {};
@@ -62,7 +70,15 @@ class DynamicConfigurator {
                 if(!output.dataset_property[el.dataset.value][propertyURI]){
                     output.dataset_property[el.dataset.value][propertyURI] = {};
                 }
-                output.dataset_property[el.dataset.value][propertyURI][el.setting.value.split('#')[1]] = el.settingValue.value;
+                //assume that all values will be stored in an array expect 0, 1 values
+                if(String(el.settingValue.value) === '0' || String(el.settingValue.value) === '1'){
+                    output.dataset_property[el.dataset.value][propertyURI][el.setting.value.split('#')[1]] = parseInt(el.settingValue.value);
+                }else{
+                    if(!output.dataset_property[el.dataset.value][propertyURI][el.setting.value.split('#')[1]]){
+                        output.dataset_property[el.dataset.value][propertyURI][el.setting.value.split('#')[1]] = [];
+                    }
+                    output.dataset_property[el.dataset.value][propertyURI][el.setting.value.split('#')[1]].push( el.settingValue.value);
+                }
 
             } else if(el.scope.value === 'RP'){
                 if(!output.resource_property[el.resource.value]){
@@ -71,7 +87,16 @@ class DynamicConfigurator {
                 if(!output.resource_property[el.resource.value][propertyURI]){
                     output.resource_property[el.resource.value][propertyURI] = {};
                 }
-                output.resource_property[el.resource.value][propertyURI][el.setting.value.split('#')[1]] = el.settingValue.value;
+                //assume that all values will be stored in an array expect 0, 1 values
+                if(String(el.settingValue.value) === '0' || String(el.settingValue.value) === '1'){
+                    output.resource_property[el.resource.value][propertyURI][el.setting.value.split('#')[1]] = parseInt( el.settingValue.value);
+                }else{
+                    if(!output.resource_property[el.resource.value][propertyURI][el.setting.value.split('#')[1]]){
+                        output.resource_property[el.resource.value][propertyURI][el.setting.value.split('#')[1]] = [];
+                    }
+                    output.resource_property[el.resource.value][propertyURI][el.setting.value.split('#')[1]].push( el.settingValue.value);
+                }
+
 
             } else if(el.scope.value === 'DRP'){
                 if(!output.dataset_resource_property[el.dataset.value]){
@@ -83,8 +108,16 @@ class DynamicConfigurator {
                 if(!output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI]){
                     output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI] = {};
                 }
+                //assume that all values will be stored in an array expect 0, 1 values
+                if(String(el.settingValue.value) === '0' || String(el.settingValue.value) === '1'){
+                    output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][el.setting.value.split('#')[1]]= parseInt(el.settingValue.value);
+                }else{
+                    if(!output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][el.setting.value.split('#')[1]]){
+                        output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][el.setting.value.split('#')[1]] = [];
+                    }
+                    output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                }
 
-                output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][el.setting.value.split('#')[1]] = el.settingValue.value;
             }
         });
         return output;

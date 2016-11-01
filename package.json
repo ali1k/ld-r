@@ -25,6 +25,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
+    "async": "^2.1.2",
     "body-parser": "^1.15.2",
     "compression": "^1.6.2",
     "continuation-local-storage": "^3.2.0",

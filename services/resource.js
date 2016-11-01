@@ -63,21 +63,23 @@ export default {
             //send request
             rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                 //exceptional case for user properties: we hide some admin props from normal users
-                let {props, title, resourceType, rconfig} = utilObject.parseProperties(res, graphName, resourceURI, category, propertyPath);
-                if(graphName === authGraphName[0] && !parseInt(user.isSuperUser)){
-                    props = utilObject.deleteAdminProperties(props);
-                }
-                //------------------------------------
-                callback(null, {
-                    graphName: graphName,
-                    resourceURI: resourceURI,
-                    resourceType: resourceType,
-                    title: title,
-                    currentCategory: category,
-                    propertyPath: propertyPath,
-                    properties: props,
-                    config: rconfig
+                utilObject.parseProperties(res, graphName, resourceURI, category, propertyPath, (cres)=> {
+                    if(graphName === authGraphName[0] && !parseInt(user.isSuperUser)){
+                        props = utilObject.deleteAdminProperties(cres.props);
+                    }
+                    //------------------------------------
+                    callback(null, {
+                        graphName: graphName,
+                        resourceURI: resourceURI,
+                        resourceType: cres.resourceType,
+                        title: cres.title,
+                        currentCategory: category,
+                        propertyPath: propertyPath,
+                        properties: cres.props,
+                        config: cres.rconfig
+                    });
                 });
+
             }).catch(function (err) {
                 console.log(err);
                 if(enableLogs){
@@ -110,11 +112,12 @@ export default {
             //build http uri
             //send request
             rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
-                let {props, objectType} = utilObject.parseObjectProperties(res, graphName, resourceURI, propertyURI);
-                callback(null, {
-                    objectURI: objectURI,
-                    objectType: objectType,
-                    properties: props
+                utilObject.parseObjectProperties(res, graphName, resourceURI, propertyURI, (cres)=> {
+                    callback(null, {
+                        objectURI: objectURI,
+                        objectType: cres.objectType,
+                        properties: cres.props
+                    });
                 });
             }).catch(function (err) {
                 console.log(err);

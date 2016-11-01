@@ -35,7 +35,7 @@ class Configurator{
         }
         return output;
     }
-    prepareDatasetConfig(useGeneric, graphName) {
+    prepareDatasetConfig(useGeneric, graphName, callback) {
         let config = this.cloneConfig(this.config);
         //default config comes from generic dataset
         let output = {};
@@ -48,9 +48,9 @@ class Configurator{
                 output[prop] = config.dataset[graphName][prop];
             }
         }
-        return output;
+        callback (output);
     }
-    prepareResourceConfig(useGeneric, graphName, resourceURI, resourceType) {
+    prepareResourceConfig(useGeneric, graphName, resourceURI, resourceType, callback) {
         if(!Array.isArray(resourceType)){
             resourceType=[resourceType];
         }
@@ -61,58 +61,60 @@ class Configurator{
             output = this.prepareGenericConfig(2);
         }
         //get the dataset config
-        let tmp = this.prepareDatasetConfig(0, graphName);
-        for(let prop in tmp) {
-            output[prop] = tmp[prop];
-        }
-        //go to user-defined scopes
-        //it goes from less-specific to most-specific config
-        //check resource Type scope as well
-        for(let res in config.resource) {
-            if(config.resource[res].treatAsResourceType){
-                if(resourceType.indexOf(res) !== -1){
-                    for(let prop in config.resource[res]) {
-                        output[prop] = config.resource[res][prop];
+        this.prepareDatasetConfig(0, graphName, (tmp)=> {
+            for(let prop in tmp) {
+                output[prop] = tmp[prop];
+            }
+            //go to user-defined scopes
+            //it goes from less-specific to most-specific config
+            //check resource Type scope as well
+            for(let res in config.resource) {
+                if(config.resource[res].treatAsResourceType){
+                    if(resourceType.indexOf(res) !== -1){
+                        for(let prop in config.resource[res]) {
+                            output[prop] = config.resource[res][prop];
+                        }
                     }
                 }
             }
-        }
-        if(config.resource[resourceURI]){
-            for(let prop in config.resource[resourceURI]) {
-                output[prop] = config.resource[resourceURI][prop];
-            }
-        }
-        if(config.dataset_resource[graphName]){
-            if(config.dataset_resource[graphName][resourceURI]){
-                //apply config on resource URI
-                for(let prop in config.dataset_resource[graphName][resourceURI]) {
-                    output[prop] = config.dataset_resource[graphName][resourceURI][prop];
+            if(config.resource[resourceURI]){
+                for(let prop in config.resource[resourceURI]) {
+                    output[prop] = config.resource[resourceURI][prop];
                 }
-            }else{
-                //check if there is config on resource type
-                //apply config on a specific resource type
-                for(let res in config.dataset_resource[graphName]) {
-                    if(config.dataset_resource[graphName][res].treatAsResourceType){
-                        if(resourceType.indexOf(res) !== -1){
-                            for(let prop in config.dataset_resource[graphName][res]) {
-                                output[prop] = config.dataset_resource[graphName][res][prop];
+            }
+            if(config.dataset_resource[graphName]){
+                if(config.dataset_resource[graphName][resourceURI]){
+                    //apply config on resource URI
+                    for(let prop in config.dataset_resource[graphName][resourceURI]) {
+                        output[prop] = config.dataset_resource[graphName][resourceURI][prop];
+                    }
+                }else{
+                    //check if there is config on resource type
+                    //apply config on a specific resource type
+                    for(let res in config.dataset_resource[graphName]) {
+                        if(config.dataset_resource[graphName][res].treatAsResourceType){
+                            if(resourceType.indexOf(res) !== -1){
+                                for(let prop in config.dataset_resource[graphName][res]) {
+                                    output[prop] = config.dataset_resource[graphName][res][prop];
+                                }
                             }
                         }
                     }
                 }
             }
-        }
-        let finalOutput = {};
-        //remove irrelevant attributes from config
-        let irrels = ['resourceFocusType', 'maxNumberOfResourcesOnPage', 'datasetReactor', 'datasetLabel', 'resourceLabelProperty'];
-        for(let prop in output) {
-            if(irrels.indexOf(prop) === -1) {
-                finalOutput[prop] = output[prop];
+            let finalOutput = {};
+            //remove irrelevant attributes from config
+            let irrels = ['resourceFocusType', 'maxNumberOfResourcesOnPage', 'datasetReactor', 'datasetLabel', 'resourceLabelProperty'];
+            for(let prop in output) {
+                if(irrels.indexOf(prop) === -1) {
+                    finalOutput[prop] = output[prop];
+                }
             }
-        }
-        return finalOutput;
+            callback(finalOutput);
+        });
+
     }
-    preparePropertyConfig(useGeneric, graphName, resourceURI, resourceType, propertyURI) {
+    preparePropertyConfig(useGeneric, graphName, resourceURI, resourceType, propertyURI, callback) {
         if(!Array.isArray(resourceType)){
             resourceType=[resourceType];
         }
@@ -122,56 +124,84 @@ class Configurator{
             output = this.prepareGenericConfig(3);
         }
         //first we need to get upper level configs that come from resource config
-        let tmp = this.prepareResourceConfig(0, graphName, resourceURI, resourceType);
-        //owerwrite generic ones
-        for(let prop in tmp) {
-            output[prop] = tmp[prop];
-        }
+        this.prepareResourceConfig(0, graphName, resourceURI, resourceType, (tmp)=> {
+            //owerwrite generic ones
+            for(let prop in tmp) {
+                output[prop] = tmp[prop];
+            }
 
-        //retrieve all dynamic property configs stored in the triple store
-        dynamicConfigurator.prepareDynamicPropertyConfig(graphName, resourceURI, resourceType, propertyURI, (dynamicConfig)=> {
-            //console.log(dynamicConfig);
-        });
-
-        if(config.property[propertyURI]){
-            for(let prop in config.property[propertyURI]) {
-                output[prop] = config.property[propertyURI][prop];
-            }
-        }
-        if(config.dataset_property[graphName]){
-            if(config.dataset_property[graphName][propertyURI]){
-                for(let prop in config.dataset_property[graphName][propertyURI]) {
-                    output[prop] = config.dataset_property[graphName][propertyURI][prop];
-                }
-            }
-        }
-        if(config.resource_property[resourceURI]){
-            if(config.resource_property[resourceURI][propertyURI]){
-                for(let prop in config.resource_property[resourceURI][propertyURI]) {
-                    output[prop] = config.resource_property[resourceURI][propertyURI][prop];
-                }
-            }
-        }
-        if(config.dataset_resource_property[graphName]){
-            if(config.dataset_resource_property[graphName][resourceURI]){
-                if(config.dataset_resource_property[graphName][resourceURI][propertyURI]){
-                    for(let prop in config.dataset_resource_property[graphName][resourceURI][propertyURI]) {
-                        output[prop] = config.dataset_resource_property[graphName][resourceURI][propertyURI][prop];
+            //retrieve all dynamic property configs stored in the triple store
+            dynamicConfigurator.prepareDynamicPropertyConfig(graphName, resourceURI, resourceType, propertyURI, (dynamicConfig)=> {
+                //console.log(dynamicConfig);
+                if(config.property[propertyURI]){
+                    for(let prop in config.property[propertyURI]) {
+                        output[prop] = config.property[propertyURI][prop];
+                    }
+                //check the dynamic config
+                }else if (dynamicConfig.property[propertyURI]) {
+                    for(let prop in dynamicConfig.property[propertyURI]) {
+                        output[prop] = dynamicConfig.property[propertyURI][prop];
                     }
                 }
-            }
-        }
-        let finalOutput = {};
-        //remove irrelevant attributes from config
-        let irrels = ['resourceFocusType', 'maxNumberOfResourcesOnPage', 'datasetReactor', 'usePropertyCategories', 'propertyCategories', 'resourceReactor', 'treatAsResourceType', 'datasetLabel', 'resourceLabelProperty'];
-        for(let prop in output) {
-            if(irrels.indexOf(prop) == -1) {
-                finalOutput[prop] = output[prop];
-            }
-        }
-        return finalOutput;
+                if(config.dataset_property[graphName]){
+                    if(config.dataset_property[graphName][propertyURI]){
+                        for(let prop in config.dataset_property[graphName][propertyURI]) {
+                            output[prop] = config.dataset_property[graphName][propertyURI][prop];
+                        }
+                    }
+                }else if (dynamicConfig.dataset_property[graphName]){
+                    if(dynamicConfig.dataset_property[graphName][propertyURI]){
+                        for(let prop in dynamicConfig.dataset_property[graphName][propertyURI]) {
+                            output[prop] = dynamicConfig.dataset_property[graphName][propertyURI][prop];
+                        }
+                    }
+                }
+                if(config.resource_property[resourceURI]){
+                    if(config.resource_property[resourceURI][propertyURI]){
+                        for(let prop in config.resource_property[resourceURI][propertyURI]) {
+                            output[prop] = config.resource_property[resourceURI][propertyURI][prop];
+                        }
+                    }
+                }else if (dynamicConfig.resource_property[resourceURI]){
+                    if(dynamicConfig.resource_property[resourceURI][propertyURI]){
+                        for(let prop in dynamicConfig.resource_property[resourceURI][propertyURI]) {
+                            output[prop] = dynamicConfig.resource_property[resourceURI][propertyURI][prop];
+                        }
+                    }
+                }
+                if(config.dataset_resource_property[graphName]){
+                    if(config.dataset_resource_property[graphName][resourceURI]){
+                        if(config.dataset_resource_property[graphName][resourceURI][propertyURI]){
+                            for(let prop in config.dataset_resource_property[graphName][resourceURI][propertyURI]) {
+                                output[prop] = config.dataset_resource_property[graphName][resourceURI][propertyURI][prop];
+                            }
+                        }
+                    }
+                }else if (dynamicConfig.dataset_resource_property[graphName]){
+                    if(dynamicConfig.dataset_resource_property[graphName][resourceURI]){
+                        if(dynamicConfig.dataset_resource_property[graphName][resourceURI][propertyURI]){
+                            for(let prop in dynamicConfig.dataset_resource_property[graphName][resourceURI][propertyURI]) {
+                                output[prop] = dynamicConfig.dataset_resource_property[graphName][resourceURI][propertyURI][prop];
+                            }
+                        }
+                    }
+                }
+                let finalOutput = {};
+                //remove irrelevant attributes from config
+                let irrels = ['resourceFocusType', 'maxNumberOfResourcesOnPage', 'datasetReactor', 'usePropertyCategories', 'propertyCategories', 'resourceReactor', 'treatAsResourceType', 'datasetLabel', 'resourceLabelProperty'];
+                for(let prop in output) {
+                    if(irrels.indexOf(prop) == -1) {
+                        finalOutput[prop] = output[prop];
+                    }
+                }
+                callback(finalOutput);
+
+            });
+
+        });
+
     }
-    prepareObjectConfig(useGeneric, graphName, resourceURI, propertyURI, objectValue) {
+    prepareObjectConfig(useGeneric, graphName, resourceURI, propertyURI, objectValue, callback) {
         //todo: it is not yet completely implemented because we are not sure about the possible use case
         //it has to go through 15 scopes which causes an overhead if unnecessary
         //we can easily implement this if needed in future so that users can have components in the scope of objects
@@ -182,24 +212,26 @@ class Configurator{
         if(useGeneric){
             output = this.prepareGenericConfig(4);
         }
-        let tmp = this.preparePropertyConfig(0, graphName, resourceURI, resourceType, propertyURI);
-
-        //owerwrite generic ones
-        for(let prop in tmp) {
-            output[prop] = tmp[prop];
-        }
-        //todo-----
-        //traverese object configs
-        //-------
-        let finalOutput = {};
-        //remove irrelevant attributes from config
-        let irrels = ['propertyReactor', 'objectReactor', 'objectIViewer', 'objectIEditor', 'extendedOEditor', 'extendedOViewer'];
-        for(let prop in output) {
-            if(irrels.indexOf(prop) == -1) {
-                finalOutput[prop] = output[prop];
+        this.preparePropertyConfig(0, graphName, resourceURI, resourceType, propertyURI, (tmp)=> {
+            //owerwrite generic ones
+            for(let prop in tmp) {
+                output[prop] = tmp[prop];
             }
-        }
-        return finalOutput;
+            //todo-----
+            //traverese object configs
+            //-------
+            let finalOutput = {};
+            //remove irrelevant attributes from config
+            let irrels = ['propertyReactor', 'objectReactor', 'objectIViewer', 'objectIEditor', 'extendedOEditor', 'extendedOViewer'];
+            for(let prop in output) {
+                if(irrels.indexOf(prop) == -1) {
+                    finalOutput[prop] = output[prop];
+                }
+            }
+            callback(finalOutput);
+        });
+
+
     }
     getResourceFocusType(graphName){
         let out = {'type':[], 'labelProperty': []};

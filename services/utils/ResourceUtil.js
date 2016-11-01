@@ -1,4 +1,5 @@
 'use strict';
+import async from 'async';
 import Configurator from './Configurator';
 class ResourceUtil {
     getPropertyLabel(uri) {
@@ -17,7 +18,7 @@ class ResourceUtil {
         property = property.charAt(0).toUpperCase() + property.slice(1);
         return property;
     }
-    parseProperties(body, graphName, resourceURI, category, propertyPath) {
+    parseProperties(body, graphName, resourceURI, category, propertyPath, callback) {
         let configurator = new Configurator();
         let configExceptional = {},
             config = {},
@@ -45,103 +46,122 @@ class ResourceUtil {
             });
         }
         //resource config
-        let rconfig = configurator.prepareResourceConfig(1, graphName, resourceURI, resourceType);
-        if (rconfig.usePropertyCategories) {
-            //allow filter by category
-            if (!category) {
-                //get first category as default
-                category = rconfig.propertyCategories[0];
+        configurator.prepareResourceConfig(1, graphName, resourceURI, resourceType, (rconfig)=> {
+            if (rconfig.usePropertyCategories) {
+                //allow filter by category
+                if (!category) {
+                    //get first category as default
+                    category = rconfig.propertyCategories[0];
+                }
+                filterByCategory = 1;
             }
-            filterByCategory = 1;
-        }
-        if (parsed.head.vars[0] === 'callret-0') {
-            //no results!
-            return [];
-        } else {
-            parsed.results.bindings.forEach(function(el) {
-                config = configurator.preparePropertyConfig(1, graphName, resourceURI, resourceType, el.p.value);
+            if (parsed.head.vars[0] === 'callret-0') {
+                //no results!
+                return [];
+            } else {
+                let asyncTasks = [];
                 //handle properties config in different levels
                 //todo: now only handles level 2 properties should be extended later if needed
                 if (propertyPath && propertyPath.length) {
-                    //it is only for property path
-                    configExceptional = configurator.preparePropertyConfig(1, graphName, resourceURI, resourceType, propertyPath[1]);
-                    if (configExceptional.extensions) {
-                        configExceptional.extensions.forEach(function(ex) {
-                            if (ex.spec.propertyURI === el.p.value) {
-                                for (let cp in ex.config) {
-                                    //overwrite config with extension config
-                                    config[cp] = ex.config[cp];
+                    asyncTasks.push(function(callback){
+                        //it is only for property path
+                        configurator.preparePropertyConfig(1, graphName, resourceURI, resourceType, propertyPath[1], (res)=> {
+                            configExceptional = res;
+                            callback();
+                        });
+                    });
+                }
+                parsed.results.bindings.forEach(function(el) {
+                    asyncTasks.push(function(callback){
+                        configurator.preparePropertyConfig(1, graphName, resourceURI, resourceType, el.p.value, (config)=> {
+                            //handle categories
+                            if (filterByCategory) {
+                                if (!config || !config.category || category !== config.category[0]) {
+                                    //skip property
+                                    callback();
                                 }
                             }
+                            let property = self.getPropertyLabel(el.p.value);
+                            //group by properties
+                            //I put the valueType into instances because we might have cases (e.g. subject property) in which for different instances, we have different value types
+                            if (propIndex[el.p.value]) {
+                                propIndex[el.p.value].push({
+                                    value: el.o.value,
+                                    valueType: el.o.type,
+                                    dataType: (el.o.type === 'typed-literal' ? el.o.datatype : ''),
+                                    extended: parseInt(el.hasExtendedValue.value)
+                                });
+                            } else {
+                                propIndex[el.p.value] = [{
+                                    value: el.o.value,
+                                    valueType: el.o.type,
+                                    dataType: (el.o.type === 'typed-literal' ? el.o.datatype : ''),
+                                    extended: parseInt(el.hasExtendedValue.value)
+                                }];
+                            }
+                            output.push({
+                                propertyURI: el.p.value,
+                                property: property,
+                                instances: [],
+                                config: config
+                            });
+                            callback();
                         });
-                    }
-                }
-                //handle categories
-                if (filterByCategory) {
-                    if (!config || !config.category || category !== config.category[0]) {
-                        //skip property
-                        return;
-                    }
-                }
-                let property = self.getPropertyLabel(el.p.value);
-                //group by properties
-                //I put the valueType into instances because we might have cases (e.g. subject property) in which for different instances, we have different value types
-                if (propIndex[el.p.value]) {
-                    propIndex[el.p.value].push({
-                        value: el.o.value,
-                        valueType: el.o.type,
-                        dataType: (el.o.type === 'typed-literal' ? el.o.datatype : ''),
-                        extended: parseInt(el.hasExtendedValue.value)
                     });
-                } else {
-                    propIndex[el.p.value] = [{
-                        value: el.o.value,
-                        valueType: el.o.type,
-                        dataType: (el.o.type === 'typed-literal' ? el.o.datatype : ''),
-                        extended: parseInt(el.hasExtendedValue.value)
-                    }];
-                }
-                output.push({
-                    propertyURI: el.p.value,
-                    property: property,
-                    instances: [],
-                    config: config
                 });
-            });
-            output.forEach(function(el) {
-                if (propIndex[el.propertyURI]) {
-                    finalOutput.push({
-                        propertyURI: el.propertyURI,
-                        property: el.property,
-                        config: el.config,
-                        instances: propIndex[el.propertyURI]
+                let modifiedConfig;
+                //run all tasks in parallel
+                async.parallel(asyncTasks, function(){
+                    output.forEach(function(el) {
+                        modifiedConfig = el.config;
+                        //overwrite configs if extensions are provided
+                        if (configExceptional && configExceptional.extensions) {
+                            configExceptional.extensions.forEach(function(ex) {
+                                if (ex.spec.propertyURI === el.propertyURI) {
+                                    for (let cp in ex.config) {
+                                        //overwrite config with extension config
+                                        modifiedConfig[cp] = ex.config[cp];
+                                    }
+                                }
+                            });
+                        }
+
+                        if (propIndex[el.propertyURI]) {
+                            finalOutput.push({
+                                propertyURI: el.propertyURI,
+                                property: el.property,
+                                config: modifiedConfig,
+                                instances: propIndex[el.propertyURI]
+                            });
+                            propIndex[el.propertyURI] = null;
+                        }
                     });
-                    propIndex[el.propertyURI] = null;
-                }
-            });
-            //make the right title for resource if propertyLabel is defined in config
-            let newTitel = title;
-            if (rconfig && rconfig.resourceLabelProperty && rconfig.resourceLabelProperty.length) {
-                newTitel = '';
-                let tmpArr = [];
-                finalOutput.forEach(function(el) {
-                    if (rconfig.resourceLabelProperty.indexOf(el.propertyURI) !== -1) {
-                        tmpArr.push(el.instances[0].value);
+                    //make the right title for resource if propertyLabel is defined in config
+                    let newTitel = title;
+                    if (rconfig && rconfig.resourceLabelProperty && rconfig.resourceLabelProperty.length) {
+                        newTitel = '';
+                        let tmpArr = [];
+                        finalOutput.forEach(function(el) {
+                            if (rconfig.resourceLabelProperty.indexOf(el.propertyURI) !== -1) {
+                                tmpArr.push(el.instances[0].value);
+                            }
+                        });
+                        if (tmpArr.length) {
+                            newTitel = tmpArr.join('-');
+                        } else {
+                            newTitel = title;
+                        }
                     }
+                    callback( {
+                        props: finalOutput,
+                        title: newTitel,
+                        resourceType: resourceType,
+                        rconfig: rconfig
+                    });
                 });
-                if (tmpArr.length) {
-                    newTitel = tmpArr.join('-');
-                } else {
-                    newTitel = title;
-                }
             }
-            return {
-                props: finalOutput,
-                title: newTitel,
-                resourceType: resourceType,
-                rconfig: rconfig
-            };
-        }
+        });
+
     }
     buildConfigFromExtensions(extensions) {
         let config = {};
@@ -166,78 +186,87 @@ class ResourceUtil {
         }
         return extensions[index].config;
     }
-    parseObjectProperties(body, graphName, resourceURI, propertyURI) {
+    parseObjectProperties(body, graphName, resourceURI, propertyURI, callback) {
         let title, objectType = '';
         let configurator = new Configurator();
         let config = {};
-        let configExceptional = configurator.preparePropertyConfig(1, graphName, resourceURI, 0, propertyURI);
-        let self = this;
-        let parsed = JSON.parse(body);
-        let output = [],
-            propIndex = {},
-            finalOutput = [];
-        if (parsed.results.bindings.length) {
-            parsed.results.bindings.forEach(function(el) {
-                config = configurator.preparePropertyConfig(1, graphName, resourceURI, 0, el.p.value);
-                if (el.p.value === 'http://purl.org/dc/terms/title') {
-                    title = el.o.value;
-                } else if (el.p.value === 'http://www.w3.org/2000/01/rdf-schema#label') {
-                    title = el.o.value;
-                } else if (el.p.value === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type') {
-                    objectType = el.o.value;
-                }
-                if (configExceptional && configExceptional.extensions) {
-                    configExceptional.extensions.forEach(function(ex) {
-                        if (ex.spec.propertyURI === el.p.value) {
-                            for (let cp in ex.config) {
-                                //overwrite config with extension config
-                                config[cp] = ex.config[cp];
+        configurator.preparePropertyConfig(1, graphName, resourceURI, 0, propertyURI, (configExceptional)=> {
+            let self = this;
+            let parsed = JSON.parse(body);
+            let output = [],
+                propIndex = {},
+                finalOutput = [], asyncTasks = [];
+            if (parsed.results.bindings.length) {
+                parsed.results.bindings.forEach(function(el) {
+                    asyncTasks.push(function(callback){
+                        configurator.preparePropertyConfig(1, graphName, resourceURI, 0, el.p.value, (config)=> {
+                            if (el.p.value === 'http://purl.org/dc/terms/title') {
+                                title = el.o.value;
+                            } else if (el.p.value === 'http://www.w3.org/2000/01/rdf-schema#label') {
+                                title = el.o.value;
+                            } else if (el.p.value === 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type') {
+                                objectType = el.o.value;
                             }
-                        }
+                            if (configExceptional && configExceptional.extensions) {
+                                configExceptional.extensions.forEach(function(ex) {
+                                    if (ex.spec.propertyURI === el.p.value) {
+                                        for (let cp in ex.config) {
+                                            //overwrite config with extension config
+                                            config[cp] = ex.config[cp];
+                                        }
+                                    }
+                                });
+                            }
+                            let property = self.getPropertyLabel(el.p.value);
+                            if (propIndex[el.p.value]) {
+                                propIndex[el.p.value].push({
+                                    value: el.o.value,
+                                    valueType: el.o.type,
+                                    dataType: (el.o.type === 'typed-literal' ? el.o.datatype : ''),
+                                    extended: parseInt(el.hasExtendedValue.value)
+                                });
+                            } else {
+                                propIndex[el.p.value] = [{
+                                    value: el.o.value,
+                                    valueType: el.o.type,
+                                    dataType: (el.o.type === 'typed-literal' ? el.o.datatype : ''),
+                                    extended: parseInt(el.hasExtendedValue.value)
+                                }];
+                            }
+                            output.push({
+                                propertyURI: el.p.value,
+                                property: property,
+                                instances: [],
+                                config: config
+                            });
+                            callback();
+                        });
                     });
-                }
-                let property = self.getPropertyLabel(el.p.value);
-                if (propIndex[el.p.value]) {
-                    propIndex[el.p.value].push({
-                        value: el.o.value,
-                        valueType: el.o.type,
-                        dataType: (el.o.type === 'typed-literal' ? el.o.datatype : ''),
-                        extended: parseInt(el.hasExtendedValue.value)
-                    });
-                } else {
-                    propIndex[el.p.value] = [{
-                        value: el.o.value,
-                        valueType: el.o.type,
-                        dataType: (el.o.type === 'typed-literal' ? el.o.datatype : ''),
-                        extended: parseInt(el.hasExtendedValue.value)
-                    }];
-                }
-                output.push({
-                    propertyURI: el.p.value,
-                    property: property,
-                    instances: [],
-                    config: config
                 });
-            });
-            output.forEach(function(el) {
-                if (propIndex[el.propertyURI]) {
-                    finalOutput.push({
-                        config: el.config,
-                        spec: {
-                            propertyURI: el.propertyURI,
-                            property: el.property,
-                            instances: propIndex[el.propertyURI]
+                //run all tasks in parallel
+                async.parallel(asyncTasks, function(){
+                    output.forEach(function(el) {
+                        if (propIndex[el.propertyURI]) {
+                            finalOutput.push({
+                                config: el.config,
+                                spec: {
+                                    propertyURI: el.propertyURI,
+                                    property: el.property,
+                                    instances: propIndex[el.propertyURI]
+                                }
+                            });
+                            propIndex[el.propertyURI] = null;
                         }
                     });
-                    propIndex[el.propertyURI] = null;
-                }
-            });
-            return {
-                props: finalOutput,
-                title: title,
-                objectType: objectType
-            };
-        }
+                    callback({
+                        props: finalOutput,
+                        title: title,
+                        objectType: objectType
+                    });
+                });
+            }
+        });
+
     }
         //------ permission check functions---------------
     deleteAdminProperties(list) {
