@@ -40,7 +40,8 @@ class DynamicConfigurator {
             config = self.parseDatasetConfigs(config, graphName, res);
             callback(config);
         }).catch(function (err) {
-            console.log(err);
+            console.log('Error in dataset config query:', prefixes + query);
+            console.log('---------------------------------------------------------');
             callback(config);
         });
     }
@@ -56,7 +57,16 @@ class DynamicConfigurator {
         });
         let typeFilterStr = '';
         if(typeFilter.length){
-            typeFilterStr = '(' + typeFilter.join(' || ') + ') && ';
+            //design decision: do not allow configs for resources with more than 20 type
+            if(typeFilter.length < 20){
+                typeFilterStr = '(' + typeFilter.join(' || ') + ') && ';
+            }else{
+                typeFilterStr = '0 && ';
+            }
+
+        }else{
+            //do not allow treat as type when no type is defined
+            typeFilterStr = '0 && ';
         }
         //start config
         //query the triple store for property configs
@@ -98,12 +108,14 @@ class DynamicConfigurator {
         //send request
         //console.log(prefixes + query);
         let self = this;
-        rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+        let HTTPQueryObject = getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat);
+        rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params, headers: headers}).then(function(res){
             //console.log(res);
             config = self.parseResourceConfigs(config, resourceURI, res);
             callback(config);
         }).catch(function (err) {
-            console.log(err);
+            console.log('Error in resource config query:', prefixes + query);
+            console.log('---------------------------------------------------------');
             callback(config);
         });
 
@@ -147,7 +159,8 @@ class DynamicConfigurator {
             config = self.parsePropertyConfigs(config, propertyURI, res);
             callback(config);
         }).catch(function (err) {
-            console.log(err);
+            console.log('Error in property config query:', prefixes + query);
+            console.log('---------------------------------------------------------');
             callback(config);
         });
     }

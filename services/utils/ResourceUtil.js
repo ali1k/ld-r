@@ -47,7 +47,6 @@ class ResourceUtil {
         }
         //resource config
         configurator.prepareResourceConfig(1, graphName, resourceURI, resourceType, (rconfig)=> {
-            //console.log(rconfig);
             if (rconfig.usePropertyCategories) {
                 //allow filter by category
                 if (!category) {
@@ -112,7 +111,7 @@ class ResourceUtil {
                 });
                 let modifiedConfig;
                 //run all tasks in parallel
-                async.parallel(asyncTasks, function(){
+                async.parallelLimit(asyncTasks, 10, function(){
                     output.forEach(function(el) {
                         modifiedConfig = el.config;
                         //overwrite configs if extensions are provided
@@ -245,7 +244,7 @@ class ResourceUtil {
                     });
                 });
                 //run all tasks in parallel
-                async.parallel(asyncTasks, function(){
+                async.parallelLimit(asyncTasks, 10, function(){
                     output.forEach(function(el) {
                         if (propIndex[el.propertyURI]) {
                             finalOutput.push({
