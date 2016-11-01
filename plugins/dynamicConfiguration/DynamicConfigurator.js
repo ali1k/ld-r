@@ -57,12 +57,11 @@ class DynamicConfigurator {
         });
         let typeFilterStr = '';
         if(typeFilter.length){
-            //design decision: do not allow configs for resources with more than 20 type
-            if(typeFilter.length < 20){
-                typeFilterStr = '(' + typeFilter.join(' || ') + ') && ';
-            }else{
-                typeFilterStr = '0 && ';
-            }
+            typeFilterStr = '(' + typeFilter.join(' || ') + ') && ';
+            //design decision: do not allow configs for resources with more than 100 type?
+            // if(typeFilter.length > 100){
+            //     typeFilterStr = '0 && ';
+            // }
 
         }else{
             //do not allow treat as type when no type is defined
