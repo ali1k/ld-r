@@ -149,7 +149,7 @@ class Resource extends React.Component {
         let breadcrumb;
         if(self.props.propertyPath.length > 1){
             breadcrumb = <div className="ui large breadcrumb">
-                          <a className="section" href={'/dataset/' + encodeURIComponent(self.props.graphName) + '/resource/' + encodeURIComponent(self.props.propertyPath[0])}>{self.props.propertyPath[0]}</a>
+                          <a className="section" href={'/dataset/' + encodeURIComponent(self.props.graphName) + '/resource/' + encodeURIComponent(self.props.propertyPath[0])}>{URIUtil.getURILabel(self.props.propertyPath[0])}</a>
                           <i className="right chevron icon divider"></i>
                           <div className="active section">{URIUtil.getURILabel(self.props.propertyPath[1])}</div>
                         </div>;
