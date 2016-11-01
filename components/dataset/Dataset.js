@@ -1,5 +1,4 @@
 import React from 'react';
-import {config} from '../../configs/reactor';
 import ResourceList from './ResourceList';
 import ResourceListPager from './ResourceListPager';
 import URIUtil from '../utils/URIUtil';
@@ -32,8 +31,8 @@ class Dataset extends React.Component {
         let datasetTitle;
         if(this.props.graphName){
             datasetTitle = <a target="_blank" href={this.props.graphName}> {this.props.graphName} </a>;
-            if(config.dataset && config.dataset[this.props.graphName] && config.dataset[this.props.graphName].datasetLabel){
-                datasetTitle = <a target="_blank" href={this.props.graphName}> {config.dataset[this.props.graphName].datasetLabel} </a>;
+            if(this.props.config && this.props.config.datasetLabel){
+                datasetTitle = <a target="_blank" href={this.props.graphName}> {this.props.config.datasetLabel} </a>;
             }
         }
         return (

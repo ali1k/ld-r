@@ -45,13 +45,15 @@ class Configurator{
 
         //retrieve all dynamic resource configs stored in the triple store
         dynamicConfigurator.prepareDynamicDatasetConfig(graphName, (dynamicConfig)=> {
-            //console.log(dynamicConfig);
+            //console.log(dynamicConfig.dataset);
             if(config.dataset[graphName]){
                 //there is a user-defined config, overwrite default config then
                 for(let prop in config.dataset[graphName]) {
                     output[prop] = config.dataset[graphName][prop];
                 }
-            }else if(dynamicConfig.dataset[graphName]) {
+            }
+            //design decision: dynamic configs can overwrite existing local configs
+            if(dynamicConfig.dataset[graphName]) {
                 for(let prop in dynamicConfig.dataset[graphName]) {
                     output[prop] = dynamicConfig.dataset[graphName][prop];
                 }
@@ -95,7 +97,9 @@ class Configurator{
                     for(let prop in config.resource[resourceURI]) {
                         output[prop] = config.resource[resourceURI][prop];
                     }
-                } else if(dynamicConfig.resource[resourceURI]) {
+                }
+                //design decision: dynamic configs can overwrite existing local configs
+                if(dynamicConfig.resource[resourceURI]) {
                     for(let prop in dynamicConfig.resource[resourceURI]) {
                         output[prop] = dynamicConfig.resource[resourceURI][prop];
                     }
@@ -119,7 +123,9 @@ class Configurator{
                             }
                         }
                     }
-                }else if(dynamicConfig.dataset_resource[graphName]) {
+                }
+                //design decision: dynamic configs can overwrite existing local configs
+                if(dynamicConfig.dataset_resource[graphName]) {
                     if(dynamicConfig.dataset_resource[graphName][resourceURI]){
                         //apply config on resource URI
                         for(let prop in dynamicConfig.dataset_resource[graphName][resourceURI]) {
@@ -166,7 +172,9 @@ class Configurator{
                         output[prop] = config.property[propertyURI][prop];
                     }
                 //check the dynamic config
-                }else if (dynamicConfig.property[propertyURI]) {
+                }
+                //design decision: dynamic configs can overwrite existing local configs
+                if (dynamicConfig.property[propertyURI]) {
                     for(let prop in dynamicConfig.property[propertyURI]) {
                         output[prop] = dynamicConfig.property[propertyURI][prop];
                     }
@@ -177,7 +185,9 @@ class Configurator{
                             output[prop] = config.dataset_property[graphName][propertyURI][prop];
                         }
                     }
-                }else if (dynamicConfig.dataset_property[graphName]){
+                }
+                //design decision: dynamic configs can overwrite existing local configs
+                if (dynamicConfig.dataset_property[graphName]){
                     if(dynamicConfig.dataset_property[graphName][propertyURI]){
                         for(let prop in dynamicConfig.dataset_property[graphName][propertyURI]) {
                             output[prop] = dynamicConfig.dataset_property[graphName][propertyURI][prop];
@@ -190,7 +200,9 @@ class Configurator{
                             output[prop] = config.resource_property[resourceURI][propertyURI][prop];
                         }
                     }
-                }else if (dynamicConfig.resource_property[resourceURI]){
+                }
+                //design decision: dynamic configs can overwrite existing local configs
+                if (dynamicConfig.resource_property[resourceURI]){
                     if(dynamicConfig.resource_property[resourceURI][propertyURI]){
                         for(let prop in dynamicConfig.resource_property[resourceURI][propertyURI]) {
                             output[prop] = dynamicConfig.resource_property[resourceURI][propertyURI][prop];
@@ -205,7 +217,9 @@ class Configurator{
                             }
                         }
                     }
-                }else if (dynamicConfig.dataset_resource_property[graphName]){
+                }
+                //design decision: dynamic configs can overwrite existing local configs
+                if (dynamicConfig.dataset_resource_property[graphName]){
                     if(dynamicConfig.dataset_resource_property[graphName][resourceURI]){
                         if(dynamicConfig.dataset_resource_property[graphName][resourceURI][propertyURI]){
                             for(let prop in dynamicConfig.dataset_resource_property[graphName][resourceURI][propertyURI]) {
