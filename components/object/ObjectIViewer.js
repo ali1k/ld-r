@@ -9,76 +9,92 @@ import PasswordView from './viewer/individual/PasswordView';
 import LanguageView from './viewer/individual/LanguageView';
 import TwoLetterCountryView from './viewer/individual/TwoLetterCountryView';
 import BasicDateTimeView from './viewer/individual/BasicDateTimeView';
+import PrefixBasedView from './viewer/individual/PrefixBasedView';
 
 class ObjectIViewer extends React.Component {
     render() {
-        let category = 0, propertyPath = [], viewer, viewerConfig = '', extendedViewer, extendedViewerConfig = '';
-        if(this.props.config){
-            if(this.props.config.extendedOViewer){
+        let category = 0,
+            propertyPath = [],
+            viewer,
+            viewerConfig = '',
+            extendedViewer,
+            extendedViewerConfig = '';
+        if (this.props.config) {
+            if (this.props.config.extendedOViewer) {
                 extendedViewerConfig = this.props.config.extendedOViewer[0];
             }
-            if(this.props.config.objectIViewer){
+            if (this.props.config.objectIViewer) {
                 viewerConfig = this.props.config.objectIViewer[0];
             }
         }
-        if(this.props.spec.extendedViewData){
+        if (this.props.spec.extendedViewData) {
             //go to extended view
-            switch(extendedViewerConfig){
+            switch (extendedViewerConfig) {
                 case 'BasicIndividualDetailView':
                     extendedViewer = <BasicIndividualDetailView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
-                break;
+                    break;
                 default:
                     extendedViewer = <BasicIndividualDetailView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
             }
         }
         //always go for linked view when it has extensions (and when BasicIndividualView is selected)
-        if(this.props.config && this.props.spec.extended && viewerConfig ==='BasicIndividualView'){
+        if (this.props.config && this.props.spec.extended && viewerConfig === 'BasicIndividualView') {
             viewerConfig = 'BasicLinkedIndividualView';
             propertyPath = [this.props.resource, this.props.property];
         }
-        if(this.props.config && this.props.config.category){
+        if (this.props.config && this.props.config.category) {
             category = this.props.config.category;
         }
         //go to normal view
-        switch(viewerConfig){
+        switch (viewerConfig) {
             case 'BasicIndividualView':
                 viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
-            break;
+                break;
             case 'BasicImageView':
                 viewer = <BasicImageView spec={this.props.spec} config={this.props.config}/>;
-            break;
+                break;
+            case 'PrefixBasedView':
+                viewer = <PrefixBasedView spec={this.props.spec} config={this.props.config}/>;
+                break;
             case 'BasicDateTimeView':
                 viewer = <BasicDateTimeView spec={this.props.spec} config={this.props.config}/>;
-            break;
+                break;
             case 'BasicLinkedIndividualView':
                 viewer = <BasicLinkedIndividualView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config} propertyPath={propertyPath} category={category}/>;
-            break;
+                break;
             case 'PasswordView':
                 viewer = <PasswordView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
-            break;
+                break;
             case 'BasicDBpediaView':
                 viewer = <BasicDBpediaView spec={this.props.spec} config={this.props.config}/>;
-            break;
+                break;
             case 'LanguageView':
                 viewer = <LanguageView spec={this.props.spec} config={this.props.config}/>;
-            break;
+                break;
             case 'BasicOptionView':
                 viewer = <BasicOptionView spec={this.props.spec} config={this.props.config}/>;
-            break;
+                break;
             case 'TwoLetterCountryView':
                 viewer = <TwoLetterCountryView spec={this.props.spec} config={this.props.config}/>;
-            break;
+                break;
             default:
                 viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
         }
         //check if it has a blank node value config
         let hideObject = 0;
-        if(this.props.config && this.props.config.hasBlankNode && extendedViewer){
+        if (this.props.config && this.props.config.hasBlankNode && extendedViewer) {
             hideObject = 1;
         }
         return (
-            <div className="ui" ref="objectIViewer" onClick={this.props.onObjectClick} style={{'wordBreak': 'break-all', 'wordWrap': 'break-word'}}>
-                {hideObject ? <span itemProp={this.props.property}></span> : <div itemProp={this.props.property} className="ui attached message"> {viewer} </div>}
+            <div className="ui" ref="objectIViewer" onClick={this.props.onObjectClick} style={{
+                'wordBreak': 'break-all',
+                'wordWrap': 'break-word'
+            }}>
+                {hideObject
+                    ? <span itemProp={this.props.property}></span>
+                    : <div itemProp={this.props.property} className="ui attached message">
+                        {viewer}
+                    </div>}
                 {extendedViewer}
             </div>
         );

@@ -63,6 +63,43 @@ export default {
 
         },
         dataset_property: {
+            //for configuration manager
+            'http://ld-r.org/configurations': {
+                'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
+                    isHidden: 1
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#scope': {
+                    hint: ['Determines the type of scope in LD-R'],
+                    objectIEditor: ['BasicOptionInput'],
+                    objectIViewer: ['BasicOptionView'],
+                    options: [
+                        {label: 'Dataset', value: 'D'},
+                        {label: 'Resource', value: 'R'},
+                        {label: 'Property', value: 'P'},
+                        {label: 'Dataset-Resource', value: 'DR'},
+                        {label: 'Dataset-Property', value: 'DP'},
+                        {label: 'Resource-Property', value: 'RP'},
+                        {label: 'Dataset-Resource-Property', value: 'DRP'},
+                    ]
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#dataset': {
+                    shortenURI: 0,
+                    objectIViewer: ['PrefixBasedView']
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#property': {
+                    shortenURI: 0,
+                    objectIViewer: ['PrefixBasedView']
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resource': {
+                    shortenURI: 0,
+                    objectIViewer: ['PrefixBasedView']
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#treatAsResourceType': {
+                    label: ['Treat as Resource Type'],
+                    hint: ['If set to true, will consider resource URI as type URI for resource'],
+                }
+            },
+            //for user page
             'http://ld-r.org/users': {
                 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
                     isHidden: 1
