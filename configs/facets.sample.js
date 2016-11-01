@@ -17,6 +17,9 @@ export default {
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#dataset': {
                     shortenURI: 0
                 },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resource': {
+                    shortenURI: 0
+                },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#property': {
                     shortenURI: 0
                 }
