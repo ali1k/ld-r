@@ -1,4 +1,5 @@
 import {BaseStore} from 'fluxible/addons';
+import Immutable from 'immutable';
 import ResourceStoreUtil from './utils/ResourceStoreUtil';
 let utilObject = new ResourceStoreUtil();
 
@@ -14,14 +15,14 @@ class ResourceStore extends BaseStore {
         this.currentCategory = payload.currentCategory;
         this.propertyPath = payload.propertyPath;
         // this.properties = payload.properties;
-        this.properties = utilObject.preservePropertiesOrder(this.properties, payload.properties);
+        this.properties = utilObject.preservePropertiesOrder(this.properties, Immutable.fromJS(payload.properties));
         this.title = payload.title ? payload.title : payload.resourceURI;
         this.config = payload.config;
         this.isComplete = 1;
         this.emitChange();
     }
     cleanAll() {
-        this.properties = [];
+        this.properties = Immutable.fromJS([]);
         this.graphName = '';
         this.currentCategory = 0;
         this.resourceURI = '';

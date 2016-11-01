@@ -40,6 +40,7 @@
     "fluxible-plugin-fetchr": "^0.3.11",
     "fluxible-router": "^0.4.18",
     "hogan-express": "^0.5.2",
+    "immutable": "^3.8.1",
     "log": "^1.4.0",
     "moment": "^2.15.2",
     "nodemailer": "^2.6.4",

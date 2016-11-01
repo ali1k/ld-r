@@ -67,7 +67,7 @@ class Resource extends React.Component {
         //create a list of properties
         let list = this.props.properties.map(function(node, index) {
             //if there was no config at all or it is hidden, do not render the property
-            if(!node.config || !node.config.isHidden){
+            if(!node.get('config') || !node.get('config').get('isHidden')){
                 //for readOnly, we first check the defautl value then we check readOnly value of each property if exists
                 //this is what comes from the config
                 if(readOnly){
@@ -78,12 +78,12 @@ class Resource extends React.Component {
                         configReadOnly = false;
                     }else{
                         //it property is readOnly from config
-                        if(node.config){
-                            if(node.config.readOnly){
+                        if(node.get('config')){
+                            if(node.get('config').get('readOnly')){
                                 configReadOnly = true;
                             }else{
                                 //check access levels
-                                accessLevel = self.checkAccess(user, self.props.graphName, self.props.resource, node.propertyURI);
+                                accessLevel = self.checkAccess(user, self.props.graphName, self.props.resource, node.get('propertyURI'));
                                 if(accessLevel.access){
                                     configReadOnly = false;
                                 }else{
@@ -92,7 +92,7 @@ class Resource extends React.Component {
                             }
                         }else{
                             //check access levels
-                            accessLevel = self.checkAccess(user, self.props.graphName, self.props.resource, node.propertyURI);
+                            accessLevel = self.checkAccess(user, self.props.graphName, self.props.resource,  node.get('propertyURI'));
                             if(accessLevel.access){
                                 configReadOnly = false;
                             }else{
@@ -102,7 +102,7 @@ class Resource extends React.Component {
                     }
                 }
                 return (
-                    <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} graphName={self.props.graphName} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
+                    <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.get('config')} graphName={self.props.graphName} resource={self.props.resource} property={node.get('propertyURI')} propertyPath= {self.props.propertyPath}/>
                 );
             }
         });
