@@ -42,13 +42,23 @@ class Configurator{
         if(useGeneric){
             output = this.prepareGenericConfig(1);
         }
-        if(config.dataset[graphName]){
-            //there is a user-defined config, overwrite default config then
-            for(let prop in config.dataset[graphName]) {
-                output[prop] = config.dataset[graphName][prop];
+
+        //retrieve all dynamic resource configs stored in the triple store
+        dynamicConfigurator.prepareDynamicDatasetConfig(graphName, (dynamicConfig)=> {
+            //console.log(dynamicConfig);
+            if(config.dataset[graphName]){
+                //there is a user-defined config, overwrite default config then
+                for(let prop in config.dataset[graphName]) {
+                    output[prop] = config.dataset[graphName][prop];
+                }
+            }else if(dynamicConfig.dataset[graphName]) {
+                for(let prop in dynamicConfig.dataset[graphName]) {
+                    output[prop] = dynamicConfig.dataset[graphName][prop];
+                }
             }
-        }
-        callback (output);
+            callback (output);
+        })
+
     }
     prepareResourceConfig(useGeneric, graphName, resourceURI, resourceType, callback) {
         //resource type can be a set of values
