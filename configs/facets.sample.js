@@ -18,10 +18,24 @@ export default {
                     shortenURI: 0
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resource': {
-                    shortenURI: 0
+                    shortenURI: 0,
+                    objectIViewer: ['PrefixBasedView']
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#property': {
-                    shortenURI: 0
+                    shortenURI: 0,
+                    objectIViewer: ['PrefixBasedView']
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#scope': {
+                    objectIViewer: ['BasicOptionView'],
+                    options: [
+                        {label: 'Dataset', value: 'D'},
+                        {label: 'Resource', value: 'R'},
+                        {label: 'Property', value: 'P'},
+                        {label: 'Dataset-Resource', value: 'DR'},
+                        {label: 'Dataset-Property', value: 'DP'},
+                        {label: 'Resource-Property', value: 'RP'},
+                        {label: 'Dataset-Resource-Property', value: 'DRP'},
+                    ]
                 }
             }
         },
