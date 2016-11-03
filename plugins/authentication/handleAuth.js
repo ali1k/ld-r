@@ -1,6 +1,5 @@
 'use strict';
 //required for authentication
-let helper = require('./auth-helper');
 let passwordHash = require('password-hash');
 let passport = require ('passport');
 let passportConfig = require('./passport-config');
@@ -145,7 +144,7 @@ let addUserQueries = function (req, res, recaptchaSiteKey){
     ';
 
     let endpoint = helpers.getEndpointParameters([generalConfig.authDatasetURI[0]]);
-    let rpPath = helpers.getHTTPQuery('read', query, endpoint, outputFormat);
+    let rpPath = helpers.getHTTPGetURL(helpers.getHTTPQuery('read', query, endpoint, outputFormat));
     //send request
     rp.get({uri: rpPath}).then(function(resq){
         let parsed = JSON.parse(resq);
@@ -191,8 +190,8 @@ let addUserQueries = function (req, res, recaptchaSiteKey){
                     } \
                     ';
                 }
-                rpPath = helper.getHTTPQuery('update', query, endpoint, outputFormat);
-                rp.post({uri: rpPath}).then(function(){
+                let HTTPQueryObject = helpers.getHTTPQuery('update', query, endpoint, outputFormat);
+                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(){
                     console.log('User is created!');
                     //send email notifications
                     if(generalConfig.enableEmailNotifications){
