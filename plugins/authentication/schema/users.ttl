@@ -23,7 +23,7 @@
       ldr:isSuperUser "1"^^xsd:Integer .
 
 #non-super users will have the following access level properties:
-#ldr:editorOfGraph
+#ldr:editorOfDataset
 #ldr:editorOfResource
 #ldr:editorOfProperty -> blank node
 #                               ldr: resource

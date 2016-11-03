@@ -9,7 +9,7 @@ class Resource extends React.Component {
     componentDidMount() {
         //scroll to top of the page
         if(this.props.config && this.props.config.readOnly){
-            let body = $("html, body");
+            let body = $('html, body');
             body.stop().animate({scrollTop:0}, '500', 'swing', function() {
             });
         }
@@ -30,7 +30,7 @@ class Resource extends React.Component {
                 if(parseInt(user.isSuperUser)){
                     return {access: true, type: 'full'};
                 }else{
-                    if(graph && user.editorOfGraph.indexOf(graph) !== -1){
+                    if(graph && user.editorOfDataset.indexOf(graph) !== -1){
                         return {access: true, type: 'full'};
                     }else{
                         if(resource && user.editorOfResource.indexOf(resource) !== -1){
@@ -83,7 +83,7 @@ class Resource extends React.Component {
                                 configReadOnly = true;
                             }else{
                                 //check access levels
-                                accessLevel = self.checkAccess(user, self.props.graphName, self.props.resource, node.propertyURI);
+                                accessLevel = self.checkAccess(user, self.props.datasetURI , self.props.resource, node.propertyURI);
                                 if(accessLevel.access){
                                     configReadOnly = false;
                                 }else{
@@ -92,7 +92,7 @@ class Resource extends React.Component {
                             }
                         }else{
                             //check access levels
-                            accessLevel = self.checkAccess(user, self.props.graphName, self.props.resource, node.propertyURI);
+                            accessLevel = self.checkAccess(user, self.props.datasetURI , self.props.resource, node.propertyURI);
                             if(accessLevel.access){
                                 configReadOnly = false;
                             }else{
@@ -102,7 +102,7 @@ class Resource extends React.Component {
                     }
                 }
                 return (
-                    <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} graphName={self.props.graphName} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
+                    <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
                 );
             }
         });
@@ -115,7 +115,7 @@ class Resource extends React.Component {
             }
             tabsDIV = this.props.config.propertyCategories.map(function(node, index) {
                 return (
-                    <NavLink className={(node === currentCategory ? 'item link active' : 'item link')} key={index} routeName="resource" href={'/dataset/' + encodeURIComponent(self.props.graphName) + '/resource/' + encodeURIComponent(self.props.resource) + '/' + node + '/' + encodeURIComponent(self.props.propertyPath)}>
+                    <NavLink className={(node === currentCategory ? 'item link active' : 'item link')} key={index} routeName="resource" href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(self.props.resource) + '/' + node + '/' + encodeURIComponent(self.props.propertyPath)}>
                       {node}
                     </NavLink>
                 );
@@ -149,7 +149,7 @@ class Resource extends React.Component {
         let breadcrumb;
         if(self.props.propertyPath.length > 1){
             breadcrumb = <div className="ui large breadcrumb">
-                          <a className="section" href={'/dataset/' + encodeURIComponent(self.props.graphName) + '/resource/' + encodeURIComponent(self.props.propertyPath[0])}>{URIUtil.getURILabel(self.props.propertyPath[0])}</a>
+                          <a className="section" href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(self.props.propertyPath[0])}>{URIUtil.getURILabel(self.props.propertyPath[0])}</a>
                           <i className="right chevron icon divider"></i>
                           <div className="active section">{URIUtil.getURILabel(self.props.propertyPath[1])}</div>
                         </div>;
@@ -160,7 +160,7 @@ class Resource extends React.Component {
                     {breadcrumb}
                     <h2>
                         {this.props.isComplete ? '' : <img src="/assets/img/loader.gif" alt="loading..."/>}
-                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.graphName) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon cube"></i></a> <a href={this.props.resource} target="_blank">{this.props.title}</a>
+                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI ) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon cube"></i></a> <a href={this.props.resource} target="_blank">{this.props.title}</a>
                     </h2>
                     {mainDIV}
                 </div>

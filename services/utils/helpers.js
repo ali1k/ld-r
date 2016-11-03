@@ -2,7 +2,7 @@ import {sparqlEndpoint} from '../../configs/server';
 import {defaultGraphName} from '../../configs/general';
 import validUrl from 'valid-url';
 import queryString from 'query-string';
-
+//todo: get config from dynamic configs: not allow overwriting auth and config graphs data
 let prepareDGFunc = function (datasetURI){
     let d = datasetURI, g = datasetURI;
     //try default graph if no datasetURI is given

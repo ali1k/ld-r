@@ -34,7 +34,7 @@ class ObjectReactor extends React.Component {
                 if (parseInt(user.isSuperUser)) {
                     return {access: true, type: 'full'};
                 } else {
-                    if (graph && user.editorOfGraph.indexOf(graph) !== -1) {
+                    if (graph && user.editorOfDataset.indexOf(graph) !== -1) {
                         return {access: true, type: 'full'};
                     } else {
                         if (resource && user.editorOfResource.indexOf(resource) !== -1) {

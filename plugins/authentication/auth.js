@@ -39,7 +39,7 @@ module.exports = {
         let query = '\
       PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
       PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-      SELECT ?p ?o ?pr ?pp FROM <' + generalConfig.authDatasetURI[0] + '> WHERE { \
+      SELECT ?p ?o ?pr ?pp FROM <' + authGraphName + '> WHERE { \
         { \
             <' + id + '> a foaf:Person . \
             <' + id + '> ?p ?o . \
@@ -55,13 +55,13 @@ module.exports = {
         }).then(function(res) {
             let parsed = JSON.parse(res);
             let user = {};
-            user.editorOfGraph = [];
+            user.editorOfDataset = [];
             user.editorOfResource = [];
             user.editorOfProperty = [];
             if (parsed.results.bindings.length) {
                 parsed.results.bindings.forEach(function(el) {
-                    if (self.getPropertyLabel(el.p.value) === 'editorOfGraph') {
-                        user.editorOfGraph.push(el.o.value);
+                    if (self.getPropertyLabel(el.p.value) === 'editorOfDataset') {
+                        user.editorOfDataset.push(el.o.value);
                     } else {
                         if (self.getPropertyLabel(el.p.value) === 'editorOfResource') {
                             user.editorOfResource.push(el.o.value);
@@ -81,7 +81,7 @@ module.exports = {
                 });
                 //to not show password in session
                 delete user.password;
-                user.graphName = generalConfig.authDatasetURI[0];
+                user.datasetURI = generalConfig.authDatasetURI[0];
                 user.id = id;
                 return fn(null, user);
             }
@@ -96,7 +96,7 @@ module.exports = {
         let query = '\
       PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
       PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-      SELECT ?s ?p ?o FROM <' + generalConfig.authDatasetURI[0] + '> WHERE { \
+      SELECT ?s ?p ?o FROM <' + authGraphName + '> WHERE { \
         { \
             ?s a foaf:Person . \
             ?s foaf:accountName "' + username + '" .\
