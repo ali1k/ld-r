@@ -50,7 +50,7 @@ export default {
                     callback(null, {
                         datasetURI: datasetURI,
                         graphName: graphName,
-                        resources: utilObject.parseResourcesByType(res, datasetURI),
+                        resources: utilObject.parseResourcesByType(res, graphName),
                         page: params.page,
                         config: rconfig
                     });

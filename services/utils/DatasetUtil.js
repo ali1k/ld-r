@@ -16,11 +16,11 @@ class DatasetUtil {
         return property;
     }
 
-    parseResourcesByType(body, datasetURI) {
+    parseResourcesByType(body, graphName) {
         let output = [];
         let parsed = JSON.parse(body);
         if (parsed.results.bindings.length) {
-            if (!datasetURI || String(datasetURI) === 'default') {
+            if (!graphName || String(graphName) === 'default') {
                 parsed.results.bindings.forEach(function(el) {
                     output.push({
                         v: el.resource.value,
