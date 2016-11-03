@@ -19,7 +19,7 @@ class ResourceReactor extends React.Component {
         return o;
     }
     render() {
-        let graphName = this.props.ResourceStore.graphName;
+        let datasetURI = this.props.ResourceStore.datasetURI;
         let properties = this.props.ResourceStore.properties;
         let resourceURI = this.props.ResourceStore.resourceURI;
         let resourceType = this.props.ResourceStore.resourceType;
@@ -32,13 +32,13 @@ class ResourceReactor extends React.Component {
         if (config && config.resourceReactor) {
             switch (config.resourceReactor[0]) {
                 case 'Resource':
-                    resourceReactor = <Resource enableAuthentication={enableAuthentication} graphName={graphName} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} isComplete={isComplete} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    resourceReactor = <Resource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} isComplete={isComplete} config={this.configMinus(config, ['resourceReactor'])}/>;
                     break;
                 case 'PersonResource':
-                    resourceReactor = <PersonResource enableAuthentication={enableAuthentication} graphName={graphName} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} isComplete={isComplete} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    resourceReactor = <PersonResource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} isComplete={isComplete} config={this.configMinus(config, ['resourceReactor'])}/>;
                     break;
                 default:
-                    resourceReactor = <Resource enableAuthentication={enableAuthentication} graphName={graphName} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} isComplete={isComplete} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    resourceReactor = <Resource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} isComplete={isComplete} config={this.configMinus(config, ['resourceReactor'])}/>;
             }
         }
         return (

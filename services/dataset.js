@@ -1,6 +1,6 @@
 'use strict';
 import {prepareDG, getEndpointParameters, getHTTPQuery, getHTTPGetURL} from './utils/helpers';
-import {defaultGraphName, enableAuthentication} from '../configs/general';
+import {enableAuthentication} from '../configs/general';
 import DatasetQuery from './sparql/DatasetQuery';
 import DatasetUtil from './utils/DatasetUtil';
 import Configurator from './utils/Configurator';

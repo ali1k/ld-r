@@ -22,10 +22,10 @@ class CheckboxItem extends React.Component {
     }
     render() {
         let title, c;
-        let graphName = this.props.graphName;
+        let datasetURI = this.props.datasetURI;
         if(this.props.config && this.props.config.objectIViewer){
             c = this.props.config;
-            title = <ObjectIViewer graphName={this.props.graphName} spec={this.props.spec} config={c}/>;
+            title = <ObjectIViewer datasetURI={this.props.datasetURI} spec={this.props.spec} config={c}/>;
         }else{
             title = this.props.spec.value;
             if(this.props.spec.label){
@@ -36,9 +36,9 @@ class CheckboxItem extends React.Component {
             if(this.props.spec.valueType === 'uri'){
                 if(this.props.config && this.props.config.hasLinkedValue){
                     if(this.props.config.linkedGraph){
-                        graphName = this.props.config.linkedGraph[0];
+                        datasetURI = this.props.config.linkedGraph[0];
                     }
-                    title = <a className="ui label" href={'/dataset/' + encodeURIComponent(graphName) + '/resource/' + encodeURIComponent(this.props.spec.value)} target="_blank"> {title} </a>;
+                    title = <a className="ui label" href={'/dataset/' + encodeURIComponent(datasetURI) + '/resource/' + encodeURIComponent(this.props.spec.value)} target="_blank"> {title} </a>;
                 }else{
                     title = <a href={this.props.spec.value} target="_blank"> {title} </a>;
                 }

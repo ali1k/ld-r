@@ -1,6 +1,6 @@
 'use strict';
 import {prepareDG, getEndpointParameters, getHTTPQuery, getHTTPGetURL} from './utils/helpers';
-import {defaultGraphName, enableLogs, enableAuthentication, authDatasetURI} from '../configs/general';
+import {enableLogs, enableAuthentication, authDatasetURI} from '../configs/general';
 import ResourceQuery from './sparql/ResourceQuery';
 import ResourceUtil from './utils/ResourceUtil';
 import rp from 'request-promise';

@@ -1,6 +1,6 @@
 'use strict';
 import {prepareDG, getEndpointParameters, getHTTPQuery, getHTTPGetURL} from './utils/helpers';
-import {defaultGraphName, enableAuthentication} from '../configs/general';
+import {enableAuthentication} from '../configs/general';
 import FacetQuery from './sparql/FacetQuery';
 import FacetUtil from './utils/FacetUtil';
 import Configurator from './utils/Configurator';

@@ -23,7 +23,7 @@ class PropertyReactor extends React.Component {
                     ? this.props.config.category[0]
                     : '')
                 : ''),
-            dataset: this.props.graphName,
+            dataset: this.props.datasetURI,
             resourceURI: this.props.resource,
             propertyPath: this.props.propertyPath,
             propertyURI: this.props.spec.propertyURI,
@@ -42,7 +42,7 @@ class PropertyReactor extends React.Component {
                     ? this.props.config.category[0]
                     : '')
                 : ''),
-            dataset: this.props.graphName,
+            dataset: this.props.datasetURI,
             resourceURI: this.props.resource,
             propertyPath: this.props.propertyPath,
             propertyURI: this.props.spec.propertyURI,
@@ -59,7 +59,7 @@ class PropertyReactor extends React.Component {
                     ? this.props.config.category[0]
                     : '')
                 : ''),
-            dataset: this.props.graphName,
+            dataset: this.props.datasetURI,
             resourceURI: this.props.resource,
             propertyPath: this.props.propertyPath,
             propertyURI: this.props.spec.propertyURI,
@@ -79,7 +79,7 @@ class PropertyReactor extends React.Component {
                     ? this.props.config.category[0]
                     : '')
                 : ''),
-            dataset: this.props.graphName,
+            dataset: this.props.datasetURI,
             resourceURI: this.props.resource,
             propertyPath: this.props.propertyPath,
             propertyURI: this.props.spec.propertyURI,
@@ -99,7 +99,7 @@ class PropertyReactor extends React.Component {
                     ? this.props.config.category[0]
                     : '')
                 : ''),
-            dataset: this.props.graphName,
+            dataset: this.props.datasetURI,
             resourceURI: this.props.resource,
             propertyPath: this.props.propertyPath,
             propertyURI: this.props.spec.propertyURI,
@@ -113,7 +113,7 @@ class PropertyReactor extends React.Component {
                     ? this.props.config.category[0]
                     : '')
                 : ''),
-            dataset: this.props.graphName,
+            dataset: this.props.datasetURI,
             resourceURI: this.props.resource,
             propertyPath: this.props.propertyPath,
             propertyURI: this.props.spec.propertyURI,
@@ -131,7 +131,7 @@ class PropertyReactor extends React.Component {
                     ? this.props.config.category[0]
                     : '')
                 : ''),
-            dataset: this.props.graphName,
+            dataset: this.props.datasetURI,
             resourceURI: this.props.resource,
             propertyPath: this.props.propertyPath,
             propertyURI: this.props.spec.propertyURI,
@@ -165,10 +165,10 @@ class PropertyReactor extends React.Component {
         if (propertyReactorType) {
             switch (propertyReactorType) {
                 case 'IndividualProperty':
-                    propertyReactor = <IndividualProperty spec={this.props.spec} enableAuthentication={this.props.enableAuthentication} readOnly={this.props.readOnly} graphName={this.props.graphName} resource={this.props.resource} property={this.props.property} propertyPath={this.props.propertyPath} config={this.configMinus(this.props.config, ['propertyReactor'])} onCreateIndividualObject={this.handleCreateIndividualObject.bind(this)} onDeleteIndividualObject={this.handleDeleteIndividualObject.bind(this)} onUpdateIndividualObject={this.handleUpdateIndividualObject.bind(this)} onDetailCreateIndividualObject={this.handleDetailCreateIndividualObject.bind(this)} onDetailUpdateIndividualObject={this.handleDetailUpdateIndividualObject.bind(this)} onUpdateAggObject={this.handleUpdateAggObject.bind(this)} onDeleteAggObject={this.handleDeleteAggObject.bind(this)}/>;
+                    propertyReactor = <IndividualProperty spec={this.props.spec} enableAuthentication={this.props.enableAuthentication} readOnly={this.props.readOnly} datasetURI={this.props.datasetURI} resource={this.props.resource} property={this.props.property} propertyPath={this.props.propertyPath} config={this.configMinus(this.props.config, ['propertyReactor'])} onCreateIndividualObject={this.handleCreateIndividualObject.bind(this)} onDeleteIndividualObject={this.handleDeleteIndividualObject.bind(this)} onUpdateIndividualObject={this.handleUpdateIndividualObject.bind(this)} onDetailCreateIndividualObject={this.handleDetailCreateIndividualObject.bind(this)} onDetailUpdateIndividualObject={this.handleDetailUpdateIndividualObject.bind(this)} onUpdateAggObject={this.handleUpdateAggObject.bind(this)} onDeleteAggObject={this.handleDeleteAggObject.bind(this)}/>;
                     break;
                 default:
-                    propertyReactor = <IndividualProperty spec={this.props.spec} enableAuthentication={this.props.enableAuthentication} readOnly={this.props.readOnly} graphName={this.props.graphName} resource={this.props.resource} property={this.props.property} propertyPath={this.props.propertyPath} config={this.configMinus(this.props.config, ['propertyReactor'])} onCreateIndividualObject={this.handleCreateIndividualObject.bind(this)} onDeleteIndividualObject={this.handleDeleteIndividualObject.bind(this)} onUpdateIndividualObject={this.handleUpdateIndividualObject.bind(this)} onDetailCreateIndividualObject={this.handleDetailCreateIndividualObject.bind(this)} onDetailUpdateIndividualObject={this.handleDetailUpdateIndividualObject.bind(this)} onUpdateAggObject={this.handleUpdateAggObject.bind(this)} onDeleteAggObject={this.handleDeleteAggObject.bind(this)}/>;
+                    propertyReactor = <IndividualProperty spec={this.props.spec} enableAuthentication={this.props.enableAuthentication} readOnly={this.props.readOnly} datasetURI={this.props.datasetURI} resource={this.props.resource} property={this.props.property} propertyPath={this.props.propertyPath} config={this.configMinus(this.props.config, ['propertyReactor'])} onCreateIndividualObject={this.handleCreateIndividualObject.bind(this)} onDeleteIndividualObject={this.handleDeleteIndividualObject.bind(this)} onUpdateIndividualObject={this.handleUpdateIndividualObject.bind(this)} onDetailCreateIndividualObject={this.handleDetailCreateIndividualObject.bind(this)} onDetailUpdateIndividualObject={this.handleDetailUpdateIndividualObject.bind(this)} onUpdateAggObject={this.handleUpdateAggObject.bind(this)} onDeleteAggObject={this.handleDeleteAggObject.bind(this)}/>;
             }
         }
         return (

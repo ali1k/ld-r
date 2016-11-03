@@ -3,7 +3,7 @@ import {getEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services
 import rp from 'request-promise';
 
 class DynamicConfigurator {
-    prepareDynamicDatasetConfig(graphName, callback) {
+    prepareDynamicDatasetConfig(datasetURI, callback) {
         let config = {dataset: {}};
         //do not config if disabled
         if(!enableDynamicConfiguration){
@@ -21,7 +21,7 @@ class DynamicConfigurator {
         SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue WHERE { GRAPH <${configDatasetURI}>
                 {
                 ?config a ldr:ReactorConfig ;
-                        ldr:dataset <${graphName}> ;
+                        ldr:dataset <${datasetURI}> ;
                         ldr:scope ?scope ;
                         rdfs:label ?label ;
                         ?setting ?settingValue .
@@ -37,7 +37,7 @@ class DynamicConfigurator {
         let self = this;
         rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
             //console.log(res);
-            config = self.parseDatasetConfigs(config, graphName, res);
+            config = self.parseDatasetConfigs(config, datasetURI, res);
             callback(config);
         }).catch(function (err) {
             console.log('Error in dataset config query:', prefixes + query);
@@ -45,7 +45,7 @@ class DynamicConfigurator {
             callback(config);
         });
     }
-    prepareDynamicResourceConfig(graphName, resourceURI, resourceType, callback) {
+    prepareDynamicResourceConfig(datasetURI, resourceURI, resourceType, callback) {
         let config = {resource: {}, dataset_resource: {}};
         //do not config if disabled
         if(!enableDynamicConfiguration){
@@ -119,7 +119,7 @@ class DynamicConfigurator {
         });
 
     }
-    prepareDynamicPropertyConfig(graphName, resourceURI, resourceType, propertyURI, callback) {
+    prepareDynamicPropertyConfig(datasetURI, resourceURI, resourceType, propertyURI, callback) {
         let config = {property: {}, dataset_property: {}, resource_property: {}, dataset_resource_property: {}};
         //do not config if disabled
         if(!enableDynamicConfiguration){
@@ -277,22 +277,22 @@ class DynamicConfigurator {
         });
         return output;
     }
-    parseDatasetConfigs(config, graphName, body) {
+    parseDatasetConfigs(config, datasetURI, body) {
         let output = config;
         let parsed = JSON.parse(body);
         parsed.results.bindings.forEach(function(el) {
             if(el.scope.value === 'D'){
-                if(!output.dataset[graphName]){
-                    output.dataset[graphName] = {};
+                if(!output.dataset[datasetURI]){
+                    output.dataset[datasetURI] = {};
                 }
                 //assume that all values will be stored in an array expect numbers: Not-a-Number
                 if(!isNaN(el.settingValue.value)){
-                    output.dataset[graphName][el.setting.value.split('#')[1]]= parseInt(el.settingValue.value);
+                    output.dataset[datasetURI][el.setting.value.split('#')[1]]= parseInt(el.settingValue.value);
                 }else{
-                    if(!output.dataset[graphName][el.setting.value.split('#')[1]]){
-                        output.dataset[graphName][el.setting.value.split('#')[1]] = []
+                    if(!output.dataset[datasetURI][el.setting.value.split('#')[1]]){
+                        output.dataset[datasetURI][el.setting.value.split('#')[1]] = []
                     }
-                    output.dataset[graphName][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                    output.dataset[datasetURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
                 }
             }
         });

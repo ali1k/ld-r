@@ -130,7 +130,7 @@ export default {
                     objectIViewer: ['PasswordView'],
                     objectIEditor: ['PasswordInput']
                 },
-                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfGraph': {
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfDataset': {
                     label: ['Editor of Graph'],
                     allowNewValue: 1
                 },

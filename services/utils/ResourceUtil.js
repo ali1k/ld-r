@@ -271,7 +271,7 @@ class ResourceUtil {
         //------ permission check functions---------------
     deleteAdminProperties(list) {
         let out = []
-        const adminProps = ['https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isSuperUser', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isActive', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfGraph', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfProperty', 'http://purl.org/dc/terms/created'];
+        const adminProps = ['https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isSuperUser', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isActive', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfDataset', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfProperty', 'http://purl.org/dc/terms/created'];
         list.forEach(function(el) {
             if (adminProps.indexOf(el.propertyURI) === -1) {
                 out.push(el);
@@ -296,7 +296,7 @@ class ResourceUtil {
                 type: 'full'
             };
         } else {
-            if (graph && user.editorOfGraph.indexOf(graph) !== -1) {
+            if (graph && user.editorOfDataset.indexOf(graph) !== -1) {
                 return {
                     access: true,
                     type: 'full'

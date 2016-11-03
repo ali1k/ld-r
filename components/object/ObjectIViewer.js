@@ -32,10 +32,10 @@ class ObjectIViewer extends React.Component {
             //go to extended view
             switch (extendedViewerConfig) {
                 case 'BasicIndividualDetailView':
-                    extendedViewer = <BasicIndividualDetailView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
+                    extendedViewer = <BasicIndividualDetailView datasetURI={this.props.datasetURI} spec={this.props.spec} config={this.props.config}/>;
                     break;
                 default:
-                    extendedViewer = <BasicIndividualDetailView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
+                    extendedViewer = <BasicIndividualDetailView datasetURI={this.props.datasetURI} spec={this.props.spec} config={this.props.config}/>;
             }
         }
         //always go for linked view when it has extensions (and when BasicIndividualView is selected)
@@ -64,10 +64,10 @@ class ObjectIViewer extends React.Component {
                 viewer = <BasicDateTimeView spec={this.props.spec} config={this.props.config}/>;
                 break;
             case 'BasicLinkedIndividualView':
-                viewer = <BasicLinkedIndividualView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config} propertyPath={propertyPath} category={category}/>;
+                viewer = <BasicLinkedIndividualView datasetURI={this.props.datasetURI} spec={this.props.spec} config={this.props.config} propertyPath={propertyPath} category={category}/>;
                 break;
             case 'PasswordView':
-                viewer = <PasswordView graphName={this.props.graphName} spec={this.props.spec} config={this.props.config}/>;
+                viewer = <PasswordView datasetURI={this.props.datasetURI} spec={this.props.spec} config={this.props.config}/>;
                 break;
             case 'BasicDBpediaView':
                 viewer = <BasicDBpediaView spec={this.props.spec} config={this.props.config}/>;

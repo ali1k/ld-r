@@ -4,8 +4,8 @@ export default {
     //short page title
     appShortTitle: ['LD-R'],
 
-    //Default Named Graph under observation, if not set , will consider all existing graph names
-    defaultGraphName: [''],
+    //Default Dataset under observation, if not set , will consider all existing graph names
+    defaultDatasetURI: [''],
 
     //will prevent access if not logged in
     enableAuthentication: 0,

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {navigateAction} from 'fluxible-router';
-import {defaultGraphName, authDatasetURI, enableAuthentication, configDatasetURI} from '../configs/general';
+import {defaultDataseURI, authDatasetURI, enableAuthentication, configDatasetURI} from '../configs/general';
 import {config} from '../configs/reactor';
 import {facets} from '../configs/facets';
 import URIUtil from './utils/URIUtil';
@@ -53,7 +53,7 @@ class Datasets extends React.Component {
                     if(graph !== authDatasetURI[0] && graph !== configDatasetURI[0] && graph !== 'generic'){
                         dfl = '';
                         brws = '';
-                        if(graph === defaultGraphName[0]){
+                        if(graph === defaultDataseURI[0]){
                             dfl = <i className="ui teal flag icon" title="default dataset"></i>;
                         }
                         if(dss.indexOf(graph) === -1){
@@ -72,7 +72,7 @@ class Datasets extends React.Component {
                     if(dss.indexOf(graph) === -1){
                         brws = '';
                         dfl = '';
-                        if(graph === defaultGraphName[0]){
+                        if(graph === defaultDataseURI[0]){
                             dfl = <i className="ui green flag icon" title="default dataset"></i>;
                         }
                         if(dss.indexOf(graph) === -1){
@@ -84,8 +84,8 @@ class Datasets extends React.Component {
                 }
             }
             if(!dss.length){
-                if(defaultGraphName[0]){
-                    output.push(<div className="ui item" key={defaultGraphName[0]}> <div className="content"> <i className="ui blue icon cubes"></i> <a href={'/dataset/1/' + encodeURIComponent(defaultGraphName[0])} title="go to resource list">{defaultGraphName[0]}</a> </div> </div>);
+                if(defaultDataseURI[0]){
+                    output.push(<div className="ui item" key={defaultDataseURI[0]}> <div className="content"> <i className="ui blue icon cubes"></i> <a href={'/dataset/1/' + encodeURIComponent(defaultDataseURI[0])} title="go to resource list">{defaultDataseURI[0]}</a> </div> </div>);
                 }else{
                     //no graph name is specified
                     output.push(<div className="ui big item" key="empty" > <div className="content">  Your config is empty!<a href={'/dataset/'}> <span className="ui big blue label">See all resources in all local datasets</span></a></div> </div>);
