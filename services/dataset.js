@@ -10,7 +10,7 @@ const outputFormat = 'application/sparql-results+json';
 const headers = {'Accept': 'application/sparql-results+json'};
 let user;
 /*-----------------------------------*/
-let endpointParameters, cGraphName, datasetURI, dg, graphName, query, queryObject, utilObject, configurator, propertyURI;
+let endpointParameters, datasetURI, dg, graphName, query, queryObject, utilObject, configurator, propertyURI;
 queryObject = new DatasetQuery();
 utilObject = new DatasetUtil();
 configurator = new Configurator();
