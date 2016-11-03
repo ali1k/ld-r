@@ -14,7 +14,12 @@ let prepareDGFunc = function (datasetURI){
         if(sparqlEndpoint[d].graphName){
             g = sparqlEndpoint[d].graphName;
         }else{
-            g = d;
+            if(d === 'generic'){
+                g = 'default';
+            }else{
+                g = d;
+            }
+
         }
     }else{
         //go for generic SPARQL endpoint
