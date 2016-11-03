@@ -40,7 +40,7 @@ export default {
         }
     },
     datasets: {
-        //if no id is provided -> will start by defaultDataseURI in reactor.config
+        //if no id is provided -> will start by defaultDatasetURI in reactor.config
         path: '/datasets',
         method: 'get',
         handler: require('../components/Datasets'),
@@ -51,7 +51,7 @@ export default {
         }
     },
     dataset: {
-        //if no id is provided -> will start by defaultDataseURI in reactor.config
+        //if no id is provided -> will start by defaultDatasetURI in reactor.config
         path: '/dataset/:page?/:id?',
         method: 'get',
         handler: require('../components/reactors/DatasetReactor'),
