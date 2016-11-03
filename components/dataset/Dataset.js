@@ -29,21 +29,21 @@ class Dataset extends React.Component {
             }
         }
         let datasetTitle;
-        if(this.props.graphName){
-            datasetTitle = <a target="_blank" href={this.props.graphName}> {this.props.graphName} </a>;
+        if(this.props.datasetURI){
+            datasetTitle = <a target="_blank" href={this.props.datasetURI}> {this.props.datasetURI} </a>;
             if(this.props.config && this.props.config.datasetLabel){
-                datasetTitle = <a target="_blank" href={this.props.graphName}> {this.props.config.datasetLabel} </a>;
+                datasetTitle = <a target="_blank" href={this.props.datasetURI}> {this.props.config.datasetLabel} </a>;
             }
         }
         return (
             <div className="ui page grid" ref="dataset">
                 <div className="ui column">
                     <div className="ui segment top attached">
-                        <h3>{this.props.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.graphName)}><span className="ui big black circular label">{this.addCommas(this.props.total)}</span></a> : ''} Resources of type {typeSt} in {datasetTitle ? datasetTitle : ' all local datasets'}</h3>
-                        <ResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} graphName={this.props.graphName} isBig={true} config={this.props.config}/>
+                        <h3>{this.props.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI)}><span className="ui big black circular label">{this.addCommas(this.props.total)}</span></a> : ''} Resources of type {typeSt} in {datasetTitle ? datasetTitle : ' all local datasets'}</h3>
+                        <ResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={true} config={this.props.config}/>
                     </div>
                     <div className= "ui secondary segment bottom attached">
-                        <ResourceListPager graphName={this.props.graphName} total={this.props.total} threshold={10} currentPage={this.props.page} maxNumberOfResourcesOnPage={this.props.config.maxNumberOfResourcesOnPage}/>
+                        <ResourceListPager datasetURI={this.props.datasetURI} total={this.props.total} threshold={10} currentPage={this.props.page} maxNumberOfResourcesOnPage={this.props.config.maxNumberOfResourcesOnPage}/>
                     </div>
                 </div>
             </div>

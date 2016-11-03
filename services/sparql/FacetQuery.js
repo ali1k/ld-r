@@ -20,7 +20,7 @@ class FacetQuery{
         //---to support resource focus types
         let st_extra = this.makeExtraTypeFilters(endpointParameters, type);
         st = st + ' ' + st_extra;
-        if(String(graphName)!=='' && graphName){
+        if(graphName && String(graphName)!=='default'){
             /*jshint multistr: true */
             this.query = '\
             SELECT (count(?s) AS ?total) ?v WHERE {\
@@ -154,7 +154,7 @@ class FacetQuery{
     getSideEffects(endpointParameters, graphName, type, propertyURI, prevSelection) {
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
         st = st + '?s <'+ propertyURI + '>  ?v.';
-        if(String(graphName)!=='' && graphName){
+        if(graphName && String(graphName)!=='default'){
             /*jshint multistr: true */
             this.query = '\
             SELECT (count(?s) AS ?total) ?v WHERE {\
@@ -177,7 +177,7 @@ class FacetQuery{
     }
     countSecondLevelPropertyValues(endpointParameters, graphName, type, propertyURI, prevSelection) {
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
-        if(String(graphName)!=='' && graphName){
+        if(graphName && String(graphName)!=='default'){
             /*jshint multistr: true */
             this.query = '\
             SELECT (count(?s) AS ?total) WHERE {\
@@ -221,7 +221,7 @@ class FacetQuery{
             }
         }
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
-        if(String(graphName)!=='' && graphName){
+        if(graphName && String(graphName)!=='default'){
             /*jshint multistr: true */
             this.query = '\
             SELECT DISTINCT ?s ' + selectStr + ' WHERE {\

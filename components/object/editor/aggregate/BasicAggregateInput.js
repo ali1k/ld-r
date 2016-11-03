@@ -25,7 +25,7 @@ class BasicAggregateInput extends React.Component {
                 return undefined; // stop processing this iteration
             }
             return (
-                <div key={index} className="ui form grid"> <div className="twelve wide column field"> <ObjectIEditor spec={node} config={self.props.config} graphName={self.props.graphName} onDataEdit={self.handleDataEdit.bind(self, index, node.value, node.valueType, node.dataType)} onEnterPress={self.handleEnterPress.bind(this)}/> </div> <div className="two wide column field"> <BasicCheckbox onToggle={self.checkBox.bind(self, index)}/> </div> </div>
+                <div key={index} className="ui form grid"> <div className="twelve wide column field"> <ObjectIEditor spec={node} config={self.props.config} datasetURI={self.props.datasetURI} onDataEdit={self.handleDataEdit.bind(self, index, node.value, node.valueType, node.dataType)} onEnterPress={self.handleEnterPress.bind(this)}/> </div> <div className="two wide column field"> <BasicCheckbox onToggle={self.checkBox.bind(self, index)}/> </div> </div>
             );
         });
         return (

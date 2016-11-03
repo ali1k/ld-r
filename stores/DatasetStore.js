@@ -7,6 +7,7 @@ class DatasetStore extends BaseStore {
     updateResourceList(payload) {
         this.dataset = {
             graphName: payload.graphName,
+            datasetURI: payload.datasetURI,
             resources: payload.resources,
             page: payload.page,
             config: payload.config,

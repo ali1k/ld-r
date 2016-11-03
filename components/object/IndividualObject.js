@@ -56,7 +56,7 @@ class IndividualObject extends React.Component {
             category = this.props.config.category;
         }
         this.context.executeAction(navigateAction, {
-            url: '/dataset/' + encodeURIComponent(this.props.graphName) + '/resource/' + encodeURIComponent(this.props.spec.value) + '/' + category + '/' + encodeURIComponent([this.props.resource, this.props.property])
+            url: '/dataset/' + encodeURIComponent(this.props.datasetURI) + '/resource/' + encodeURIComponent(this.props.spec.value) + '/' + category + '/' + encodeURIComponent([this.props.resource, this.props.property])
         });
     }
     handleEdit() {
@@ -170,7 +170,7 @@ class IndividualObject extends React.Component {
         if (this.state.inEditMode) {
             dataEditType = <ObjectIEditor isDefault={false} resource={this.props.resource} property={this.props.property} spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onDetailDataEdit={this.handleDetailDataEdit.bind(this)} onEnterPress={this.handleSave.bind(this)}/>;
         }else{
-            dataViewType = <ObjectIViewer onObjectClick={this.handleOnObjectClick.bind(this)} graphName={this.props.graphName} spec={this.props.spec} config={this.props.config} resource={this.props.resource} property={this.props.property}/>;
+            dataViewType = <ObjectIViewer onObjectClick={this.handleOnObjectClick.bind(this)} datasetURI={this.props.datasetURI} spec={this.props.spec} config={this.props.config} resource={this.props.resource} property={this.props.property}/>;
         }
         let editDIV, saveDIV, undoDIV, detailDIV, deleteDIV;
         //disable edit in readOnly mode

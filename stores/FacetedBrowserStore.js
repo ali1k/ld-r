@@ -12,6 +12,7 @@ class FacetedBrowserStore extends BaseStore {
         this.total = 0;
         this.page = 1;
         this.graphName = '';
+        this.datasetURI = '';
     }
     clearFacets() {
         this.clearAll();
@@ -27,6 +28,7 @@ class FacetedBrowserStore extends BaseStore {
         this.total = payload.total;
         this.page = payload.page;
         this.graphName = payload.graphName;
+        this.datasetURI = payload.datasetURI;
         this.isComplete = 1;
         this.emitChange();
     }
@@ -39,6 +41,7 @@ class FacetedBrowserStore extends BaseStore {
         }
         this.page = payload.page;
         this.graphName = payload.graphName;
+        this.datasetURI = payload.datasetURI;
         this.isComplete = 1;
         this.emitChange();
     }
@@ -46,6 +49,7 @@ class FacetedBrowserStore extends BaseStore {
         this.facets[payload.facets.propertyURI] = payload.facets.items;
         this.page = payload.page;
         this.graphName = payload.graphName;
+        this.datasetURI = payload.datasetURI;
         this.isComplete = 1;
         this.emitChange();
     }
@@ -54,6 +58,7 @@ class FacetedBrowserStore extends BaseStore {
         return {
             facets: this.facets,
             graphName: this.graphName,
+            datasetURI: this.datasetURI,
             resources: this.resources,
             total: this.total,
             page: this.page,
@@ -66,6 +71,7 @@ class FacetedBrowserStore extends BaseStore {
     rehydrate(state) {
         this.facets = state.facets;
         this.graphName = state.graphName;
+        this.datasetURI = state.datasetURI;
         this.resources = state.resources;
         this.total = state.total;
         this.page = state.page;

@@ -1,45 +1,60 @@
 import {sparqlEndpoint} from '../../configs/server';
+import {defaultGraphName} from '../../configs/general';
 import validUrl from 'valid-url';
 import queryString from 'query-string';
-export default {
-    getHTTPOptions: function(graphName) {
-        let httpOptions, g;
-        if(sparqlEndpoint[graphName]){
-            g = graphName;
+
+let prepareDGFunc = function (datasetURI){
+    let d = datasetURI, g = datasetURI;
+    //try default graph if no datasetURI is given
+    if(!d && String(defaultGraphName[0]) !==''){
+        d = defaultGraphName[0];
+        g = defaultGraphName[0];
+    }
+    if(sparqlEndpoint[d]){
+        if(sparqlEndpoint[d].graphName){
+            g = sparqlEndpoint[d].graphName;
         }else{
-            //go for generic SPARQL endpoint
-            g = 'generic';
+            g = d;
         }
+    }else{
+        //go for generic SPARQL endpoint
+        if(sparqlEndpoint['generic'].graphName){
+            g = sparqlEndpoint['generic'].graphName;
+        }else{
+            g = d;
+        }
+        d = 'generic';
+    }
+    return {d: d, g: g};
+}
+
+export default {
+    //returns dataset and graphName
+    prepareDG: function (datasetURI){
+        return prepareDGFunc(datasetURI);
+    },
+    getHTTPOptions: function(datasetURI) {
+        let httpOptions, {d, g} = prepareDGFunc(datasetURI);
         httpOptions = {
-          host: sparqlEndpoint[g].host,
-          port: sparqlEndpoint[g].port,
-          path: sparqlEndpoint[g].path
+            host: sparqlEndpoint[d].host,
+            port: sparqlEndpoint[d].port,
+            path: sparqlEndpoint[d].path
         };
         return httpOptions;
     },
-    getEndpointParameters: function(graphName) {
-        let httpOptions, g;
-        if(sparqlEndpoint[graphName]){
-            g = graphName;
-        }else{
-            //go for generic SPARQL endpoint
-            g = 'generic';
-        }
+    getEndpointParameters: function(datasetURI) {
+        let httpOptions, {d, g} = prepareDGFunc(datasetURI);
         httpOptions = {
-          host: sparqlEndpoint[g].host,
-          port: sparqlEndpoint[g].port,
-          path: sparqlEndpoint[g].path
+            host: sparqlEndpoint[d].host,
+            port: sparqlEndpoint[d].port,
+            path: sparqlEndpoint[d].path
         };
-        let useDefaultGraph = 0;
-        if(sparqlEndpoint[g].useDefaultGraph){
-            useDefaultGraph = 1;
-        }
         let useReasoning = 0;
-        if(sparqlEndpoint[g].useReasoning){
+        if(sparqlEndpoint[d].useReasoning){
             useReasoning = 1;
         }
-        let etype = sparqlEndpoint[g].type ? sparqlEndpoint[g].type : 'virtuoso';
-        return {httpOptions: httpOptions, type: etype, useDefaultGraph: useDefaultGraph, useReasoning: useReasoning};
+        let etype = sparqlEndpoint[d].type ? sparqlEndpoint[d].type : 'virtuoso';
+        return {httpOptions: httpOptions, type: etype, graphName: g, useReasoning: useReasoning};
     },
     //build the write URI and params for different SPARQL endpoints
     getHTTPQuery: function(mode, query, endpointParameters, outputFormat) {

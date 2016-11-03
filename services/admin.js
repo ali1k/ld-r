@@ -1,6 +1,6 @@
 'use strict';
-import {getEndpointParameters, getHTTPQuery, getHTTPGetURL} from './utils/helpers';
-import {authGraphName, enableAuthentication, enableEmailNotifications} from '../configs/general';
+import {prepareDG, getEndpointParameters, getHTTPQuery, getHTTPGetURL} from './utils/helpers';
+import {authDatasetURI, enableAuthentication, enableEmailNotifications} from '../configs/general';
 import {sendMail} from '../plugins/email/handleEmail';
 import AdminQuery from './sparql/AdminQuery';
 import AdminUtil from './utils/AdminUtil';
@@ -10,7 +10,7 @@ let user;
 const headers = {'Accept': 'application/sparql-results+json'};
 const outputFormat = 'application/sparql-results+json';
 /*-----------------------------------*/
-let endpointParameters, graphName, query, queryObject, utilObject;
+let endpointParameters, dg, graphName, datasetURI, query, queryObject, utilObject;
 queryObject = new AdminQuery();
 utilObject = new AdminUtil();
 
@@ -20,15 +20,18 @@ export default {
     read: (req, resource, params, config, callback) => {
         if (resource === 'admin.userslist') {
             //SPARQL QUERY
-            graphName = (params.id ? params.id : authGraphName[0]);
+            datasetURI = (params.id ? params.id : authDatasetURI[0]);
+            dg = prepareDG(datasetURI);
+            datasetURI = dg.d;
+            graphName = dg.g;
             if(enableAuthentication){
                 if(!req.user){
-                    callback(null, {graphName: graphName, users: []});
+                    callback(null, {datasetURI: datasetURI, graphName: graphName, users: []});
                 }else{
                     user = req.user;
                     //only super users have access to admin services
                     if(!parseInt(user.isSuperUser)){
-                        callback(null, {graphName: graphName, users: []});
+                        callback(null, {datasetURI: datasetURI, graphName: graphName, users: []});
                     }
                 }
             }else{
@@ -36,16 +39,17 @@ export default {
             }
             query = queryObject.getUsers(graphName);
             //build http uri
-            endpointParameters = getEndpointParameters(graphName);
+            endpointParameters = getEndpointParameters(datasetURI);
             //send request
             rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                 callback(null, {
+                    datasetURI: datasetURI,
                     graphName: graphName,
                     users: utilObject.parseUsers(res)
                 });
             }).catch(function (err) {
                 console.log(err);
-                callback(null, {graphName: graphName, users: []});
+                callback(null, {datasetURI: datasetURI, graphName: graphName, users: []});
             });
         }else if(resource === 'admin.others'){
             console.log('other services');
@@ -69,8 +73,11 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            endpointParameters = getEndpointParameters(authGraphName[0]);
-            query = queryObject.activateUser(endpointParameters.type, authGraphName[0], params.resourceURI);
+            dg = prepareDG(authDatasetURI[0]);
+            datasetURI = dg.d;
+            graphName = dg.g;
+            endpointParameters = getEndpointParameters(datasetURI);
+            query = queryObject.activateUser(endpointParameters.type, graphName, params.resourceURI);
             //build http uri
             //send request
             HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);

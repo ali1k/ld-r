@@ -53,7 +53,7 @@ class Facet extends React.Component {
                     </div>
                     <div className="description">
                         <div className="ui form" style={descStyle}>
-                            <ObjectBrowser shortenURI={true} spec={newSpec} config={this.props.config} onSelect={this.checkItem.bind(this)} graphName={this.props.graphName}/>
+                            <ObjectBrowser shortenURI={true} spec={newSpec} config={this.props.config} onSelect={this.checkItem.bind(this)} datasetURI={this.props.datasetURI}/>
                         </div>
                     </div>
                   </div>

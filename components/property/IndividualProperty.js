@@ -40,7 +40,7 @@ class IndividualProperty extends React.Component {
         if(this.props.config && this.props.config.allowNewValue && !this.props.readOnly){
             propLabel = this.props.config.label ? this.props.config.label : this.props.spec.property;
             if(this.state.inNewValueMode){
-                defaultValueDIV = <ObjectReactor isNewValue={true} inEditMode={true} key="defaultValue" spec={this.simulateDefaultValue()} config={this.props.config} graphName={this.props.graphName} resource={this.props.resource} property={this.props.property} readOnly={false} onCreateIndividualObject={this.props.onCreateIndividualObject.bind(this)}/>;
+                defaultValueDIV = <ObjectReactor isNewValue={true} inEditMode={true} key="defaultValue" spec={this.simulateDefaultValue()} config={this.props.config} datasetURI={this.props.datasetURI} resource={this.props.resource} property={this.props.property} readOnly={false} onCreateIndividualObject={this.props.onCreateIndividualObject.bind(this)}/>;
                 newValueDIV = <div className="ui list">
                                         <div className="item">
                                             <div onClick={this.handleCancelNewIndividualObject.bind(this)} className="medium ui basic icon labeled button">
@@ -69,7 +69,7 @@ class IndividualProperty extends React.Component {
                 </div>
                 <div className="ui dividing header"></div>
                 <div className="property-objects">
-                    <ObjectReactor enableAuthentication={this.props.enableAuthentication} readOnly={this.props.readOnly} inEditMode={this.props.inEditMode} graphName={this.props.graphName} resource={this.props.resource} property={this.props.property} propertyPath={this.props.propertyPath} spec={this.props.spec} config={this.props.config} onCreateIndividualObject={this.props.onCreateIndividualObject.bind(this)} onDeleteIndividualObject={this.props.onDeleteIndividualObject.bind(this)} onUpdateIndividualObject={this.props.onUpdateIndividualObject.bind(this)} onDetailCreateIndividualObject={this.props.onDetailCreateIndividualObject.bind(this)} onDetailUpdateIndividualObject={this.props.onDetailUpdateIndividualObject.bind(this)} onUpdateAggObject={this.props.onUpdateAggObject.bind(this)} onDeleteAggObject={this.props.onDeleteAggObject.bind(this)} onControlNewInsert={this.controlNewInsert.bind(this)}/>
+                    <ObjectReactor enableAuthentication={this.props.enableAuthentication} readOnly={this.props.readOnly} inEditMode={this.props.inEditMode} datasetURI={this.props.datasetURI} resource={this.props.resource} property={this.props.property} propertyPath={this.props.propertyPath} spec={this.props.spec} config={this.props.config} onCreateIndividualObject={this.props.onCreateIndividualObject.bind(this)} onDeleteIndividualObject={this.props.onDeleteIndividualObject.bind(this)} onUpdateIndividualObject={this.props.onUpdateIndividualObject.bind(this)} onDetailCreateIndividualObject={this.props.onDetailCreateIndividualObject.bind(this)} onDetailUpdateIndividualObject={this.props.onDetailUpdateIndividualObject.bind(this)} onUpdateAggObject={this.props.onUpdateAggObject.bind(this)} onDeleteAggObject={this.props.onDeleteAggObject.bind(this)} onControlNewInsert={this.controlNewInsert.bind(this)}/>
                 </div>
                 {defaultValueDIV}
                 {(this.state.showNewInsert ? newValueDIV : '')}

@@ -81,7 +81,7 @@ class ResourceQuery{
     }
     getProperties(graphName, resourceURI) {
         let ex = 'FROM <'+ graphName +'>';
-        if(!graphName){
+        if(!graphName || graphName === 'default'){
             ex ='';
         }
         /*jshint multistr: true */
@@ -97,7 +97,7 @@ class ResourceQuery{
         let newValue, tmp = {};
         let graph = 'GRAPH <'+ graphName +'> { ';
         let graphEnd = ' } ';
-        if(!graphName){
+        if(!graphName || graphName === 'default'){
             graph =' ';
             graphEnd = ' ';
         }
@@ -113,7 +113,7 @@ class ResourceQuery{
         //todo: consider different value types
       let newValue, tmp = {};
       let graph = 'INTO <'+ graphName +'> ';
-      if(!graphName){
+      if(!graphName || graphName === 'default'){
           graph ='';
       }
       tmp = getQueryDataTypeValue(valueType, dataType, objectValue);
@@ -128,7 +128,7 @@ class ResourceQuery{
         let dtype, newValue, tmp = {};
         let graph = 'GRAPH <'+ graphName +'> {';
         let graphEnd = ' } ';
-        if(!graphName){
+        if(!graphName || graphName === 'default'){
             graph = ' ';
             graphEnd = ' ';
         }
@@ -146,7 +146,7 @@ class ResourceQuery{
     deleteTriple(graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
         let dtype, newValue, tmp = {};
         let graph = 'FROM <'+ graphName +'> ';
-        if(!graphName){
+        if(!graphName || graphName === 'default'){
             graph ='';
         }
         if(objectValue){

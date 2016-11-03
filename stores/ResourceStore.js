@@ -9,6 +9,7 @@ class ResourceStore extends BaseStore {
     }
     updatePropertyList(payload) {
         this.graphName = payload.graphName;
+        this.datasetURI = payload.datasetURI;
         this.resourceURI = payload.resourceURI;
         this.resourceType = payload.resourceType;
         this.currentCategory = payload.currentCategory;
@@ -22,6 +23,7 @@ class ResourceStore extends BaseStore {
     }
     cleanAll() {
         this.properties = [];
+        this.datasetURI = '';
         this.graphName = '';
         this.currentCategory = 0;
         this.resourceURI = '';
@@ -42,6 +44,7 @@ class ResourceStore extends BaseStore {
     getState() {
         return {
             graphName: this.graphName,
+            datasetURI: this.datasetURI,
             resourceURI: this.resourceURI,
             resourceType: this.resourceType,
             title: this.title,
@@ -61,6 +64,7 @@ class ResourceStore extends BaseStore {
         this.resourceType = state.resourceType;
         this.title = state.title;
         this.graphName = state.graphName;
+        this.datasetURI = state.datasetURI;
         this.currentCategory = state.currentCategory;
         this.propertyPath = state.propertyPath;
         this.config = state.config;

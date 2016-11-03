@@ -10,7 +10,7 @@ export default {
     //will prevent access if not logged in
     enableAuthentication: 0,
     //graph that stores users data, must be loaded beforehand
-    authGraphName: ['http://ld-r.org/users'],
+    authDatasetURI: ['http://ld-r.org/users'],
     //will allow super users to confirm and activate regiastered users
     enableUserConfirmation: 0,
     //if enabled will allow a recaptcha box in the registration form
@@ -32,7 +32,7 @@ export default {
     //if set, will use the configs stored in a triple store and automatically configs the app
     enableDynamicConfiguration: 0,
     //graph that stores your configurations
-    configGraphName: ['http://ld-r.org/configurations'],
+    configDatasetURI: ['http://ld-r.org/configurations'],
     //will disable auto config
     disableAutomaticConfiguration: 0
 };

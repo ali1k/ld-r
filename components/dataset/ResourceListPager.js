@@ -11,7 +11,7 @@ class ResourceListPager extends React.Component {
             );
         }else{
             return (
-                <NavLink key={(icon ? ('i' + page) : page)} routeName="dataset" className={'ui ' + color + ' label'} href={'/dataset/' + page + '/' + encodeURIComponent(this.props.graphName)}> {icon ? <i className={icon}></i> : <span>{page}</span>} </NavLink>
+                <NavLink key={(icon ? ('i' + page) : page)} routeName="dataset" className={'ui ' + color + ' label'} href={'/dataset/' + page + '/' + encodeURIComponent(this.props.datasetURI)}> {icon ? <i className={icon}></i> : <span>{page}</span>} </NavLink>
             );
         }
     }
@@ -21,7 +21,7 @@ class ResourceListPager extends React.Component {
         if(!maxOnPage){
             maxOnPage = 20;
         }
-        let graphName = this.props.graphName;
+        let datasetURI = this.props.datasetURI;
         let i, startI, totalPages, threshold = this.props.threshold, currentPage, pageList = [];
         if(this.props.total){
             currentPage = parseInt(this.props.currentPage);

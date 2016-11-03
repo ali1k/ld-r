@@ -7,7 +7,7 @@ import Dataset from '../dataset/Dataset';
 
 class DatasetReactor extends React.Component {
     componentDidMount() {
-        this.context.executeAction(getResourcesCount, {id: this.props.DatasetStore.dataset.graphName});
+        this.context.executeAction(getResourcesCount, {id: this.props.DatasetStore.dataset.datasetURI});
     }
     //removes properties from an object
     configMinus(config, props) {
@@ -20,7 +20,7 @@ class DatasetReactor extends React.Component {
         return o;
     }
     render() {
-        let graphName = this.props.DatasetStore.dataset.graphName;
+        let datasetURI = this.props.DatasetStore.dataset.datasetURI;
         let resources = this.props.DatasetStore.dataset.resources;
         let page = this.props.DatasetStore.dataset.page;
         let total = this.props.DatasetStore.dataset.total;
@@ -29,10 +29,10 @@ class DatasetReactor extends React.Component {
         if(config && config.datasetReactor){
             switch(config.datasetReactor[0]){
                 case 'Dataset':
-                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} graphName={graphName} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])}/>;
+                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])}/>;
                 break;
                 default:
-                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} graphName={graphName} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])}/>;
+                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])}/>;
             }
         }
         return (

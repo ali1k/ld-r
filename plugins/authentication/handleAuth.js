@@ -1,31 +1,34 @@
 'use strict';
 //required for authentication
-var helper = require('./auth-helper');
-var passwordHash = require('password-hash');
-var passport = require ('passport');
-var passportConfig = require('./passport-config');
+let helper = require('./auth-helper');
+let passwordHash = require('password-hash');
+let passport = require ('passport');
+let passportConfig = require('./passport-config');
 passportConfig.enable(passport);
 //----------------------
-var handleEmail = require('../../plugins/email/handleEmail');
-var rp = require('request-promise');
-var config = require('../../configs/server');
-var generalConfig = require('../../configs/general');
-var httpOptions, g;
-if(config.sparqlEndpoint[generalConfig.authGraphName[0]]){
-    g = generalConfig.authGraphName[0];
-}else{
-    //go for generic SPARQL endpoint
-    g = 'generic';
-}
-httpOptions = {
-    host: config.sparqlEndpoint[g].host,
-    port: config.sparqlEndpoint[g].port,
-    path: config.sparqlEndpoint[g].path
-};
-var appShortTitle = generalConfig.appShortTitle;
-var appFullTitle = generalConfig.appFullTitle;
+let handleEmail = require('../../plugins/email/handleEmail');
+let rp = require('request-promise');
+let config = require('../../configs/server');
+let generalConfig = require('../../configs/general');
+let helpers = require('../../services/utils/helpers');
+let httpOptions;
 
-var outputFormat = 'application/sparql-results+json';
+let d = generalConfig.authDatasetURI[0], g = generalConfig.authDatasetURI[0];
+httpOptions = helpers.getHTTPOptions(d);
+let dg = helpers.prepareDG(d);
+d = dg.d;
+g = dg.g;
+let authGraphName = g;
+
+httpOptions = {
+    host: config.sparqlEndpoint[d].host,
+    port: config.sparqlEndpoint[d].port,
+    path: config.sparqlEndpoint[d].path
+};
+let appShortTitle = generalConfig.appShortTitle;
+let appFullTitle = generalConfig.appFullTitle;
+
+let outputFormat = 'application/sparql-results+json';
 module.exports = function handleAuthentication(server) {
     server.use(passport.initialize());
     server.use(passport.session());
@@ -58,7 +61,7 @@ module.exports = function handleAuthentication(server) {
         res.redirect('/');
     });
     server.get('/profile/:id', function(req, res) {
-        res.redirect('/dataset/' + encodeURIComponent(generalConfig.authGraphName)+'/resource/'+ encodeURIComponent(req.params.id));
+        res.redirect('/dataset/' + encodeURIComponent(generalConfig.authDatasetURI)+'/resource/'+ encodeURIComponent(req.params.id));
     });
     server.get('/confirmation', function(req, res) {
         if(!req.isAuthenticated()){
@@ -128,12 +131,12 @@ module.exports = function handleAuthentication(server) {
          }
      });
 };
-var addUserQueries = function (req, res, recaptchaSiteKey){
+let addUserQueries = function (req, res, recaptchaSiteKey){
     //first check if user already exists
     /*jshint multistr: true */
-    var query = '\
+    let query = '\
     PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-    SELECT ( COUNT(?s) AS ?exists ) FROM <'+ generalConfig.authGraphName[0] +'> WHERE { \
+    SELECT ( COUNT(?s) AS ?exists ) FROM <'+ authGraphName +'> WHERE { \
       { \
           ?s a foaf:Person . \
           ?s foaf:accountName "'+ req.body.username +'" .\
@@ -141,31 +144,31 @@ var addUserQueries = function (req, res, recaptchaSiteKey){
     } \
     ';
 
-    var endpoint = helper.getEndpointParameters([generalConfig.authGraphName[0]]);
-    var rpPath = helper.getHTTPQuery('read', query, endpoint, outputFormat);
+    let endpoint = helpers.getEndpointParameters([generalConfig.authDatasetURI[0]]);
+    let rpPath = helpers.getHTTPQuery('read', query, endpoint, outputFormat);
     //send request
     rp.get({uri: rpPath}).then(function(resq){
-        var parsed = JSON.parse(resq);
+        let parsed = JSON.parse(resq);
         if(parsed.results.bindings.length){
             if(parsed.results.bindings[0].exists.value ==='0'){
                 //register as new user
                 console.log('start registration');
-                var rnd = Math.round(+new Date() / 1000);
-                var resourceURI = generalConfig.baseResourceDomain + '/user/' + rnd;
-                var dresourceURI = generalConfig.baseResourceDomain + '/resource/' + rnd;
-                var dgraphURI = generalConfig.baseResourceDomain + '/graph/' + rnd;
-                var blanknode = generalConfig.baseResourceDomain + '/editorship/' + rnd;
-                var tmpE= [];
-                var isActive = generalConfig.enableUserConfirmation? 0 : 1;
-                var date = new Date();
-                var currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
+                let rnd = Math.round(+new Date() / 1000);
+                let resourceURI = generalConfig.baseResourceDomain + '/user/' + rnd;
+                let dresourceURI = generalConfig.baseResourceDomain + '/resource/' + rnd;
+                let dgraphURI = generalConfig.baseResourceDomain + '/graph/' + rnd;
+                let blanknode = generalConfig.baseResourceDomain + '/editorship/' + rnd;
+                let tmpE= [];
+                let isActive = generalConfig.enableUserConfirmation? 0 : 1;
+                let date = new Date();
+                let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
                 if(endpoint.type === 'sesame'){
                     /*jshint multistr: true */
                     query = '\
                     PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
                     PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
                     PREFIX dcterms: <http://purl.org/dc/terms/> \
-                    INSERT DATA { GRAPH <'+ generalConfig.authGraphName[0] +'> { \
+                    INSERT DATA { GRAPH <'+ authGraphName +'> { \
                     <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; foaf:mbox <mailto:'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfGraph <'+dgraphURI+'>; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1>;ldr:editorOfProperty <'+blanknode+'2>; ldr:editorOfProperty <'+blanknode+'3>; ldr:editorOfProperty <'+blanknode+'4> . \
                     <'+blanknode+'1> ldr:resource <'+resourceURI+'> ; ldr:property foaf:firstName . \
                     <'+blanknode+'2> ldr:resource <'+resourceURI+'> ; ldr:property foaf:lastName . \
@@ -179,7 +182,7 @@ var addUserQueries = function (req, res, recaptchaSiteKey){
                     PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
                     PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
                     PREFIX dcterms: <http://purl.org/dc/terms/> \
-                    INSERT DATA INTO <'+ generalConfig.authGraphName[0] +'> { \
+                    INSERT DATA INTO <'+ authGraphName +'> { \
                     <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; foaf:mbox <mailto:'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfGraph <'+dgraphURI+'>; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1>;ldr:editorOfProperty <'+blanknode+'2>; ldr:editorOfProperty <'+blanknode+'3>; ldr:editorOfProperty <'+blanknode+'4> . \
                     <'+blanknode+'1> ldr:resource <'+resourceURI+'> ; ldr:property foaf:firstName . \
                     <'+blanknode+'2> ldr:resource <'+resourceURI+'> ; ldr:property foaf:lastName . \

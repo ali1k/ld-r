@@ -16,15 +16,15 @@ class DatasetUtil {
         return property;
     }
 
-    parseResourcesByType(body, graphName) {
+    parseResourcesByType(body, datasetURI) {
         let output = [];
         let parsed = JSON.parse(body);
         if (parsed.results.bindings.length) {
-            if (String(graphName) === '') {
+            if (!datasetURI || String(datasetURI) === 'default') {
                 parsed.results.bindings.forEach(function(el) {
                     output.push({
                         v: el.resource.value,
-                        g: el.graphName ? el.graphName.value : 0,
+                        d: el.graphName ? el.graphName.value : 0,
                         title: el.title ? el.title.value : '',
                         label: el.label ? el.label.value : ''
                     });
@@ -33,7 +33,7 @@ class DatasetUtil {
                 parsed.results.bindings.forEach(function(el) {
                     output.push({
                         v: el.resource.value,
-                        g: graphName,
+                        d: datasetURI,
                         title: el.title ? el.title.value : '',
                         label: el.label ? el.label.value : ''
                     });

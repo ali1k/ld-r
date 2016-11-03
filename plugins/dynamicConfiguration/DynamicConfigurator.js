@@ -1,4 +1,4 @@
-import {enableDynamicConfiguration, configGraphName, disableAutomaticConfiguration} from '../../configs/general';
+import {enableDynamicConfiguration, configDatasetURI, disableAutomaticConfiguration} from '../../configs/general';
 import {getEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
 import rp from 'request-promise';
 
@@ -18,7 +18,7 @@ class DynamicConfigurator {
             PREFIX owl: <http://www.w3.org/2002/07/owl#>
         `;
         const query = `
-        SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue WHERE { GRAPH <${configGraphName}>
+        SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue WHERE { GRAPH <${configDatasetURI}>
                 {
                 ?config a ldr:ReactorConfig ;
                         ldr:dataset <${graphName}> ;
@@ -29,7 +29,7 @@ class DynamicConfigurator {
                 }
         }
         `;
-        const endpointParameters = getEndpointParameters(configGraphName);
+        const endpointParameters = getEndpointParameters(configDatasetURI);
         const headers = {'Accept': 'application/sparql-results+json'};
         const outputFormat = 'application/sparql-results+json';
         //send request
@@ -76,7 +76,7 @@ class DynamicConfigurator {
             PREFIX owl: <http://www.w3.org/2002/07/owl#>
         `;
         const query = `
-        SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?treatAsResourceType ?settingValue WHERE { GRAPH <${configGraphName}> {
+        SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?treatAsResourceType ?settingValue WHERE { GRAPH <${configDatasetURI}> {
                 {
                 ?config a ldr:ReactorConfig ;
                         ldr:resource ?resource ;
@@ -101,7 +101,7 @@ class DynamicConfigurator {
                 }
         }   } ORDER BY DESC(?treatAsResourceType)
         `;
-        const endpointParameters = getEndpointParameters(configGraphName);
+        const endpointParameters = getEndpointParameters(configDatasetURI);
         const headers = {'Accept': 'application/sparql-results+json'};
         const outputFormat = 'application/sparql-results+json';
         //send request
@@ -134,7 +134,7 @@ class DynamicConfigurator {
             PREFIX owl: <http://www.w3.org/2002/07/owl#>
         `;
         const query = `
-        SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?settingValue WHERE { GRAPH <${configGraphName}>
+        SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?settingValue WHERE { GRAPH <${configDatasetURI}>
                 {
                 ?config a ldr:ReactorConfig ;
                         ldr:property <${propertyURI}> ;
@@ -147,7 +147,7 @@ class DynamicConfigurator {
                 }
         }
         `;
-        const endpointParameters = getEndpointParameters(configGraphName);
+        const endpointParameters = getEndpointParameters(configDatasetURI);
         const headers = {'Accept': 'application/sparql-results+json'};
         const outputFormat = 'application/sparql-results+json';
         //send request

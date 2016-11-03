@@ -4,8 +4,8 @@ var config = require('../../configs/server');
 var generalConfig = require('../../configs/general');
 var helper = require('./auth-helper')
 var httpOptions, g;
-if(config.sparqlEndpoint[generalConfig.authGraphName[0]]){
-    g = generalConfig.authGraphName[0];
+if(config.sparqlEndpoint[generalConfig.authDatasetURI[0]]){
+    g = generalConfig.authDatasetURI[0];
 }else{
     //go for generic SPARQL endpoint
     g = 'generic';
@@ -36,7 +36,7 @@ module.exports = {
       var query = '\
       PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
       PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-      SELECT ?p ?o ?pr ?pp FROM <'+ generalConfig.authGraphName[0] +'> WHERE { \
+      SELECT ?p ?o ?pr ?pp FROM <'+ generalConfig.authDatasetURI[0] +'> WHERE { \
         { \
             <'+id+'> a foaf:Person . \
             <'+id+'> ?p ?o . \
@@ -45,7 +45,7 @@ module.exports = {
       } \
       ';
       //send request
-      var endpoint = helper.getEndpointParameters([generalConfig.authGraphName[0]]);
+      var endpoint = helper.getEndpointParameters([generalConfig.authDatasetURI[0]]);
       var rpPath = helper.getHTTPQuery('read', query, endpoint, outputFormat);
       rp.get({uri: rpPath}).then(function(res){
           var parsed = JSON.parse(res);
@@ -73,7 +73,7 @@ module.exports = {
             });
             //to not show password in session
             delete user.password;
-            user.graphName = generalConfig.authGraphName[0];
+            user.graphName = generalConfig.authDatasetURI[0];
             user.id = id;
             return fn(null, user);
           }
@@ -88,7 +88,7 @@ module.exports = {
       var query = '\
       PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
       PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-      SELECT ?s ?p ?o FROM <'+ generalConfig.authGraphName[0] +'> WHERE { \
+      SELECT ?s ?p ?o FROM <'+ generalConfig.authDatasetURI[0] +'> WHERE { \
         { \
             ?s a foaf:Person . \
             ?s foaf:accountName "'+ username +'" .\
@@ -96,7 +96,7 @@ module.exports = {
         } \
       } \
       ';
-      var endpoint = helper.getEndpointParameters([generalConfig.authGraphName[0]]);
+      var endpoint = helper.getEndpointParameters([generalConfig.authDatasetURI[0]]);
       var rpPath = helper.getHTTPQuery('read', query, endpoint, outputFormat);
       //send request
       rp.get({uri: rpPath}).then(function(res){
