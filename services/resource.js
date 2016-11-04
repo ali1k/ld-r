@@ -105,7 +105,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getPrefixes() + queryObject.getProperties(datasetURI, objectURI);
+            query = queryObject.getPrefixes() + queryObject.getProperties(graphName, objectURI);
             //build http uri
             //send request
             rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
