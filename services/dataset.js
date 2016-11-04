@@ -22,7 +22,6 @@ export default {
         if (resource === 'dataset.resourcesByType') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
             dg = prepareDG(datasetURI);
-            datasetURI = dg.d;
             graphName = dg.g;
             endpointParameters = getEndpointParameters(datasetURI);
             //config handler
@@ -50,7 +49,7 @@ export default {
                     callback(null, {
                         datasetURI: datasetURI,
                         graphName: graphName,
-                        resources: utilObject.parseResourcesByType(res, graphName),
+                        resources: utilObject.parseResourcesByType(res, datasetURI, graphName),
                         page: params.page,
                         config: rconfig
                     });
@@ -64,7 +63,6 @@ export default {
             //SPARQL QUERY
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
             dg = prepareDG(datasetURI);
-            datasetURI = dg.d;
             graphName = dg.g;
             endpointParameters = getEndpointParameters(datasetURI);
 
@@ -82,6 +80,7 @@ export default {
                     user = {accountName: 'open'};
                 }
                 query = queryObject.countResourcesByType(graphName, rconfig.resourceFocusType);
+
                 //build http uri
                 //send request
                 rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){

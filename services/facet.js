@@ -22,7 +22,6 @@ export default {
         if (resource === 'facet.facetsSideEffect') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
             dg = prepareDG(datasetURI);
-            datasetURI = dg.d;
             graphName = dg.g;
             endpointParameters = getEndpointParameters(datasetURI);
            //control access on authentication
@@ -55,7 +54,6 @@ export default {
         } else if (resource === 'facet.facetsMaster') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
             dg = prepareDG(datasetURI);
-            datasetURI = dg.d;
             graphName = dg.g;
             endpointParameters = getEndpointParameters(datasetURI);
            //control access on authentication
@@ -98,7 +96,6 @@ export default {
         } else if (resource === 'facet.facetsSecondLevel') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
             dg = prepareDG(datasetURI);
-            datasetURI = dg.d;
             graphName = dg.g;
             endpointParameters = getEndpointParameters(datasetURI);
             //config handler

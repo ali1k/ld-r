@@ -22,7 +22,6 @@ export default {
             //SPARQL QUERY
             datasetURI = (params.id ? params.id : authDatasetURI[0]);
             dg = prepareDG(datasetURI);
-            datasetURI = dg.d;
             graphName = dg.g;
             if(enableAuthentication){
                 if(!req.user){
@@ -73,8 +72,8 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            dg = prepareDG(authDatasetURI[0]);
-            datasetURI = dg.d;
+            datasetURI = authDatasetURI[0];
+            dg = prepareDG(datasetURI);
             graphName = dg.g;
             endpointParameters = getEndpointParameters(datasetURI);
             query = queryObject.activateUser(endpointParameters.type, graphName, params.resourceURI);

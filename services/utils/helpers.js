@@ -6,9 +6,10 @@ import queryString from 'query-string';
 let prepareDGFunc = function (datasetURI){
     let d = datasetURI, g = datasetURI;
     //try default graph if no datasetURI is given
-    if(!d && String(defaultDatasetURI[0]) !==''){
-        d = defaultDatasetURI[0];
-        g = defaultDatasetURI[0];
+    if(String(defaultDatasetURI[0]) !==''){
+        if(!d) {
+            d = defaultDatasetURI[0];
+        }
     }
     if(sparqlEndpoint[d]){
         if(sparqlEndpoint[d].graphName){
@@ -19,7 +20,6 @@ let prepareDGFunc = function (datasetURI){
             }else{
                 g = d;
             }
-
         }
     }else{
         //go for generic SPARQL endpoint

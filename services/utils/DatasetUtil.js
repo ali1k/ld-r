@@ -16,7 +16,7 @@ class DatasetUtil {
         return property;
     }
 
-    parseResourcesByType(body, graphName) {
+    parseResourcesByType(body, datasetURI, graphName) {
         let output = [];
         let parsed = JSON.parse(body);
         if (parsed.results.bindings.length) {
