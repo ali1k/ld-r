@@ -23,7 +23,7 @@ class FacetQuery{
         if(graphName && String(graphName)!=='default'){
             /*jshint multistr: true */
             this.query = '\
-            SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {\
+            SELECT (count(?s) AS ?total) ?v WHERE {\
                 { GRAPH <' + graphName + '> \
                     { '+ st +' \
                     } \
@@ -32,7 +32,7 @@ class FacetQuery{
             ';
         }else{
             this.query = '\
-            SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {\
+            SELECT (count(?s) AS ?total) ?v WHERE {\
                 { '+ st +' \
             }  \
             } GROUP BY ?v \
@@ -157,7 +157,7 @@ class FacetQuery{
         if(graphName && String(graphName)!=='default'){
             /*jshint multistr: true */
             this.query = '\
-            SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {\
+            SELECT (count(?s) AS ?total) ?v WHERE {\
                 { GRAPH <' + graphName + '> \
                     { '+ st +' \
                     } \
@@ -167,7 +167,7 @@ class FacetQuery{
         }else{
             /*jshint multistr: true */
             this.query = '\
-            SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {\
+            SELECT (count(?s) AS ?total) ?v WHERE {\
                 { '+ st +' \
                 } \
             } GROUP BY ?v \
@@ -180,7 +180,7 @@ class FacetQuery{
         if(graphName && String(graphName)!=='default'){
             /*jshint multistr: true */
             this.query = '\
-            SELECT (count(DISTINCT ?s) AS ?total) WHERE {\
+            SELECT (count(?s) AS ?total) WHERE {\
                 { GRAPH <' + graphName + '> \
                     { '+ st +' \
                     } \
@@ -190,7 +190,7 @@ class FacetQuery{
         }else{
             /*jshint multistr: true */
             this.query = '\
-            SELECT (count(DISTINCT ?s) AS ?total) WHERE {\
+            SELECT (count(?s) AS ?total) WHERE {\
                 { '+ st +' \
                 } \
             }\
