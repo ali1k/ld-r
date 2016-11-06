@@ -43,6 +43,7 @@ export default {
                     user = {accountName: 'open'};
                 }
                 query = queryObject.getResourcesByType(graphName, rconfig, maxOnPage, offset);
+                //console.log(query);
                 //build http uri
                 //send request
                 rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
@@ -80,7 +81,7 @@ export default {
                     user = {accountName: 'open'};
                 }
                 query = queryObject.countResourcesByType(graphName, rconfig.resourceFocusType);
-
+                //console.log(query);
                 //build http uri
                 //send request
                 rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){

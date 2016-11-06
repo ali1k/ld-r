@@ -120,6 +120,7 @@ export default {
                 if(params.mode === 'init'){
                     //get all resources
                     query = queryObject.countSecondLevelPropertyValues(endpointParameters, graphName, rftconfig.type, 0, {});
+                    //console.log(query);
                 }else{
                     query = queryObject.countSecondLevelPropertyValues(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
                 }
