@@ -11,28 +11,37 @@
 @prefix dbo: <http://dbpedia.org/ontology/> .
 
 #Resource URI config
-<https://ld-r.org/config/14a> a ldr:ReactorConfig;
+<https://ld-r.org/config/r14a> a ldr:ReactorConfig;
       ldr:scope "R" ;
       rdfs:label """dbr:Frank_van_Harmelen to PersonResource""" ;
       ldr:resource dbr:Frank_van_Harmelen ;
       ldr:resourceReactor "PersonResource" .
 #Resource Type config
-<https://ld-r.org/config/14b> a ldr:ReactorConfig;
+<https://ld-r.org/config/r14b> a ldr:ReactorConfig;
       ldr:scope "R" ;
       rdfs:label """foaf:Person types to PersonResource""" ;
       ldr:resource foaf:Person ;
       ldr:treatAsResourceType "1" ;
       ldr:resourceReactor "PersonResource" .
 #Property config
-<https://ld-r.org/config/12> a ldr:ReactorConfig;
+<https://ld-r.org/config/r12> a ldr:ReactorConfig;
       ldr:scope "P" ;
       rdfs:label """foaf:thumbnail/dbo:thumbnail to BasicImageView""" ;
       ldr:property foaf:thumbnail, dbo:thumbnail ;
       ldr:objectIViewer "BasicImageView" .
 #Dataset-Property config
-<https://ld-r.org/config/11> a ldr:ReactorConfig;
+<https://ld-r.org/config/r11> a ldr:ReactorConfig;
         ldr:scope "DP" ;
         rdfs:label """DBpedia foaf:depiction to BasicImageView""" ;
         ldr:dataset <http://live.dbpedia.org/sparql> ;
         ldr:property foaf:depiction ;
         ldr:objectIViewer "BasicImageView" .
+#Server config
+<https://ld-r.org/config/s1> a ldr:ServerConfig;
+        ldr:dataset <http://dbpedia.org/sparql> ;
+        ldr:host "dbpedia.org" ;
+        ldr:port "80" ;
+        ldr:path "/sparql" ;
+        ldr:endpointType "virtuoso" ;
+        ldr:graphName 'default' ;
+        ldr:useReasoning "0" .
