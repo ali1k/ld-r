@@ -8,115 +8,119 @@ class DynamicConfigurator {
         //do not config if disabled
         if(!enableDynamicConfiguration){
             callback(config);
+        }else{
+            //start config
+            //query the triple store for property configs
+            const prefixes = `
+                PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
+                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                PREFIX owl: <http://www.w3.org/2002/07/owl#>
+            `;
+            const query = `
+            SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue WHERE { GRAPH <${configDatasetURI[0]}>
+                    {
+                    ?config a ldr:ReactorConfig ;
+                            ldr:dataset <${datasetURI}> ;
+                            ldr:scope ?scope ;
+                            rdfs:label ?label ;
+                            ?setting ?settingValue .
+                            FILTER (?setting !=rdf:type && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset)
+                    }
+            }
+            `;
+            const endpointParameters = getEndpointParameters(configDatasetURI[0]);
+            const headers = {'Accept': 'application/sparql-results+json'};
+            const outputFormat = 'application/sparql-results+json';
+            //send request
+            //console.log(prefixes + query);
+            let self = this;
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                //console.log(res);
+                config = self.parseDatasetConfigs(config, datasetURI, res);
+                callback(config);
+            }).catch(function (err) {
+                console.log('Error in dataset config query:', prefixes + query);
+                console.log('---------------------------------------------------------');
+                callback(config);
+            });
         }
-        //start config
-        //query the triple store for property configs
-        const prefixes = `
-            PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
-            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-            PREFIX owl: <http://www.w3.org/2002/07/owl#>
-        `;
-        const query = `
-        SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue WHERE { GRAPH <${configDatasetURI[0]}>
-                {
-                ?config a ldr:ReactorConfig ;
-                        ldr:dataset <${datasetURI}> ;
-                        ldr:scope ?scope ;
-                        rdfs:label ?label ;
-                        ?setting ?settingValue .
-                        FILTER (?setting !=rdf:type && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset)
-                }
-        }
-        `;
-        const endpointParameters = getEndpointParameters(configDatasetURI[0]);
-        const headers = {'Accept': 'application/sparql-results+json'};
-        const outputFormat = 'application/sparql-results+json';
-        //send request
-        //console.log(prefixes + query);
-        let self = this;
-        rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
-            //console.log(res);
-            config = self.parseDatasetConfigs(config, datasetURI, res);
-            callback(config);
-        }).catch(function (err) {
-            console.log('Error in dataset config query:', prefixes + query);
-            console.log('---------------------------------------------------------');
-            callback(config);
-        });
+
     }
     prepareDynamicResourceConfig(datasetURI, resourceURI, resourceType, callback) {
         let config = {resource: {}, dataset_resource: {}};
         //do not config if disabled
         if(!enableDynamicConfiguration){
             callback(config);
-        }
-        let typeFilter = [];
-        resourceType.forEach(function(el) {
-            typeFilter.push(`?resource=<${el}>`);
-        });
-        let typeFilterStr = '';
-        if(typeFilter.length){
-            typeFilterStr = '(' + typeFilter.join(' || ') + ') && ';
-            //design decision: do not allow configs for resources with more than 100 type?
-            // if(typeFilter.length > 100){
-            //     typeFilterStr = '0 && ';
-            // }
-
         }else{
-            //do not allow treat as type when no type is defined
-            typeFilterStr = '0 && ';
+            let typeFilter = [];
+            resourceType.forEach(function(el) {
+                typeFilter.push(`?resource=<${el}>`);
+            });
+            let typeFilterStr = '';
+            if(typeFilter.length){
+                typeFilterStr = '(' + typeFilter.join(' || ') + ') && ';
+                //design decision: do not allow configs for resources with more than 100 type?
+                // if(typeFilter.length > 100){
+                //     typeFilterStr = '0 && ';
+                // }
+
+            }else{
+                //do not allow treat as type when no type is defined
+                typeFilterStr = '0 && ';
+            }
+            //start config
+            //query the triple store for property configs
+            const prefixes = `
+                PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
+                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                PREFIX owl: <http://www.w3.org/2002/07/owl#>
+            `;
+            const query = `
+            SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?treatAsResourceType ?settingValue WHERE { GRAPH <${configDatasetURI[0]}> {
+                    {
+                    ?config a ldr:ReactorConfig ;
+                            ldr:resource ?resource ;
+                            ldr:treatAsResourceType "1" ;
+                            ldr:treatAsResourceType ?treatAsResourceType ;
+                            ldr:scope ?scope ;
+                            rdfs:label ?label ;
+                            ?setting ?settingValue .
+                            OPTIONAL { ?config ldr:dataset ?dataset . }
+                            FILTER (${typeFilterStr}  ?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
+                    }
+                    UNION
+                    {
+                    ?config a ldr:ReactorConfig ;
+                            ldr:resource <${resourceURI}> ;
+                            ldr:scope ?scope ;
+                            rdfs:label ?label ;
+                            ?setting ?settingValue .
+                            OPTIONAL { ?config ldr:dataset ?dataset . }
+                            OPTIONAL { ?config ldr:treatAsResourceType ?treatAsResourceType . }
+                            FILTER (?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
+                    }
+            }   } ORDER BY DESC(?treatAsResourceType)
+            `;
+            const endpointParameters = getEndpointParameters(configDatasetURI[0]);
+            const headers = {'Accept': 'application/sparql-results+json'};
+            const outputFormat = 'application/sparql-results+json';
+            //send request
+            //console.log(prefixes + query);
+            let self = this;
+            let HTTPQueryObject = getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat);
+            rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params, headers: headers}).then(function(res){
+                //console.log(res);
+                config = self.parseResourceConfigs(config, resourceURI, res);
+                callback(config);
+            }).catch(function (err) {
+                console.log('Error in resource config query:', prefixes + query);
+                console.log('---------------------------------------------------------');
+                callback(config);
+            });
         }
-        //start config
-        //query the triple store for property configs
-        const prefixes = `
-            PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
-            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-            PREFIX owl: <http://www.w3.org/2002/07/owl#>
-        `;
-        const query = `
-        SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?treatAsResourceType ?settingValue WHERE { GRAPH <${configDatasetURI[0]}> {
-                {
-                ?config a ldr:ReactorConfig ;
-                        ldr:resource ?resource ;
-                        ldr:treatAsResourceType "1" ;
-                        ldr:treatAsResourceType ?treatAsResourceType ;
-                        ldr:scope ?scope ;
-                        rdfs:label ?label ;
-                        ?setting ?settingValue .
-                        OPTIONAL { ?config ldr:dataset ?dataset . }
-                        FILTER (${typeFilterStr}  ?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
-                }
-                UNION
-                {
-                ?config a ldr:ReactorConfig ;
-                        ldr:resource <${resourceURI}> ;
-                        ldr:scope ?scope ;
-                        rdfs:label ?label ;
-                        ?setting ?settingValue .
-                        OPTIONAL { ?config ldr:dataset ?dataset . }
-                        OPTIONAL { ?config ldr:treatAsResourceType ?treatAsResourceType . }
-                        FILTER (?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
-                }
-        }   } ORDER BY DESC(?treatAsResourceType)
-        `;
-        const endpointParameters = getEndpointParameters(configDatasetURI[0]);
-        const headers = {'Accept': 'application/sparql-results+json'};
-        const outputFormat = 'application/sparql-results+json';
-        //send request
-        //console.log(prefixes + query);
-        let self = this;
-        let HTTPQueryObject = getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat);
-        rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params, headers: headers}).then(function(res){
-            //console.log(res);
-            config = self.parseResourceConfigs(config, resourceURI, res);
-            callback(config);
-        }).catch(function (err) {
-            console.log('Error in resource config query:', prefixes + query);
-            console.log('---------------------------------------------------------');
-            callback(config);
-        });
+
 
     }
     prepareDynamicPropertyConfig(datasetURI, resourceURI, resourceType, propertyURI, callback) {
@@ -124,44 +128,46 @@ class DynamicConfigurator {
         //do not config if disabled
         if(!enableDynamicConfiguration){
             callback(config);
+        }else{
+            //start config
+            //query the triple store for property configs
+            const prefixes = `
+                PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
+                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                PREFIX owl: <http://www.w3.org/2002/07/owl#>
+            `;
+            const query = `
+            SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?settingValue WHERE { GRAPH <${configDatasetURI[0]}>
+                    {
+                    ?config a ldr:ReactorConfig ;
+                            ldr:property <${propertyURI}> ;
+                            ldr:scope ?scope ;
+                            rdfs:label ?label ;
+                            ?setting ?settingValue .
+                            OPTIONAL { ?config ldr:dataset ?dataset . }
+                            OPTIONAL { ?config ldr:resource ?resource . }
+                            FILTER (?setting !=rdf:type && ?setting !=ldr:property && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset && ?setting !=ldr:resource)
+                    }
+            }
+            `;
+            const endpointParameters = getEndpointParameters(configDatasetURI[0]);
+            const headers = {'Accept': 'application/sparql-results+json'};
+            const outputFormat = 'application/sparql-results+json';
+            //send request
+            //console.log(prefixes + query);
+            let self = this;
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                //console.log(res);
+                config = self.parsePropertyConfigs(config, propertyURI, res);
+                callback(config);
+            }).catch(function (err) {
+                console.log('Error in property config query:', prefixes + query);
+                console.log('---------------------------------------------------------');
+                callback(config);
+            });            
         }
-        //start config
-        //query the triple store for property configs
-        const prefixes = `
-            PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
-            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-            PREFIX owl: <http://www.w3.org/2002/07/owl#>
-        `;
-        const query = `
-        SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?settingValue WHERE { GRAPH <${configDatasetURI[0]}>
-                {
-                ?config a ldr:ReactorConfig ;
-                        ldr:property <${propertyURI}> ;
-                        ldr:scope ?scope ;
-                        rdfs:label ?label ;
-                        ?setting ?settingValue .
-                        OPTIONAL { ?config ldr:dataset ?dataset . }
-                        OPTIONAL { ?config ldr:resource ?resource . }
-                        FILTER (?setting !=rdf:type && ?setting !=ldr:property && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset && ?setting !=ldr:resource)
-                }
-        }
-        `;
-        const endpointParameters = getEndpointParameters(configDatasetURI[0]);
-        const headers = {'Accept': 'application/sparql-results+json'};
-        const outputFormat = 'application/sparql-results+json';
-        //send request
-        //console.log(prefixes + query);
-        let self = this;
-        rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
-            //console.log(res);
-            config = self.parsePropertyConfigs(config, propertyURI, res);
-            callback(config);
-        }).catch(function (err) {
-            console.log('Error in property config query:', prefixes + query);
-            console.log('---------------------------------------------------------');
-            callback(config);
-        });
+
     }
     parsePropertyConfigs(config, propertyURI, body) {
         let output = config;
