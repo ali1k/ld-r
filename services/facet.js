@@ -1,5 +1,5 @@
 'use strict';
-import {prepareDG, getEndpointParameters, getHTTPQuery, getHTTPGetURL} from './utils/helpers';
+import {getEndpointParameters, getHTTPQuery, getHTTPGetURL} from './utils/helpers';
 import {enableAuthentication} from '../configs/general';
 import FacetQuery from './sparql/FacetQuery';
 import FacetUtil from './utils/FacetUtil';
@@ -21,9 +21,9 @@ export default {
     read: (req, resource, params, config, callback) => {
         if (resource === 'facet.facetsSideEffect') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
-            dg = prepareDG(datasetURI);
-            graphName = dg.g;
             endpointParameters = getEndpointParameters(datasetURI);
+            graphName = endpointParameters.graphName;
+
            //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -53,9 +53,9 @@ export default {
         //handles changes in master level facets
         } else if (resource === 'facet.facetsMaster') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
-            dg = prepareDG(datasetURI);
-            graphName = dg.g;
             endpointParameters = getEndpointParameters(datasetURI);
+            graphName = endpointParameters.graphName;
+
            //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -95,9 +95,9 @@ export default {
         //handles changes in second level facets
         } else if (resource === 'facet.facetsSecondLevel') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
-            dg = prepareDG(datasetURI);
-            graphName = dg.g;
             endpointParameters = getEndpointParameters(datasetURI);
+            graphName = endpointParameters.graphName;
+
             //config handler
             configurator.prepareDatasetConfig(1, datasetURI, (rconfig)=> {
                 //resource focus type

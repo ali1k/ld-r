@@ -1,5 +1,5 @@
 import {sparqlEndpoint} from '../../configs/server';
-import {defaultDatasetURI} from '../../configs/general';
+import {defaultDatasetURI, enableDynamicServerConfiguration} from '../../configs/general';
 import validUrl from 'valid-url';
 import queryString from 'query-string';
 //todo: get config from dynamic configs: not allow overwriting auth and config graphs data

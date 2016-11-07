@@ -1,5 +1,5 @@
 'use strict';
-import {prepareDG, getEndpointParameters, getHTTPQuery, getHTTPGetURL} from './utils/helpers';
+import {getEndpointParameters, getHTTPQuery, getHTTPGetURL} from './utils/helpers';
 import {enableAuthentication} from '../configs/general';
 import DatasetQuery from './sparql/DatasetQuery';
 import DatasetUtil from './utils/DatasetUtil';
@@ -21,9 +21,8 @@ export default {
     read: (req, resource, params, config, callback) => {
         if (resource === 'dataset.resourcesByType') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
-            dg = prepareDG(datasetURI);
-            graphName = dg.g;
             endpointParameters = getEndpointParameters(datasetURI);
+            graphName = endpointParameters.graphName;
             //config handler
             configurator.prepareDatasetConfig(1, datasetURI, (rconfig)=> {
                 let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
@@ -63,9 +62,8 @@ export default {
         } else if (resource === 'dataset.countResourcesByType') {
             //SPARQL QUERY
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
-            dg = prepareDG(datasetURI);
-            graphName = dg.g;
             endpointParameters = getEndpointParameters(datasetURI);
+            graphName = endpointParameters.graphName;
 
             //config handler
             configurator.prepareDatasetConfig(1, datasetURI, (rconfig)=> {

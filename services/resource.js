@@ -1,5 +1,5 @@
 'use strict';
-import {prepareDG, getEndpointParameters, getHTTPQuery, getHTTPGetURL} from './utils/helpers';
+import {getEndpointParameters, getHTTPQuery, getHTTPGetURL} from './utils/helpers';
 import {enableLogs, enableAuthentication, authDatasetURI} from '../configs/general';
 import ResourceQuery from './sparql/ResourceQuery';
 import ResourceUtil from './utils/ResourceUtil';
@@ -34,10 +34,10 @@ export default {
             category = params.category;
             //SPARQL QUERY
             datasetURI = (params.dataset && params.dataset !== '0' ? decodeURIComponent(params.dataset) : 0);
-            dg = prepareDG(datasetURI);
-            graphName = dg.g;
             //graph name used for server settings and configs
             endpointParameters = getEndpointParameters(datasetURI);
+            graphName = endpointParameters.graphName;
+
             resourceURI = params.resource;
             propertyPath = decodeURIComponent(params.propertyPath);
             if(propertyPath.length > 1){
@@ -90,10 +90,10 @@ export default {
             propertyURI = params.propertyURI;
             resourceURI = params.resourceURI;
             datasetURI = params.dataset;
-            dg = prepareDG(datasetURI);
-            graphName = dg.g;
 
             endpointParameters = getEndpointParameters(datasetURI);
+            graphName = endpointParameters.graphName;
+
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -130,9 +130,9 @@ export default {
     create: (req, resource, params, body, config, callback) => {
         if (resource === 'resource.individualObject') {
             datasetURI = params.dataset;
-            dg = prepareDG(datasetURI);
-            graphName = dg.g;
             endpointParameters = getEndpointParameters(datasetURI);
+            graphName = endpointParameters.graphName;
+
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -169,9 +169,9 @@ export default {
             });
         } else if (resource === 'resource.individualObjectDetail') {
             datasetURI = params.dataset;
-            dg = prepareDG(datasetURI);
-            graphName = dg.g;
             endpointParameters = getEndpointParameters(datasetURI);
+            graphName = endpointParameters.graphName;
+
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -214,10 +214,10 @@ export default {
     update: (req, resource, params, body, config, callback) => {
         if (resource === 'resource.individualObject') {
             datasetURI = params.dataset;
-            dg = prepareDG(datasetURI);
-            graphName = dg.g;
 
             endpointParameters = getEndpointParameters(datasetURI);
+            graphName = endpointParameters.graphName;
+
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -253,10 +253,10 @@ export default {
             });
         } else if(resource === 'resource.individualObjectDetail'){
             datasetURI = params.dataset;
-            dg = prepareDG(datasetURI);
-            graphName = dg.g;
 
             endpointParameters = getEndpointParameters(datasetURI);
+            graphName = endpointParameters.graphName;
+
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -300,10 +300,10 @@ export default {
             });
         } else if(resource === 'resource.aggObject'){
             datasetURI = params.dataset;
-            dg = prepareDG(datasetURI);
-            graphName = dg.g;
 
             endpointParameters = getEndpointParameters(datasetURI);
+            graphName = endpointParameters.graphName;
+
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -342,10 +342,10 @@ export default {
     delete: (req, resource, params, config, callback) => {
         if (resource === 'resource.individualObject') {
             datasetURI = params.dataset;
-            dg = prepareDG(datasetURI);
-            graphName = dg.g;
 
             endpointParameters = getEndpointParameters(datasetURI);
+            graphName = endpointParameters.graphName;
+
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -381,10 +381,10 @@ export default {
             });
         } else if(resource === 'resource.aggObject') {
             datasetURI = params.dataset;
-            dg = prepareDG(datasetURI);
-            graphName = dg.g;
 
             endpointParameters = getEndpointParameters(datasetURI);
+            graphName = endpointParameters.graphName;
+
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){

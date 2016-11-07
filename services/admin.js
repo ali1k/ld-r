@@ -1,5 +1,5 @@
 'use strict';
-import {prepareDG, getEndpointParameters, getHTTPQuery, getHTTPGetURL} from './utils/helpers';
+import {getEndpointParameters, getHTTPQuery, getHTTPGetURL} from './utils/helpers';
 import {authDatasetURI, enableAuthentication, enableEmailNotifications} from '../configs/general';
 import {sendMail} from '../plugins/email/handleEmail';
 import AdminQuery from './sparql/AdminQuery';
@@ -21,16 +21,14 @@ export default {
         if (resource === 'admin.userslist') {
             //SPARQL QUERY
             datasetURI = (params.id ? params.id : authDatasetURI[0]);
-            dg = prepareDG(datasetURI);
-            graphName = dg.g;
             if(enableAuthentication){
                 if(!req.user){
-                    callback(null, {datasetURI: datasetURI, graphName: graphName, users: []});
+                    callback(null, {datasetURI: datasetURI, graphName: '', users: []});
                 }else{
                     user = req.user;
                     //only super users have access to admin services
                     if(!parseInt(user.isSuperUser)){
-                        callback(null, {datasetURI: datasetURI, graphName: graphName, users: []});
+                        callback(null, {datasetURI: datasetURI, graphName: '', users: []});
                     }
                 }
             }else{
@@ -39,6 +37,8 @@ export default {
             query = queryObject.getUsers(graphName);
             //build http uri
             endpointParameters = getEndpointParameters(datasetURI);
+            graphName = endpointParameters.graphName;
+
             //send request
             rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                 callback(null, {
@@ -73,9 +73,9 @@ export default {
                 user = {accountName: 'open'};
             }
             datasetURI = authDatasetURI[0];
-            dg = prepareDG(datasetURI);
-            graphName = dg.g;
             endpointParameters = getEndpointParameters(datasetURI);
+            graphName = endpointParameters.graphName;
+
             query = queryObject.activateUser(endpointParameters.type, graphName, params.resourceURI);
             //build http uri
             //send request
