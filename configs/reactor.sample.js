@@ -52,12 +52,6 @@ export default {
                 shortenURI: 1
             }
         },
-        //property value = object
-        object: {
-            'generic': {
-                truncateURI: 1
-            }
-        },
         //---------depth 2------------
         dataset_resource: {
 
@@ -175,33 +169,11 @@ export default {
                 }
             }
         },
-        dataset_object: {
-
-        },
         resource_property: {
-
-        },
-        resource_object: {
-
-        },
-        property_object: {
 
         },
         //---------depth 3------------
         dataset_resource_property: {
-
-        },
-        dataset_resource_object: {
-
-        },
-        dataset_property_object: {
-
-        },
-        resource_property_object: {
-
-        },
-        //---------depth 4------------
-        dataset_resource_property_object: {
 
         }
     }

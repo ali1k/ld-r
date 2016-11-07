@@ -1,4 +1,4 @@
-import {enableDynamicConfiguration, configDatasetURI, disableAutomaticConfiguration} from '../../configs/general';
+import {enableDynamicReactorConfiguration, configDatasetURI, enableAutomaticConfiguration} from '../../configs/general';
 import {getEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
 import rp from 'request-promise';
 
@@ -6,7 +6,7 @@ class DynamicConfigurator {
     prepareDynamicDatasetConfig(datasetURI, callback) {
         let config = {dataset: {}};
         //do not config if disabled
-        if(!enableDynamicConfiguration){
+        if(!enableDynamicReactorConfiguration){
             callback(config);
         }else{
             //start config
@@ -50,7 +50,7 @@ class DynamicConfigurator {
     prepareDynamicResourceConfig(datasetURI, resourceURI, resourceType, callback) {
         let config = {resource: {}, dataset_resource: {}};
         //do not config if disabled
-        if(!enableDynamicConfiguration){
+        if(!enableDynamicReactorConfiguration){
             callback(config);
         }else{
             let typeFilter = [];
@@ -126,7 +126,7 @@ class DynamicConfigurator {
     prepareDynamicPropertyConfig(datasetURI, resourceURI, resourceType, propertyURI, callback) {
         let config = {property: {}, dataset_property: {}, resource_property: {}, dataset_resource_property: {}};
         //do not config if disabled
-        if(!enableDynamicConfiguration){
+        if(!enableDynamicReactorConfiguration){
             callback(config);
         }else{
             //start config
@@ -165,7 +165,7 @@ class DynamicConfigurator {
                 console.log('Error in property config query:', prefixes + query);
                 console.log('---------------------------------------------------------');
                 callback(config);
-            });            
+            });
         }
 
     }

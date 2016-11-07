@@ -243,38 +243,6 @@ class Configurator{
         });
 
     }
-    prepareObjectConfig(useGeneric, datasetURI, resourceURI, propertyURI, objectValue, callback) {
-        //todo: it is not yet completely implemented because we are not sure about the possible use case
-        //it has to go through 15 scopes which causes an overhead if unnecessary
-        //we can easily implement this if needed in future so that users can have components in the scope of objects
-        //for now, we only add one check for object data types which makes sense in some scenarios
-        let config = this.cloneConfig(this.config);
-        let output = {};
-        //collect the generic config
-        if(useGeneric){
-            output = this.prepareGenericConfig(4);
-        }
-        this.preparePropertyConfig(0, datasetURI, resourceURI, resourceType, propertyURI, (tmp)=> {
-            //owerwrite generic ones
-            for(let prop in tmp) {
-                output[prop] = tmp[prop];
-            }
-            //todo-----
-            //traverese object configs
-            //-------
-            let finalOutput = {};
-            //remove irrelevant attributes from config
-            let irrels = ['propertyReactor', 'objectReactor', 'objectIViewer', 'objectIEditor', 'extendedOEditor', 'extendedOViewer'];
-            for(let prop in output) {
-                if(irrels.indexOf(prop) == -1) {
-                    finalOutput[prop] = output[prop];
-                }
-            }
-            callback(finalOutput);
-        });
-
-
-    }
     getResourceFocusType(cnf, datasetURI){
         let out = {'type':[], 'labelProperty': []};
         if(cnf && cnf.resourceFocusType){

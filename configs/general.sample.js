@@ -29,10 +29,12 @@ export default {
     //if provided will track the users on your LD-R instance
     googleAnalyticsID: '',
 
-    //if set, will use the configs stored in a triple store and automatically configs the app
-    enableDynamicConfiguration: 0,
+    //if set, will use the configs stored in a triple store
+    enableDynamicReactorConfiguration: 0,
+    enableDynamicServerConfiguration: 0,
+    enableDynamicFacetsConfiguration: 0,
     //graph that stores your configurations
     configDatasetURI: ['http://ld-r.org/configurations'],
-    //will disable auto config
-    disableAutomaticConfiguration: 0
+    //will enable/disable auto config
+    enableAutomaticConfiguration: 0
 };
