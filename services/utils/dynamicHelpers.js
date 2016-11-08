@@ -1,7 +1,7 @@
 import {sparqlEndpoint} from '../../configs/server';
 import {defaultDatasetURI} from '../../configs/general';
 import DynamicConfigurator from '../../plugins/dynamicConfiguration/DynamicConfigurator';
-
+let dynamicConfigurator = new DynamicConfigurator();
 let prepareDGFunc = function (datasetURI, callback){
     let d = datasetURI, g = datasetURI, options = {};
     //try default graph if no datasetURI is given
@@ -10,7 +10,6 @@ let prepareDGFunc = function (datasetURI, callback){
             d = defaultDatasetURI[0];
         }
     }
-    let dynamicConfigurator = new DynamicConfigurator();
     dynamicConfigurator.prepareDynamicServerConfig(d, (dynamicConfig)=> {
         if(sparqlEndpoint[d]){
             options = sparqlEndpoint[d];
@@ -64,5 +63,10 @@ export default {
             callback ({httpOptions: httpOptions, type: etype, graphName: g, useReasoning: useReasoning});
         });
 
+    },
+    getDynamicFacetsConfig: function(datasetURI, callback) {
+        dynamicConfigurator.prepareDynamicFacetsConfig(datasetURI, (dynamicConfig)=> {
+            callback(dynamicConfig);
+        });
     }
 }

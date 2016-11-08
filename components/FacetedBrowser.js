@@ -33,9 +33,21 @@ class FacetedBrowser extends React.Component {
             g = 'generic';
         }
         let hasFacetConfig = facets[g] ? (facets[g].config ? (facets[g].config[propertyURI] ? 1 : 0) : 0) : 0;
+        let dynamicConfig = 0;
+        //overwrite if there is a dynamic config
+        if(this.props.FacetedBrowserStore.dynamicConfig){
+            hasFacetConfig = this.props.FacetedBrowserStore.dynamicConfig.facets[g] ? (this.props.FacetedBrowserStore.dynamicConfig.facets[g].config ? (this.props.FacetedBrowserStore.dynamicConfig.facets[g].config[propertyURI] ? 1 : 0) : 0) : 0;
+            dynamicConfig = 1;
+        }
+
         if(hasFacetConfig){
             //first check the custom facets config
-            selectedConfig = facets[g].config[propertyURI];
+            if(dynamicConfig){
+                selectedConfig = this.props.FacetedBrowserStore.dynamicConfig.facets[g].config[propertyURI];
+            }else{
+                selectedConfig = facets[g].config[propertyURI];
+            }
+
         }else{
             //second: check the generic facet config
             let hasGenericFacetConfig = facets.generic.config ? (facets.generic.config[propertyURI] ? 1 : 0) : 0;
@@ -59,6 +71,10 @@ class FacetedBrowser extends React.Component {
             selectedFacetConfig = facets.generic;
         }else{
             selectedFacetConfig = facets[g];
+        }
+        //overwrite if there is a dynamic config
+        if(this.props.FacetedBrowserStore.dynamicConfig && this.props.FacetedBrowserStore.dynamicConfig.facets[g]){
+            selectedFacetConfig = this.props.FacetedBrowserStore.dynamicConfig.facets[g];
         }
         //action only if there is a config
         let propConfig;

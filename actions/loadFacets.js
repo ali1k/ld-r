@@ -1,4 +1,5 @@
 import {appFullTitle} from '../configs/general';
+import loadDynamicFacetsConfig from './loadDynamicFacetsConfig';
 
 export default function loadFacets(context, payload, done) {
     //timer
@@ -6,6 +7,8 @@ export default function loadFacets(context, payload, done) {
     //start = new Date().getTime();
     //dispatch action based on the parameter
     if(payload.mode === 'init'){
+        //dynamic config
+        context.executeAction(loadDynamicFacetsConfig, payload);
         //clear facets
         context.dispatch('CLEAR_FACETS_SUCCESS', {});
         //used for loading progress indicator

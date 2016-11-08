@@ -1,4 +1,4 @@
-import {enableDynamicReactorConfiguration, enableDynamicServerConfiguration, configDatasetURI, enableAutomaticConfiguration, authDatasetURI} from '../../configs/general';
+import {enableDynamicReactorConfiguration, enableDynamicServerConfiguration, enableDynamicFacetsConfiguration, configDatasetURI, enableAutomaticConfiguration, authDatasetURI} from '../../configs/general';
 import {getStaticEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
 import test from '../../services/utils/helpers';
 import rp from 'request-promise';
@@ -52,10 +52,12 @@ class DynamicConfigurator {
         }
 
     }
-    prepareDynamicFacetsonfig(datasetURI, callback) {
+    prepareDynamicFacetsConfig(datasetURI, callback) {
         let config = {facets: {}};
-        //do not config if disabled
-        if(!enableDynamicFacetsConfiguration){
+        //the following graphs shold be only locally reachable
+        let exceptions = [configDatasetURI[0], authDatasetURI[0]];
+        //do not config if disabled or exceptions
+        if(!enableDynamicFacetsConfiguration || exceptions.indexOf(datasetURI) !== -1){
             callback(config);
         }else{
             //start config
@@ -79,8 +81,9 @@ class DynamicConfigurator {
                             ldr:config ?facetPConfig .
                             OPTIONAL { ?config rdfs:label ?resource . }
                             ?facetsConfig ldr:property ?configProperty ;
+                                          a ldr:FacetsPropertyConfig ;
                                           ?setting ?settingValue .
-                            FILTER (?setting !=rdf:type && (?setting !=ldr:property)
+                            FILTER (?setting !=rdf:type && ?setting !=ldr:property)
                     }
             }
             `;
@@ -100,8 +103,9 @@ class DynamicConfigurator {
     }
     prepareDynamicDatasetConfig(datasetURI, callback) {
         let config = {dataset: {}};
-        //do not config if disabled
-        if(!enableDynamicReactorConfiguration){
+        let exceptions = [configDatasetURI[0], authDatasetURI[0]];
+        //do not config if disabled or exceptions
+        if(!enableDynamicReactorConfiguration || exceptions.indexOf(datasetURI) !== -1){
             callback(config);
         }else{
             //start config
@@ -282,7 +286,10 @@ class DynamicConfigurator {
                     if(!output.property[propertyURI][el.setting.value.split('#')[1]]){
                         output.property[propertyURI][el.setting.value.split('#')[1]] = []
                     }
-                    output.property[propertyURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                    if(output.property[propertyURI][el.setting.value.split('#')[1]].indexOf() === -1) {
+                        output.property[propertyURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                    }
+
                 }
             } else if(el.scope.value === 'DP'){
                 if(!output.dataset_property[el.dataset.value]){
@@ -298,7 +305,10 @@ class DynamicConfigurator {
                     if(!output.dataset_property[el.dataset.value][propertyURI][el.setting.value.split('#')[1]]){
                         output.dataset_property[el.dataset.value][propertyURI][el.setting.value.split('#')[1]] = [];
                     }
-                    output.dataset_property[el.dataset.value][propertyURI][el.setting.value.split('#')[1]].push( el.settingValue.value);
+                    if(output.dataset_property[el.dataset.value][propertyURI][el.setting.value.split('#')[1]].indexOf(el.settingValue.value) === -1){
+                        output.dataset_property[el.dataset.value][propertyURI][el.setting.value.split('#')[1]].push( el.settingValue.value);
+                    }
+
                 }
 
             } else if(el.scope.value === 'RP'){
@@ -315,7 +325,10 @@ class DynamicConfigurator {
                     if(!output.resource_property[el.resource.value][propertyURI][el.setting.value.split('#')[1]]){
                         output.resource_property[el.resource.value][propertyURI][el.setting.value.split('#')[1]] = [];
                     }
-                    output.resource_property[el.resource.value][propertyURI][el.setting.value.split('#')[1]].push( el.settingValue.value);
+                    if(output.resource_property[el.resource.value][propertyURI][el.setting.value.split('#')[1]].indexOf() === -1){
+                        output.resource_property[el.resource.value][propertyURI][el.setting.value.split('#')[1]].push( el.settingValue.value);
+                    }
+
                 }
 
 
@@ -336,7 +349,10 @@ class DynamicConfigurator {
                     if(!output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][el.setting.value.split('#')[1]]){
                         output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][el.setting.value.split('#')[1]] = [];
                     }
-                    output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                    if(output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][el.setting.value.split('#')[1]].indexOf() === -1){
+                        output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                    }
+
                 }
 
             }
@@ -374,7 +390,10 @@ class DynamicConfigurator {
                     if(!output.dataset_resource[el.dataset.value][resourceURI][el.setting.value.split('#')[1]]){
                         output.dataset_resource[el.dataset.value][resourceURI][el.setting.value.split('#')[1]] = [];
                     }
-                    output.dataset_resource[el.dataset.value][resourceURI][el.setting.value.split('#')[1]].push( el.settingValue.value);
+                    if(output.dataset_resource[el.dataset.value][resourceURI][el.setting.value.split('#')[1]].indexOf() === -1){
+                        output.dataset_resource[el.dataset.value][resourceURI][el.setting.value.split('#')[1]].push( el.settingValue.value);
+                    }
+
                 }
 
             }
@@ -396,7 +415,10 @@ class DynamicConfigurator {
                     if(!output.dataset[datasetURI][el.setting.value.split('#')[1]]){
                         output.dataset[datasetURI][el.setting.value.split('#')[1]] = []
                     }
-                    output.dataset[datasetURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                    if(output.dataset[datasetURI][el.setting.value.split('#')[1]].indexOf (el.settingValue.value) === -1){
+                        output.dataset[datasetURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                    }
+
                 }
             }
         });
@@ -412,11 +434,12 @@ class DynamicConfigurator {
             if(!output.facets[datasetURI].list){
                 output.facets[datasetURI].list = [];
             }
-            output.facets[datasetURI].list.push(el.list.value);
+            if(output.facets[datasetURI].list.indexOf(el.list.value) === -1){
+                output.facets[datasetURI].list.push(el.list.value);
+            }
             if(!output.facets[datasetURI].config){
                 output.facets[datasetURI].config = {};
             }
-            output.facets[datasetURI].list.push(el.list.value);
             if(!output.facets[datasetURI].config[el.configProperty.value]){
                 output.facets[datasetURI].config[el.configProperty.value] = {};
             }
@@ -427,7 +450,10 @@ class DynamicConfigurator {
                 if(!output.facets[datasetURI].config[el.configProperty.value][el.setting.value.split('#')[1]]){
                     output.facets[datasetURI].config[el.configProperty.value][el.setting.value.split('#')[1]] = []
                 }
-                output.facets[datasetURI].config[el.configProperty.value][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                //do not allow duplicate labels
+                if(output.facets[datasetURI].config[el.configProperty.value][el.setting.value.split('#')[1]].indexOf(el.settingValue.value) === -1){
+                    output.facets[datasetURI].config[el.configProperty.value][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                }
             }
 
         });

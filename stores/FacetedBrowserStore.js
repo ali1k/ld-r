@@ -12,9 +12,14 @@ class FacetedBrowserStore extends BaseStore {
         this.page = 1;
         this.graphName = '';
         this.datasetURI = '';
+        this.dynamicConfig = {};
     }
     clearFacets() {
         this.clearAll();
+        this.emitChange();
+    }
+    loadDynamicFacetConfigs(payload) {
+        this.dynamicConfig = payload.dynamicConfig;
         this.emitChange();
     }
     updateFacetResources(payload) {
@@ -53,7 +58,8 @@ class FacetedBrowserStore extends BaseStore {
             datasetURI: this.datasetURI,
             resources: this.resources,
             total: this.total,
-            page: this.page
+            page: this.page,
+            dynamicConfig: this.dynamicConfig
         };
     }
     dehydrate() {
@@ -66,6 +72,7 @@ class FacetedBrowserStore extends BaseStore {
         this.resources = state.resources;
         this.total = state.total;
         this.page = state.page;
+        this.dynamicConfig = state.dynamicConfig;
     }
 }
 
@@ -74,6 +81,7 @@ FacetedBrowserStore.handlers = {
     'LOAD_FACETS_RESOURCES_SUCCESS': 'updateFacetResources',
     'LOAD_MASTER_FACETS_SUCCESS': 'updateMasterFacets',
     'LOAD_SIDE_EFFECTS_FACETS_SUCCESS': 'handleFacetSideEffects',
+    'LOAD_DYNAMIC_FACETS_CONFIG': 'loadDynamicFacetConfigs',
     'CLEAR_FACETS_SUCCESS': 'clearFacets'
 };
 

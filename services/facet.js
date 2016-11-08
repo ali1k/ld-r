@@ -1,6 +1,6 @@
 'use strict';
 import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
-import {getDynamicEndpointParameters} from './utils/dynamicHelpers';
+import {getDynamicEndpointParameters, getDynamicFacetsConfig} from './utils/dynamicHelpers';
 import {enableAuthentication} from '../configs/general';
 import FacetQuery from './sparql/FacetQuery';
 import FacetUtil from './utils/FacetUtil';
@@ -152,7 +152,11 @@ export default {
                     });
                 });
             });
-
+        } else if (resource === 'facet.dynamicConfig') {
+            datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
+            getDynamicFacetsConfig(datasetURI, (dynamicConfig)=>{
+                callback(null, {datasetURI: datasetURI, dynamicConfig: dynamicConfig});
+            });
         }
     }
     // other methods
