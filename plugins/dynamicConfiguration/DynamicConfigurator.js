@@ -32,7 +32,7 @@ class DynamicConfigurator {
                             ldr:path ?path ;
                             ldr:endpointType ?endpointType ;
                             ?setting ?settingValue .
-                            FILTER (?setting !=ldr:dataset && ?setting !=ldr:host && ?setting !=ldr:port && ?setting !=ldr:path && ?setting !=ldr:endpointType)
+                            FILTER (?setting !=rdf:type && ?setting !=ldr:dataset && ?setting !=ldr:host && ?setting !=ldr:port && ?setting !=ldr:path && ?setting !=ldr:endpointType)
                     }
             }
             `;
@@ -42,7 +42,7 @@ class DynamicConfigurator {
                 config = self.parseServerConfigs(config, datasetURI, res);
                 callback(config);
             }).catch(function (err) {
-                console.log('Error in seever config query:', prefixes + query);
+                console.log('Error in server config query:', prefixes + query);
                 console.log('---------------------------------------------------------');
                 callback(config);
             });
@@ -365,14 +365,22 @@ class DynamicConfigurator {
             output.sparqlEndpoint[datasetURI].path = el.path.value;
             output.sparqlEndpoint[datasetURI].endpointType = el.endpointType.value;
             //assume that all values will be stored in an array expect numbers: Not-a-Number
+
             if(!isNaN(el.settingValue.value)){
                 output.sparqlEndpoint[datasetURI][el.setting.value.split('#')[1]]= parseInt(el.settingValue.value);
             }else{
-                if(!output.sparqlEndpoint[datasetURI][el.setting.value.split('#')[1]]){
-                    output.sparqlEndpoint[datasetURI][el.setting.value.split('#')[1]] = []
+                //exception for graphNameValue
+                if(el.setting.value.split('#')[1]==='graphName'){
+                    output.sparqlEndpoint[datasetURI][el.setting.value.split('#')[1]]= el.settingValue.value;
+                }else{
+                    if(!output.sparqlEndpoint[datasetURI][el.setting.value.split('#')[1]]){
+                        output.sparqlEndpoint[datasetURI][el.setting.value.split('#')[1]] = []
+                    }
+                    output.sparqlEndpoint[datasetURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
                 }
-                output.sparqlEndpoint[datasetURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
+
             }
+
         });
         return output;
     }
