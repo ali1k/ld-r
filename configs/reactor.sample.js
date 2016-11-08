@@ -91,6 +91,14 @@ export default {
                     objectIViewer: ['PrefixBasedView'],
                     objectIEditor: ['PrefixBasedInput']
                 },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#config': {
+                    label: ['Configuration']
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#list': {
+                    shortenURI: 0,
+                    objectIViewer: ['PrefixBasedView'],
+                    objectIEditor: ['PrefixBasedInput']
+                },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#treatAsResourceType': {
                     label: ['Treat as Resource Type'],
                     hint: ['If set to true, will consider resource URI as type URI for resource'],

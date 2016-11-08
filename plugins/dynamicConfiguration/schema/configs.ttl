@@ -7,6 +7,7 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dbp: <http://dbpedia.org/property/> .
 @prefix dbr: <http://dbpedia.org/resource/> .
 @prefix dbo: <http://dbpedia.org/ontology/> .
 
@@ -46,3 +47,13 @@
         ldr:endpointType "virtuoso" ;
         ldr:graphName 'default' ;
         ldr:useReasoning "0" .
+#Facets property config
+<https://ld-r.org/config/fp1> a ldr:ReactorConfig, ldr:FacetsPropertyConfig;
+        ldr:property dbp:established ;
+        ldr:label """Established Year""" .
+#Facets config
+<https://ld-r.org/config/f1> a ldr:FacetsConfig;
+        rdfs:label """Browse DBpedia""" ;
+        ldr:dataset <http://dbpedia.org/sparql> ;
+        ldr:list rdf:type, dbo:country, dbp:established ;
+        ldr:config <https://ld-r.org/config/fp1> .

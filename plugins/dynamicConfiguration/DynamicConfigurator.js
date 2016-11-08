@@ -52,6 +52,52 @@ class DynamicConfigurator {
         }
 
     }
+    prepareDynamicFacetsonfig(datasetURI, callback) {
+        let config = {facets: {}};
+        //do not config if disabled
+        if(!enableDynamicFacetsConfiguration){
+            callback(config);
+        }else{
+            //start config
+            const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
+            const graphName = endpointParameters.graphName;
+            const headers = {'Accept': 'application/sparql-results+json'};
+            const outputFormat = 'application/sparql-results+json';
+            //query the triple store for property configs
+            const prefixes = `
+                PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
+                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                PREFIX owl: <http://www.w3.org/2002/07/owl#>
+            `;
+            const query = `
+            SELECT DISTINCT ?config ?label ?list ?configProperty ?setting ?settingValue WHERE { GRAPH <${graphName}>
+                    {
+                    ?config a ldr:FacetsConfig ;
+                            ldr:dataset <${datasetURI}> ;
+                            ldr:list ?list ;
+                            ldr:config ?facetPConfig .
+                            OPTIONAL { ?config rdfs:label ?resource . }
+                            ?facetsConfig ldr:property ?configProperty ;
+                                          ?setting ?settingValue .
+                            FILTER (?setting !=rdf:type && (?setting !=ldr:property)
+                    }
+            }
+            `;
+            //send request
+            //console.log(prefixes + query);
+            let self = this;
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                //console.log(res);
+                config = self.parseFacetsConfigs(config, datasetURI, res);
+                callback(config);
+            }).catch(function (err) {
+                console.log('Error in facets config query:', prefixes + query);
+                console.log('---------------------------------------------------------');
+                callback(config);
+            });
+        }
+    }
     prepareDynamicDatasetConfig(datasetURI, callback) {
         let config = {dataset: {}};
         //do not config if disabled
@@ -353,6 +399,37 @@ class DynamicConfigurator {
                     output.dataset[datasetURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
                 }
             }
+        });
+        return output;
+    }
+    parseFacetsConfigs(config, datasetURI, body) {
+        let output = config;
+        let parsed = JSON.parse(body);
+        parsed.results.bindings.forEach(function(el) {
+            if(!output.facets[datasetURI]){
+                output.facets[datasetURI] = {};
+            }
+            if(!output.facets[datasetURI].list){
+                output.facets[datasetURI].list = [];
+            }
+            output.facets[datasetURI].list.push(el.list.value);
+            if(!output.facets[datasetURI].config){
+                output.facets[datasetURI].config = {};
+            }
+            output.facets[datasetURI].list.push(el.list.value);
+            if(!output.facets[datasetURI].config[el.configProperty.value]){
+                output.facets[datasetURI].config[el.configProperty.value] = {};
+            }
+            //assume that all values will be stored in an array expect numbers: Not-a-Number
+            if(!isNaN(el.settingValue.value)){
+                output.facets[datasetURI].config[el.configProperty.value][el.setting.value.split('#')[1]]= parseInt(el.settingValue.value);
+            }else{
+                if(!output.facets[datasetURI].config[el.configProperty.value][el.setting.value.split('#')[1]]){
+                    output.facets[datasetURI].config[el.configProperty.value][el.setting.value.split('#')[1]] = []
+                }
+                output.facets[datasetURI].config[el.configProperty.value][el.setting.value.split('#')[1]].push(el.settingValue.value);
+            }
+
         });
         return output;
     }
