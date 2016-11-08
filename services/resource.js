@@ -65,6 +65,8 @@ export default {
                     utilObject.parseProperties(res, datasetURI, resourceURI, category, propertyPath, (cres)=> {
                         if(graphName === authDatasetURI[0] && !parseInt(user.isSuperUser)){
                             props = utilObject.deleteAdminProperties(cres.props);
+                        }else{
+                            props = cres.props;
                         }
                         //------------------------------------
                         callback(null, {

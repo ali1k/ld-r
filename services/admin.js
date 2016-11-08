@@ -11,7 +11,7 @@ let user;
 const headers = {'Accept': 'application/sparql-results+json'};
 const outputFormat = 'application/sparql-results+json';
 /*-----------------------------------*/
-let endpointParameters, dg, graphName, datasetURI, query, queryObject, utilObject;
+let endpointParameters, dg, graphName, datasetURI, query, queryObject, utilObject, HTTPQueryObject;
 queryObject = new AdminQuery();
 utilObject = new AdminUtil();
 
@@ -35,11 +35,10 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            query = queryObject.getUsers(graphName);
             //build http uri
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-
+                query = queryObject.getUsers(graphName);
                 //send request
                 rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                     callback(null, {
@@ -79,7 +78,7 @@ export default {
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=> {
                 graphName = endpointParameters.graphName;
 
-                query = queryObject.activateUser(endpointParameters.type, graphName, params.resourceURI);
+                query = queryObject.activateUser(endpointParameters, graphName, params.resourceURI);
                 //build http uri
                 //send request
                 HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
