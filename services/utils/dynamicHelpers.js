@@ -1,5 +1,5 @@
 import {sparqlEndpoint} from '../../configs/server';
-import {defaultDatasetURI, enableDynamicServerConfiguration} from '../../configs/general';
+import {defaultDatasetURI} from '../../configs/general';
 import DynamicConfigurator from '../../plugins/dynamicConfiguration/DynamicConfigurator';
 
 let prepareDGFunc = function (datasetURI, callback){
@@ -25,7 +25,7 @@ let prepareDGFunc = function (datasetURI, callback){
             }
         }else{
             //do not allow to override server configs by dynamic ones
-            if(dynamicConfig.sparqlEndpoint[d].graphName){
+            if(dynamicConfig.sparqlEndpoint[d] && dynamicConfig.sparqlEndpoint[d].graphName){
                 g = dynamicConfig.sparqlEndpoint[d].graphName;
                 options = dynamicConfig.sparqlEndpoint[d];
             }else{
@@ -46,6 +46,7 @@ let prepareDGFunc = function (datasetURI, callback){
 export default {
     getDynamicEndpointParameters: function(datasetURI, callback) {
         prepareDGFunc(datasetURI, (config)=> {
+
             let httpOptions;
             let d = config.d;
             let g = config.g;
