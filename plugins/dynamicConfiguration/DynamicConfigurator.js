@@ -25,7 +25,7 @@ class DynamicConfigurator {
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
             `;
             const query = `
-            SELECT DISTINCT ?config ?host ?port ?path ?endpointType ?setting ?settingValue WHERE { GRAPH <${graphName}>
+            SELECT DISTINCT ?config ?label ?host ?port ?path ?endpointType ?setting ?settingValue WHERE { GRAPH <${graphName}>
                     {
                     ?config a ldr:ServerConfig ;
                             ldr:dataset <${datasetURI}> ;
@@ -34,6 +34,7 @@ class DynamicConfigurator {
                             ldr:path ?path ;
                             ldr:endpointType ?endpointType ;
                             ?setting ?settingValue .
+                            OPTIONAL { ?config rdfs:label ?resource . }
                             FILTER (?setting !=rdf:type && ?setting !=ldr:dataset && ?setting !=ldr:host && ?setting !=ldr:port && ?setting !=ldr:path && ?setting !=ldr:endpointType)
                     }
             }
@@ -75,8 +76,8 @@ class DynamicConfigurator {
                     ?config a ldr:ReactorConfig ;
                             ldr:dataset <${datasetURI}> ;
                             ldr:scope ?scope ;
-                            rdfs:label ?label ;
                             ?setting ?settingValue .
+                            OPTIONAL { ?config rdfs:label ?resource . }
                             FILTER (?setting !=rdf:type && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset)
                     }
             }
@@ -138,8 +139,8 @@ class DynamicConfigurator {
                             ldr:treatAsResourceType "1" ;
                             ldr:treatAsResourceType ?treatAsResourceType ;
                             ldr:scope ?scope ;
-                            rdfs:label ?label ;
                             ?setting ?settingValue .
+                            OPTIONAL { ?config rdfs:label ?resource . }
                             OPTIONAL { ?config ldr:dataset ?dataset . }
                             FILTER (${typeFilterStr}  ?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
                     }
@@ -148,9 +149,9 @@ class DynamicConfigurator {
                     ?config a ldr:ReactorConfig ;
                             ldr:resource <${resourceURI}> ;
                             ldr:scope ?scope ;
-                            rdfs:label ?label ;
                             ?setting ?settingValue .
                             OPTIONAL { ?config ldr:dataset ?dataset . }
+                            OPTIONAL { ?config rdfs:label ?resource . }
                             OPTIONAL { ?config ldr:treatAsResourceType ?treatAsResourceType . }
                             FILTER (?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
                     }
@@ -197,10 +198,10 @@ class DynamicConfigurator {
                     ?config a ldr:ReactorConfig ;
                             ldr:property <${propertyURI}> ;
                             ldr:scope ?scope ;
-                            rdfs:label ?label ;
                             ?setting ?settingValue .
                             OPTIONAL { ?config ldr:dataset ?dataset . }
-                            OPTIONAL { ?config ldr:resource ?resource . }
+                            OPTIONAL { ?config ldr:dataset ?dataset . }
+                            OPTIONAL { ?config rdfs:label ?resource . }
                             FILTER (?setting !=rdf:type && ?setting !=ldr:property && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset && ?setting !=ldr:resource)
                     }
             }

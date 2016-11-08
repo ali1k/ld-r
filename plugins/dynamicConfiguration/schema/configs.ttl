@@ -38,6 +38,7 @@
         ldr:objectIViewer "BasicImageView" .
 #Server config
 <https://ld-r.org/config/s1> a ldr:ServerConfig;
+        rdfs:label """DBpedia SPARQL Endpoint""" ;
         ldr:dataset <http://dbpedia.org/sparql> ;
         ldr:host "dbpedia.org" ;
         ldr:port "80" ;
