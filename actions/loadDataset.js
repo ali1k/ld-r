@@ -6,7 +6,6 @@ export default function loadDataset(context, payload, done) {
         if (err) {
             context.dispatch('LOAD_DATASET_FAILURE', err);
         } else {
-            context.dispatch('CLEAN_DATASET_SUCCESS', res);
             context.dispatch('LOAD_DATASET_SUCCESS', res);
         }
         context.dispatch('UPDATE_PAGE_TITLE', {
