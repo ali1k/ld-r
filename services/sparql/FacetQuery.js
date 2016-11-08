@@ -16,7 +16,7 @@ class FacetQuery{
         this.query='';
     }
     getMasterPropertyValues(endpointParameters, graphName, type, propertyURI) {
-        let st = '?s <'+ propertyURI + '>  ?v.';
+        let st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.';
         //---to support resource focus types
         let st_extra = this.makeExtraTypeFilters(endpointParameters, type);
         st = st + ' ' + st_extra;
@@ -109,7 +109,7 @@ class FacetQuery{
                     }
                 }
                 //---------
-                st = st + '?s <'+ key + '>  ?v' + i + '. ';
+                st = st + '?s '+ this.filterPropertyPath(key) + ' ?v' + i + '. ';
             }
         }
         st = st + ' FILTER (' + filters.join(' && ') + ') ';
@@ -151,9 +151,20 @@ class FacetQuery{
         //-----------------------------------------------
         return st_extra;
     }
+    filterPropertyPath(propertyURI){
+        if(propertyURI.indexOf('->')!== -1){
+            let tmp2 =[], tmp = propertyURI.split('->');
+            tmp.forEach((el)=> {
+                tmp2.push('<'+el.trim()+'>');
+            });
+            return tmp2.join('/');
+        }else{
+            return '<'+ propertyURI + '>';
+        }
+    }
     getSideEffects(endpointParameters, graphName, type, propertyURI, prevSelection) {
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
-        st = st + '?s <'+ propertyURI + '>  ?v.';
+        st = st + '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.';
         if(graphName && String(graphName)!=='default'){
             /*jshint multistr: true */
             this.query = '\

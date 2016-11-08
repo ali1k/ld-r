@@ -6,7 +6,6 @@ class FacetedBrowserStore extends BaseStore {
         this.clearFacets();
     }
     clearAll() {
-        this.isComplete = 1;
         this.facets = {};
         this.resources = [];
         this.total = 0;
@@ -18,10 +17,6 @@ class FacetedBrowserStore extends BaseStore {
         this.clearAll();
         this.emitChange();
     }
-    startTask () {
-        this.isComplete = 0;
-        this.emitChange();
-    }
     updateFacetResources(payload) {
         //for second level properties
         this.resources = payload.facets.items;
@@ -29,7 +24,6 @@ class FacetedBrowserStore extends BaseStore {
         this.page = payload.page;
         this.graphName = payload.graphName;
         this.datasetURI = payload.datasetURI;
-        this.isComplete = 1;
         this.emitChange();
     }
     updateMasterFacets(payload) {
@@ -42,7 +36,6 @@ class FacetedBrowserStore extends BaseStore {
         this.page = payload.page;
         this.graphName = payload.graphName;
         this.datasetURI = payload.datasetURI;
-        this.isComplete = 1;
         this.emitChange();
     }
     handleFacetSideEffects(payload) {
@@ -50,7 +43,6 @@ class FacetedBrowserStore extends BaseStore {
         this.page = payload.page;
         this.graphName = payload.graphName;
         this.datasetURI = payload.datasetURI;
-        this.isComplete = 1;
         this.emitChange();
     }
 
@@ -61,8 +53,7 @@ class FacetedBrowserStore extends BaseStore {
             datasetURI: this.datasetURI,
             resources: this.resources,
             total: this.total,
-            page: this.page,
-            isComplete: this.isComplete
+            page: this.page
         };
     }
     dehydrate() {
@@ -83,8 +74,7 @@ FacetedBrowserStore.handlers = {
     'LOAD_FACETS_RESOURCES_SUCCESS': 'updateFacetResources',
     'LOAD_MASTER_FACETS_SUCCESS': 'updateMasterFacets',
     'LOAD_SIDE_EFFECTS_FACETS_SUCCESS': 'handleFacetSideEffects',
-    'CLEAR_FACETS_SUCCESS': 'clearFacets',
-    'START_TASK_FACETS': 'startTask'
+    'CLEAR_FACETS_SUCCESS': 'clearFacets'
 };
 
 export default FacetedBrowserStore;

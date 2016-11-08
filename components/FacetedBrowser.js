@@ -165,10 +165,9 @@ class FacetedBrowser extends React.Component {
         });
         return i;
     }
-    getPropertyLabel(uri) {
-        let property = '';
-        let tmp = uri;
-        let tmp2 = tmp.split('#');
+    extractNameFromPropertyURI(uri) {
+        let property = uri;
+        let tmp2 = uri.split('#');
         if(tmp2.length > 1){
             property = tmp2[1];
         }else{
@@ -177,6 +176,23 @@ class FacetedBrowser extends React.Component {
         }
         //make first letter capital case
         property = property.charAt(0).toUpperCase() + property.slice(1);
+        return property;
+    }
+    getPropertyLabel(uri) {
+        let property = '';
+        let tmp = uri;
+        let self = this;
+        //handle the prop path case
+        if(uri.indexOf('->') !==-1){
+            let tmp12 = uri.split('->');
+            let tmp2 = [];
+            tmp12.forEach((el)=> {
+                tmp2.push(self.extractNameFromPropertyURI(el.trim()));
+            });
+            property = tmp2.join('/');
+        }else{
+            property = self.extractNameFromPropertyURI(uri);
+        }
         return property;
     }
     getBrowsableList(){
@@ -243,7 +259,7 @@ class FacetedBrowser extends React.Component {
             if(this.props.FacetedBrowserStore.total){
                 resourceDIV = <div className="ui segment">
                                 <h3 className="ui header">
-                                    {this.props.FacetedBrowserStore.isComplete ? '' : <img src="/assets/img/loader.gif" alt="loading..."/>} <span className="ui blue circular label">{this.addCommas(this.props.FacetedBrowserStore.total)}</span> Resources from {datasetTitle}
+                                    <span className="ui blue circular label">{this.addCommas(this.props.FacetedBrowserStore.total)}</span> Resources from {datasetTitle}
 
                                  </h3>
                                 <ResourceList resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} OpenInNewTab={true} isBig={!showFactes}/>
