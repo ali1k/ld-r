@@ -24,6 +24,7 @@ class DatasetReactor extends React.Component {
         let resources = this.props.DatasetStore.dataset.resources;
         let page = this.props.DatasetStore.dataset.page;
         let total = this.props.DatasetStore.dataset.total;
+        let isComplete = this.props.DatasetStore.isComplete;
         let config = this.props.DatasetStore.dataset.config;
         let datasetReactor;
         if(config && config.datasetReactor){
@@ -35,6 +36,7 @@ class DatasetReactor extends React.Component {
                     datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])}/>;
             }
         }
+
         return (
             <div ref="datasetReactor">
                 {datasetReactor}

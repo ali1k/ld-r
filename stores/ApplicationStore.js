@@ -8,9 +8,18 @@ class ApplicationStore extends BaseStore {
     constructor(dispatcher) {
         super(dispatcher);
         this.pageTitle = '';
+        this.loading = 0;
     }
     updatePageTitle(payload) {
         this.pageTitle = payload.pageTitle;
+        this.emitChange();
+    }
+    loaderOn() {
+        this.loading = 1;
+        this.emitChange();
+    }
+    loaderOff() {
+        this.loading = 0;
         this.emitChange();
     }
     getPageTitle() {
@@ -18,7 +27,8 @@ class ApplicationStore extends BaseStore {
     }
     getState() {
         return {
-            pageTitle: this.pageTitle
+            pageTitle: this.pageTitle,
+            loading: this.loading
         };
     }
     dehydrate() {
@@ -26,12 +36,15 @@ class ApplicationStore extends BaseStore {
     }
     rehydrate(state) {
         this.pageTitle = state.pageTitle;
+        this.loading = state.loading;
     }
 }
 
 ApplicationStore.storeName = 'ApplicationStore'; // PR open in dispatchr to remove this need
 ApplicationStore.handlers = {
-    'UPDATE_PAGE_TITLE': 'updatePageTitle'
+    'UPDATE_PAGE_TITLE': 'updatePageTitle',
+    'LOADING_DATA': 'loaderOn',
+    'LOADED_DATA': 'loaderOff'
 };
 
 export default ApplicationStore;

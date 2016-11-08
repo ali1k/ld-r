@@ -26,21 +26,21 @@ class ResourceReactor extends React.Component {
         let title = this.props.ResourceStore.title;
         let currentCategory = this.props.ResourceStore.currentCategory;
         let propertyPath = this.props.ResourceStore.propertyPath;
-        let isComplete = this.props.ResourceStore.isComplete;
         let config = this.props.ResourceStore.config;
         let resourceReactor;
         if (config && config.resourceReactor) {
             switch (config.resourceReactor[0]) {
                 case 'Resource':
-                    resourceReactor = <Resource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} isComplete={isComplete} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    resourceReactor = <Resource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
                     break;
                 case 'PersonResource':
-                    resourceReactor = <PersonResource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} isComplete={isComplete} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    resourceReactor = <PersonResource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
                     break;
                 default:
-                    resourceReactor = <Resource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} isComplete={isComplete} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    resourceReactor = <Resource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
             }
         }
+
         return (
             <div ref="resourceReactor">
                 {resourceReactor}
@@ -49,6 +49,7 @@ class ResourceReactor extends React.Component {
     }
 }
 ResourceReactor.contextTypes = {
+    executeAction: React.PropTypes.func.isRequired,
     getUser: React.PropTypes.func
 };
 ResourceReactor = connectToStores(ResourceReactor, [ResourceStore], function(context, props) {

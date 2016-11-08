@@ -159,7 +159,6 @@ class Resource extends React.Component {
                 <div className="ui column">
                     {breadcrumb}
                     <h2>
-                        {this.props.isComplete ? '' : <img src="/assets/img/loader.gif" alt="loading..."/>}
                         <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI ) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon cube"></i></a> <a href={this.props.resource} target="_blank">{this.props.title}</a>
                     </h2>
                     {mainDIV}

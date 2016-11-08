@@ -18,7 +18,6 @@ class ResourceStore extends BaseStore {
         this.properties = utilObject.preservePropertiesOrder(this.properties, payload.properties);
         this.title = payload.title ? payload.title : payload.resourceURI;
         this.config = payload.config;
-        this.isComplete = 1;
         this.emitChange();
     }
     cleanAll() {
@@ -31,14 +30,9 @@ class ResourceStore extends BaseStore {
         this.title = '';
         this.propertyPath = [];
         this.config = {};
-        this.isComplete = 1;
     }
     cleanResource() {
         this.cleanAll();
-        this.emitChange();
-    }
-    startTask () {
-        this.isComplete = 0;
         this.emitChange();
     }
     getState() {
@@ -51,8 +45,7 @@ class ResourceStore extends BaseStore {
             currentCategory: this.currentCategory,
             properties: this.properties,
             propertyPath: this.propertyPath,
-            config: this.config,
-            isComplete: this.isComplete
+            config: this.config
         };
     }
     dehydrate() {
@@ -74,8 +67,7 @@ class ResourceStore extends BaseStore {
 ResourceStore.storeName = 'ResourceStore'; // PR open in dispatchr to remove this need
 ResourceStore.handlers = {
     'LOAD_RESOURCE_SUCCESS': 'updatePropertyList',
-    'CLEAN_RESOURCE_SUCCESS': 'cleanResource',
-    'START_TASK_RESOURCE': 'startTask'
+    'CLEAN_RESOURCE_SUCCESS': 'cleanResource'
 };
 
 export default ResourceStore;
