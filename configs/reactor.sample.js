@@ -14,7 +14,9 @@ export default {
             },
             //authentication graph
             'http://ld-r.org/users': {
-                readOnly: 0
+                readOnly: 0,
+                resourceFocusType: ['https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#User'],
+                resourceLabelProperty: ['http://xmlns.com/foaf/0.1/accountName']
             },
             'http://ld-r.org/configurations': {
                 readOnly: 0,
