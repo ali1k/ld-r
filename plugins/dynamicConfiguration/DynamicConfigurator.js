@@ -1,4 +1,4 @@
-import {enableDynamicReactorConfiguration, enableDynamicServerConfiguration, configDatasetURI, enableAutomaticConfiguration} from '../../configs/general';
+import {enableDynamicReactorConfiguration, enableDynamicServerConfiguration, configDatasetURI, enableAutomaticConfiguration, authDatasetURI} from '../../configs/general';
 import {getStaticEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
 import test from '../../services/utils/helpers';
 import rp from 'request-promise';
@@ -6,8 +6,10 @@ import rp from 'request-promise';
 class DynamicConfigurator {
     prepareDynamicServerConfig(datasetURI, callback) {
         let config = {sparqlEndpoint: {}};
-        //do not config if disabled
-        if(!enableDynamicServerConfiguration){
+        //the following graphs shold be only locally reachable
+        let exceptions = [configDatasetURI[0], authDatasetURI[0]];
+        //do not config if disabled or exceptions
+        if(!enableDynamicServerConfiguration || exceptions.indexOf(datasetURI) !== -1){
             callback(config);
         }else{
             //start config

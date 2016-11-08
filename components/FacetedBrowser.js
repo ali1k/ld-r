@@ -171,7 +171,7 @@ class FacetedBrowser extends React.Component {
         if(tmp2.length > 1){
             property = tmp2[1];
         }else{
-            tmp2 = tmp.split('/');
+            tmp2 = uri.split('/');
             property = tmp2[tmp2.length - 1];
         }
         //make first letter capital case
