@@ -10,6 +10,10 @@ class DynamicConfigurator {
             callback(config);
         }else{
             //start config
+            const endpointParameters = getEndpointParameters(configDatasetURI[0]);
+            const graphName = endpointParameters.graphName;
+            const headers = {'Accept': 'application/sparql-results+json'};
+            const outputFormat = 'application/sparql-results+json';
             //query the triple store for server configs
             const prefixes = `
                 PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
@@ -18,7 +22,7 @@ class DynamicConfigurator {
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
             `;
             const query = `
-            SELECT DISTINCT ?config ?host ?port ?path ?endpointType ?setting ?settingValue WHERE { GRAPH <${configDatasetURI[0]}>
+            SELECT DISTINCT ?config ?host ?port ?path ?endpointType ?setting ?settingValue WHERE { GRAPH <${graphName}>
                     {
                     ?config a ldr:ServerConfig ;
                             ldr:dataset <${datasetURI}> ;
@@ -31,9 +35,6 @@ class DynamicConfigurator {
                     }
             }
             `;
-            const endpointParameters = getEndpointParameters(configDatasetURI[0]);
-            const headers = {'Accept': 'application/sparql-results+json'};
-            const outputFormat = 'application/sparql-results+json';
             //send request
             //console.log(prefixes + query);
             let self = this;
@@ -56,6 +57,10 @@ class DynamicConfigurator {
             callback(config);
         }else{
             //start config
+            const endpointParameters = getEndpointParameters(configDatasetURI[0]);
+            const graphName = endpointParameters.graphName;
+            const headers = {'Accept': 'application/sparql-results+json'};
+            const outputFormat = 'application/sparql-results+json';
             //query the triple store for property configs
             const prefixes = `
                 PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
@@ -64,7 +69,7 @@ class DynamicConfigurator {
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
             `;
             const query = `
-            SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue WHERE { GRAPH <${configDatasetURI[0]}>
+            SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue WHERE { GRAPH <${graphName}>
                     {
                     ?config a ldr:ReactorConfig ;
                             ldr:dataset <${datasetURI}> ;
@@ -75,9 +80,6 @@ class DynamicConfigurator {
                     }
             }
             `;
-            const endpointParameters = getEndpointParameters(configDatasetURI[0]);
-            const headers = {'Accept': 'application/sparql-results+json'};
-            const outputFormat = 'application/sparql-results+json';
             //send request
             //console.log(prefixes + query);
             let self = this;
@@ -116,6 +118,10 @@ class DynamicConfigurator {
                 typeFilterStr = '0 && ';
             }
             //start config
+            const endpointParameters = getEndpointParameters(configDatasetURI[0]);
+            const graphName = endpointParameters.graphName;
+            const headers = {'Accept': 'application/sparql-results+json'};
+            const outputFormat = 'application/sparql-results+json';
             //query the triple store for property configs
             const prefixes = `
                 PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
@@ -124,7 +130,7 @@ class DynamicConfigurator {
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
             `;
             const query = `
-            SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?treatAsResourceType ?settingValue WHERE { GRAPH <${configDatasetURI[0]}> {
+            SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?treatAsResourceType ?settingValue WHERE { GRAPH <${graphName}> {
                     {
                     ?config a ldr:ReactorConfig ;
                             ldr:resource ?resource ;
@@ -149,9 +155,6 @@ class DynamicConfigurator {
                     }
             }   } ORDER BY DESC(?treatAsResourceType)
             `;
-            const endpointParameters = getEndpointParameters(configDatasetURI[0]);
-            const headers = {'Accept': 'application/sparql-results+json'};
-            const outputFormat = 'application/sparql-results+json';
             //send request
             //console.log(prefixes + query);
             let self = this;
@@ -176,6 +179,10 @@ class DynamicConfigurator {
             callback(config);
         }else{
             //start config
+            const endpointParameters = getEndpointParameters(configDatasetURI[0]);
+            const graphName = endpointParameters.graphName;
+            const headers = {'Accept': 'application/sparql-results+json'};
+            const outputFormat = 'application/sparql-results+json';
             //query the triple store for property configs
             const prefixes = `
                 PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
@@ -184,7 +191,7 @@ class DynamicConfigurator {
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
             `;
             const query = `
-            SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?settingValue WHERE { GRAPH <${configDatasetURI[0]}>
+            SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?settingValue WHERE { GRAPH <${graphName}>
                     {
                     ?config a ldr:ReactorConfig ;
                             ldr:property <${propertyURI}> ;
@@ -197,9 +204,6 @@ class DynamicConfigurator {
                     }
             }
             `;
-            const endpointParameters = getEndpointParameters(configDatasetURI[0]);
-            const headers = {'Accept': 'application/sparql-results+json'};
-            const outputFormat = 'application/sparql-results+json';
             //send request
             //console.log(prefixes + query);
             let self = this;
