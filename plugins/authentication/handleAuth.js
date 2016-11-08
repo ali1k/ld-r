@@ -10,20 +10,7 @@ let rp = require('request-promise');
 let config = require('../../configs/server');
 let generalConfig = require('../../configs/general');
 let helpers = require('../../services/utils/helpers');
-let httpOptions;
 
-let d = generalConfig.authDatasetURI[0], g = generalConfig.authDatasetURI[0];
-httpOptions = helpers.getHTTPOptions(d);
-let dg = helpers.prepareDG(d);
-d = dg.d;
-g = dg.g;
-let authGraphName = g;
-
-httpOptions = {
-    host: config.sparqlEndpoint[d].host,
-    port: config.sparqlEndpoint[d].port,
-    path: config.sparqlEndpoint[d].path
-};
 let appShortTitle = generalConfig.appShortTitle;
 let appFullTitle = generalConfig.appFullTitle;
 
@@ -132,18 +119,17 @@ module.exports = function handleAuthentication(server) {
 };
 let addUserQueries = function (req, res, recaptchaSiteKey){
     //first check if user already exists
+    let endpoint = helpers.getStaticEndpointParameters([generalConfig.authDatasetURI[0]]);
     /*jshint multistr: true */
     let query = '\
     PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-    SELECT ( COUNT(?s) AS ?exists ) FROM <'+ authGraphName +'> WHERE { \
+    SELECT ( COUNT(?s) AS ?exists ) FROM <'+ endpoint.graphName +'> WHERE { \
       { \
           ?s a foaf:Person . \
           ?s foaf:accountName "'+ req.body.username +'" .\
       } \
     } \
     ';
-
-    let endpoint = helpers.getEndpointParameters([generalConfig.authDatasetURI[0]]);
     let rpPath = helpers.getHTTPGetURL(helpers.getHTTPQuery('read', query, endpoint, outputFormat));
     //send request
     rp.get({uri: rpPath}).then(function(resq){
@@ -167,7 +153,7 @@ let addUserQueries = function (req, res, recaptchaSiteKey){
                     PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
                     PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
                     PREFIX dcterms: <http://purl.org/dc/terms/> \
-                    INSERT DATA { GRAPH <'+ authGraphName +'> { \
+                    INSERT DATA { GRAPH <'+ endpoint.graphName +'> { \
                     <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; foaf:mbox <mailto:'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfDataset <'+datasetURI+'>; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1>;ldr:editorOfProperty <'+blanknode+'2>; ldr:editorOfProperty <'+blanknode+'3>; ldr:editorOfProperty <'+blanknode+'4> . \
                     <'+blanknode+'1> ldr:resource <'+resourceURI+'> ; ldr:property foaf:firstName . \
                     <'+blanknode+'2> ldr:resource <'+resourceURI+'> ; ldr:property foaf:lastName . \
@@ -181,7 +167,7 @@ let addUserQueries = function (req, res, recaptchaSiteKey){
                     PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
                     PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
                     PREFIX dcterms: <http://purl.org/dc/terms/> \
-                    INSERT DATA INTO <'+ authGraphName +'> { \
+                    INSERT DATA INTO <'+ endpoint.graphName +'> { \
                     <'+ resourceURI + '> a foaf:Person; foaf:firstName """'+req.body.firstname+'"""; foaf:lastName """'+req.body.lastname+'"""; foaf:organization """'+req.body.organization+'"""; foaf:mbox <mailto:'+req.body.email+'>; dcterms:created "' + currentDate + '"^^xsd:dateTime; foaf:accountName """'+req.body.username+'"""; ldr:password """'+passwordHash.generate(req.body.password)+'"""; ldr:isActive "'+isActive+'"^^xsd:Integer; ldr:isSuperUser "0"^^xsd:Integer; ldr:editorOfDataset <'+datasetURI+'>; ldr:editorOfResource <'+dresourceURI+'>; ldr:editorOfProperty <'+blanknode+'1>;ldr:editorOfProperty <'+blanknode+'2>; ldr:editorOfProperty <'+blanknode+'3>; ldr:editorOfProperty <'+blanknode+'4> . \
                     <'+blanknode+'1> ldr:resource <'+resourceURI+'> ; ldr:property foaf:firstName . \
                     <'+blanknode+'2> ldr:resource <'+resourceURI+'> ; ldr:property foaf:lastName . \

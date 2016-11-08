@@ -2,8 +2,8 @@ import {sparqlEndpoint} from '../../configs/server';
 import {defaultDatasetURI, enableDynamicServerConfiguration} from '../../configs/general';
 import validUrl from 'valid-url';
 import queryString from 'query-string';
-//todo: get config from dynamic configs: not allow overwriting auth and config graphs data
-let prepareDGFunc = function (datasetURI){
+
+let prepareStaticDGFunc = function (datasetURI){
     let d = datasetURI, g = datasetURI;
     //try default graph if no datasetURI is given
     if(String(defaultDatasetURI[0]) !==''){
@@ -36,19 +36,11 @@ let prepareDGFunc = function (datasetURI){
 export default {
     //returns dataset and graphName
     prepareDG: function (datasetURI){
-        return prepareDGFunc(datasetURI);
+        return prepareStaticDGFunc(datasetURI);
     },
-    getHTTPOptions: function(datasetURI) {
-        let httpOptions, {d, g} = prepareDGFunc(datasetURI);
-        httpOptions = {
-            host: sparqlEndpoint[d].host,
-            port: sparqlEndpoint[d].port,
-            path: sparqlEndpoint[d].path
-        };
-        return httpOptions;
-    },
-    getEndpointParameters: function(datasetURI) {
-        let httpOptions, {d, g} = prepareDGFunc(datasetURI);
+    //it is used for users and configs
+    getStaticEndpointParameters: function(datasetURI) {
+        let httpOptions, {d, g} = prepareStaticDGFunc(datasetURI);
         httpOptions = {
             host: sparqlEndpoint[d].host,
             port: sparqlEndpoint[d].port,
@@ -58,7 +50,7 @@ export default {
         if(sparqlEndpoint[d].useReasoning){
             useReasoning = 1;
         }
-        let etype = sparqlEndpoint[d].type ? sparqlEndpoint[d].type : 'virtuoso';
+        let etype = sparqlEndpoint[d].endpointType ? sparqlEndpoint[d].endpointType : 'virtuoso';
         return {httpOptions: httpOptions, type: etype, graphName: g, useReasoning: useReasoning};
     },
     //build the write URI and params for different SPARQL endpoints

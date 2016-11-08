@@ -1,5 +1,6 @@
 'use strict';
-import {getEndpointParameters, getHTTPQuery, getHTTPGetURL} from './utils/helpers';
+import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
+import {getDynamicEndpointParameters} from './utils/dynamicHelpers';
 import {authDatasetURI, enableAuthentication, enableEmailNotifications} from '../configs/general';
 import {sendMail} from '../plugins/email/handleEmail';
 import AdminQuery from './sparql/AdminQuery';
@@ -36,20 +37,22 @@ export default {
             }
             query = queryObject.getUsers(graphName);
             //build http uri
-            endpointParameters = getEndpointParameters(datasetURI);
-            graphName = endpointParameters.graphName;
+            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
 
-            //send request
-            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
-                callback(null, {
-                    datasetURI: datasetURI,
-                    graphName: graphName,
-                    users: utilObject.parseUsers(res)
+                //send request
+                rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                    callback(null, {
+                        datasetURI: datasetURI,
+                        graphName: graphName,
+                        users: utilObject.parseUsers(res)
+                    });
+                }).catch(function (err) {
+                    console.log(err);
+                    callback(null, {datasetURI: datasetURI, graphName: graphName, users: []});
                 });
-            }).catch(function (err) {
-                console.log(err);
-                callback(null, {datasetURI: datasetURI, graphName: graphName, users: []});
             });
+
         }else if(resource === 'admin.others'){
             console.log('other services');
         }
@@ -73,21 +76,22 @@ export default {
                 user = {accountName: 'open'};
             }
             datasetURI = authDatasetURI[0];
-            endpointParameters = getEndpointParameters(datasetURI);
-            graphName = endpointParameters.graphName;
+            getDynamicEndpointParameters(datasetURI, (endpointParameters)=> {
+                graphName = endpointParameters.graphName;
 
-            query = queryObject.activateUser(endpointParameters.type, graphName, params.resourceURI);
-            //build http uri
-            //send request
-            HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
-            rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
-                if(enableEmailNotifications){
-                    sendMail('userActivation', '', params.email, '', '', '');
-                }
-                callback(null, {});
-            }).catch(function (err) {
-                console.log(err);
-                callback(null, {});
+                query = queryObject.activateUser(endpointParameters.type, graphName, params.resourceURI);
+                //build http uri
+                //send request
+                HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
+                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                    if(enableEmailNotifications){
+                        sendMail('userActivation', '', params.email, '', '', '');
+                    }
+                    callback(null, {});
+                }).catch(function (err) {
+                    console.log(err);
+                    callback(null, {});
+                });
             });
         }
     }

@@ -2,74 +2,76 @@
 let rp = require('request-promise');
 let generalConfig = require('../../configs/general');
 let helpers = require('../../services/utils/helpers');
+let helpers2 = require('../../services/utils/dynamicHelpers');
 let appShortTitle = generalConfig.appShortTitle;
 let appFullTitle = generalConfig.appFullTitle;
 
 let exportResource = function(format, datasetURI , resourceURI, req, res) {
-    let endpoint = helpers.getEndpointParameters([datasetURI]);
-    let httpOptions = endpoint.httpOptions;
-    let outputFormat;
-    switch (format) {
-        case 'RDF/XML':
-            outputFormat = 'application/rdf+xml';
-            break;
-        case 'JSON':
-            outputFormat = 'application/sparql-results+json';
-            break;
-        case 'NTriples':
-            outputFormat = 'text/plain';
-            break;
-        default:
-            outputFormat = 'text/plain';
-    }
-    let ext = 'FROM <' + datasetURI  + '>';
-    if (endpoint.graphName && endpoint.graphName==='default') {
-        ext = '';
-    }
-    let primaryTopic = '<http://' + req.headers.host + '/dataset/' + encodeURIComponent(datasetURI ) + '> foaf:primaryTopic <' + datasetURI  + '> . ?s ?p ?o .';
-    let selectPhrase = '?s ?p ?o .';
-    if (resourceURI) {
-        selectPhrase = '<' + resourceURI + '> ?p ?o . OPTIONAL {?o ?sp ?spo .} FILTER(?p != ldReactor:password)';
-        primaryTopic = '<http://' + req.headers.host + '/dataset/' + encodeURIComponent(datasetURI ) + '/resource/' + encodeURIComponent(resourceURI) + '> foaf:primaryTopic <' + resourceURI + '> . <' + resourceURI + '> ?p ?o . ?o ?sp ?spo .';
-    }
-    /*jshint multistr: true */
-    let query = '\
-    PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-    PREFIX ldReactor: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
-    CONSTRUCT {' + primaryTopic + '} ' + ext + ' WHERE { ' + selectPhrase + ' } LIMIT 70000 \
-    ';
-    let rpPath = helpers.getHTTPGetURL(helpers.getHTTPQuery('read', query, endpoint, outputFormat));
-    rp.get({
-        uri: rpPath
-    }).then(function(result) {
-        res.set({
-            'Content-Type': outputFormat,
-            'Content-Length': result.length
+    helpers2.getDynamicEndpointParameters([datasetURI],(endpoint)=>{
+        let httpOptions = endpoint.httpOptions;
+        let outputFormat;
+        switch (format) {
+            case 'RDF/XML':
+                outputFormat = 'application/rdf+xml';
+                break;
+            case 'JSON':
+                outputFormat = 'application/sparql-results+json';
+                break;
+            case 'NTriples':
+                outputFormat = 'text/plain';
+                break;
+            default:
+                outputFormat = 'text/plain';
+        }
+        let ext = 'FROM <' + datasetURI  + '>';
+        if (endpoint.graphName && endpoint.graphName==='default') {
+            ext = '';
+        }
+        let primaryTopic = '<http://' + req.headers.host + '/dataset/' + encodeURIComponent(datasetURI ) + '> foaf:primaryTopic <' + datasetURI  + '> . ?s ?p ?o .';
+        let selectPhrase = '?s ?p ?o .';
+        if (resourceURI) {
+            selectPhrase = '<' + resourceURI + '> ?p ?o . OPTIONAL {?o ?sp ?spo .} FILTER(?p != ldReactor:password)';
+            primaryTopic = '<http://' + req.headers.host + '/dataset/' + encodeURIComponent(datasetURI ) + '/resource/' + encodeURIComponent(resourceURI) + '> foaf:primaryTopic <' + resourceURI + '> . <' + resourceURI + '> ?p ?o . ?o ?sp ?spo .';
+        }
+        /*jshint multistr: true */
+        let query = '\
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
+        PREFIX ldReactor: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
+        CONSTRUCT {' + primaryTopic + '} ' + ext + ' WHERE { ' + selectPhrase + ' } LIMIT 70000 \
+        ';
+        let rpPath = helpers.getHTTPGetURL(helpers.getHTTPQuery('read', query, endpoint, outputFormat));
+        rp.get({
+            uri: rpPath
+        }).then(function(result) {
+            res.set({
+                'Content-Type': outputFormat,
+                'Content-Length': result.length
+            });
+            //res.download(result);
+            res.write(result);
+            res.end();
+            //res.send(result);
+        }).catch(function(err) {
+            res.send(err);
         });
-        //res.download(result);
-        res.write(result);
-        res.end();
-        //res.send(result);
-    }).catch(function(err) {
-        res.send(err);
+        /* todo: content negotiation
+        res.format({
+          'text/plain': function(){
+
+          },
+          'text/html': function(){
+              res.render('export', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, data: 'data', errorMsg: ''});
+          },
+          'application/json': function(){
+
+          },
+          'default': function() {
+            // log the request and respond with 406
+
+          }
+        });
+        */
     });
-    /* todo: content negotiation
-    res.format({
-      'text/plain': function(){
-
-      },
-      'text/html': function(){
-          res.render('export', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, data: 'data', errorMsg: ''});
-      },
-      'application/json': function(){
-
-      },
-      'default': function() {
-        // log the request and respond with 406
-
-      }
-    });
-    */
 }
 module.exports = function handleExport(server) {
     server.get('/export/:t/:d/:r?', function(req, res) {

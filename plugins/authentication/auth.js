@@ -3,21 +3,6 @@ let rp = require('request-promise');
 let config = require('../../configs/server');
 let generalConfig = require('../../configs/general');
 let helpers = require('../../services/utils/helpers');
-
-let httpOptions;
-let d = generalConfig.authDatasetURI[0],
-    g = generalConfig.authDatasetURI[0];
-httpOptions = helpers.getHTTPOptions(d);
-let dg = helpers.prepareDG(d);
-d = dg.d;
-g = dg.g;
-let authGraphName = g;
-httpOptions = {
-    host: config.sparqlEndpoint[d].host,
-    port: config.sparqlEndpoint[d].port,
-    path: config.sparqlEndpoint[d].path
-};
-
 let outputFormat = 'application/sparql-results+json';
 //this is visible to the server-side
 module.exports = {
@@ -35,11 +20,12 @@ module.exports = {
     },
     findById: function(id, fn) {
         let self = this;
+        let endpoint = helpers.getStaticEndpointParameters([generalConfig.authDatasetURI[0]]);
         /*jshint multistr: true */
         let query = '\
       PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
       PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-      SELECT ?p ?o ?pr ?pp FROM <' + authGraphName + '> WHERE { \
+      SELECT ?p ?o ?pr ?pp FROM <' + endpoint.graphName + '> WHERE { \
         { \
             <' + id + '> a foaf:Person . \
             <' + id + '> ?p ?o . \
@@ -48,7 +34,6 @@ module.exports = {
       } \
       ';
         //send request
-        let endpoint = helpers.getEndpointParameters([generalConfig.authDatasetURI[0]]);
         let rpPath = helpers.getHTTPGetURL(helpers.getHTTPQuery('read', query, endpoint, outputFormat));
         rp.get({
             uri: rpPath
@@ -92,11 +77,12 @@ module.exports = {
     },
     findByUsername: function(username, fn) {
         let self = this;
+        let endpoint = helpers.getStaticEndpointParameters([generalConfig.authDatasetURI[0]]);
         /*jshint multistr: true */
         let query = '\
       PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
       PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-      SELECT ?s ?p ?o FROM <' + authGraphName + '> WHERE { \
+      SELECT ?s ?p ?o FROM <' + endpoint.graphName + '> WHERE { \
         { \
             ?s a foaf:Person . \
             ?s foaf:accountName "' + username + '" .\
@@ -104,7 +90,6 @@ module.exports = {
         } \
       } \
       ';
-        let endpoint = helpers.getEndpointParameters([generalConfig.authDatasetURI[0]]);
         let rpPath = helpers.getHTTPGetURL(helpers.getHTTPQuery('read', query, endpoint, outputFormat));
         //send request
         rp.get({

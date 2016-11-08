@@ -1,5 +1,6 @@
 import {enableDynamicReactorConfiguration, enableDynamicServerConfiguration, configDatasetURI, enableAutomaticConfiguration} from '../../configs/general';
-import {getEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
+import {getStaticEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
+import test from '../../services/utils/helpers';
 import rp from 'request-promise';
 
 class DynamicConfigurator {
@@ -10,7 +11,7 @@ class DynamicConfigurator {
             callback(config);
         }else{
             //start config
-            const endpointParameters = getEndpointParameters(configDatasetURI[0]);
+            const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
             const graphName = endpointParameters.graphName;
             const headers = {'Accept': 'application/sparql-results+json'};
             const outputFormat = 'application/sparql-results+json';
@@ -36,10 +37,8 @@ class DynamicConfigurator {
             }
             `;
             //send request
-            //console.log(prefixes + query);
             let self = this;
             rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
-                //console.log(res);
                 config = self.parseServerConfigs(config, datasetURI, res);
                 callback(config);
             }).catch(function (err) {
@@ -57,7 +56,7 @@ class DynamicConfigurator {
             callback(config);
         }else{
             //start config
-            const endpointParameters = getEndpointParameters(configDatasetURI[0]);
+            const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
             const graphName = endpointParameters.graphName;
             const headers = {'Accept': 'application/sparql-results+json'};
             const outputFormat = 'application/sparql-results+json';
@@ -118,7 +117,7 @@ class DynamicConfigurator {
                 typeFilterStr = '0 && ';
             }
             //start config
-            const endpointParameters = getEndpointParameters(configDatasetURI[0]);
+            const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
             const graphName = endpointParameters.graphName;
             const headers = {'Accept': 'application/sparql-results+json'};
             const outputFormat = 'application/sparql-results+json';
@@ -179,7 +178,7 @@ class DynamicConfigurator {
             callback(config);
         }else{
             //start config
-            const endpointParameters = getEndpointParameters(configDatasetURI[0]);
+            const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
             const graphName = endpointParameters.graphName;
             const headers = {'Accept': 'application/sparql-results+json'};
             const outputFormat = 'application/sparql-results+json';
@@ -358,21 +357,21 @@ class DynamicConfigurator {
         let output = config;
         let parsed = JSON.parse(body);
         parsed.results.bindings.forEach(function(el) {
-            if(!output.dataset[datasetURI]){
-                output.dataset[datasetURI] = {};
+            if(!output.sparqlEndpoint[datasetURI]){
+                output.sparqlEndpoint[datasetURI] = {};
             }
-            output.dataset[datasetURI].host = el.host.value;
-            output.dataset[datasetURI].port = el.port.value;
-            output.dataset[datasetURI].path = el.path.value;
-            output.dataset[datasetURI].endpointType = el.endpointType.value;
+            output.sparqlEndpoint[datasetURI].host = el.host.value;
+            output.sparqlEndpoint[datasetURI].port = el.port.value;
+            output.sparqlEndpoint[datasetURI].path = el.path.value;
+            output.sparqlEndpoint[datasetURI].endpointType = el.endpointType.value;
             //assume that all values will be stored in an array expect numbers: Not-a-Number
             if(!isNaN(el.settingValue.value)){
-                output.dataset[datasetURI][el.setting.value.split('#')[1]]= parseInt(el.settingValue.value);
+                output.sparqlEndpoint[datasetURI][el.setting.value.split('#')[1]]= parseInt(el.settingValue.value);
             }else{
-                if(!output.dataset[datasetURI][el.setting.value.split('#')[1]]){
-                    output.dataset[datasetURI][el.setting.value.split('#')[1]] = []
+                if(!output.sparqlEndpoint[datasetURI][el.setting.value.split('#')[1]]){
+                    output.sparqlEndpoint[datasetURI][el.setting.value.split('#')[1]] = []
                 }
-                output.dataset[datasetURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                output.sparqlEndpoint[datasetURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
             }
         });
         return output;
