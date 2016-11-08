@@ -27,7 +27,7 @@ module.exports = {
       PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
       SELECT ?p ?o ?pr ?pp FROM <' + endpoint.graphName + '> WHERE { \
         { \
-            <' + id + '> a foaf:Person . \
+            <' + id + '> a ldr:User . \
             <' + id + '> ?p ?o . \
             OPTIONAL {?o ldr:resource ?pr . ?o ldr:property ?pp .} \
         } \
@@ -84,7 +84,7 @@ module.exports = {
       PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
       SELECT ?s ?p ?o FROM <' + endpoint.graphName + '> WHERE { \
         { \
-            ?s a foaf:Person . \
+            ?s a ldr:User . \
             ?s foaf:accountName "' + username + '" .\
             ?s ?p ?o . \
         } \
