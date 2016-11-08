@@ -98,6 +98,13 @@ export default {
                     objectIEditor:['ToggleEdit'],
                     onValue: ['1'],
                     offValue: ['0']
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#useReasoning': {
+                    label: ['Use Reasoning?'],
+                    objectIViewer:['ToggleView'],
+                    objectIEditor:['ToggleEdit'],
+                    onValue: ['1'],
+                    offValue: ['0']
                 }
             },
             //for user page

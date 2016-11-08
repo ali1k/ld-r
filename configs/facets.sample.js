@@ -12,7 +12,8 @@ export default {
         'http://ld-r.org/configurations': {
             list: [
                 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#scope', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#dataset', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resource', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#property'
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#scope', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#dataset', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resource', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#property',
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#endpointType'
             ],
             config: {
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#dataset': {
