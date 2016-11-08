@@ -59,6 +59,7 @@ export default {
                 //console.log(query);
                 //build http uri
                 //send request
+                let props;
                 rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                     //exceptional case for user properties: we hide some admin props from normal users
                     utilObject.parseProperties(res, datasetURI, resourceURI, category, propertyPath, (cres)=> {
@@ -74,7 +75,7 @@ export default {
                             title: cres.title,
                             currentCategory: category,
                             propertyPath: propertyPath,
-                            properties: cres.props,
+                            properties: props,
                             config: cres.rconfig
                         });
                     });

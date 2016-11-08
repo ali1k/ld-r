@@ -250,8 +250,8 @@ class DynamicConfigurator {
                             ldr:scope ?scope ;
                             ?setting ?settingValue .
                             OPTIONAL { ?config ldr:dataset ?dataset . }
-                            OPTIONAL { ?config ldr:dataset ?dataset . }
-                            OPTIONAL { ?config rdfs:label ?resource . }
+                            OPTIONAL { ?config ldr:resource ?resource . }
+                            OPTIONAL { ?config rdfs:label ?label . }
                             FILTER (?setting !=rdf:type && ?setting !=ldr:property && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset && ?setting !=ldr:resource)
                     }
             }
@@ -264,6 +264,7 @@ class DynamicConfigurator {
                 config = self.parsePropertyConfigs(config, propertyURI, res);
                 callback(config);
             }).catch(function (err) {
+                //console.log(err);
                 console.log('Error in property config query:', prefixes + query);
                 console.log('---------------------------------------------------------');
                 callback(config);
