@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {navigateAction} from 'fluxible-router';
-import {defaultDatasetURI, authDatasetURI, enableAuthentication, configDatasetURI} from '../configs/general';
-import {config} from '../configs/reactor';
-import {facets} from '../configs/facets';
+import {connectToStores} from 'fluxible-addons-react';
+import {enableAuthentication} from '../configs/general';
+import DatasetsStore from '../stores/DatasetsStore';
 import URIUtil from './utils/URIUtil';
+
 class Datasets extends React.Component {
     componentDidMount() {
 
@@ -28,73 +29,36 @@ class Datasets extends React.Component {
     }
     render() {
         let self = this;
+        let optionsList, output;
+        let color = 'black';
         let user = this.context.getUser();
-        let sources = ['dataset', 'dataset_resource', 'dataset_property', 'dataset_object', 'dataset_resource_property', 'dataset_resource_object', 'dataset_property_object', 'dataset_resource_property_object'];
-        let dss = [], dfl, brws, color, optionsList, output = [], focus = '';
         let info = <div className="ui blue message">
                         The list contains only the datasets for which at least one <b>config scope</b> is found!
                    </div>;
+        let dss = this.props.DatasetsStore.datasetsList;
         if(enableAuthentication && !user){
             output.push(<div className="ui warning message"><div className="header"> Please <a href="/register">Register</a> or <a href="/login">Login</a> to see the datasets.</div></div>);
         }else{
-            sources.forEach(function(s){
-                for(let graph in config[s]){
-                    //check if it readOnly
-                    color = 'black';
-                    focus = '';
-                    if(s === 'dataset'){
-                        if(config[s][graph].readOnly === 0){
-                            color = 'green';
-                        }
-                        if(config[s][graph].resourceFocusType && config[s][graph].resourceFocusType.length){
-                            focus = <span className="ui small circular label"> {self.prepareFocusList(config[s][graph].resourceFocusType)} </span>;
-                        }
-                    }
-                    if(graph !== authDatasetURI[0] && graph !== configDatasetURI[0] && graph !== 'generic'){
-                        dfl = '';
-                        brws = '';
-                        if(graph === defaultDatasetURI[0]){
-                            dfl = <i className="ui teal flag icon" title="default dataset"></i>;
-                        }
-                        if(dss.indexOf(graph) === -1){
-                            if(facets[graph]){
-                                brws = <a className="ui grey label" href={'/browse/' + encodeURIComponent(graph)} title="browse"><i className="zoom icon"></i>browse</a>;
-                            }
-                            dss.push(graph);
-                            output.push(<div className="ui item" key={graph}> <div className="content"> <i className={'ui icon cubes ' + color} ></i> <a className="ui blank link" href={'/dataset/1/' + encodeURIComponent(graph)} title="go to resource list">{config[s][graph].datasetLabel ? config[s][graph].datasetLabel : graph}</a> {focus} {brws} {dfl}</div> </div>);
-                        }
-                    }
-                }
+            optionsList = dss.map(function(option, index) {
+                return <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
             });
-            //if only facet is set
-            for(let graph in facets){
-                if(graph !== authDatasetURI[0] && graph !== configDatasetURI[0] && graph !== 'generic'){
-                    if(dss.indexOf(graph) === -1){
-                        brws = '';
-                        dfl = '';
-                        if(graph === defaultDatasetURI[0]){
-                            dfl = <i className="ui green flag icon" title="default dataset"></i>;
-                        }
-                        if(dss.indexOf(graph) === -1){
-                            brws = <a className="ui label" href={'/browse/' + encodeURIComponent(graph)} title="browse"><i className="zoom icon"></i>browse</a>;
-                            dss.push(graph);
-                            output.push(<div className="ui item" key={graph}> <div className="content"> <i className="ui blue icon cubes"></i> <a href={'/dataset/1/' + encodeURIComponent(graph)} title="go to resource list">{graph}</a> {brws} {dfl}</div> </div>);
+            output = dss.map(function(ds, index) {
+                if(ds.features){
+                    if(typeof ds.features.readOnly === 'undefined' ){
+                        color = 'black';
+                    }else{
+                        if(ds.features.readOnly){
+                            color = 'black';
+                        }else{
+                            color = 'blue';
                         }
                     }
                 }
-            }
-            if(!dss.length){
-                if(defaultDatasetURI[0]){
-                    output.push(<div className="ui item" key={defaultDatasetURI[0]}> <div className="content"> <i className="ui blue icon cubes"></i> <a href={'/dataset/1/' + encodeURIComponent(defaultDatasetURI[0])} title="go to resource list">{defaultDatasetURI[0]}</a> <i className="ui green flag icon" title="default dataset"></i> </div> </div>);
-                }else{
-                    //no graph name is specified
-                    output.push(<div className="ui big item" key="empty" > <div className="content">  Your config is empty!<a href={'/dataset/'}> <span className="ui big blue label">See all resources in all local datasets</span></a></div> </div>);
-                }
-            }
+                return <div className="ui item" key={ds.d}> <div className="content"> <i className={'ui icon cubes ' + color}></i> <a href={'/dataset/1/' + encodeURIComponent(ds.d)} title="go to resource list">{ds.features && ds.features.datasetLabel ? ds.features.datasetLabel : ds.d}</a> {ds.features && ds.features.resourceFocusType ? <span className="ui small circular label"> {self.prepareFocusList(ds.features.resourceFocusType)} </span> : ''} {ds.features && ds.features.isBrowsable ? <a className="ui grey label" href={'/browse/' + encodeURIComponent(ds.d)} title="browse"><i className="zoom icon"></i>browse</a> : ''} {ds.features && ds.features.isDynamic ? <i className="ui orange theme icon" title="loaded from dynamic config"></i> :''} {ds.features && ds.features.isDefaultDataset ? <i className="ui teal flag icon" title="default dataset"></i> :''}</div> </div>;
+            });
+
         }
-        optionsList = dss.map(function(option, index) {
-            return <option key={index} value={(option)}> {(config.dataset[option] && config.dataset[option].datasetLabel) ? config.dataset[option].datasetLabel : option} </option>;
-        });
+
         return (
             <div className="ui page grid" ref="datasets">
                 <div className="ui column">
@@ -123,4 +87,9 @@ Datasets.contextTypes = {
     executeAction: React.PropTypes.func.isRequired,
     getUser: React.PropTypes.func
 };
+Datasets = connectToStores(Datasets, [DatasetsStore], function (context, props) {
+    return {
+        DatasetsStore: context.getStore(DatasetsStore).getState()
+    };
+});
 export default Datasets;

@@ -1,3 +1,4 @@
+import loadDatasets from '../actions/loadDatasets';
 import loadDataset from '../actions/loadDataset';
 import loadResource from '../actions/loadResource';
 import loadUsersList from '../actions/loadUsersList';
@@ -46,8 +47,7 @@ export default {
         handler: require('../components/Datasets'),
         label: 'Datasets',
         action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Datasets'});
-            done();
+            context.executeAction(loadDatasets, {}, done);
         }
     },
     dataset: {

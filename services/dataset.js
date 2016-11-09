@@ -1,7 +1,9 @@
 'use strict';
 import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
-import {getDynamicEndpointParameters} from './utils/dynamicHelpers';
-import {enableAuthentication} from '../configs/general';
+import {getDynamicEndpointParameters, getDynamicDatasets} from './utils/dynamicHelpers';
+import {enableAuthentication, authDatasetURI, configDatasetURI, defaultDatasetURI} from '../configs/general';
+import staticReactor from '../configs/reactor';
+import staticFacets from '../configs/facets';
 import DatasetQuery from './sparql/DatasetQuery';
 import DatasetUtil from './utils/DatasetUtil';
 import Configurator from './utils/Configurator';
@@ -98,6 +100,49 @@ export default {
                 });
             });
 
+        } else if (resource === 'dataset.datasetsList') {
+            let staticReactorDS = {dataset: {}};
+            let staticFacetsDS = {facets: {}};
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {dynamicReactorDS: {datasets: {}}, dynamicFacetsDS: {facets: {}}, staticReactorDS: staticReactorDS, staticFacetsDS: staticFacetsDS});
+                    return 0;
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            //filter the config
+            let sources = ['dataset', 'dataset_resource', 'dataset_property', 'dataset_resource_property'];
+            sources.forEach(function(s){
+                for(let ds in staticReactor.config[s]){
+                    if(ds !== authDatasetURI[0] && ds !== configDatasetURI[0] && ds !== 'generic'){
+                        if(!staticReactorDS.dataset[ds]){
+                            staticReactorDS.dataset[ds] = {};
+                        }
+                        if(s === 'dataset'){
+                            staticReactorDS.dataset[ds] = staticReactor.config[s][ds];
+                        }
+                        if(ds === defaultDatasetURI[0]){
+                            staticReactorDS.dataset[ds].isDefaultDataset = 1;
+                        }
+                    }
+                }
+            });
+            for(let ds in staticFacets.facets){
+                if(ds !== authDatasetURI[0] && ds !== configDatasetURI[0] && ds !== 'generic'){
+                    if(!staticFacetsDS.facets[ds]){
+                        staticFacetsDS.facets[ds]= {};
+                    }
+                    if(ds === defaultDatasetURI[0]){
+                        staticFacetsDS.facets[ds].isDefaultDataset = 1;
+                    }
+                }
+            }
+            getDynamicDatasets((dynamicReactorDS, dynamicFacetsDS)=>{
+                callback(null, {dynamicReactorDS: dynamicReactorDS, dynamicFacetsDS: dynamicFacetsDS, staticReactorDS: staticReactorDS, staticFacetsDS: staticFacetsDS});
+            });
         }
     }
     // other methods
