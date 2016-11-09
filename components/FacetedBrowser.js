@@ -53,6 +53,9 @@ class FacetedBrowser extends React.Component {
             }
             //overwrite configs by dynamic one
             if(hasDynamicFacetConfig){
+                if(!selectedConfig){
+                    selectedConfig ={};
+                }
                 let tmp = this.props.FacetedBrowserStore.dynamicConfig.facets[g].config[propertyURI];
                 for(let prop in tmp){
                     selectedConfig[prop] = tmp [prop];
