@@ -19,7 +19,7 @@ class Datasets extends React.Component {
     }
     displayResource(){
         let resourceURI = ReactDOM.findDOMNode(this.refs.resourceURI).value;
-        let datasetURI = ReactDOM.findDOMNode(this.refs.datasetURI).value;
+        let datasetURI = ReactDOM.findDOMNode(this.refs.datasetURI).value.trim();
         let output = '/dataset/' + encodeURIComponent(datasetURI) + '/resource/' + encodeURIComponent(resourceURI);
         if(resourceURI){
             this.context.executeAction(navigateAction, {
