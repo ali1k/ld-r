@@ -7,7 +7,7 @@ class DynamicConfigurator {
     getDynamicDatasets(callback) {
         let dynamicReactorDS  = {dataset:{}};
         let dynamicFacetsDS = {facets:{}};
-        if(!enableDynamicReactorConfiguration){
+        if(!enableDynamicReactorConfiguration && !enableDynamicFacetsConfiguration){
             callback(dynamicReactorDS, dynamicFacetsDS);
         }else{
             const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
@@ -21,17 +21,48 @@ class DynamicConfigurator {
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
             `;
-            const query = `
-            SELECT DISTINCT ?dataset ?datasetLabel ?readOnly ?resourceFocusType WHERE { GRAPH <${graphName}>
-                    {
-                    ?config a ldr:ReactorConfig ;
-                            ldr:dataset ?dataset .
-                            OPTIONAL { ?config ldr:datasetLabel ?datasetLabel . }
-                            OPTIONAL { ?config ldr:readOnly ?readOnly . }
-                            OPTIONAL { ?config ldr:resourceFocusType ?resourceFocusType . }
-                    }
+            let query = '';
+            if(enableDynamicReactorConfiguration){
+                query = `
+                SELECT DISTINCT ?dataset ?datasetLabel ?readOnly ?resourceFocusType WHERE { GRAPH <${graphName}>
+                        {
+                        ?config a ldr:ReactorConfig ;
+                                ldr:dataset ?dataset .
+                                OPTIONAL { ?config ldr:datasetLabel ?datasetLabel . }
+                                OPTIONAL { ?config ldr:readOnly ?readOnly . }
+                                OPTIONAL { ?config ldr:resourceFocusType ?resourceFocusType . }
+                        }
+                }
+                `;
             }
-            `;
+            if(enableDynamicFacetsConfiguration){
+                query = `
+                SELECT DISTINCT ?config2 ?dataset WHERE { GRAPH <${graphName}>
+                        {
+                        ?config2 a ldr:FacetsConfig ;
+                                ldr:dataset ?dataset .
+                        }
+                }
+                `;
+            }
+            if(enableDynamicReactorConfiguration && enableDynamicFacetsConfiguration){
+                query = `
+                SELECT DISTINCT ?config2 ?dataset ?datasetLabel ?readOnly ?resourceFocusType WHERE { GRAPH <${graphName}> {
+                        {
+                        ?config1 a ldr:ReactorConfig ;
+                                ldr:dataset ?dataset .
+                                OPTIONAL { ?config ldr:datasetLabel ?datasetLabel . }
+                                OPTIONAL { ?config ldr:readOnly ?readOnly . }
+                                OPTIONAL { ?config ldr:resourceFocusType ?resourceFocusType . }
+                        }
+                        UNION
+                        {
+                        ?config2 a ldr:FacetsConfig ;
+                                ldr:dataset ?dataset .
+                        }
+                }}
+                `;
+            }
             //send request
             let self = this;
             rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
@@ -537,28 +568,37 @@ class DynamicConfigurator {
         let dynamicFacetsDS = {facets:{}};
         let parsed = JSON.parse(body);
         parsed.results.bindings.forEach(function(el) {
-            if(!dynamicReactorDS.dataset[el.dataset.value]){
-                dynamicReactorDS.dataset[el.dataset.value] = {};
-            }
-            if(el.datasetLabel && el.datasetLabel.value){
-                if(!dynamicReactorDS.dataset[el.dataset.value].datasetLabel){
-                    dynamicReactorDS.dataset[el.dataset.value].datasetLabel = [];
+            if(el.config2 && el.config2.value){
+                //facets
+                if(!dynamicFacetsDS.facets[el.dataset.value]){
+                    dynamicFacetsDS.facets[el.dataset.value] = {};
                 }
-                if(dynamicReactorDS.dataset[el.dataset.value].datasetLabel.indexOf(el.datasetLabel.value) === -1){
-                    dynamicReactorDS.dataset[el.dataset.value].datasetLabel.push(el.datasetLabel.value);
+            }else{
+                //reactors
+                if(!dynamicReactorDS.dataset[el.dataset.value]){
+                    dynamicReactorDS.dataset[el.dataset.value] = {};
+                }
+                if(el.datasetLabel && el.datasetLabel.value){
+                    if(!dynamicReactorDS.dataset[el.dataset.value].datasetLabel){
+                        dynamicReactorDS.dataset[el.dataset.value].datasetLabel = [];
+                    }
+                    if(dynamicReactorDS.dataset[el.dataset.value].datasetLabel.indexOf(el.datasetLabel.value) === -1){
+                        dynamicReactorDS.dataset[el.dataset.value].datasetLabel.push(el.datasetLabel.value);
+                    }
+                }
+                if(el.resourceFocusType && el.resourceFocusType.value){
+                    if(!dynamicReactorDS.dataset[el.dataset.value].resourceFocusType){
+                        dynamicReactorDS.dataset[el.dataset.value].resourceFocusType = [];
+                    }
+                    if(dynamicReactorDS.dataset[el.dataset.value].resourceFocusType.indexOf(el.resourceFocusType.value) === -1){
+                        dynamicReactorDS.dataset[el.dataset.value].resourceFocusType.push(el.resourceFocusType.value);
+                    }
+                }
+                if(el.readOnly && el.readOnly.value){
+                    dynamicReactorDS.dataset[el.dataset.value].readOnly = parseInt(el.readOnly.value);
                 }
             }
-            if(el.resourceFocusType && el.resourceFocusType.value){
-                if(!dynamicReactorDS.dataset[el.dataset.value].resourceFocusType){
-                    dynamicReactorDS.dataset[el.dataset.value].resourceFocusType = [];
-                }
-                if(dynamicReactorDS.dataset[el.dataset.value].resourceFocusType.indexOf(el.resourceFocusType.value) === -1){
-                    dynamicReactorDS.dataset[el.dataset.value].resourceFocusType.push(el.resourceFocusType.value);
-                }
-            }
-            if(el.readOnly && el.readOnly.value){
-                dynamicReactorDS.dataset[el.dataset.value].readOnly = parseInt(el.readOnly.value);
-            }
+
 
         });
         return {dynamicReactorDS: dynamicReactorDS, dynamicFacetsDS: dynamicFacetsDS};

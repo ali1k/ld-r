@@ -30,8 +30,8 @@ export default {
     googleAnalyticsID: '',
 
     //if set, will use the configs stored in a triple store
-    enableDynamicReactorConfiguration: 0,
     enableDynamicServerConfiguration: 0,
+    enableDynamicReactorConfiguration: 0,
     enableDynamicFacetsConfiguration: 0,
     //graph that stores your configurations
     configDatasetURI: ['http://ld-r.org/configurations'],
