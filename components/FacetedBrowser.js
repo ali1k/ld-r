@@ -280,7 +280,7 @@ class FacetedBrowser extends React.Component {
                                     <span className="ui blue circular label">{this.addCommas(this.props.FacetedBrowserStore.total)}</span> Resources from {datasetTitle}
 
                                  </h3>
-                                <ResourceList resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} OpenInNewTab={true} isBig={!showFactes}/>
+                                <ResourceList resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} OpenInNewTab={true} isBig={!showFactes} config={config.dataset && config.dataset[this.props.FacetedBrowserStore.datasetURI] ? config.dataset[this.props.FacetedBrowserStore.datasetURI] : {}}/>
                                 <ResourceListPager handleClick={this.gotoPage.bind(this)} datasetURI={this.props.FacetedBrowserStore.datasetURI} total={this.props.FacetedBrowserStore.total} threshold={pagerSize} currentPage={this.props.FacetedBrowserStore.page}/>
                               </div>;
             }

@@ -9,7 +9,7 @@ class ResourceList extends React.Component {
         let self = this;
         let cloneDIV = '';
         if (cloneable) {
-            cloneDIV = <a className="ui" onClick={self.handleCloneResource.bind(self, decodeURIComponent(g), decodeURIComponent(v))} title="clone this resource"><i className="icon violet superscript"></i></a> ;
+            cloneDIV = <a className="mini ui circular basic icon button" onClick={self.handleCloneResource.bind(self, decodeURIComponent(g), decodeURIComponent(v))} title="clone this resource"><i className="icon teal superscript"></i></a>;
         }
 
         if (this.props.OpenInNewTab) {
@@ -96,7 +96,7 @@ class ResourceList extends React.Component {
             cloneable = 1;
         }
         let listClass = cloneable ? '' : ' animated';
-        
+
         if (!this.props.resources.length) {
             list = <div className="ui warning message">
                 <div className="header">
