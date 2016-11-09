@@ -1,5 +1,5 @@
 'use strict';
-import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
+import {getHTTPQuery, getHTTPGetURL, prepareDG} from './utils/helpers';
 import {getDynamicEndpointParameters} from './utils/dynamicHelpers';
 import {enableLogs, enableAuthentication, authDatasetURI} from '../configs/general';
 import ResourceQuery from './sparql/ResourceQuery';
@@ -63,7 +63,7 @@ export default {
                 rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                     //exceptional case for user properties: we hide some admin props from normal users
                     utilObject.parseProperties(res, datasetURI, resourceURI, category, propertyPath, (cres)=> {
-                        if(graphName === authDatasetURI[0] && !parseInt(user.isSuperUser)){
+                        if(datasetURI === authDatasetURI[0] && !parseInt(user.isSuperUser)){
                             props = utilObject.deleteAdminProperties(cres.props);
                         }else{
                             props = cres.props;
@@ -199,7 +199,7 @@ export default {
                 query = queryObject.getPrefixes() + queryObject.getUpdateObjectTriplesForSesame(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData);
                 //we should add this resource into user's profile too
                 if(enableAuthentication){
-                    query = query + queryObject.getAddTripleQuery(endpointParameters, authDatasetURI, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', params.newObjectValue, 'uri', '');
+                    query = query + queryObject.getAddTripleQuery(endpointParameters, prepareDG(authDatasetURI[0]).g, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', params.newObjectValue, 'uri', '');
                 }
                 //build http uri
                 //send request
@@ -236,6 +236,10 @@ export default {
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 query = queryObject.getPrefixes() + queryObject.cloneResource(graphName, params.resourceURI, newResourceURI);
+                //we should add this resource into user's profile too
+                if(enableAuthentication){
+                    query = query + queryObject.getAddTripleQuery(endpointParameters, prepareDG(authDatasetURI[0]).g, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', newResourceURI, 'uri', '');
+                }
                 //build http uri
                 //send request
                 HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);

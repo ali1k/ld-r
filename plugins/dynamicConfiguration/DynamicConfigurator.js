@@ -1,6 +1,5 @@
 import {enableDynamicReactorConfiguration, enableDynamicServerConfiguration, enableDynamicFacetsConfiguration, configDatasetURI, enableAutomaticConfiguration, authDatasetURI} from '../../configs/general';
 import {getStaticEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
-import test from '../../services/utils/helpers';
 import rp from 'request-promise';
 
 class DynamicConfigurator {
