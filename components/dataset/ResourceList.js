@@ -5,11 +5,11 @@ import cloneResource from '../../actions/cloneResource';
 
 class ResourceList extends React.Component {
     componentDidMount() {}
-    buildLink(v, g, title, icon) {
+    buildLink(v, g, title, icon, cloneable) {
         let self = this;
         let cloneDIV = '';
-        if (self.props.config && typeof self.props.config.allowResourceClone !== 'undefined' && parseInt(self.props.config.allowResourceClone)) {
-            cloneDIV = <a className="ui" onClick={self.handleCloneResource.bind(self, decodeURIComponent(g), decodeURIComponent(v))} title="clone this resource"><i className="clone violet icon"></i></a> ;
+        if (cloneable) {
+            cloneDIV = <a className="ui" onClick={self.handleCloneResource.bind(self, decodeURIComponent(g), decodeURIComponent(v))} title="clone this resource"><i className="icon violet superscript"></i></a> ;
         }
 
         if (this.props.OpenInNewTab) {
@@ -91,12 +91,19 @@ class ResourceList extends React.Component {
             title,
             list,
             dbClass = 'black cube icon';
+        let cloneable = 0;
+        if (self.props.config && typeof self.props.config.allowResourceClone !== 'undefined' && parseInt(self.props.config.allowResourceClone)) {
+            cloneable = 1;
+        }
+        let listClass = cloneable ? '' : ' animated';
+        
         if (!this.props.resources.length) {
             list = <div className="ui warning message">
                 <div className="header">
                     There was no resource in the selected dataset! This might be due to the connection problems. Please check the connection parameters of your dataset's Sparql endpoint or add resources to your dataset...</div>
             </div>;
         } else {
+
             list = this.props.resources.map((node, index) => {
                 title = node.title
                     ? node.title
@@ -121,8 +128,8 @@ class ResourceList extends React.Component {
                     }
                 }
                 return (
-                    <div className="item animated fadeIn" key={index}>
-                        {self.buildLink(encodeURIComponent(node.v), encodeURIComponent(node.d), title, dbClass)}
+                    <div className={'item fadeIn' + listClass} key={index}>
+                        {self.buildLink(encodeURIComponent(node.v), encodeURIComponent(node.d), title, dbClass, cloneable)}
                     </div>
                 );
             });
@@ -130,7 +137,7 @@ class ResourceList extends React.Component {
         return (
             <div className={'ui ' + (this.props.isBig
                 ? 'big'
-                : '') + ' divided animated list'} ref="resourceList">
+                : '') + ' divided list ' + listClass} ref="resourceList">
                 {list}
             </div>
         );
