@@ -1,6 +1,8 @@
 import React from 'react';
 import {NavLink} from 'fluxible-router';
 import URIUtil from '../utils/URIUtil';
+import cloneResource from '../../actions/cloneResource';
+
 class ResourceList extends React.Component {
     componentDidMount() {}
     buildLink(v, g, title, icon) {
@@ -21,6 +23,12 @@ class ResourceList extends React.Component {
                 </NavLink>
             );
         }
+    }
+    handleCloneResource(datasetURI, resourceURI) {
+        this.context.executeAction(cloneResource, {
+            dataset: datasetURI,
+            resourceURI: resourceURI
+        });
     }
     includesProperty(list, resource) {
         let out = false;
@@ -96,9 +104,16 @@ class ResourceList extends React.Component {
                         dbClass = 'black cube icon';
                     }
                 }
+                let cloneDIV = '';
+                if (self.props.config && typeof self.props.config.allowResourceClone !== 'undefined' && parseInt(self.props.config.allowResourceClone)) {
+                    cloneDIV = <a className="ui" onClick={self.handleCloneResource.bind(self, node.d, node.v)} title="clone this resource"><i className="clone violet icon"></i></a> ;
+                }
                 return (
                     <div className="item animated fadeIn" key={index}>
-                        {self.buildLink(encodeURIComponent(node.v), encodeURIComponent(node.d), title, dbClass)}
+                        <div className="content">
+                            {self.buildLink(encodeURIComponent(node.v), encodeURIComponent(node.d), title, dbClass)}
+                            {cloneDIV}
+                        </div>
                     </div>
                 );
             });
@@ -113,6 +128,7 @@ class ResourceList extends React.Component {
     }
 }
 ResourceList.contextTypes = {
+    executeAction: React.PropTypes.func.isRequired,
     getUser: React.PropTypes.func
 };
 export default ResourceList;

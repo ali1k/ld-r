@@ -218,6 +218,41 @@ export default {
                 });
             });
 
+        } else if (resource === 'resource.clone') {
+            datasetURI = params.dataset;
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI, resourceURI: params.resourceURI,});
+                    return 0;
+                }else{
+                    user = req.user;
+                    //todo: think about the access level in the case of clone
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            let newResourceURI = params.resourceURI + '_' + Math.round(+new Date() / 1000);
+            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+                query = queryObject.getPrefixes() + queryObject.cloneResource(graphName, params.resourceURI, newResourceURI);
+                //build http uri
+                //send request
+                HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
+                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                    if(enableLogs){
+                        log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                    }
+                    callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
+                }).catch(function (err) {
+                    console.log(err);
+                    if(enableLogs){
+                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                    }
+                    callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
+                });
+            });
+
         }
     },
     update: (req, resource, params, body, config, callback) => {
