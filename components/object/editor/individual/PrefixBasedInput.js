@@ -71,7 +71,7 @@ class PrefixBasedInput extends React.Component {
     }
     applyPrefix(value) {
         let tmp = value.split(':');
-        if (tmp.length) {
+        if (tmp.length && value.indexOf('http://') === -1) {
             if (list[tmp[0]]) {
                 return value.replace(tmp[0] + ':', list[tmp[0]]);
             } else {
