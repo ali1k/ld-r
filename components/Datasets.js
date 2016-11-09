@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {navigateAction} from 'fluxible-router';
 import {connectToStores} from 'fluxible-addons-react';
-import {enableAuthentication} from '../configs/general';
+import {enableAuthentication, defaultDatasetURI} from '../configs/general';
 import DatasetsStore from '../stores/DatasetsStore';
 import URIUtil from './utils/URIUtil';
 
@@ -39,23 +39,32 @@ class Datasets extends React.Component {
         if(enableAuthentication && !user){
             output.push(<div className="ui warning message"><div className="header"> Please <a href="/register">Register</a> or <a href="/login">Login</a> to see the datasets.</div></div>);
         }else{
-            optionsList = dss.map(function(option, index) {
-                return <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
-            });
-            output = dss.map(function(ds, index) {
-                if(ds.features){
-                    if(typeof ds.features.readOnly === 'undefined' ){
-                        color = 'black';
-                    }else{
-                        if(ds.features.readOnly){
+            if(!dss.length){
+                if(defaultDatasetURI[0]){
+                    output = <div className="ui item" key={defaultDatasetURI[0]}> <div className="content"> <i className="ui blue icon cubes"></i> <a href={'/dataset/1/' + encodeURIComponent(defaultDatasetURI[0])} title="go to resource list">{defaultDatasetURI[0]}</a> <i className="ui green flag icon" title="default dataset"></i> </div> </div>;
+                }else{
+                    //no graph name is specified
+                    output = <div className="ui big item" key="empty" > <div className="content">  Your config is empty!<a href={'/dataset/'}> <span className="ui big blue label">See all resources in all local datasets</span></a></div> </div>;
+                }
+            }else{
+                optionsList = dss.map(function(option, index) {
+                    return <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
+                });
+                output = dss.map(function(ds, index) {
+                    if(ds.features){
+                        if(typeof ds.features.readOnly === 'undefined' ){
                             color = 'black';
                         }else{
-                            color = 'blue';
+                            if(ds.features.readOnly){
+                                color = 'black';
+                            }else{
+                                color = 'blue';
+                            }
                         }
                     }
-                }
-                return <div className="ui item" key={ds.d}> <div className="content"> <i className={'ui icon cubes ' + color}></i> <a href={'/dataset/1/' + encodeURIComponent(ds.d)} title="go to resource list">{ds.features && ds.features.datasetLabel ? ds.features.datasetLabel : ds.d}</a> {ds.features && ds.features.resourceFocusType ? <span className="ui small circular label"> {self.prepareFocusList(ds.features.resourceFocusType)} </span> : ''} {ds.features && ds.features.isBrowsable ? <a className="ui grey label" href={'/browse/' + encodeURIComponent(ds.d)} title="browse"><i className="zoom icon"></i>browse</a> : ''} {ds.features && ds.features.isDynamic ? <i className="ui orange theme icon" title="loaded from dynamic config"></i> :''} {ds.features && ds.features.isDefaultDataset ? <i className="ui teal flag icon" title="default dataset"></i> :''}</div> </div>;
-            });
+                    return <div className="ui item" key={ds.d}> <div className="content"> <i className={'ui icon cubes ' + color}></i> <a href={'/dataset/1/' + encodeURIComponent(ds.d)} title="go to resource list">{ds.features && ds.features.datasetLabel ? ds.features.datasetLabel : ds.d}</a> {ds.features && ds.features.resourceFocusType ? <span className="ui small circular label"> {self.prepareFocusList(ds.features.resourceFocusType)} </span> : ''} {ds.features && ds.features.isBrowsable ? <a className="ui grey label" href={'/browse/' + encodeURIComponent(ds.d)} title="browse"><i className="zoom icon"></i>browse</a> : ''} {ds.features && ds.features.isDynamic ? <i className="ui orange theme icon" title="loaded from dynamic config"></i> :''} {ds.features && ds.features.isDefaultDataset ? <i className="ui teal flag icon" title="default dataset"></i> :''}</div> </div>;
+                });
+            }
 
         }
 
