@@ -33,28 +33,30 @@ class FacetedBrowser extends React.Component {
             g = 'generic';
         }
         let hasFacetConfig = facets[g] ? (facets[g].config ? (facets[g].config[propertyURI] ? 1 : 0) : 0) : 0;
-        let dynamicConfig = 0;
+        let hasDynamicFacetConfig = 0;
         //overwrite if there is a dynamic config
         if(this.props.FacetedBrowserStore.dynamicConfig){
-            hasFacetConfig = this.props.FacetedBrowserStore.dynamicConfig.facets[g] ? (this.props.FacetedBrowserStore.dynamicConfig.facets[g].config ? (this.props.FacetedBrowserStore.dynamicConfig.facets[g].config[propertyURI] ? 1 : 0) : 0) : 0;
-            dynamicConfig = 1;
+            hasDynamicFacetConfig = this.props.FacetedBrowserStore.dynamicConfig.facets[g] ? (this.props.FacetedBrowserStore.dynamicConfig.facets[g].config ? (this.props.FacetedBrowserStore.dynamicConfig.facets[g].config[propertyURI] ? 1 : 0) : 0) : 0;
         }
 
-        if(hasFacetConfig){
-            //first check the custom facets config
-            if(dynamicConfig){
-                selectedConfig = this.props.FacetedBrowserStore.dynamicConfig.facets[g].config[propertyURI];
-            }else{
-                selectedConfig = facets[g].config[propertyURI];
-            }
-
-        }else{
+        if(!hasFacetConfig && !hasDynamicFacetConfig){
             //second: check the generic facet config
             let hasGenericFacetConfig = facets.generic.config ? (facets.generic.config[propertyURI] ? 1 : 0) : 0;
             if(hasGenericFacetConfig){
                 selectedConfig = facets.generic.config[propertyURI];
             }else{
                 selectedConfig = {};
+            }
+        }else{
+            if(hasFacetConfig){
+                selectedConfig = facets[g].config[propertyURI];
+            }
+            //overwrite configs by dynamic one
+            if(hasDynamicFacetConfig){
+                let tmp = this.props.FacetedBrowserStore.dynamicConfig.facets[g].config[propertyURI];
+                for(let prop in tmp){
+                    selectedConfig[prop] = tmp [prop];
+                }
             }
         }
         return selectedConfig;
