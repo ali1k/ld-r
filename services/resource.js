@@ -471,6 +471,44 @@ export default {
                     callback(null, {category: params.category});
                 });
             });
+        } else if(resource === 'resource.property') {
+            datasetURI = params.dataset;
+
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {category: params.category});
+                }else{
+                    user = req.user;
+                    accessLevel = utilObject.checkAccess(user, datasetURI, params.resourceURI, params.propertyURI);
+                    if(!accessLevel.access){
+                        //action not allowed!
+                        callback(null, {category: params.category});
+                    }
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+                //delete all values
+                query = queryObject.getPrefixes() + queryObject.getDeleteTripleQuery(endpointParameters, graphName, params.resourceURI, params.propertyURI, 0, 0, 0);
+                //build http uri
+                //send request
+                HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
+                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                    if(enableLogs){
+                        log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                    }
+                    callback(null, {category: params.category});
+                }).catch(function (err) {
+                    console.log(err);
+                    if(enableLogs){
+                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                    }
+                    callback(null, {category: params.category});
+                });
+            });
 
         }
     }

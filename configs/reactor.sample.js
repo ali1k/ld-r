@@ -21,6 +21,8 @@ export default {
             'http://ld-r.org/configurations': {
                 readOnly: 0,
                 allowResourceClone: 1,
+                allowPropertyDelete: 1,
+                allowResourceNew: 1,
                 resourceFocusType: ['https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#ReactorConfig', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#ServerConfig', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#FacetsConfig'],
                 datasetLabel: ['LD-R Configurations'],
                 resourceLabelProperty: ['http://www.w3.org/2000/01/rdf-schema#label']
@@ -62,11 +64,19 @@ export default {
         dataset_property: {
             //for configuration manager
             'http://ld-r.org/configurations': {
+                'http://www.w3.org/2000/01/rdf-schema#label': {
+                    allowPropertyDelete: 0
+                },
                 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
-                    isHidden: 1
+                    isHidden: 0,
+                    shortenURI: 0,
+                    allowPropertyDelete: 0,
+                    objectIViewer: ['PrefixBasedView'],
+                    objectIEditor: ['PrefixBasedInput']
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#cloneOf': {
-                    readOnly: 1
+                    readOnly: 1,
+                    allowPropertyDelete: 0
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#scope': {
                     hint: ['Determines the type of scope in LD-R'],

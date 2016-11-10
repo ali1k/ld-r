@@ -1,6 +1,7 @@
 module.exports = {
     list: {
     'aair': 'http://xmlns.notu.be/aair#',
+    'ldr': 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#',
     'aapi': 'http://rdf.alchemyapi.com/rdf/v1/s/aapi-schema#',
     'abc': 'http://www.metadata.net/harmony/ABCSchemaV5Commented.rdf#',
     'ac': 'http://umbel.org/umbel/ac/',
@@ -1262,7 +1263,7 @@ module.exports = {
     'l2sp': 'http://www.linked2safety-project.eu/properties/',
     'language': 'http://id.loc.gov/vocabulary/iso639-1/',
     'lda': 'http://purl.org/linked-data/api/vocab#',
-    'ldr': 'http://purl.oclc.org/NET/ldr/ns#',
+    'pldr': 'http://purl.oclc.org/NET/ldr/ns#',
     'lexcz': 'http://purl.org/lex/cz#',
     'lexicon': 'http://www.example.org/lexicon#',
     'lexinfo': 'http://www.lexinfo.net/ontology/2.0/lexinfo#',
