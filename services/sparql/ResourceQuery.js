@@ -136,6 +136,7 @@ class ResourceQuery{
             <${newResourceURI}> ?p ?o ; ldr:cloneOf <${resourceURI}> .
         } WHERE {
             <${resourceURI}> ?p ?o .
+            FILTER (?p != ldr:cloneOf)
         }
         `;
         return this.query;

@@ -2,6 +2,8 @@ import React from 'react';
 import PropertyReactor from '../reactors/PropertyReactor';
 import {NavLink} from 'fluxible-router';
 import URIUtil from '../utils/URIUtil';
+import cloneResource from '../../actions/cloneResource';
+
 class PersonResource extends React.Component {
     constructor(props) {
         super(props);
@@ -13,6 +15,13 @@ class PersonResource extends React.Component {
             body.stop().animate({scrollTop:0}, '500', 'swing', function() {
             });
         }
+    }
+    handleCloneResource(datasetURI, resourceURI, e) {
+        this.context.executeAction(cloneResource, {
+            dataset: datasetURI,
+            resourceURI: resourceURI
+        });
+        e.stopPropagation();
     }
     includesProperty(list, resource, property) {
         let out = false;
@@ -154,12 +163,19 @@ class PersonResource extends React.Component {
                           <div className="active section">{URIUtil.getURILabel(self.props.propertyPath[1])}</div>
                         </div>;
         }
+        let cloneable = 0;
+        if (self.props.config && typeof self.props.config.allowResourceClone !== 'undefined' && parseInt(self.props.config.allowResourceClone)) {
+            cloneable = 1;
+        }
         return (
             <div className="ui page grid" ref="resource" itemScope itemType={this.props.resourceType} itemID={this.props.resource}>
                 <div className="ui column">
                     {breadcrumb}
                     <h2>
-                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI ) + '/' + encodeURIComponent(this.props.resource)}><i className="green icon user"></i></a> <a href={this.props.resource} target="_blank">{this.props.title}</a>
+                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon user"></i></a> <a href={this.props.resource} target="_blank">{this.props.title}</a>
+                        {cloneable ?
+                            <a className="mini ui circular basic icon button" onClick={this.handleCloneResource.bind(this, this.props.datasetURI, decodeURIComponent(this.props.resource))} title="clone this resource"><i className="icon teal superscript"></i></a>
+                        : ''}
                     </h2>
                     {mainDIV}
                 </div>
@@ -168,6 +184,7 @@ class PersonResource extends React.Component {
     }
 }
 PersonResource.contextTypes = {
+    executeAction: React.PropTypes.func.isRequired,
     getUser: React.PropTypes.func
 };
 export default PersonResource;
