@@ -35,6 +35,17 @@ class Dataset extends React.Component {
                 datasetTitle = <a target="_blank" href={this.props.datasetURI}> {this.props.config.datasetLabel} </a>;
             }
         }
+        let createResourceDIV = '';
+        if(this.props.config && this.props.config.allowResourceNew){
+            createResourceDIV = <div className="ui list">
+                <div className="item">
+                    <div  className="medium ui basic icon labeled button" onClick={this.props.onCreateResource.bind(this, this.props.datasetURI)}>
+                        <i className="add square large blue icon "></i> Add a New Resource
+                        </div>
+                    </div>
+                <br/>
+             </div>;
+        }
         return (
             <div className="ui page grid" ref="dataset">
                 <div className="ui column">
@@ -44,6 +55,9 @@ class Dataset extends React.Component {
                     </div>
                     <div className= "ui secondary segment bottom attached">
                         <ResourceListPager datasetURI={this.props.datasetURI} total={this.props.total} threshold={10} currentPage={this.props.page} maxNumberOfResourcesOnPage={this.props.config.maxNumberOfResourcesOnPage}/>
+                    </div>
+                    <div className= "ui bottom attached">
+                        {createResourceDIV}
                     </div>
                 </div>
             </div>

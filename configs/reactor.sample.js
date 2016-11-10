@@ -23,6 +23,7 @@ export default {
                 allowResourceClone: 1,
                 allowPropertyDelete: 1,
                 allowResourceNew: 1,
+                allowPropertyNew: 1,
                 resourceFocusType: ['https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#ReactorConfig', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#ServerConfig', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#FacetsConfig'],
                 datasetLabel: ['LD-R Configurations'],
                 resourceLabelProperty: ['http://www.w3.org/2000/01/rdf-schema#label']

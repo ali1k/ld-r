@@ -141,6 +141,21 @@ class ResourceQuery{
         `;
         return this.query;
     }
+    newResource(graphName, newResourceURI) {
+        //todo: consider different value types
+        let graph = 'INTO <'+ graphName +'> ';
+        if(!graphName || graphName === 'default'){
+            graph ='';
+        }
+        this.query = `
+        INSERT ${graph} {
+            <${newResourceURI}> rdfs:label "New Resource" .
+        } WHERE {
+
+        }
+        `;
+        return this.query;
+    }
     deleteTripleForSesame(graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
         let dtype, newValue, tmp = {};
         let graph = 'GRAPH <'+ graphName +'> {';

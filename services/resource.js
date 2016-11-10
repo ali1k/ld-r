@@ -223,7 +223,7 @@ export default {
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
-                    callback(null, {datasetURI: datasetURI, resourceURI: params.resourceURI,});
+                    callback(null, {datasetURI: datasetURI, resourceURI: params.resourceURI});
                     return 0;
                 }else{
                     user = req.user;
@@ -232,14 +232,56 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            let newResourceURI = datasetURI + '/' + Math.round(+new Date() / 1000);
+            let newResourceURI = datasetURI + '/c' + Math.round(+new Date() / 1000);
             //do not add two slashes
             if(datasetURI.slice(-1) === '/'){
-                newResourceURI = datasetURI + Math.round(+new Date() / 1000);
+                newResourceURI = datasetURI + 'c' + Math.round(+new Date() / 1000);
             }
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 query = queryObject.getPrefixes() + queryObject.cloneResource(graphName, params.resourceURI, newResourceURI);
+                //we should add this resource into user's profile too
+                if(enableAuthentication){
+                    query = query + queryObject.getAddTripleQuery(endpointParameters, prepareDG(authDatasetURI[0]).g, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', newResourceURI, 'uri', '');
+                }
+                //build http uri
+                //send request
+                HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
+                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                    if(enableLogs){
+                        log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                    }
+                    callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
+                }).catch(function (err) {
+                    console.log(err);
+                    if(enableLogs){
+                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                    }
+                    callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
+                });
+            });
+        } else if (resource === 'resource.new') {
+            datasetURI = params.dataset;
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI});
+                    return 0;
+                }else{
+                    user = req.user;
+                    //todo: think about the access level in the case of clone
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            let newResourceURI = datasetURI + '/n' + Math.round(+new Date() / 1000);
+            //do not add two slashes
+            if(datasetURI.slice(-1) === '/'){
+                newResourceURI = datasetURI + 'n' + Math.round(+new Date() / 1000);
+            }
+            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+                query = queryObject.getPrefixes() + queryObject.newResource(graphName, newResourceURI);
                 //we should add this resource into user's profile too
                 if(enableAuthentication){
                     query = query + queryObject.getAddTripleQuery(endpointParameters, prepareDG(authDatasetURI[0]).g, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', newResourceURI, 'uri', '');

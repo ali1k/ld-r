@@ -5,6 +5,7 @@ import {enableAuthentication} from '../../configs/general';
 import getResourcesCount from '../../actions/getResourcesCount';
 import Dataset from '../dataset/Dataset';
 import cloneResource from '../../actions/cloneResource';
+import createResource from '../../actions/createResource';
 
 class DatasetReactor extends React.Component {
     componentDidMount() {
@@ -14,6 +15,11 @@ class DatasetReactor extends React.Component {
         this.context.executeAction(cloneResource, {
             dataset: datasetURI,
             resourceURI: resourceURI
+        });
+    }
+    handleCreateResource(datasetURI) {
+        this.context.executeAction(createResource, {
+            dataset: datasetURI
         });
     }
     //removes properties from an object
@@ -37,10 +43,10 @@ class DatasetReactor extends React.Component {
         if(config && config.datasetReactor){
             switch(config.datasetReactor[0]){
                 case 'Dataset':
-                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])} onCloneResource={this.handleCloneResource.bind(this)} />;
+                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)} />;
                 break;
                 default:
-                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])} onCloneResource={this.handleCloneResource.bind(this)}/>;
+                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)} />;
             }
         }
 
