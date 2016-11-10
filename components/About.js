@@ -34,9 +34,6 @@ class About extends React.Component {
                                       <div className="item">
                                         <a className="ui label animated zoomIn" href="mailto:a.khalili@vu.nl@vu.nl"><i className="mail icon"></i> Dr. &nbsp; Ali Khalili &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</a>
                                       </div>
-                                      <div className="item">
-                                        <a className="ui label animated zoomIn" href="mailto:a.loizou@vu.nl"><i className="mail icon"></i> Dr. &nbsp; Antonis Loizou &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</a>
-                                      </div>
                                     </div>
                                 </div>
                             </div>
