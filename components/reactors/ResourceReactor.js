@@ -4,6 +4,9 @@ import ResourceStore from '../../stores/ResourceStore';
 import {connectToStores} from 'fluxible-addons-react';
 import Resource from '../resource/Resource';
 import PersonResource from '../resource/PersonResource';
+import createProperty from '../../actions/createProperty';
+import ReactDOM from 'react-dom';
+
 class ResourceReactor extends React.Component {
     constructor(props) {
         super(props);
@@ -17,6 +20,19 @@ class ResourceReactor extends React.Component {
             }
         }
         return o;
+    }
+    handleNewProperty(e) {
+        let self = this;
+        let newPropertyURI = ReactDOM.findDOMNode(self.refs.newPropertyURI).value.trim();
+        let newPropertyValue = ReactDOM.findDOMNode(self.refs.newPropertyValue).value.trim();
+        if(newPropertyURI && newPropertyValue){
+            this.context.executeAction(createProperty, {
+                dataset: self.props.ResourceStore.datasetURI,
+                resourceURI: self.props.ResourceStore.resourceURI,
+                propertyURI: newPropertyURI,
+                objectValue: newPropertyValue
+            });
+        }
     }
     render() {
         let datasetURI = this.props.ResourceStore.datasetURI;
@@ -40,10 +56,19 @@ class ResourceReactor extends React.Component {
                     resourceReactor = <Resource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
             }
         }
-
+        let newPropDIV = '';
+        if(config && config.allowPropertyNew){
+            newPropDIV =  <div className="ui page grid">
+                                <div className="ui column"><div className="ui violet message form">
+                                <input ref="newPropertyURI" type="text" className="input" placeholder="Enter the URI of the property"/>
+                                <input ref="newPropertyValue" type="text" className="input" placeholder="Value of the property"/>
+                                <button className="fluid ui primary icon button" onClick={this.handleNewProperty.bind(this)}><i className="icon add"></i>Add Property/Value</button>
+                        </div></div></div>;
+        }
         return (
             <div ref="resourceReactor">
                 {resourceReactor}
+                {newPropDIV}
             </div>
         );
     }

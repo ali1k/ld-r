@@ -156,6 +156,22 @@ class ResourceQuery{
         `;
         return this.query;
     }
+    newResourceProperty(graphName, resourceURI, propertyURI, objectValue) {
+        let tmp = getQueryDataTypeValue('literal', '', objectValue);
+        let newValue = tmp.value;
+        let graph = 'INTO <'+ graphName +'> ';
+        if(!graphName || graphName === 'default'){
+            graph ='';
+        }
+        this.query = `
+        INSERT ${graph} {
+            <${resourceURI}> <${propertyURI}> ${newValue} .
+        } WHERE {
+
+        }
+        `;
+        return this.query;
+    }
     deleteTripleForSesame(graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
         let dtype, newValue, tmp = {};
         let graph = 'GRAPH <'+ graphName +'> {';

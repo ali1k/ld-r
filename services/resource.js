@@ -260,6 +260,39 @@ export default {
                     callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
                 });
             });
+        } else if (resource === 'resource.property') {
+            datasetURI = params.dataset;
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {category: params.category, datasetURI: datasetURI, resourceURI: params.resourceURI, propertyURI: params.propertyURI, objectValue: params.objectValue});
+                    return 0;
+                }else{
+                    user = req.user;
+                    //todo: think about the access level in the case of clone
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+                query = queryObject.getPrefixes() + queryObject.newResourceProperty(graphName, params.resourceURI, params.propertyURI, params.objectValue);
+                //build http uri
+                //send request
+                HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
+                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                    if(enableLogs){
+                        log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                    }
+                    callback(null, {category: params.category, datasetURI: datasetURI, resourceURI: params.resourceURI, propertyURI: params.propertyURI, objectValue: params.objectValue});
+                }).catch(function (err) {
+                    console.log(err);
+                    if(enableLogs){
+                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                    }
+                    callback(null, {category: params.category, datasetURI: datasetURI, resourceURI: params.resourceURI, propertyURI: params.propertyURI, objectValue: params.objectValue});
+                });
+            });
         } else if (resource === 'resource.new') {
             datasetURI = params.dataset;
             //control access on authentication
