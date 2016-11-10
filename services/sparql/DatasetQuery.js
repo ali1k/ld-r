@@ -99,20 +99,12 @@ class DatasetQuery{
             } LIMIT ' + limit + ' OFFSET ' + offset + ' \
             ';
         }else{
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT DISTINCT ?resource ?title ?label ?graphName WHERE { \
-                { GRAPH ?graphName \
-                    { '+ st +' \
-                    OPTIONAL { ?resource rdfs:label ?label .} '+ optPhase + bindPhase +' \
-                    }\
-                } \
-                UNION \
-                { '+ st +' \
-                    OPTIONAL { ?resource rdfs:label ?label .} '+ optPhase + bindPhase +' \
-                }\
-            } LIMIT ' + limit + ' OFFSET ' + offset + ' \
-            ';
+            this.query = `
+            SELECT DISTINCT ?resource ?title ?label ?graphName WHERE {
+                ${st}
+                OPTIONAL { ?resource rdfs:label ?label .} ${optPhase} ${bindPhase}
+            } LIMIT ${limit} OFFSET ${offset} 
+            `;
         }
         return this.prefixes + this.query;
     }

@@ -20,25 +20,14 @@ class DatasetUtil {
         let output = [];
         let parsed = JSON.parse(body);
         if (parsed.results.bindings.length) {
-            if (!datasetURI || String(datasetURI) === 'generic') {
-                parsed.results.bindings.forEach(function(el) {
-                    output.push({
-                        v: el.resource.value,
-                        d: el.graphName ? el.graphName.value : 0,
-                        title: el.title ? el.title.value : '',
-                        label: el.label ? el.label.value : ''
-                    });
+            parsed.results.bindings.forEach(function(el) {
+                output.push({
+                    v: el.resource.value,
+                    d: datasetURI,
+                    title: el.title ? el.title.value : '',
+                    label: el.label ? el.label.value : ''
                 });
-            } else {
-                parsed.results.bindings.forEach(function(el) {
-                    output.push({
-                        v: el.resource.value,
-                        d: datasetURI,
-                        title: el.title ? el.title.value : '',
-                        label: el.label ? el.label.value : ''
-                    });
-                });
-            }
+            });
         }
         return output;
     }
