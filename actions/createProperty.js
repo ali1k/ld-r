@@ -7,7 +7,7 @@ export default function createProperty(context, payload, done) {
             done();
         } else {
             //refresh the resource properties
-            context.executeAction(loadResource, {dataset: res.dataset, resource: res.resourceURI, category: res.category, propertyPath: res.propertyPath}, function(err2, res2){
+            context.executeAction(loadResource, {dataset: res.datasetURI, resource: res.resourceURI, category: res.category, propertyPath: res.propertyPath}, function(err2, res2){
                 context.dispatch('CREATE_PROPERTY_SUCCESS', res);
                 done();
             });
