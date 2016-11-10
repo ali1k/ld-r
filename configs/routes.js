@@ -37,7 +37,7 @@ export default {
             if (!datasetURI) {
                 datasetURI = 0;
             }
-            context.executeAction(loadFacets, {mode: 'init', id: datasetURI, selection: 0, page: 1}, done);
+            context.executeAction(loadFacets, {mode: 'init', id: decodeURIComponent(datasetURI), selection: 0, page: 1}, done);
         }
     },
     datasets: {
@@ -66,7 +66,7 @@ export default {
             if (!page) {
                 page = 1;
             }
-            context.executeAction(loadDataset, { id: datasetURI, page: page}, done);
+            context.executeAction(loadDataset, { id: decodeURIComponent(datasetURI), page: page}, done);
         }
     },
     resource: {
@@ -88,7 +88,7 @@ export default {
             if (!datasetURI) {
                 datasetURI = 0;
             }
-            context.executeAction(loadResource, { dataset: datasetURI, resource: decodeURIComponent(payload.params.rid), category: category, propertyPath: propertyPath}, done);
+            context.executeAction(loadResource, { dataset: decodeURIComponent(datasetURI), resource: decodeURIComponent(payload.params.rid), category: category, propertyPath: propertyPath}, done);
         }
     },
     user: {
@@ -98,7 +98,7 @@ export default {
         label: 'User',
         action: (context, payload, done) => {
             let category = 0;
-            context.executeAction(loadResource, { dataset: authDatasetURI, resource: baseResourceDomain + '/user/' + decodeURIComponent(payload.params.id), category: category}, done);
+            context.executeAction(loadResource, { dataset: authDatasetURI[0], resource: baseResourceDomain + '/user/' + decodeURIComponent(payload.params.id), category: category}, done);
         }
     },
     users: {

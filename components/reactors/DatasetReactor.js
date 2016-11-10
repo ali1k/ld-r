@@ -10,7 +10,7 @@ import createResource from '../../actions/createResource';
 
 class DatasetReactor extends React.Component {
     componentDidMount() {
-        this.context.executeAction(getResourcesCount, {id: this.props.DatasetStore.dataset.datasetURI});
+
     }
     handleCloneResource(datasetURI, resourceURI) {
         this.context.executeAction(cloneResource, {

@@ -252,10 +252,10 @@ class DynamicConfigurator {
                          ldr:scope "D" ;
                          ldr:datasetLabel "${datasetURI}" ;
                          ldr:readOnly "0" ;
-                         ldr:allowResourceClone "0" ;
-                         ldr:allowPropertyDelete "0" ;
-                         ldr:allowResourceNew "0" ;
-                         ldr:allowPropertyNew "0" ;
+                         ldr:allowResourceClone "1" ;
+                         ldr:allowPropertyDelete "1" ;
+                         ldr:allowResourceNew "1" ;
+                         ldr:allowPropertyNew "1" ;
                          ldr:maxNumberOfResourcesOnPage "20" .
             } WHERE {
 

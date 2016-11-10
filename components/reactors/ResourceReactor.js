@@ -12,7 +12,8 @@ class ResourceReactor extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            newPropURI: ''
+            newPropURI: '',
+            newObjetValue: ''
         };
     }
     //removes properties from an object
@@ -27,18 +28,20 @@ class ResourceReactor extends React.Component {
     }
     handleNewProperty(e) {
         let self = this;
-        let newPropertyValue = ReactDOM.findDOMNode(self.refs.newPropertyValue).value.trim();
-        if(this.state.newPropURI && newPropertyValue){
+        if(this.state.newPropURI && this.state.newObjetValue){
             this.context.executeAction(createProperty, {
                 dataset: self.props.ResourceStore.datasetURI,
                 resourceURI: self.props.ResourceStore.resourceURI,
                 propertyURI: this.state.newPropURI,
-                objectValue: newPropertyValue
+                objectValue: this.state.newObjetValue
             });
         }
     }
     handleNewPropertyEdit(v) {
         this.setState({newPropURI: v.trim()});
+    }
+    handleNewObjectValueEdit(v) {
+        this.setState({newObjetValue: v.trim()});
     }
     render() {
         let datasetURI = this.props.ResourceStore.datasetURI;
@@ -67,7 +70,7 @@ class ResourceReactor extends React.Component {
             newPropDIV =  <div className="ui page grid">
                                 <div className="ui column"><div className="ui violet message form">
                                 <PrefixBasedInput spec={{value:''}} onDataEdit={this.handleNewPropertyEdit.bind(this)} placeholder="Enter the URI of the property. You can use common prefixes e.g. foaf:name"/>
-                                <input ref="newPropertyValue" type="text" className="input" placeholder="Value of the property"/>
+                                <PrefixBasedInput spec={{value:''}} onDataEdit={this.handleNewObjectValueEdit.bind(this)} placeholder="Value of the property" onEnterPress={this.handleNewProperty.bind(this)} allowActionByKey={true}/>
                                 <button className="fluid ui primary icon button" onClick={this.handleNewProperty.bind(this)}><i className="icon add"></i>Add Property/Value</button>
                         </div></div></div>;
         }

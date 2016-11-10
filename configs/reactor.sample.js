@@ -56,6 +56,10 @@ export default {
                 extendedOEditor: ['BasicIndividualDetailEdit'],
                 extendedOViewer: ['BasicIndividualDetailView'],
                 shortenURI: 1
+            },
+            'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#cloneOf': {
+                readOnly: 1,
+                allowPropertyDelete: 0
             }
         },
         //---------depth 2------------
@@ -74,10 +78,6 @@ export default {
                     allowPropertyDelete: 0,
                     objectIViewer: ['PrefixBasedView'],
                     objectIEditor: ['PrefixBasedInput']
-                },
-                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#cloneOf': {
-                    readOnly: 1,
-                    allowPropertyDelete: 0
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#scope': {
                     hint: ['Determines the type of scope in LD-R'],
