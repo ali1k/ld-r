@@ -6,8 +6,6 @@ class ToggleEdit extends React.Component {
     constructor(props) {
         super(props);
         let v = this.props.spec.value;
-        //to initialize value in Property state
-        this.props.onDataEdit(v);
         let onValue = '1';
         let offValue = '0';
         if(this.props.config){
@@ -22,7 +20,10 @@ class ToggleEdit extends React.Component {
         this['offValue']= offValue;
         this.state = {value: v};
     }
-
+    componentWillMount() {
+        //to initialize value in Property state
+        this.props.onDataEdit(this.state.value);
+    }
     handleChange(event) {
         let newVal = String(event.target.value) === String(this['onValue']) ? String(this['offValue']) : String(this['onValue']);
         this.props.onDataEdit(newVal);
