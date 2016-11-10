@@ -1,6 +1,6 @@
 'use strict';
 import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
-import {getDynamicEndpointParameters, getDynamicDatasets} from './utils/dynamicHelpers';
+import {getDynamicEndpointParameters, getDynamicDatasets, prepareNewDatasetConfig} from './utils/dynamicHelpers';
 import {enableAuthentication, authDatasetURI, configDatasetURI, defaultDatasetURI} from '../configs/general';
 import staticReactor from '../configs/reactor';
 import staticFacets from '../configs/facets';
@@ -144,9 +144,16 @@ export default {
                 callback(null, {dynamicReactorDS: dynamicReactorDS, dynamicFacetsDS: dynamicFacetsDS, staticReactorDS: staticReactorDS, staticFacetsDS: staticFacetsDS});
             });
         }
+    },
+    create: (req, resource, params, body, config, callback) => {
+        if (resource === 'dataset.newReactorConfig') {
+            datasetURI = params.dataset;
+            prepareNewDatasetConfig(datasetURI, (res)=>{
+                callback(null, {success: res});
+            });    
+        }
     }
     // other methods
-    // create: function(req, resource, params, body, config, callback) {},
     // update: function(req, resource, params, body, config, callback) {},
     // delete: function(req, resource, params, config, callback) {}
 };

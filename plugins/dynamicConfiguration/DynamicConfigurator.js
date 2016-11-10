@@ -23,13 +23,13 @@ class DynamicConfigurator {
             let query = '';
             if(enableDynamicReactorConfiguration){
                 query = `
-                SELECT DISTINCT ?dataset ?datasetLabel ?readOnly ?resourceFocusType WHERE { GRAPH <${graphName}>
+                SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?resourceFocusType WHERE { GRAPH <${graphName}>
                         {
-                        ?config a ldr:ReactorConfig ;
+                        ?config1 a ldr:ReactorConfig ;
                                 ldr:dataset ?dataset .
-                                OPTIONAL { ?config ldr:datasetLabel ?datasetLabel . }
-                                OPTIONAL { ?config ldr:readOnly ?readOnly . }
-                                OPTIONAL { ?config ldr:resourceFocusType ?resourceFocusType . }
+                                OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
+                                OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
+                                OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
                         }
                 }
                 `;
@@ -46,13 +46,13 @@ class DynamicConfigurator {
             }
             if(enableDynamicReactorConfiguration && enableDynamicFacetsConfiguration){
                 query = `
-                SELECT DISTINCT ?config2 ?dataset ?datasetLabel ?readOnly ?resourceFocusType WHERE { GRAPH <${graphName}> {
+                SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?resourceFocusType WHERE { GRAPH <${graphName}> {
                         {
                         ?config1 a ldr:ReactorConfig ;
                                 ldr:dataset ?dataset .
-                                OPTIONAL { ?config ldr:datasetLabel ?datasetLabel . }
-                                OPTIONAL { ?config ldr:readOnly ?readOnly . }
-                                OPTIONAL { ?config ldr:resourceFocusType ?resourceFocusType . }
+                                OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
+                                OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
+                                OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
                         }
                         UNION
                         {
@@ -214,6 +214,63 @@ class DynamicConfigurator {
                 console.log('Error in dataset config query:', prefixes + query);
                 console.log('---------------------------------------------------------');
                 callback(config);
+            });
+        }
+
+    }
+    prepareNewDatasetConfig(datasetURI, callback) {
+        let exceptions = [configDatasetURI[0], authDatasetURI[0]];
+        //do not config if disabled or exceptions
+        if(!enableDynamicReactorConfiguration || exceptions.indexOf(datasetURI) !== -1){
+            callback(0);
+        }else{
+            //start config
+            const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
+            const graphName = endpointParameters.graphName;
+            const headers = {'Accept': 'application/sparql-results+json'};
+            const outputFormat = 'application/sparql-results+json';
+            //query the triple store for property configs
+            const prefixes = `
+                PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
+                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                PREFIX owl: <http://www.w3.org/2002/07/owl#>
+            `;
+            let graph = 'INTO <'+ graphName +'> ';
+            if(!graphName || graphName === 'default'){
+                graph ='';
+            }
+            let rnc = configDatasetURI[0] + '/rcf' + Math.round(+new Date() / 1000);
+            //do not add two slashes
+            if(configDatasetURI[0].slice(-1) === '/'){
+                rnc = configDatasetURI[0] + 'rcf' + Math.round(+new Date() / 1000);
+            }
+            const query = `
+            INSERT ${graph} {
+                <${rnc}> a ldr:ReactorConfig ;
+                         ldr:dataset <${datasetURI}> ;
+                         ldr:scope "D" ;
+                         ldr:datasetLabel "${datasetURI}" ;
+                         ldr:readOnly "0" ;
+                         ldr:allowResourceClone "0" ;
+                         ldr:allowPropertyDelete "0" ;
+                         ldr:allowResourceNew "0" ;
+                         ldr:allowPropertyNew "0" ;
+                         ldr:maxNumberOfResourcesOnPage "20" .
+            } WHERE {
+
+            }
+            `;
+            //send request
+            //console.log(prefixes + query);
+            let self = this;
+            let HTTPQueryObject = getHTTPQuery('update', prefixes + query, endpointParameters, outputFormat);
+            rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                callback(1);
+            }).catch(function (err) {
+                console.log('Error in dataset config creation update query:', prefixes + query);
+                console.log('---------------------------------------------------------');
+                callback(0);
             });
         }
 

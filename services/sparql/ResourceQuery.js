@@ -149,7 +149,7 @@ class ResourceQuery{
         }
         this.query = `
         INSERT ${graph} {
-            <${newResourceURI}> rdfs:label "New Resource" .
+            <${newResourceURI}> a ldr:Resource ; rdfs:label "New Resource" .
         } WHERE {
 
         }

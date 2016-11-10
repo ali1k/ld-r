@@ -7,6 +7,7 @@ import Dataset from '../dataset/Dataset';
 import cloneResource from '../../actions/cloneResource';
 import createResource from '../../actions/createResource';
 
+
 class DatasetReactor extends React.Component {
     componentDidMount() {
         this.context.executeAction(getResourcesCount, {id: this.props.DatasetStore.dataset.datasetURI});
@@ -43,10 +44,10 @@ class DatasetReactor extends React.Component {
         if(config && config.datasetReactor){
             switch(config.datasetReactor[0]){
                 case 'Dataset':
-                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)} />;
+                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)}/>;
                 break;
                 default:
-                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)} />;
+                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)}/>;
             }
         }
 

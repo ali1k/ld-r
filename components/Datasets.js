@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {navigateAction} from 'fluxible-router';
 import {connectToStores} from 'fluxible-addons-react';
-import {enableAuthentication, defaultDatasetURI} from '../configs/general';
+import {enableAuthentication, defaultDatasetURI, enableAddingNewDatasets} from '../configs/general';
 import DatasetsStore from '../stores/DatasetsStore';
 import URIUtil from './utils/URIUtil';
+import createDataset from '../actions/createDataset';
 
 class Datasets extends React.Component {
     componentDidMount() {
@@ -16,6 +17,11 @@ class Datasets extends React.Component {
             out.push(<a key={i} href={f} target="_blank">{URIUtil.getURILabel(f)} </a>);
         });
         return out;
+    }
+    handleCreateDataset() {
+        this.context.executeAction(createDataset, {
+
+        });
     }
     displayResource(){
         let resourceURI = ReactDOM.findDOMNode(this.refs.resourceURI).value;
@@ -67,7 +73,17 @@ class Datasets extends React.Component {
             }
 
         }
-
+        let createDatasetDIV = '';
+        if(enableAddingNewDatasets){
+            createDatasetDIV = <div className="ui list">
+                <div className="item">
+                    <div  className="medium ui basic icon labeled button" onClick={this.handleCreateDataset.bind(this)}>
+                        <i className="add square large blue icon "></i> Add a New Dataset
+                        </div>
+                    </div>
+                <br/>
+             </div>;
+        }
         return (
             <div className="ui page grid" ref="datasets">
                 <div className="ui column">
@@ -77,6 +93,9 @@ class Datasets extends React.Component {
                         <div className="ui big divided list">
                             {output}
                         </div>
+                    </div>
+                    <div className= "ui bottom attached">
+                        {createDatasetDIV}
                     </div>
                     {dss.length ?
                     <div className="ui violet message form">

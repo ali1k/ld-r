@@ -115,9 +115,6 @@ export default {
         switch (valueType) {
         case 'uri':
         case 'bnode':
-            newValue='<'+objectValue+'>';
-            dtype = 'uri';
-            break;
         case 'literal':
             // automatically detect uris even in literal values
             if(validUrl.is_web_uri(objectValue.toString())){
