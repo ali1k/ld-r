@@ -6,10 +6,14 @@ import Resource from '../resource/Resource';
 import PersonResource from '../resource/PersonResource';
 import createProperty from '../../actions/createProperty';
 import ReactDOM from 'react-dom';
+import PrefixBasedInput from '../object/editor/individual/PrefixBasedInput';
 
 class ResourceReactor extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            newPropURI: ''
+        };
     }
     //removes properties from an object
     configMinus(config, props) {
@@ -23,16 +27,18 @@ class ResourceReactor extends React.Component {
     }
     handleNewProperty(e) {
         let self = this;
-        let newPropertyURI = ReactDOM.findDOMNode(self.refs.newPropertyURI).value.trim();
         let newPropertyValue = ReactDOM.findDOMNode(self.refs.newPropertyValue).value.trim();
-        if(newPropertyURI && newPropertyValue){
+        if(this.state.newPropURI && newPropertyValue){
             this.context.executeAction(createProperty, {
                 dataset: self.props.ResourceStore.datasetURI,
                 resourceURI: self.props.ResourceStore.resourceURI,
-                propertyURI: newPropertyURI,
+                propertyURI: this.state.newPropURI,
                 objectValue: newPropertyValue
             });
         }
+    }
+    handleNewPropertyEdit(v) {
+        this.setState({newPropURI: v.trim()});
     }
     render() {
         let datasetURI = this.props.ResourceStore.datasetURI;
@@ -60,7 +66,7 @@ class ResourceReactor extends React.Component {
         if(config && config.allowPropertyNew){
             newPropDIV =  <div className="ui page grid">
                                 <div className="ui column"><div className="ui violet message form">
-                                <input ref="newPropertyURI" type="text" className="input" placeholder="Enter the URI of the property"/>
+                                <PrefixBasedInput spec={{value:''}} onDataEdit={this.handleNewPropertyEdit.bind(this)} placeholder="Enter the URI of the property. You can use common prefixes e.g. foaf:name"/>
                                 <input ref="newPropertyValue" type="text" className="input" placeholder="Value of the property"/>
                                 <button className="fluid ui primary icon button" onClick={this.handleNewProperty.bind(this)}><i className="icon add"></i>Add Property/Value</button>
                         </div></div></div>;
