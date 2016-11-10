@@ -6,14 +6,11 @@ class HelpModal extends React.Component {
             <div className="ui modal">
               <i className="close icon"></i>
               <div className="header">
-                Help
+                Help: About Icons
               </div>
               <div className="content">
                 <div className="description">
                   <div className="ui divided list">
-                      <div className="item">
-                        <h3> About Icons </h3>
-                      </div>
                       <div className="item">
                         <i className="big circle info icon"></i>
                         <div className="content">
@@ -87,7 +84,13 @@ class HelpModal extends React.Component {
                       <div className="item">
                         <div className="content">
                             <a className="header"> Resource </a>
-                          <div className="description"> <i className="big icon black cube"></i> Read Only Access <i className="big icon green cube"></i> Write Access <i className="big icon yellow cube"></i> Partial Write Access </div>
+                          <div className="description"> <i className="big icon black cube"></i> Read Only Access <i className="big icon green cube"></i> Write Access <i className="big icon yellow cube"></i> Partial Write Access <i className="big icon green superscript"></i> Clone </div>
+                        </div>
+                      </div>
+                      <div className="item">
+                        <div className="content">
+                            <a className="header"> Dataset </a>
+                          <div className="description"> <i className="big icon orange theme"></i> has Dynamic Config <i className="big icon brown theme"></i> has both Dynamic & Static Config </div>
                         </div>
                       </div>
                     </div>

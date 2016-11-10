@@ -42,10 +42,11 @@ class DatasetsStore extends BaseStore {
                 for(let prop in dynamicReactorDS.dataset[ds]){
                     tmp [ds][prop] = dynamicReactorDS.dataset[ds][prop];
                 }
+                tmp [ds].isStaticDynamic = 1;
             }else{
                 tmp [ds] = dynamicReactorDS.dataset[ds];
+                tmp [ds].isDynamic = 1;
             }
-            tmp [ds].isDynamic = 1;
         }
         for(let ds in dynamicFacetsDS.facets){
             if(tmp [ds]){
@@ -53,11 +54,13 @@ class DatasetsStore extends BaseStore {
                 for(let prop in dynamicFacetsDS.facets[ds]){
                     tmp [ds][prop] = dynamicFacetsDS.facets[ds][prop];
                 }
+                tmp [ds].isStaticDynamic = 1;
             }else{
                 tmp [ds] = dynamicFacetsDS.facets[ds];
+                tmp [ds].isDynamic = 1;
             }
             tmp [ds].isBrowsable = 1;
-            tmp [ds].isDynamic = 1;
+
         }
         for(let ds in tmp){
             out.push({d: ds, features: tmp[ds]});
