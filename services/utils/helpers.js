@@ -75,10 +75,20 @@ export default {
             outputObject.params['Accept'] = outputFormat;
 
             break;
+        case 'cliopatria':
+            if(mode === 'update'){
+                outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + 'update';
+                outputObject.params['update'] = query;
+            }else{
+                outputObject.params['query'] = query;
+                outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                outputObject.params['format'] = outputFormat;
+            }
+
+            break;
         //todo: check the differences for other triple stores
         case 'sesame':
             if(mode === 'update'){
-                ext = '';
                 outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '/statements';
                 outputObject.params['update'] = query;
             }else{
@@ -88,6 +98,10 @@ export default {
             }
 
             break;
+        default:
+            outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+            outputObject.params['query'] = query;
+            outputObject.params['format'] = outputFormat;
         }
         return outputObject;
     },
