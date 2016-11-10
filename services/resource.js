@@ -232,7 +232,11 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            let newResourceURI = params.resourceURI + '_' + Math.round(+new Date() / 1000);
+            let newResourceURI = datasetURI + '/' + Math.round(+new Date() / 1000);
+            //do not add two slashes
+            if(datasetURI.slice(-1) === '/'){
+                newResourceURI = datasetURI + Math.round(+new Date() / 1000);
+            }
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 query = queryObject.getPrefixes() + queryObject.cloneResource(graphName, params.resourceURI, newResourceURI);

@@ -65,6 +65,9 @@ export default {
                 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
                     isHidden: 1
                 },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#cloneOf': {
+                    readOnly: 1
+                },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#scope': {
                     hint: ['Determines the type of scope in LD-R'],
                     objectIEditor: ['BasicOptionInput'],
