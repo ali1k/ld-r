@@ -4,10 +4,17 @@ import {connectToStores} from 'fluxible-addons-react';
 import {enableAuthentication} from '../../configs/general';
 import getResourcesCount from '../../actions/getResourcesCount';
 import Dataset from '../dataset/Dataset';
+import cloneResource from '../../actions/cloneResource';
 
 class DatasetReactor extends React.Component {
     componentDidMount() {
         this.context.executeAction(getResourcesCount, {id: this.props.DatasetStore.dataset.datasetURI});
+    }
+    handleCloneResource(datasetURI, resourceURI) {
+        this.context.executeAction(cloneResource, {
+            dataset: datasetURI,
+            resourceURI: resourceURI
+        });
     }
     //removes properties from an object
     configMinus(config, props) {
@@ -30,10 +37,10 @@ class DatasetReactor extends React.Component {
         if(config && config.datasetReactor){
             switch(config.datasetReactor[0]){
                 case 'Dataset':
-                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])}/>;
+                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])} onCloneResource={this.handleCloneResource.bind(this)} />;
                 break;
                 default:
-                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])}/>;
+                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])} onCloneResource={this.handleCloneResource.bind(this)}/>;
             }
         }
 

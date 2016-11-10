@@ -1,7 +1,6 @@
 import React from 'react';
 import {NavLink} from 'fluxible-router';
 import URIUtil from '../utils/URIUtil';
-import cloneResource from '../../actions/cloneResource';
 
 class ResourceList extends React.Component {
     componentDidMount() {}
@@ -11,7 +10,7 @@ class ResourceList extends React.Component {
         if (cloneable) {
             cloneDIV = <a className="mini ui circular basic icon button" onClick={self.handleCloneResource.bind(self, decodeURIComponent(g), decodeURIComponent(v))} title="clone this resource"><i className="icon teal superscript"></i></a>;
         }
-
+        //in the faceted browser
         if (this.props.OpenInNewTab) {
             return (
                 <div>
@@ -20,7 +19,6 @@ class ResourceList extends React.Component {
                             <i className={icon}></i>
                             {title}
                         </a>
-                         &nbsp;{cloneDIV}
                     </div>
                 </div>
             );
@@ -40,10 +38,7 @@ class ResourceList extends React.Component {
         }
     }
     handleCloneResource(datasetURI, resourceURI, e) {
-        this.context.executeAction(cloneResource, {
-            dataset: datasetURI,
-            resourceURI: resourceURI
-        });
+        this.props.onCloneResource(datasetURI, resourceURI);
         e.stopPropagation();
     }
     includesProperty(list, resource) {
