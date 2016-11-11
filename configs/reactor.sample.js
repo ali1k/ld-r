@@ -43,10 +43,6 @@ export default {
                 //used when creating random resources
                 dynamicResourceDomain: ['http://example.org'],
                 resourceReactor: ['Resource']
-            },
-            'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#User' :{
-                treatAsResourceType: 1,
-                resourceReactor: ['UserResource']
             }
         },
         property: {
@@ -73,7 +69,12 @@ export default {
         },
         //---------depth 2------------
         dataset_resource: {
-
+            'http://ld-r.org/users': {
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#User' :{
+                    treatAsResourceType: 1,
+                    resourceReactor: ['UserResource']
+                }
+            }
         },
         dataset_property: {
             //for configuration manager
