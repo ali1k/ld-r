@@ -79,21 +79,23 @@ export default {
                     });
                     return 0;
                 }
-                //resource focus type
-                let rftconfig = configurator.getResourceFocusType(0, datasetURI);
-                query = queryObject.getMasterPropertyValues(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.value));
-                //build http uri
-                //send request
-                rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
-                    callback(null, {
-                        datasetURI: datasetURI,
-                        graphName: graphName,
-                        page: 1,
-                        facets: {status: Boolean(params.selection.status), propertyURI: decodeURIComponent(params.selection.value), items: utilObject.parseMasterPropertyValues(res)}
+                configurator.prepareDatasetConfig(1, datasetURI, (rconfig)=> {
+                    //resource focus type
+                    let rftconfig = configurator.getResourceFocusType(rconfig, datasetURI);
+                    query = queryObject.getMasterPropertyValues(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.value));
+                    //build http uri
+                    //send request
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                        callback(null, {
+                            datasetURI: datasetURI,
+                            graphName: graphName,
+                            page: 1,
+                            facets: {status: Boolean(params.selection.status), propertyURI: decodeURIComponent(params.selection.value), items: utilObject.parseMasterPropertyValues(res)}
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {datasetURI: datasetURI, graphName: graphName, facets: {}, total: 0, page: 1});
                     });
-                }).catch(function (err) {
-                    console.log(err);
-                    callback(null, {datasetURI: datasetURI, graphName: graphName, facets: {}, total: 0, page: 1});
                 });
             });
         //handles changes in second level facets
@@ -123,7 +125,6 @@ export default {
                     if(params.mode === 'init'){
                         //get all resources
                         query = queryObject.countSecondLevelPropertyValues(endpointParameters, graphName, rftconfig.type, 0, {});
-                        //console.log(query);
                     }else{
                         query = queryObject.countSecondLevelPropertyValues(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
                     }

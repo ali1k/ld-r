@@ -28,7 +28,7 @@ class FacetQuery{
         let st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.';
         //---to support resource focus types
         let st_extra = this.makeExtraTypeFilters(endpointParameters, type);
-        st = st + ' ' + st_extra;
+        st = st_extra + ' ' + st;
         this.query = `
         SELECT (count(?s) AS ?total) ?v WHERE {
             ${gStart}
@@ -118,11 +118,11 @@ class FacetQuery{
 
         //---to support resource focus types
         let st_extra = this.makeExtraTypeFilters(endpointParameters, type);
-        return st + st_extra;
+        return st_extra + ' ' + st;
     }
     makeExtraTypeFilters(endpointParameters, type){
         //---to support resource focus types
-        let st_extra = ' ?s a <'+ type + '> .';
+        let st_extra = ' ?s rdf:type <'+ type + '> .';
         //will get all the types
         if(!type || !type.length || (type.length && !type[0]) ){
             st_extra = '';
@@ -139,11 +139,11 @@ class FacetQuery{
                 typeURIs.forEach(function(fl){
                     tmp2.push('?type=' + fl);
                 });
-                st_extra = ' ?s a ?type . FILTER (' + tmp2.join(' || ') + ')';
+                st_extra = ' ?s rdf:type ?type . FILTER (' + tmp2.join(' || ') + ')';
                 //---------------
             }else{
                 //---for virtuoso
-                st_extra = ' ?s a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
+                st_extra = ' ?s rdf:type ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
             }
         }
         //-----------------------------------------------
@@ -177,11 +177,11 @@ class FacetQuery{
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
         this.query = `
-        SELECT (count(?s) AS ?total) WHERE {
+        SELECT (count(DISTINCT ?s) AS ?total) WHERE {
             ${gStart}
                 ${st}
             ${gEnd}
-        } GROUP BY ?v
+        }
         `;
         return this.prefixes + this.query;
     }
