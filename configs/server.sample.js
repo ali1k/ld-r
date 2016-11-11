@@ -16,8 +16,8 @@ export default {
             host: 'live.dbpedia.org', port: 80, path: '/sparql', graphName: 'default', endpointType: 'virtuoso'
         },
         //Example for connecting to a ClioPatria triple store
-        'http://semanticweb.cs.vu.nl/dss': {
-            host: 'semanticweb.cs.vu.nl', port: 80, path: '/dss/sparql/', graphName: 'default', endpointType: 'ClioPatria'
+        'http://localhost:3020/sparql/': {
+            host: 'localhost', port: 3020, path: '/sparql/', endpointType: 'ClioPatria'
         }
     },
     dbpediaLookupService: [

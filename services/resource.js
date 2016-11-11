@@ -7,6 +7,7 @@ import ResourceUtil from './utils/ResourceUtil';
 import rp from 'request-promise';
 import fs from 'fs';
 import Log from 'log';
+import async from 'async';
 /*-------------log updates-------------*/
 let log;
 let user, accessLevel;
@@ -55,7 +56,7 @@ export default {
                 if(propertyPath.length > 1){
                     propertyPath = propertyPath.split(',');
                 }
-                query = queryObject.getPrefixes() + queryObject.getProperties(graphName, resourceURI);
+                query = queryObject.getPrefixes() + queryObject.getProperties(endpointParameters, graphName, resourceURI);
                 //console.log(query);
                 //build http uri
                 //send request
@@ -110,7 +111,7 @@ export default {
             }
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.getProperties(graphName, objectURI);
+                query = queryObject.getPrefixes() + queryObject.getProperties(endpointParameters, graphName, objectURI);
                 //build http uri
                 //send request
                 rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
@@ -157,7 +158,7 @@ export default {
             }
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.getAddTripleQuery(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
+                query = queryObject.getPrefixes() + queryObject.addTriple(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
                 //build http uri
                 //send request
                 HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
@@ -196,26 +197,56 @@ export default {
             }
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.getUpdateObjectTriplesForSesame(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData);
-                //we should add this resource into user's profile too
-                if(enableAuthentication){
-                    query = query + queryObject.getAddTripleQuery(endpointParameters, prepareDG(authDatasetURI[0]).g, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', params.newObjectValue, 'uri', '');
-                }
-                //build http uri
-                //send request
-                HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
-                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
-                    if(enableLogs){
-                        log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                query = queryObject.getPrefixes() + queryObject.updateObjectTriples(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData);
+                async.parallel([
+                    (cback) => {
+                        //send request
+                        HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
+                        rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                            if(enableLogs){
+                                log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                            }
+                            cback();
+                        }).catch(function (err) {
+                            console.log(err);
+                            if(enableLogs){
+                                log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                            }
+                            cback();
+                        });
+                    },
+                    (cback) => {
+                        //we should add this resource into user's profile too
+                        if(enableAuthentication){
+                            let query2 = queryObject.getPrefixes() + queryObject.addTriple(endpointParameters, prepareDG(authDatasetURI[0]).g, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', params.newObjectValue, 'uri', '');
+                            //send request
+                            HTTPQueryObject = getHTTPQuery('update', query2, endpointParameters, outputFormat);
+                            rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                                if(enableLogs){
+                                    log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                                }
+                                cback();
+                            }).catch(function (err) {
+                                console.log(err);
+                                if(enableLogs){
+                                    log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                                }
+                                cback();
+                            });
+                        }else{
+                            cback();
+                        }
                     }
-                    callback(null, {category: params.category});
-                }).catch(function (err) {
-                    console.log(err);
-                    if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                ],
+                // final callback
+                (err, results) => {
+                    if (err){
+                        callback(null, {category: params.category});
+                        return;
                     }
                     callback(null, {category: params.category});
                 });
+
             });
 
         } else if (resource === 'resource.clone') {
@@ -239,23 +270,52 @@ export default {
             }
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.cloneResource(graphName, params.resourceURI, newResourceURI);
-                //we should add this resource into user's profile too
-                if(enableAuthentication){
-                    query = query + queryObject.getAddTripleQuery(endpointParameters, prepareDG(authDatasetURI[0]).g, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', newResourceURI, 'uri', '');
-                }
-                //build http uri
-                //send request
-                HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
-                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
-                    if(enableLogs){
-                        log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                query = queryObject.getPrefixes() + queryObject.cloneResource(endpointParameters, graphName, params.resourceURI, newResourceURI);
+                async.parallel([
+                    (cback) => {
+                        //send request
+                        HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
+                        rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                            if(enableLogs){
+                                log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                            }
+                            cback();
+                        }).catch(function (err) {
+                            console.log(err);
+                            if(enableLogs){
+                                log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                            }
+                            cback();
+                        });
+                    },
+                    (cback) => {
+                        //we should add this resource into user's profile too
+                        if(enableAuthentication){
+                            let query2 = queryObject.getPrefixes() + queryObject.addTriple(endpointParameters, prepareDG(authDatasetURI[0]).g, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', newResourceURI, 'uri', '');
+                            //send request
+                            HTTPQueryObject = getHTTPQuery('update', query2, endpointParameters, outputFormat);
+                            rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                                if(enableLogs){
+                                    log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                                }
+                                cback();
+                            }).catch(function (err) {
+                                console.log(err);
+                                if(enableLogs){
+                                    log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                                }
+                                cback();
+                            });
+                        }else{
+                            cback();
+                        }
                     }
-                    callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
-                }).catch(function (err) {
-                    console.log(err);
-                    if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                ],
+                // final callback
+                (err, results) => {
+                    if (err){
+                        callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
+                        return;
                     }
                     callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
                 });
@@ -276,7 +336,7 @@ export default {
             }
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.newResourceProperty(graphName, params.resourceURI, params.propertyURI, params.objectValue);
+                query = queryObject.getPrefixes() + queryObject.addTriple(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.objectValue, 'literal', '');
                 //build http uri
                 //send request
                 HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
@@ -314,23 +374,56 @@ export default {
             }
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.newResource(graphName, newResourceURI);
-                //we should add this resource into user's profile too
-                if(enableAuthentication){
-                    query = query + queryObject.getAddTripleQuery(endpointParameters, prepareDG(authDatasetURI[0]).g, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', newResourceURI, 'uri', '');
-                }
-                //build http uri
-                //send request
-                HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
-                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
-                    if(enableLogs){
-                        log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                query = queryObject.getPrefixes() + queryObject.newResource(endpointParameters, graphName, newResourceURI);
+                async.parallel([
+                    (cback) => {
+                        //send request
+                        HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
+                        rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                            if(enableLogs){
+                                log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                            }
+                            cback();
+                        }).catch(function (err) {
+                            console.log(err);
+                            if(enableLogs){
+                                log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                            }
+                            cback();
+                        });
+                    },
+                    (cback) => {
+                        //we should add this resource into user's profile too
+                        if(enableAuthentication){
+                            let query2 = queryObject.getPrefixes() + queryObject.addTriple(endpointParameters, prepareDG(authDatasetURI[0]).g, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', newResourceURI, 'uri', '');
+                            if(params.isNewDataset){
+                                //when a new dataset is created
+                                query2 = query2 + ' ; ' + queryObject.addTriple(endpointParameters, prepareDG(authDatasetURI[0]).g, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfDataset', datasetURI, 'uri', '');
+                            }
+                            //send request
+                            HTTPQueryObject = getHTTPQuery('update', query2, endpointParameters, outputFormat);
+                            rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                                if(enableLogs){
+                                    log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                                }
+                                cback();
+                            }).catch(function (err) {
+                                console.log(err);
+                                if(enableLogs){
+                                    log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                                }
+                                cback();
+                            });
+                        }else{
+                            cback();
+                        }
                     }
-                    callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
-                }).catch(function (err) {
-                    console.log(err);
-                    if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                ],
+                // final callback
+                (err, results) => {
+                    if (err){
+                        callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
+                        return;
                     }
                     callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
                 });
@@ -361,7 +454,7 @@ export default {
             }
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.getUpdateTripleQuery(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType);
+                query = queryObject.getPrefixes() + queryObject.updateTriple(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType);
                 //build http uri
                 //send request
                 HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
@@ -408,7 +501,7 @@ export default {
             }
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.getUpdateObjectTriplesForSesame(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData);
+                query = queryObject.getPrefixes() + queryObject.updateObjectTriples(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData);
                 //build http uri
                 //send request
                 HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
@@ -448,7 +541,7 @@ export default {
             }
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.getUpdateTriplesQuery(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.changes);
+                query = queryObject.getPrefixes() + queryObject.updateTriples(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.changes);
                 //build http uri
                 //send request
                 HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
@@ -491,7 +584,7 @@ export default {
             }
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.getDeleteTripleQuery(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
+                query = queryObject.getPrefixes() + queryObject.deleteTriple(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
                 //build http uri
                 //send request
                 HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
@@ -529,7 +622,7 @@ export default {
             }
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.getDeleteTriplesQuery(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.changes);
+                query = queryObject.getPrefixes() + queryObject.deleteTriples(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.changes);
                 //build http uri
                 //send request
                 HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
@@ -567,7 +660,7 @@ export default {
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 //delete all values
-                query = queryObject.getPrefixes() + queryObject.getDeleteTripleQuery(endpointParameters, graphName, params.resourceURI, params.propertyURI, 0, 0, 0);
+                query = queryObject.getPrefixes() + queryObject.deleteTriple(endpointParameters, graphName, params.resourceURI, params.propertyURI, 0, 0, 0);
                 //build http uri
                 //send request
                 HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);

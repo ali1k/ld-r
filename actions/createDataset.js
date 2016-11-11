@@ -8,7 +8,7 @@ export default function createDataset(context, payload, done) {
         newDatasetURI = baseResourceDomain[0] + 'd' + Math.round(+new Date() / 1000);
     }
     context.service.create('dataset.newReactorConfig', {dataset: newDatasetURI}, {}, function (err, res) {
-        context.service.create('resource.new', {dataset: newDatasetURI}, {}, function (err2, res2) {
+        context.service.create('resource.new', {dataset: newDatasetURI, isNewDataset: 1}, {}, function (err2, res2) {
             if (err) {
                 context.dispatch('CREATE_DATASET_FAILURE', err2);
                 done();

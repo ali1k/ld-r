@@ -19,251 +19,135 @@ class ResourceQuery{
     getPrefixes() {
         return this.prefixes;
     }
-    getAddTripleQuery(endpointParameters, graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
-        switch (endpointParameters.type) {
-            case 'stardog':
-            case 'sesame':
-                return this.addTripleForSesame(graphName, resourceURI, propertyURI, objectValue, valueType, dataType);
-                break;
-            default:
-                return this.addTriple(graphName, resourceURI, propertyURI, objectValue, valueType, dataType);
-        }
-    }
-    getDeleteTripleQuery(endpointParameters, graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
-        switch (endpointParameters.type) {
-            case 'stardog':
-            case 'sesame':
-                return this.deleteTripleForSesame(graphName, resourceURI, propertyURI, objectValue, valueType, dataType);
-                break;
-            default:
-
-                return this.deleteTriple(graphName, resourceURI, propertyURI, objectValue, valueType, dataType);
-        }
-    }
-    getDeleteTriplesQuery(endpointParameters, graphName, resourceURI, propertyURI, changes) {
-        switch (endpointParameters.type) {
-            case 'stardog':
-            case 'sesame':
-                return this.deleteTriplesForSesame(graphName, resourceURI, propertyURI, changes);
-                break;
-            default:
-                return this.deleteTriples(graphName, resourceURI, propertyURI, changes);
-        }
-    }
-    getUpdateTripleQuery(endpointParameters, graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType) {
-        switch (endpointParameters.type) {
-            case 'stardog':
-            case 'sesame':
-                return this.updateTripleForSesame(graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType);
-                break;
-            default:
-                return this.updateTriple(graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType);
-        }
-    }
-    getUpdateTriplesQuery(endpointParameters, graphName, resourceURI, propertyURI, changes) {
-        switch (endpointParameters.type) {
-            case 'stardog':
-            case 'sesame':
-                return this.updateTriplesForSesame(graphName, resourceURI, propertyURI, changes);
-                break;
-            default:
-                return this.updateTriples(graphName, resourceURI, propertyURI, changes);
-        }
-    }
-    getUpdateObjectTriplesForSesame(endpointParameters, graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType, detailData) {
-        switch (endpointParameters.type) {
-            case 'stardog':
-            case 'sesame':
-                return this.updateObjectTriplesForSesame(graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType, detailData);
-                break;
-            default:
-                return this.updateObjectTriples(graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType, detailData);
-        }
-    }
-    getProperties(graphName, resourceURI) {
-        let ex = 'FROM <'+ graphName +'>';
+    prepareGraphName(graphName){
+        let gStart = 'GRAPH <'+ graphName +'> { ';
+        let gEnd = ' } ';
         if(!graphName || graphName === 'default'){
-            ex ='';
+            gStart =' ';
+            gEnd = ' ';
         }
-        /*jshint multistr: true */
-        this.query = '\
-        SELECT ?p ?o (count(?extendedVal) AS ?hasExtendedValue) ' + ex + ' WHERE { \
-        <'+ resourceURI + '> ?p ?o . \
-        OPTIONAL {?o ?uri ?extendedVal .} \
-    } GROUP BY ?p ?o ORDER BY ?p ?o';
-      return this.query;
+        return {gStart: gStart, gEnd: gEnd}
     }
-    addTripleForSesame (graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
+    getProperties(endpointParameters, graphName, resourceURI) {
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
+        this.query = `
+            SELECT ?p ?o (count(?extendedVal) AS ?hasExtendedValue) WHERE {
+                ${gStart}
+                    <${resourceURI}> ?p ?o .
+                    OPTIONAL {?o ?uri ?extendedVal .}
+                ${gEnd}
+            } GROUP BY ?p ?o ORDER BY ?p ?o
+        `;
+        return this.query;
+    }
+    cloneResource(endpointParameters, graphName, resourceURI, newResourceURI) {
+        //todo: consider different value types
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
+        this.query = `
+        INSERT {
+            ${gStart}
+                <${newResourceURI}> ?p ?o ; ldr:cloneOf <${resourceURI}> .
+            ${gEnd}
+        } WHERE {
+            ${gStart}
+                <${resourceURI}> ?p ?o .
+                FILTER (?p != ldr:cloneOf)
+            ${gEnd}
+        }
+        `;
+        return this.query;
+    }
+    newResource(endpointParameters, graphName, newResourceURI) {
+        //todo: consider different value types
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
+        this.query = `
+        INSERT DATA {
+            ${gStart}
+                <${newResourceURI}> a ldr:Resource ; rdfs:label "New Resource" .
+            ${gEnd}
+        }
+        `;
+        return this.query;
+    }
+    addTriple(endpointParameters, graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
         //todo: consider different value types
         let newValue, tmp = {};
-        let graph = 'GRAPH <'+ graphName +'> { ';
-        let graphEnd = ' } ';
-        if(!graphName || graphName === 'default'){
-            graph =' ';
-            graphEnd = ' ';
-        }
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
         tmp = getQueryDataTypeValue(valueType, dataType, objectValue);
         newValue = tmp.value;
-        /*jshint multistr: true */
-        this.query = '\
-        INSERT DATA { \
-            ' + graph  +'<'+ resourceURI + '> <'+ propertyURI +'> '+ newValue + graphEnd + ' }';
-        return this.query;
-    }
-    addTriple(graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
-        //todo: consider different value types
-      let newValue, tmp = {};
-      let graph = 'INTO <'+ graphName +'> ';
-      if(!graphName || graphName === 'default'){
-          graph ='';
-      }
-      tmp = getQueryDataTypeValue(valueType, dataType, objectValue);
-      newValue = tmp.value;
-      /*jshint multistr: true */
-      this.query = '\
-      INSERT DATA ' + graph + '{ \
-      <'+ resourceURI + '> <'+ propertyURI +'> '+ newValue +' } ';
-      return this.query;
-    }
-    cloneResource(graphName, resourceURI, newResourceURI) {
-        //todo: consider different value types
-        let graph = 'INTO <'+ graphName +'> ';
-        if(!graphName || graphName === 'default'){
-            graph ='';
-        }
         this.query = `
-        INSERT ${graph} {
-            <${newResourceURI}> ?p ?o ; ldr:cloneOf <${resourceURI}> .
-        } WHERE {
-            <${resourceURI}> ?p ?o .
-            FILTER (?p != ldr:cloneOf)
-        }
+            INSERT DATA {
+            ${gStart}
+                <${resourceURI}> <${propertyURI}> ${newValue} .
+            ${gEnd}
+            }
         `;
         return this.query;
     }
-    newResource(graphName, newResourceURI) {
-        //todo: consider different value types
-        let graph = 'INTO <'+ graphName +'> ';
-        if(!graphName || graphName === 'default'){
-            graph ='';
-        }
-        this.query = `
-        INSERT ${graph} {
-            <${newResourceURI}> a ldr:Resource ; rdfs:label "New Resource" .
-        } WHERE {
-
-        }
-        `;
-        return this.query;
-    }
-    newResourceProperty(graphName, resourceURI, propertyURI, objectValue) {
-        let tmp = getQueryDataTypeValue('literal', '', objectValue);
-        let newValue = tmp.value;
-        let graph = 'INTO <'+ graphName +'> ';
-        if(!graphName || graphName === 'default'){
-            graph ='';
-        }
-        this.query = `
-        INSERT ${graph} {
-            <${resourceURI}> <${propertyURI}> ${newValue} .
-        } WHERE {
-
-        }
-        `;
-        return this.query;
-    }
-    deleteTripleForSesame(graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
+    deleteTriple(endpointParameters, graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
         let dtype, newValue, tmp = {};
-        let graph = 'GRAPH <'+ graphName +'> {';
-        let graphEnd = ' } ';
-        if(!graphName || graphName === 'default'){
-            graph = ' ';
-            graphEnd = ' ';
-        }
-        if(objectValue){
-            tmp = getQueryDataTypeValue(valueType, dataType, objectValue);
-            newValue = tmp.value;
-            dtype = tmp.dtype;
-            //if we just want to delete a specific value for multi-valued ones
-            this.query = 'DELETE  { '+ graph  +'<'+ resourceURI +'> <'+ propertyURI +'> ?v ' + graphEnd + ' } WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?v . FILTER(' + dtype + '(?v)= '+ newValue +' ) } ';
-        }else{
-            this.query = 'DELETE { ' + graph + '<'+ resourceURI +'> <'+ propertyURI +'> ?z ' + graphEnd + ' } WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?z }';
-        }
-        return this.query;
-    }
-    deleteTriple(graphName, resourceURI, propertyURI, objectValue, valueType, dataType) {
-        let dtype, newValue, tmp = {};
-        let graph = 'FROM <'+ graphName +'> ';
-        if(!graphName || graphName === 'default'){
-            graph ='';
-        }
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
         if(objectValue){
             tmp = getQueryDataTypeValue(valueType, dataType, objectValue);
             newValue = tmp.value;
             dtype = tmp.dtype;
           //if we just want to delete a specific value for multi-valued ones
-          this.query = 'DELETE ' + graph + '{ <'+ resourceURI +'> <'+ propertyURI +'> ?v } WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?v . FILTER(' + dtype + '(?v)= '+ newValue +' ) } ';
+            this.query = `
+                DELETE {
+                    ${gStart}
+                        <${resourceURI}> <${propertyURI}> ?v .
+                    ${gEnd}
+                } WHERE {
+                    ${gStart}
+                        <${resourceURI}> <${propertyURI}> ?v .
+                        FILTER(${dtype}(?v)=${newValue})
+                    ${gEnd}
+                }
+            `;
         }else{
-            this.query = 'DELETE ' + graph + '{ <'+ resourceURI +'> <'+ propertyURI +'> ?z }  WHERE { <'+ resourceURI +'> <'+ propertyURI +'> ?z }';
+            this.query = `
+                DELETE {
+                    ${gStart}
+                        <${resourceURI}> <${propertyURI}> ?z .
+                    ${gEnd}
+                } WHERE {
+                    ${gStart}
+                        <${resourceURI}> <${propertyURI}> ?z .
+                    ${gEnd}
+                }
+            `;
         }
         return this.query;
     }
-    deleteTriplesForSesame (graphName, resourceURI, propertyURI, changes) {
+    deleteTriples(endpointParameters, graphName, resourceURI, propertyURI, changes) {
         let self = this;
         self.query= '';
         changes.forEach(function(change) {
-            self.query = self.query + self.deleteTripleForSesame(graphName, resourceURI, propertyURI, change.oldValue, change.valueType, change.dataType);
+            self.query = self.query + self.deleteTriple(endpointParameters, graphName, resourceURI, propertyURI, change.oldValue, change.valueType, change.dataType);
         });
         return self.query;
     }
-    deleteTriples(graphName, resourceURI, propertyURI, changes) {
-        let self = this;
-        self.query= '';
-        changes.forEach(function(change) {
-            self.query = self.query + self.deleteTriple(graphName, resourceURI, propertyURI, change.oldValue, change.valueType, change.dataType);
-        });
-        return self.query;
-    }
-    updateTriple (graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType) {
-        this.query = this.deleteTriple(graphName, resourceURI, propertyURI, oldObjectValue, valueType, dataType) + this.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType);
+    updateTriple (endpointParameters, graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType) {
+        this.query = this.deleteTriple(endpointParameters, graphName, resourceURI, propertyURI, oldObjectValue, valueType, dataType) + ' ; ' + this.addTriple(endpointParameters, graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType);
         return this.query;
     }
-    updateTripleForSesame (graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType) {
-        this.query = this.deleteTripleForSesame(graphName, resourceURI, propertyURI, oldObjectValue, valueType, dataType) + ';' + this.addTripleForSesame(graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType) + ';';
-        return this.query;    }
-    updateTriples (graphName, resourceURI, propertyURI, changes) {
+    updateTriples (endpointParameters, graphName, resourceURI, propertyURI, changes) {
         let self = this;
         self.query= '';
         changes.forEach(function(change) {
-            self.query = self.query + self.updateTriple(graphName, resourceURI, propertyURI, change.oldValue, change.newValue, change.valueType, change.dataType);
+            self.query = self.query + self.updateTriple(endpointParameters, graphName, resourceURI, propertyURI, change.oldValue, change.newValue, change.valueType, change.dataType) + ' ; ';
         });
         return self.query;
     }
-    updateTriplesForSesame (graphName, resourceURI, propertyURI, changes) {
-        let self = this;
-        self.query= '';
-        changes.forEach(function(change) {
-            self.query = self.query + self.updateTripleForSesame(graphName, resourceURI, propertyURI, change.oldValue, change.newValue, change.valueType, change.dataType);
-        });
-        return self.query;
-    }
-    updateObjectTriples (graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType, detailData) {
+    updateObjectTriples (endpointParameters, graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType, detailData) {
         let self=this;
-        self.query = self.deleteTriple(graphName, resourceURI, propertyURI, oldObjectValue, valueType, dataType) + self.addTriple(graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType) ;
+        self.query = self.deleteTriple(endpointParameters, graphName, resourceURI, propertyURI, oldObjectValue, valueType, dataType) + ' ; ' + self.addTriple(endpointParameters, graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType) + ' ; ';
         for (let propURI in detailData) {
-            self.query = self.query + self.deleteTriple(graphName, oldObjectValue, propURI, '', detailData[propURI].valueType, detailData[propURI].dataType);
-            self.query = self.query + self.addTriple(graphName, newObjectValue, propURI, detailData[propURI].value, detailData[propURI].valueType, detailData[propURI].dataType);
+            self.query = self.query + self.deleteTriple(endpointParameters, graphName, oldObjectValue, propURI, '', detailData[propURI].valueType, detailData[propURI].dataType) + ' ; ';
+            self.query = self.query + self.addTriple(endpointParameters, graphName, newObjectValue, propURI, detailData[propURI].value, detailData[propURI].valueType, detailData[propURI].dataType)+ ' ; ';
         }
         return self.query;
     }
-    updateObjectTriplesForSesame (graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType, detailData) {
-        let self=this;
-        self.query = self.deleteTripleForSesame (graphName, resourceURI, propertyURI, oldObjectValue, valueType, dataType) + ';' + self.addTripleForSesame(graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType) + ';';
-        for (let propURI in detailData) {
-            self.query = self.query + self.deleteTripleForSesame (graphName, oldObjectValue, propURI, '', detailData[propURI].valueType, detailData[propURI].dataType)+ ';';
-            self.query = self.query + self.addTripleForSesame (graphName, newObjectValue, propURI, detailData[propURI].value, detailData[propURI].valueType, detailData[propURI].dataType)+ ';';
-        }
-        return self.query;
-    }
+
 }
 export default ResourceQuery;

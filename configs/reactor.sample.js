@@ -60,6 +60,11 @@ export default {
             'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#cloneOf': {
                 readOnly: 1,
                 allowPropertyDelete: 0
+            },
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
+                allowPropertyDelete: 0,
+                objectIViewer: ['PrefixBasedView'],
+                objectIEditor: ['PrefixBasedInput']
             }
         },
         //---------depth 2------------
@@ -74,10 +79,7 @@ export default {
                 },
                 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
                     isHidden: 0,
-                    shortenURI: 0,
-                    allowPropertyDelete: 0,
-                    objectIViewer: ['PrefixBasedView'],
-                    objectIEditor: ['PrefixBasedInput']
+                    shortenURI: 0
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#scope': {
                     hint: ['Determines the type of scope in LD-R'],
@@ -155,7 +157,7 @@ export default {
                     objectIEditor: ['PasswordInput']
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfDataset': {
-                    label: ['Editor of Graph'],
+                    label: ['Editor of Dataset'],
                     allowNewValue: 1
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource': {

@@ -34,7 +34,7 @@ class AdminQuery{
         return this.prefixes + this.query;
     }
     activateUser(endpoint, graphName, resourceURI){
-        this.query = this.queryObject.getUpdateTripleQuery(endpoint, graphName, resourceURI, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isActive', '0', '1', 'literal', '');
+        this.query = this.queryObject.updateTriple(endpoint, graphName, resourceURI, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isActive', '0', '1', 'literal', '');
         return this.prefixes + this.query;
     }
 }

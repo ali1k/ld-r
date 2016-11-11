@@ -50,7 +50,7 @@ export default {
         if(sparqlEndpoint[d].useReasoning){
             useReasoning = 1;
         }
-        let etype = sparqlEndpoint[d].endpointType ? sparqlEndpoint[d].endpointType.toLowerCase() : 'virtuoso';
+        let etype = sparqlEndpoint[d].endpointType ? sparqlEndpoint[d].endpointType : 'virtuoso';
         return {httpOptions: httpOptions, type: etype, graphName: g, useReasoning: useReasoning};
     },
     //build the write URI and params for different SPARQL endpoints
@@ -61,7 +61,7 @@ export default {
             outputObject.params['reasoning'] = 'true';
         }
 
-        switch (endpointParameters.type) {
+        switch (endpointParameters.type.toLowerCase()) {
         case 'virtuoso':
 
             outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;

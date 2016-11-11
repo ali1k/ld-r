@@ -9,3 +9,5 @@
 - Implement Aggregate Property Reactor.
 - In case of resource access level, find a way to update user session after a new resource is created by the user.
 - Adding Microdata annotations to components
+
+- test agg objects + Queries

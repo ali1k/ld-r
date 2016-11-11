@@ -20,33 +20,39 @@ class DynamicConfigurator {
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
             `;
+            let graph = ' GRAPH <'+ graphName +'> {';
+            let graphEnd = ' }';
+            if(!graphName || graphName === 'default'){
+                graph ='';
+                graphEnd = '';
+            }
             let query = '';
             if(enableDynamicReactorConfiguration){
                 query = `
-                SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?resourceFocusType WHERE { GRAPH <${graphName}>
-                        {
+                SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?resourceFocusType WHERE {
+                    ${graph}
                         ?config1 a ldr:ReactorConfig ;
                                 ldr:dataset ?dataset .
                                 OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
                                 OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
                                 OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
-                        }
+                    ${graphEnd}
                 }
                 `;
             }
             if(enableDynamicFacetsConfiguration){
                 query = `
-                SELECT DISTINCT ?config2 ?dataset WHERE { GRAPH <${graphName}>
-                        {
+                SELECT DISTINCT ?config2 ?dataset WHERE {
+                    ${graph}
                         ?config2 a ldr:FacetsConfig ;
                                 ldr:dataset ?dataset .
-                        }
+                    ${graphEnd}
                 }
                 `;
             }
             if(enableDynamicReactorConfiguration && enableDynamicFacetsConfiguration){
                 query = `
-                SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?resourceFocusType WHERE { GRAPH <${graphName}> {
+                SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?resourceFocusType WHERE { ${graph}
                         {
                         ?config1 a ldr:ReactorConfig ;
                                 ldr:dataset ?dataset .
@@ -59,7 +65,8 @@ class DynamicConfigurator {
                         ?config2 a ldr:FacetsConfig ;
                                 ldr:dataset ?dataset .
                         }
-                }}
+                ${graphEnd}
+                }
                 `;
             }
             //send request
@@ -95,9 +102,15 @@ class DynamicConfigurator {
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
             `;
+            let graph = ' GRAPH <'+ graphName +'> {';
+            let graphEnd = ' }';
+            if(!graphName || graphName === 'default'){
+                graph ='';
+                graphEnd = '';
+            }
             const query = `
-            SELECT DISTINCT ?config ?label ?host ?port ?path ?endpointType ?setting ?settingValue WHERE { GRAPH <${graphName}>
-                    {
+            SELECT DISTINCT ?config ?label ?host ?port ?path ?endpointType ?setting ?settingValue WHERE {
+                ${graph}
                     ?config a ldr:ServerConfig ;
                             ldr:dataset <${datasetURI}> ;
                             ldr:host ?host ;
@@ -107,7 +120,7 @@ class DynamicConfigurator {
                             ?setting ?settingValue .
                             OPTIONAL { ?config rdfs:label ?resource . }
                             FILTER (?setting !=rdf:type && ?setting !=ldr:dataset && ?setting !=ldr:host && ?setting !=ldr:port && ?setting !=ldr:path && ?setting !=ldr:endpointType)
-                    }
+                ${graphEnd}
             }
             `;
             //send request
@@ -143,9 +156,15 @@ class DynamicConfigurator {
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
             `;
+            let graph = ' GRAPH <'+ graphName +'> {';
+            let graphEnd = ' }';
+            if(!graphName || graphName === 'default'){
+                graph ='';
+                graphEnd = '';
+            }
             const query = `
-            SELECT DISTINCT ?config ?label ?list ?configProperty ?setting ?settingValue WHERE { GRAPH <${graphName}>
-                    {
+            SELECT DISTINCT ?config ?label ?list ?configProperty ?setting ?settingValue WHERE {
+                ${graph}
                     ?config a ldr:FacetsConfig ;
                             ldr:dataset <${datasetURI}> ;
                             ldr:list ?list ;
@@ -155,7 +174,7 @@ class DynamicConfigurator {
                                           a ldr:FacetsPropertyConfig ;
                                           ?setting ?settingValue .
                             FILTER (?setting !=rdf:type && ?setting !=ldr:property)
-                    }
+                ${graphEnd}
             }
             `;
             //send request
@@ -191,16 +210,22 @@ class DynamicConfigurator {
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
             `;
+            let graph = ' GRAPH <'+ graphName +'> {';
+            let graphEnd = ' }';
+            if(!graphName || graphName === 'default'){
+                graph ='';
+                graphEnd = '';
+            }
             const query = `
-            SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue WHERE { GRAPH <${graphName}>
-                    {
+            SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue WHERE {
+                ${graph}
                     ?config a ldr:ReactorConfig ;
                             ldr:dataset <${datasetURI}> ;
                             ldr:scope ?scope ;
                             ?setting ?settingValue .
                             OPTIONAL { ?config rdfs:label ?resource . }
                             FILTER (?setting !=rdf:type && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset)
-                    }
+                ${graphEnd}
             }
             `;
             //send request
@@ -236,9 +261,11 @@ class DynamicConfigurator {
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
             `;
-            let graph = 'INTO <'+ graphName +'> ';
+            let graph = ' GRAPH <'+ graphName +'> {';
+            let graphEnd = ' }';
             if(!graphName || graphName === 'default'){
                 graph ='';
+                graphEnd = '';
             }
             let rnc = configDatasetURI[0] + '/rcf' + Math.round(+new Date() / 1000);
             //do not add two slashes
@@ -246,7 +273,7 @@ class DynamicConfigurator {
                 rnc = configDatasetURI[0] + 'rcf' + Math.round(+new Date() / 1000);
             }
             const query = `
-            INSERT ${graph} {
+            INSERT DATA { ${graph}
                 <${rnc}> a ldr:ReactorConfig ;
                          ldr:dataset <${datasetURI}> ;
                          ldr:scope "D" ;
@@ -257,9 +284,7 @@ class DynamicConfigurator {
                          ldr:allowResourceNew "1" ;
                          ldr:allowPropertyNew "1" ;
                          ldr:maxNumberOfResourcesOnPage "20" .
-            } WHERE {
-
-            }
+            ${graphEnd} }
             `;
             //send request
             //console.log(prefixes + query);
@@ -309,8 +334,14 @@ class DynamicConfigurator {
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
             `;
+            let graph = ' GRAPH <'+ graphName +'> {';
+            let graphEnd = ' }';
+            if(!graphName || graphName === 'default'){
+                graph ='';
+                graphEnd = '';
+            }
             const query = `
-            SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?treatAsResourceType ?settingValue WHERE { GRAPH <${graphName}> {
+            SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?treatAsResourceType ?settingValue WHERE { ${graph}
                     {
                     ?config a ldr:ReactorConfig ;
                             ldr:resource ?resource ;
@@ -333,7 +364,7 @@ class DynamicConfigurator {
                             OPTIONAL { ?config ldr:treatAsResourceType ?treatAsResourceType . }
                             FILTER (?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
                     }
-            }   } ORDER BY DESC(?treatAsResourceType)
+            ${graphEnd}   } ORDER BY DESC(?treatAsResourceType)
             `;
             //send request
             //console.log(prefixes + query);
@@ -370,9 +401,15 @@ class DynamicConfigurator {
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
             `;
+            let graph = ' GRAPH <'+ graphName +'> {';
+            let graphEnd = ' }';
+            if(!graphName || graphName === 'default'){
+                graph ='';
+                graphEnd = '';
+            }
             const query = `
-            SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?settingValue WHERE { GRAPH <${graphName}>
-                    {
+            SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?settingValue WHERE {
+                ${graph}
                     ?config a ldr:ReactorConfig ;
                             ldr:property <${propertyURI}> ;
                             ldr:scope ?scope ;
@@ -381,7 +418,7 @@ class DynamicConfigurator {
                             OPTIONAL { ?config ldr:resource ?resource . }
                             OPTIONAL { ?config rdfs:label ?label . }
                             FILTER (?setting !=rdf:type && ?setting !=ldr:property && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset && ?setting !=ldr:resource)
-                    }
+                ${graphEnd}
             }
             `;
             //send request
