@@ -1,8 +1,6 @@
 import React from 'react';
 import Facet from './Facet';
 import {NavLink} from 'fluxible-router';
-import {facets} from '../configs/facets';
-import {config} from '../configs/reactor';
 import FacetedBrowserStore from '../stores/FacetedBrowserStore';
 import {connectToStores} from 'fluxible-addons-react';
 import loadFacets from '../actions/loadFacets';
@@ -27,64 +25,16 @@ class FacetedBrowser extends React.Component {
         });
     }
     getPropertyConfig(datasetURI, propertyURI){
-        let selectedConfig;
-        let g = datasetURI;
-        if(!g){
-            g = 'generic';
-        }
-        let hasFacetConfig = facets[g] ? (facets[g].config ? (facets[g].config[propertyURI] ? 1 : 0) : 0) : 0;
-        let hasDynamicFacetConfig = 0;
-        //overwrite if there is a dynamic config
-        if(this.props.FacetedBrowserStore.dynamicConfig){
-            hasDynamicFacetConfig = this.props.FacetedBrowserStore.dynamicConfig.facets[g] ? (this.props.FacetedBrowserStore.dynamicConfig.facets[g].config ? (this.props.FacetedBrowserStore.dynamicConfig.facets[g].config[propertyURI] ? 1 : 0) : 0) : 0;
-        }
-
-        if(!hasFacetConfig && !hasDynamicFacetConfig){
-            //second: check the generic facet config
-            let hasGenericFacetConfig = facets.generic.config ? (facets.generic.config[propertyURI] ? 1 : 0) : 0;
-            if(hasGenericFacetConfig){
-                selectedConfig = facets.generic.config[propertyURI];
-            }else{
-                selectedConfig = {};
-            }
-        }else{
-            if(hasFacetConfig){
-                selectedConfig = facets[g].config[propertyURI];
-            }
-            //overwrite configs by dynamic one
-            if(hasDynamicFacetConfig){
-                if(!selectedConfig){
-                    selectedConfig ={};
-                }
-                let tmp = this.props.FacetedBrowserStore.dynamicConfig.facets[g].config[propertyURI];
-                for(let prop in tmp){
-                    selectedConfig[prop] = tmp [prop];
-                }
-            }
-        }
-        return selectedConfig;
+        let cnf = this.props.FacetedBrowserStore.config;
+        return cnf.config[propertyURI];
     }
     buildMasterFacet(datasetURI) {
         let self = this;
         let properties = [];
-        let selectedFacetConfig;
-        let g = datasetURI;
-        if(!g){
-            g = 'generic';
-        }
-        if(!facets[g]){
-            selectedFacetConfig = facets.generic;
-        }else{
-            selectedFacetConfig = facets[g];
-        }
-        //overwrite if there is a dynamic config
-        if(this.props.FacetedBrowserStore.dynamicConfig && this.props.FacetedBrowserStore.dynamicConfig.facets[g]){
-            selectedFacetConfig = this.props.FacetedBrowserStore.dynamicConfig.facets[g];
-        }
-        //action only if there is a config
+        let cnf = this.props.FacetedBrowserStore.config;
         let propConfig;
-        if(selectedFacetConfig.list){
-            selectedFacetConfig.list.forEach(function(el) {
+        if(cnf.list){
+            cnf.list.forEach(function(el) {
                 propConfig = self.getPropertyConfig(datasetURI, el);
                 properties.push({label: (propConfig ? (propConfig.label ? propConfig.label : self.getPropertyLabel(el)) : self.getPropertyLabel(el)), value: el, valueType: 'uri'});
             });
@@ -216,39 +166,6 @@ class FacetedBrowser extends React.Component {
         }
         return property;
     }
-    getBrowsableList(){
-        if(!facets){
-            return 0;
-        }
-        let graphList = [];
-        for(let prop in facets) {
-            if(prop !== 'generic'){
-                graphList.push(prop);
-            }
-        }
-        if(!graphList.length){
-            return 0;
-        }else{
-            return graphList;
-        }
-    }
-    createGraphList(){
-        let output;
-        let l = this.getBrowsableList();
-        if(!l){
-            output = <div className="ui warning message"><div className="header"> There was no datasets to browse! Please add your desired graph names to the <b>facets</b>.</div></div>;
-        }else{
-            output = l.map(function(node, index) {
-                return (
-                    <a className="ui item" key={index} href={'/browse/' + encodeURIComponent(node)}> <div className="content"> <i className="ui blue icon cubes"></i> {node} </div> </a>
-                    // <NavLink routeName="browse" className="ui item" href={'/browse/' + encodeURIComponent(node)} key={index}>
-                    //     <div className="content"> <i className="ui blue icon cubes"></i> {node} </div>
-                    // </NavLink>
-                );
-            });
-        }
-        return output;
-    }
     render() {
         let self = this;
         let showFactes = 0;
@@ -272,10 +189,11 @@ class FacetedBrowser extends React.Component {
             let resSize = showFactes ? 'seven' : 'eleven';
             let facetsDIV = showFactes ? <div className="ui stackable five wide column">{list}</div> : '';
             let resourceDIV;
-
+            let dcnf = this.props.FacetedBrowserStore.datasetConfig;
+            let cnf = this.props.FacetedBrowserStore.config;
             let datasetTitle = <a target="_blank" href={this.props.FacetedBrowserStore.datasetURI}> {this.props.FacetedBrowserStore.datasetURI} </a>;
-            if(config.dataset && config.dataset[this.props.FacetedBrowserStore.datasetURI] && config.dataset[this.props.FacetedBrowserStore.datasetURI].datasetLabel){
-                datasetTitle = <a target="_blank" href={this.props.FacetedBrowserStore.datasetURI}> {config.dataset[this.props.FacetedBrowserStore.datasetURI].datasetLabel} </a>;
+            if(dcnf.datasetLabel){
+                datasetTitle = <a target="_blank" href={this.props.FacetedBrowserStore.datasetURI}> {dcnf.datasetLabel} </a>;
             }
             if(this.props.FacetedBrowserStore.total){
                 resourceDIV = <div className="ui segment">
@@ -283,7 +201,7 @@ class FacetedBrowser extends React.Component {
                                     <span className="ui blue circular label">{this.addCommas(this.props.FacetedBrowserStore.total)}</span> Resources from {datasetTitle}
 
                                  </h3>
-                                <ResourceList resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} OpenInNewTab={true} isBig={!showFactes} config={config.dataset && config.dataset[this.props.FacetedBrowserStore.datasetURI] ? config.dataset[this.props.FacetedBrowserStore.datasetURI] : {}}/>
+                                <ResourceList resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} OpenInNewTab={true} isBig={!showFactes} config={dcnf}/>
                                 <ResourceListPager handleClick={this.gotoPage.bind(this)} datasetURI={this.props.FacetedBrowserStore.datasetURI} total={this.props.FacetedBrowserStore.total} threshold={pagerSize} currentPage={this.props.FacetedBrowserStore.page}/>
                               </div>;
             }
@@ -305,7 +223,7 @@ class FacetedBrowser extends React.Component {
                         <div className="ui segment">
                             <h2>List of available datasets to browse</h2>
                             <div className="ui big divided animated list">
-                                {this.createGraphList()}
+                                No Dataset is selected to browse!
                             </div>
                         </div>
                     </div>

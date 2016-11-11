@@ -36,7 +36,7 @@ class Dataset extends React.Component {
             }
         }
         let createResourceDIV = '';
-        if(this.props.config && this.props.config.allowResourceNew){
+        if(this.props.config && !this.props.readOnly && this.props.config.allowResourceNew){
             createResourceDIV = <div className="ui list">
                 <div className="item">
                     <div  className="medium ui basic icon labeled button" onClick={this.props.onCreateResource.bind(this, this.props.datasetURI)}>

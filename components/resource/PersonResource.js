@@ -175,7 +175,7 @@ class PersonResource extends React.Component {
                         </div>;
         }
         let cloneable = 0;
-        if (self.props.config && typeof self.props.config.allowResourceClone !== 'undefined' && parseInt(self.props.config.allowResourceClone)) {
+        if (self.props.config && !this.props.readOnly && typeof self.props.config.allowResourceClone !== 'undefined' && parseInt(self.props.config.allowResourceClone)) {
             cloneable = 1;
         }
         return (

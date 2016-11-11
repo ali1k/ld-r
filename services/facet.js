@@ -1,11 +1,14 @@
 'use strict';
 import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
-import {getDynamicEndpointParameters, getDynamicFacetsConfig} from './utils/dynamicHelpers';
+import {getDynamicEndpointParameters, getDynamicFacetsConfig, getDynamicDatasetConfig} from './utils/dynamicHelpers';
 import {enableAuthentication} from '../configs/general';
+import staticFacets from '../configs/facets';
+import staticReactor from '../configs/reactor';
 import FacetQuery from './sparql/FacetQuery';
 import FacetUtil from './utils/FacetUtil';
 import Configurator from './utils/Configurator';
 import rp from 'request-promise';
+import async from 'async';
 /*-------------config-------------*/
 const outputFormat = 'application/sparql-results+json';
 const headers = {'Accept': 'application/sparql-results+json'};
@@ -156,9 +159,41 @@ export default {
             });
         } else if (resource === 'facet.dynamicConfig') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
-            getDynamicFacetsConfig(datasetURI, (dynamicConfig)=>{
-                callback(null, {datasetURI: datasetURI, dynamicConfig: dynamicConfig});
+            let staticConfig = {facets: {}};
+            let dynamicConfig = {facets: {}};
+            let staticDatasetConfig = {dataset: {}};
+
+            if(staticFacets.facets[datasetURI]){
+                staticConfig.facets[datasetURI] = staticFacets.facets[datasetURI];
+            }
+            if(staticReactor.config.dataset[datasetURI]){
+                staticDatasetConfig.dataset[datasetURI] = staticReactor.config.dataset[datasetURI];
+            }
+
+            staticDatasetConfig.dataset['generic'] = staticReactor.config.dataset['generic'];
+            staticConfig.facets['generic'] = staticFacets.facets['generic'];
+
+            async.parallel([
+                (cback) => {
+                    getDynamicFacetsConfig(datasetURI, (dynamicConfig)=>{
+                        cback(null,dynamicConfig);
+                    });
+                },
+                (cback) => {
+                    getDynamicDatasetConfig(datasetURI, (dynamicConfig)=>{
+                        cback(null,dynamicConfig);
+                    });
+                }
+            ],
+            // final callback
+            (err, results) => {
+                if (err){
+                    callback(null, {datasetURI: datasetURI, dynamicConfig: results.dynamicFacetsConfig, staticConfig: staticConfig, dynamicDatasetConfig: results.dynamicDatasetConfig, staticDatasetConfig: staticDatasetConfig});
+                    return;
+                }
+                callback(null, {datasetURI: datasetURI, dynamicConfig: results[0], staticConfig: staticConfig, dynamicDatasetConfig: results[1], staticDatasetConfig: staticDatasetConfig});
             });
+
         }
     }
     // other methods

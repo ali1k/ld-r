@@ -12,15 +12,43 @@ class FacetedBrowserStore extends BaseStore {
         this.page = 1;
         this.graphName = '';
         this.datasetURI = '';
-        this.dynamicConfig = {};
+        this.datasetConfig= {};
+        this.config = {};
     }
     clearFacets() {
         this.clearAll();
         this.emitChange();
     }
-    loadDynamicFacetConfigs(payload) {
-        this.dynamicConfig = payload.dynamicConfig;
+    loadFacetConfigs(payload) {
+        this.prepareFacetConfigs(payload.datasetURI, payload.dynamicConfig, payload.staticConfig, payload.dynamicDatasetConfig, payload.staticDatasetConfig);
         this.emitChange();
+    }
+    prepareFacetConfigs(datasetURI, dynamicConfig, staticConfig, dynamicDatasetConfig, staticDatasetConfig) {
+
+        this.datasetConfig = staticDatasetConfig.dataset.generic;
+        if(staticDatasetConfig.dataset[datasetURI]){
+            for(let p in staticDatasetConfig.dataset[datasetURI]){
+                this.datasetConfig[p] = staticDatasetConfig.dataset[datasetURI][p];
+            }
+        }
+        if(dynamicDatasetConfig.dataset[datasetURI]){
+            for(let p in dynamicDatasetConfig.dataset[datasetURI]){
+                this.datasetConfig[p] = dynamicDatasetConfig.dataset[datasetURI][p];
+            }
+        }
+
+        this.config = staticConfig.facets.generic;
+        if(staticConfig.facets[datasetURI]){
+            for(let p in staticConfig.facets[datasetURI]){
+                this.config[p] = staticConfig.facets[datasetURI][p];
+            }
+        }
+        //overwrite by dynamic
+        if(dynamicConfig.facets[datasetURI]){
+            for(let p in dynamicConfig.facets[datasetURI]){
+                this.config[p] = dynamicConfig.facets[datasetURI][p];
+            }
+        }
     }
     updateFacetResources(payload) {
         //for second level properties
@@ -56,10 +84,11 @@ class FacetedBrowserStore extends BaseStore {
             facets: this.facets,
             graphName: this.graphName,
             datasetURI: this.datasetURI,
+            datasetConfig: this.datasetConfig,
+            config: this.config,
             resources: this.resources,
             total: this.total,
-            page: this.page,
-            dynamicConfig: this.dynamicConfig
+            page: this.page
         };
     }
     dehydrate() {
@@ -69,10 +98,11 @@ class FacetedBrowserStore extends BaseStore {
         this.facets = state.facets;
         this.graphName = state.graphName;
         this.datasetURI = state.datasetURI;
+        this.datasetConfig = state.datasetConfig;
+        this.config = state.config;
         this.resources = state.resources;
         this.total = state.total;
         this.page = state.page;
-        this.dynamicConfig = state.dynamicConfig;
     }
 }
 
@@ -81,7 +111,7 @@ FacetedBrowserStore.handlers = {
     'LOAD_FACETS_RESOURCES_SUCCESS': 'updateFacetResources',
     'LOAD_MASTER_FACETS_SUCCESS': 'updateMasterFacets',
     'LOAD_SIDE_EFFECTS_FACETS_SUCCESS': 'handleFacetSideEffects',
-    'LOAD_DYNAMIC_FACETS_CONFIG': 'loadDynamicFacetConfigs',
+    'LOAD_FACETS_CONFIG': 'loadFacetConfigs',
     'CLEAR_FACETS_SUCCESS': 'clearFacets'
 };
 

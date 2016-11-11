@@ -69,6 +69,11 @@ export default {
             callback(dynamicConfig);
         });
     },
+    getDynamicDatasetConfig: function(datasetURI, callback) {
+        dynamicConfigurator.prepareDynamicDatasetConfig(datasetURI, (dynamicConfig)=> {
+            callback(dynamicConfig);
+        });
+    },
     getDynamicDatasets: function(callback) {
         dynamicConfigurator.getDynamicDatasets((dynamicReactorDS, dynamicFacetsDS)=> {
             callback(dynamicReactorDS, dynamicFacetsDS);
