@@ -2,7 +2,6 @@
 import {getQueryDataTypeValue} from '../utils/helpers';
 class ResourceQuery{
     constructor() {
-        /*jshint multistr: true */
         this.prefixes=`
         PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
         PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>

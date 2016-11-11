@@ -2,42 +2,40 @@
 import {getQueryDataTypeValue} from '../utils/helpers';
 class FacetQuery{
     constructor() {
-        /*jshint multistr: true */
-        this.prefixes='\
-        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \
-        PREFIX owl: <http://www.w3.org/2002/07/owl#> \
-        PREFIX dcterms: <http://purl.org/dc/terms/> \
-        PREFIX void: <http://rdfs.org/ns/void#> \
-        PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-        PREFIX skos: <http://www.w3.org/2004/02/skos/core#> \
-         ';
+        this.prefixes=`
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX owl: <http://www.w3.org/2002/07/owl#>
+        PREFIX dcterms: <http://purl.org/dc/terms/>
+        PREFIX void: <http://rdfs.org/ns/void#>
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        `;
         this.query='';
     }
+    prepareGraphName(graphName){
+        let gStart = 'GRAPH <'+ graphName +'> { ';
+        let gEnd = ' } ';
+        if(!graphName || graphName === 'default'){
+            gStart =' ';
+            gEnd = ' ';
+        }
+        return {gStart: gStart, gEnd: gEnd}
+    }
     getMasterPropertyValues(endpointParameters, graphName, type, propertyURI) {
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.';
         //---to support resource focus types
         let st_extra = this.makeExtraTypeFilters(endpointParameters, type);
         st = st + ' ' + st_extra;
-        if(graphName && String(graphName)!=='default'){
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT (count(?s) AS ?total) ?v WHERE {\
-                { GRAPH <' + graphName + '> \
-                    { '+ st +' \
-                    } \
-                } \
-            } GROUP BY ?v \
-            ';
-        }else{
-            this.query = '\
-            SELECT (count(?s) AS ?total) ?v WHERE {\
-                { '+ st +' \
-            }  \
-            } GROUP BY ?v \
-            ';
-        }
+        this.query = `
+        SELECT (count(?s) AS ?total) ?v WHERE {
+            ${gStart}
+                ${st}
+            ${gEnd}
+        } GROUP BY ?v
+        `;
         return this.prefixes + this.query;
     }
     getMultipleFilters(endpointParameters, prevSelection, type) {
@@ -163,53 +161,32 @@ class FacetQuery{
         }
     }
     getSideEffects(endpointParameters, graphName, type, propertyURI, prevSelection) {
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
         st = st + '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.';
-        if(graphName && String(graphName)!=='default'){
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT (count(?s) AS ?total) ?v WHERE {\
-                { GRAPH <' + graphName + '> \
-                    { '+ st +' \
-                    } \
-                } \
-            } GROUP BY ?v \
-            ';
-        }else{
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT (count(?s) AS ?total) ?v WHERE {\
-                { '+ st +' \
-                } \
-            } GROUP BY ?v \
-            ';
-        }
+        this.query = `
+        SELECT (count(?s) AS ?total) ?v WHERE {
+            ${gStart}
+                ${st}
+            ${gEnd}
+        } GROUP BY ?v
+        `;
         return this.prefixes + this.query;
     }
     countSecondLevelPropertyValues(endpointParameters, graphName, type, propertyURI, prevSelection) {
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
-        if(graphName && String(graphName)!=='default'){
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT (count(?s) AS ?total) WHERE {\
-                { GRAPH <' + graphName + '> \
-                    { '+ st +' \
-                    } \
-                } \
-            }\
-            ';
-        }else{
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT (count(?s) AS ?total) WHERE {\
-                { '+ st +' \
-                } \
-            }\
-            ';
-        }
+        this.query = `
+        SELECT (count(?s) AS ?total) WHERE {
+            ${gStart}
+                ${st}
+            ${gEnd}
+        } GROUP BY ?v
+        `;
         return this.prefixes + this.query;
     }
     getSecondLevelPropertyValues(endpointParameters, graphName, rtconfig, propertyURI, prevSelection, limit, offset) {
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
         let type = rtconfig.type;
         let labelProperty = rtconfig.labelProperty;
         let selectStr = '';
@@ -232,23 +209,13 @@ class FacetQuery{
             }
         }
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
-        if(graphName && String(graphName)!=='default'){
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT DISTINCT ?s ' + selectStr + ' WHERE {\
-                { GRAPH <' + graphName + '> \
-                    { '+ st + titleStr + bindPhase +' \
-                    } \
-                } \
-            } LIMIT ' + limit + ' OFFSET ' + noffset;
-        }else{
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT DISTINCT ?s ' + selectStr + ' WHERE {\
-                { '+ st + titleStr + bindPhase + ' \
-                } \
-            } LIMIT ' + limit + ' OFFSET ' + noffset;
-        }
+        this.query = `
+        SELECT DISTINCT ?s ${selectStr} WHERE {
+            ${gStart}
+                ${st} ${titleStr} ${bindPhase}
+            ${gEnd}
+        } LIMIT ${limit} OFFSET ${noffset}
+        `;
         return this.prefixes + this.query;
     }
 }

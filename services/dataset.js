@@ -45,7 +45,7 @@ export default {
                     }else{
                         user = {accountName: 'open'};
                     }
-                    query = queryObject.getResourcesByType(graphName, rconfig, maxOnPage, offset);
+                    query = queryObject.getResourcesByType(endpointParameters, graphName, rconfig, maxOnPage, offset);
                     //console.log(query);
                     //build http uri
                     //send request
@@ -83,7 +83,7 @@ export default {
                     }else{
                         user = {accountName: 'open'};
                     }
-                    query = queryObject.countResourcesByType(graphName, rconfig.resourceFocusType);
+                    query = queryObject.countResourcesByType(endpointParameters, graphName, rconfig.resourceFocusType);
                     //console.log(query);
                     //build http uri
                     //send request
@@ -150,7 +150,7 @@ export default {
             datasetURI = params.dataset;
             prepareNewDatasetConfig(datasetURI, (res)=>{
                 callback(null, {success: res});
-            });    
+            });
         }
     }
     // other methods

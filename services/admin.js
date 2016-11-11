@@ -38,7 +38,7 @@ export default {
             //build http uri
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getUsers(graphName);
+                query = queryObject.getUsers(endpointParameters, graphName);
                 //send request
                 rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                     callback(null, {
