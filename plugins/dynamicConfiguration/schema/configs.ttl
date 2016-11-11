@@ -42,9 +42,10 @@
 #Dataset config
 <https://ld-r.org/config/r15> a ldr:ReactorConfig;
     ldr:scope "D" ;
-    rdfs:label """Semantic Web Dog Food Dataset""" ;
+    rdfs:label """Config for Semantic Web Dog Food""" ;
     ldr:dataset <http://data.semanticweb.org/sparql> ;
     ldr:maxNumberOfResourcesOnPage "50" ;
+    ldr:datasetLabel """Semantic Web Dog Food Dataset""" ;
     ldr:resourceFocusType swrc:InProceedings ;
     ldr:resourceLabelProperty dc:title .
 #Server config

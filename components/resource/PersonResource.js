@@ -164,7 +164,7 @@ class PersonResource extends React.Component {
             breadcrumb = <div className="ui large breadcrumb">
                         <a className="section" href={'/dataset/1/' + encodeURIComponent(self.props.datasetURI )}><i className="cubes icon"></i>{datasetTitle}</a>
                         <i className="big right chevron icon divider"></i>
-                          <a className="section" href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(self.props.propertyPath[0])}><i className="user icon"></i>{URIUtil.getURILabel(self.props.propertyPath[0])}</a>
+                          <a className="section" href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(self.props.propertyPath[0])}><i className="cube icon"></i>{URIUtil.getURILabel(self.props.propertyPath[0])}</a>
                           <i className="big right arrow icon divider"></i>
                           <div className="active section">{URIUtil.getURILabel(self.props.propertyPath[1])}</div>
                         </div>;
