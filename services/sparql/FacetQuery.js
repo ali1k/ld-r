@@ -30,7 +30,7 @@ class FacetQuery{
         let st_extra = this.makeExtraTypeFilters(endpointParameters, type);
         st = st_extra + ' ' + st;
         this.query = `
-        SELECT (count(?s) AS ?total) ?v WHERE {
+        SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
             ${gStart}
                 ${st}
             ${gEnd}
@@ -74,7 +74,7 @@ class FacetQuery{
                         filters.push('(' + tmp2.join(' || ') + ')');
                         //---------------
                     }else{
-                        //for virtuoso
+                        //for virtuoso and others
                         filters.push('str(?v' + i + ') IN ('+ tmp.join(',') +')');
                     }
                 }else{
@@ -165,7 +165,7 @@ class FacetQuery{
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
         st = st + '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.';
         this.query = `
-        SELECT (count(?s) AS ?total) ?v WHERE {
+        SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
             ${gStart}
                 ${st}
             ${gEnd}

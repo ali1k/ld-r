@@ -83,6 +83,7 @@ export default {
                     //resource focus type
                     let rftconfig = configurator.getResourceFocusType(rconfig, datasetURI);
                     query = queryObject.getMasterPropertyValues(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.value));
+                    //console.log(query);
                     //build http uri
                     //send request
                     rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
