@@ -112,6 +112,16 @@ export default {
                     objectIViewer: ['PrefixBasedView'],
                     objectIEditor: ['PrefixBasedInput']
                 },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resourceFocusType': {
+                    shortenURI: 0,
+                    objectIViewer: ['PrefixBasedView'],
+                    objectIEditor: ['PrefixBasedInput']
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resourceLabelProperty': {
+                    shortenURI: 0,
+                    objectIViewer: ['PrefixBasedView'],
+                    objectIEditor: ['PrefixBasedInput']
+                },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#config': {
                     label: ['Configuration']
                 },
