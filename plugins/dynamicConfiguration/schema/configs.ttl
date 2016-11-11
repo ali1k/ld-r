@@ -6,10 +6,12 @@
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 @prefix dbp: <http://dbpedia.org/property/> .
 @prefix dbr: <http://dbpedia.org/resource/> .
 @prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix swrc: <http://swrc.ontoware.org/ontology#> .
 
 #Resource URI config
 <https://ld-r.org/config/r14a> a ldr:ReactorConfig;
@@ -37,6 +39,14 @@
         ldr:dataset <http://live.dbpedia.org/sparql> ;
         ldr:property foaf:depiction ;
         ldr:objectIViewer "BasicImageView" .
+#Dataset config
+<https://ld-r.org/config/r15> a ldr:ReactorConfig;
+    ldr:scope "D" ;
+    rdfs:label """Semantic Web Dog Food Dataset""" ;
+    ldr:dataset <http://data.semanticweb.org/sparql> ;
+    ldr:maxNumberOfResourcesOnPage "50" ;
+    ldr:resourceFocusType swrc:InProceedings ;
+    ldr:resourceLabelProperty dc:title .
 #Server config
 <https://ld-r.org/config/s1> a ldr:ServerConfig;
         rdfs:label """DBpedia SPARQL Endpoint""" ;
@@ -45,6 +55,15 @@
         ldr:port "80" ;
         ldr:path "/sparql" ;
         ldr:endpointType "virtuoso" ;
+        ldr:graphName 'default' ;
+        ldr:useReasoning "0" .
+<https://ld-r.org/config/s2> a ldr:ServerConfig;
+        rdfs:label """Semantic Web Dog Food SPARQL Endpoint""" ;
+        ldr:dataset <http://data.semanticweb.org/sparql> ;
+        ldr:host "data.semanticweb.org" ;
+        ldr:port "80" ;
+        ldr:path "/sparql" ;
+        ldr:endpointType "sesame" ;
         ldr:graphName 'default' ;
         ldr:useReasoning "0" .
 #Facets property config
