@@ -155,12 +155,23 @@ class Resource extends React.Component {
                             </div>
                       </div>;
         }
+        let datasetTitle = this.props.datasetURI;
+        if(this.props.config && this.props.config.datasetLabel){
+            datasetTitle = this.props.config.datasetLabel;
+        }
         let breadcrumb;
         if(self.props.propertyPath.length > 1){
             breadcrumb = <div className="ui large breadcrumb">
-                          <a className="section" href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(self.props.propertyPath[0])}>{URIUtil.getURILabel(self.props.propertyPath[0])}</a>
-                          <i className="right chevron icon divider"></i>
+                        <a className="section" href={'/dataset/1/' + encodeURIComponent(self.props.datasetURI )}><i className="cubes icon"></i>{datasetTitle}</a>
+                        <i className="big right chevron icon divider"></i>
+                          <a className="section" href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(self.props.propertyPath[0])}><i className="cube icon"></i>{URIUtil.getURILabel(self.props.propertyPath[0])}</a>
+                          <i className="big right arrow icon divider"></i>
                           <div className="active section">{URIUtil.getURILabel(self.props.propertyPath[1])}</div>
+                        </div>;
+        }else{
+            breadcrumb = <div className="ui large breadcrumb">
+                        <a className="section" href={'/dataset/1/' + encodeURIComponent(self.props.datasetURI )}><i className="cubes icon"></i>{datasetTitle}</a>
+                        <i className="big right chevron icon divider"></i>
                         </div>;
         }
         let cloneable = 0;

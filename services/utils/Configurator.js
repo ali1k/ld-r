@@ -135,7 +135,7 @@ class Configurator{
                 }
                 let finalOutput = {};
                 //remove irrelevant attributes from config
-                let irrels = ['maxNumberOfResourcesOnPage', 'datasetReactor', 'datasetLabel'];
+                let irrels = ['maxNumberOfResourcesOnPage', 'datasetReactor'];
                 for(let prop in output) {
                     if(irrels.indexOf(prop) === -1) {
                         finalOutput[prop] = output[prop];
