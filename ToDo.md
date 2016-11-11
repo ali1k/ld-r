@@ -11,3 +11,4 @@
 - Adding Microdata annotations to components
 
 - test agg objects + Queries
+- add http authentication Support
