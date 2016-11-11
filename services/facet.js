@@ -162,16 +162,17 @@ export default {
             let staticConfig = {facets: {}};
             let dynamicConfig = {facets: {}};
             let staticDatasetConfig = {dataset: {}};
-
-            if(staticFacets.facets[datasetURI]){
-                staticConfig.facets[datasetURI] = staticFacets.facets[datasetURI];
+            let src = configurator.cloneConfig(staticReactor);
+            let sfc = configurator.cloneConfig(staticFacets);
+            if(sfc.facets[datasetURI]){
+                staticConfig.facets[datasetURI] = sfc.facets[datasetURI];
             }
-            if(staticReactor.config.dataset[datasetURI]){
-                staticDatasetConfig.dataset[datasetURI] = staticReactor.config.dataset[datasetURI];
+            if(src.config.dataset[datasetURI]){
+                staticDatasetConfig.dataset[datasetURI] = src.config.dataset[datasetURI];
             }
 
-            staticDatasetConfig.dataset['generic'] = staticReactor.config.dataset['generic'];
-            staticConfig.facets['generic'] = staticFacets.facets['generic'];
+            staticDatasetConfig.dataset['generic'] = src.config.dataset['generic'];
+            staticConfig.facets['generic'] = sfc.facets['generic'];
 
             async.parallel([
                 (cback) => {

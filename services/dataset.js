@@ -46,7 +46,6 @@ export default {
                         user = {accountName: 'open'};
                     }
                     query = queryObject.getResourcesByType(endpointParameters, graphName, rconfig, maxOnPage, offset);
-                    //console.log(query);
                     //build http uri
                     //send request
                     rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
