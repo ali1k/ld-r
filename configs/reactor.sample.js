@@ -43,6 +43,10 @@ export default {
                 //used when creating random resources
                 dynamicResourceDomain: ['http://example.org'],
                 resourceReactor: ['Resource']
+            },
+            'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#User' :{
+                treatAsResourceType: 1,
+                resourceReactor: ['UserResource']
             }
         },
         property: {

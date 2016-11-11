@@ -3,6 +3,7 @@ import {enableAuthentication} from '../../configs/general';
 import ResourceStore from '../../stores/ResourceStore';
 import {connectToStores} from 'fluxible-addons-react';
 import Resource from '../resource/Resource';
+import UserResource from '../resource/UserResource';
 import PersonResource from '../resource/PersonResource';
 import createProperty from '../../actions/createProperty';
 import ReactDOM from 'react-dom';
@@ -57,6 +58,9 @@ class ResourceReactor extends React.Component {
             switch (config.resourceReactor[0]) {
                 case 'Resource':
                     resourceReactor = <Resource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    break;
+                case 'UserResource':
+                    resourceReactor = <UserResource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
                     break;
                 case 'PersonResource':
                     resourceReactor = <PersonResource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
