@@ -21,18 +21,17 @@ module.exports = {
     findById: function(id, fn) {
         let self = this;
         let endpoint = helpers.getStaticEndpointParameters([generalConfig.authDatasetURI[0]]);
-        /*jshint multistr: true */
-        let query = '\
-      PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
-      PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-      SELECT ?p ?o ?pr ?pp FROM <' + endpoint.graphName + '> WHERE { \
-        { \
-            <' + id + '> a ldr:User . \
-            <' + id + '> ?p ?o . \
-            OPTIONAL {?o ldr:resource ?pr . ?o ldr:property ?pp .} \
-        } \
-      } \
-      ';
+        let {gStart, gEnd} = helpers.prepareGraphName(endpoint.graphName);
+        let query = `
+            PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
+            PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+            SELECT ?p ?o ?pr ?pp WHERE {
+                ${gStart}
+                    <${id}> a ldr:User ; ?p ?o .
+                    OPTIONAL {?o ldr:resource ?pr . ?o ldr:property ?pp .}
+                ${gEnd}
+            }
+        `;
         //send request
         let rpPath = helpers.getHTTPGetURL(helpers.getHTTPQuery('read', query, endpoint, outputFormat));
         rp.get({
@@ -78,18 +77,18 @@ module.exports = {
     findByUsername: function(username, fn) {
         let self = this;
         let endpoint = helpers.getStaticEndpointParameters([generalConfig.authDatasetURI[0]]);
-        /*jshint multistr: true */
-        let query = '\
-      PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> \
-      PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-      SELECT ?s ?p ?o FROM <' + endpoint.graphName + '> WHERE { \
-        { \
-            ?s a ldr:User . \
-            ?s foaf:accountName "' + username + '" .\
-            ?s ?p ?o . \
-        } \
-      } \
-      ';
+        let {gStart, gEnd} = helpers.prepareGraphName(endpoint.graphName);
+        let query = `
+            PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
+            PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+            SELECT ?s ?p ?o WHERE {
+                ${gStart}
+                    ?s a ldr:User ;
+                       foaf:accountName "${username}" ;
+                       ?p ?o .
+                ${gEnd}
+            }
+        `;
         let rpPath = helpers.getHTTPGetURL(helpers.getHTTPQuery('read', query, endpoint, outputFormat));
         //send request
         rp.get({

@@ -35,11 +35,11 @@ let prepareStaticDGFunc = function (datasetURI){
 
 export default {
     //returns dataset and graphName
-    prepareDG: function (datasetURI){
+    prepareDG(datasetURI){
         return prepareStaticDGFunc(datasetURI);
     },
     //it is used for users and configs
-    getStaticEndpointParameters: function(datasetURI) {
+    getStaticEndpointParameters(datasetURI){
         let httpOptions, {d, g} = prepareStaticDGFunc(datasetURI);
         httpOptions = {
             host: sparqlEndpoint[d].host,
@@ -54,7 +54,7 @@ export default {
         return {httpOptions: httpOptions, type: etype.toLowerCase(), graphName: g, useReasoning: useReasoning};
     },
     //build the write URI and params for different SPARQL endpoints
-    getHTTPQuery: function(mode, query, endpointParameters, outputFormat) {
+    getHTTPQuery(mode, query, endpointParameters, outputFormat) {
         let outputObject = {uri: '', params: {}};
 
         if(endpointParameters.useReasoning){
@@ -109,6 +109,15 @@ export default {
     getHTTPGetURL(object){
         let uri = object.uri + '?' + queryString.stringify(object.params);
         return uri;
+    },
+    prepareGraphName(graphName){
+        let gStart = 'GRAPH <'+ graphName +'> { ';
+        let gEnd = ' } ';
+        if(!graphName || graphName === 'default'){
+            gStart =' ';
+            gEnd = ' ';
+        }
+        return {gStart: gStart, gEnd: gEnd}
     },
     getQueryDataTypeValue(valueType, dataType, objectValue) {
         let newValue, dtype;
