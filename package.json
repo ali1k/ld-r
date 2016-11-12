@@ -43,6 +43,7 @@
     "fluxible-plugin-fetchr": "^0.3.11",
     "fluxible-router": "^0.4.18",
     "hogan-express": "^0.5.2",
+    "jquery": "^3.1.1",
     "json3": "^3.3.2",
     "log": "^1.4.0",
     "moment": "^2.15.2",
