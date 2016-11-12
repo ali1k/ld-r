@@ -15,8 +15,5 @@ fi
 if [ ! -e "plugins/email/config.js" ]; then
     cp plugins/email/config.sample.js plugins/email/config.js
 fi
-echo "Installing bower packages..."
-bower install
-
 echo "Installing npm packages..."
 npm install

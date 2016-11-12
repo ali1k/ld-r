@@ -9,11 +9,7 @@ RUN apt-get install -y git
 RUN mkdir /ld-r
 WORKDIR /ld-r
 
-RUN npm install bower -g
 RUN npm install webpack -g
-
-ADD bower.json /ld-r/
-RUN bower install --allow-root
 
 ADD package.json /ld-r/
 RUN npm install

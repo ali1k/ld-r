@@ -9,7 +9,7 @@ Linked Data Reactor (LD-Reactor or LD-R) is a framework to develop reactive and 
 
 ###Installation
 
-You should have installed [NodeJS](https://nodejs.org/), [npm](https://github.com/npm/npm), [bower](http://bower.io/) and [Webpack](https://webpack.github.io/) on your system as prerequisite, then:
+You should have installed [NodeJS](https://nodejs.org/), [npm](https://github.com/npm/npm) and [Webpack](https://webpack.github.io/) on your system as prerequisite, then:
 
 Clone the repository: `git clone https://github.com/ali1k/ld-r.git`
 

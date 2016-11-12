@@ -14,5 +14,5 @@ if not exist configs\facets.js (
 if not exist plugins\email\config.js (
     copy plugins\email\config.sample.js plugins\email\config.js
 )
-echo "Installing bower and npm packages..."
-bower install & npm install
+echo "Installing npm packages..."
+npm install

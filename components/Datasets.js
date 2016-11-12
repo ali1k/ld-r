@@ -35,7 +35,7 @@ class Datasets extends React.Component {
     }
     render() {
         let self = this;
-        let optionsList, output;
+        let optionsList, output ='', outputDSS;
         let color = 'black';
         let user = this.context.getUser();
         let info = <div className="ui blue message">
@@ -43,7 +43,7 @@ class Datasets extends React.Component {
                    </div>;
         let dss = this.props.DatasetsStore.datasetsList;
         if(enableAuthentication && !user){
-            output.push(<div className="ui warning message"><div className="header"> Please <a href="/register">Register</a> or <a href="/login">Login</a> to see the datasets.</div></div>);
+            output = <div className="ui warning message"><div className="header"> Please <a href="/register">Register</a> or <a href="/login">Login</a> to see the datasets.</div></div>;
         }else{
             if(!dss.length){
                 if(defaultDatasetURI[0]){
@@ -56,7 +56,7 @@ class Datasets extends React.Component {
                 optionsList = dss.map(function(option, index) {
                     return <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
                 });
-                output = dss.map(function(ds, index) {
+                outputDSS = dss.map(function(ds, index) {
                     if(ds.features){
                         if(typeof ds.features.readOnly === 'undefined' ){
                             color = 'black';
@@ -95,7 +95,7 @@ class Datasets extends React.Component {
                     <div className="ui segment">
                         <h2><span className="ui big black circular label">{dss.length}</span> Datasets</h2>
                         <div className="ui big divided list">
-                            {output}
+                            {output}{outputDSS}
                         </div>
                     </div>
                     <div className= "ui bottom attached">

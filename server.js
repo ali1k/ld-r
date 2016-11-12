@@ -68,7 +68,15 @@ server.set('view options', { layout: false });
 server.engine('html', hogan);
 //------------------
 server.use('/public', express.static(path.join(__dirname, '/build')));
-server.use('/bower_components', express.static(path.join(__dirname, '/bower_components')));
+//server.use('/bower_components', express.static(path.join(__dirname, '/bower_components')));
+//add frontend npm modules here
+server.use('/json3', express.static(path.join(__dirname, '/node_modules/json3')));
+server.use('/es5-shim', express.static(path.join(__dirname, '/node_modules/es5-shim')));
+server.use('/es6-shim', express.static(path.join(__dirname, '/node_modules/es6-shim')));
+server.use('/semantic-ui', express.static(path.join(__dirname, '/node_modules/semantic-ui-css')));
+server.use('/jquery', express.static(path.join(__dirname, '/node_modules/jquery')));
+server.use('/animate.css', express.static(path.join(__dirname, '/node_modules/animate.css')));
+
 server.use('/assets', express.static(path.join(__dirname, '/assets')));
 // Get access to the fetchr plugin instance
 let fetchrPlugin = app.getPlugin('FetchrPlugin');
