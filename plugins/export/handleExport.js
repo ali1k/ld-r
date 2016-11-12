@@ -11,32 +11,31 @@ let exportResource = function(format, datasetURI, resourceURI, req, res) {
         let httpOptions = endpoint.httpOptions;
         let outputFormat;
         switch (format.toLowerCase()) {
-            case 'rdf/xml':
+            case 'RDF/XML':
                 outputFormat = 'application/rdf+xml';
                 break;
-            case 'json':
-                outputFormat = 'json';
+            case 'JSON':
+                outputFormat = 'application/sparql-results+json';
                 break;
-            case 'turtle':
+            case 'NTriples':
                 outputFormat = 'text/plain';
                 break;
-            case 'ntriples':
-                outputFormat = 'rdf+xml';
-                break;
             default:
-                outputFormat = 'rdf+xml';
+                outputFormat = 'text/plain';
+        }
+        if(endpoint.type === 'cliopatria'){
+            outputFormat = 'rdf+xml';
         }
         let {gStart, gEnd} = helpers.prepareGraphName(endpoint.graphName);
-
         let primaryTopic = '<http://' + req.headers.host + '/dataset/' + encodeURIComponent(datasetURI) + '> foaf:primaryTopic <' + datasetURI + '> . ?s ?p ?o .';
         let selectPhrase = '?s ?p ?o .';
         if (resourceURI) {
-            selectPhrase = '<' + resourceURI + '> ?p ?o . OPTIONAL {?o ?sp ?spo .} FILTER(?p != ldReactor:password)';
+            selectPhrase = '<' + resourceURI + '> ?p ?o . OPTIONAL {?o ?sp ?spo .} FILTER(?p != ldr:password)';
             primaryTopic = '<http://' + req.headers.host + '/dataset/' + encodeURIComponent(datasetURI) + '/resource/' + encodeURIComponent(resourceURI) + '> foaf:primaryTopic <' + resourceURI + '> . <' + resourceURI + '> ?p ?o . ?o ?sp ?spo .';
         }
         let query = `
             PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-            PREFIX ldReactor: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
+            PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
             CONSTRUCT {${primaryTopic}}  WHERE {
                 ${gStart}
                     ${selectPhrase}

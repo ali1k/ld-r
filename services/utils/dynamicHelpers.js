@@ -60,7 +60,7 @@ export default {
                 useReasoning = 1;
             }
             let etype = config.options.endpointType ? config.options.endpointType : 'virtuoso';
-            callback ({httpOptions: httpOptions, type: etype, graphName: g, useReasoning: useReasoning});
+            callback ({httpOptions: httpOptions, type: etype.toLowerCase(), graphName: g, useReasoning: useReasoning});
         });
 
     },
