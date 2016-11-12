@@ -31,8 +31,8 @@ Config: General
       <td>['LD-Reactor']</td>
     </tr>
     <tr >
-      <td class="positive">defaultGraphName</td>
-      <td>Name of the default graph to be viewed/browsed/edited. If not set, will consider all existing graph names in 'generic' endpoint.</td>
+      <td class="positive">defaultDatasetURI</td>
+      <td>URI of the default dataset to be viewed/browsed/edited. If not set, will consider all existing graph names in 'generic' endpoint.</td>
       <td>['http://dbpedia.org']</td>
     </tr>
     <tr >
@@ -41,8 +41,8 @@ Config: General
       <td>0</td>
     </tr>
     <tr >
-      <td class="positive">authGraphName</td>
-      <td>Name of the graph used to store user's data. It is required if <span class="ui label">enableAuthentication</span> is set to '1'.</td>
+      <td class="positive">authDatasetURI</td>
+      <td>URI of the dataset used to store user's data. It is required if <span class="ui label">enableAuthentication</span> is set to '1'.</td>
       <td>https://ld-r.org/users</td>
     </tr>
     <tr >
@@ -56,9 +56,14 @@ Config: General
       <td>0</td>
     </tr>
     <tr >
-      <td class="positive">baseResourceDomain</td>
-      <td>The domain name under which basic user resources will be defined.</td>
-      <td>http://ld-r.org</td>
+      <td class="positive">enableEmailNotifications</td>
+      <td>If set to '1', will enable email notifications on new user registration, user account activation, etc.</td>
+      <td>0</td>
+    </tr>      
+    <tr >
+      <td class="positive">useGoogleRecaptcha</td>
+      <td>If you want to enable Google recaptcha for user registration.</td>
+      <td>Tracking code for the Google recaptcha service</td>
     </tr>
     <tr >
       <td class="positive">enableLogs</td>
