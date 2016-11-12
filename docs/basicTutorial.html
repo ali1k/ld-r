@@ -55,7 +55,7 @@ Go to the directoy where you have installed your LD-R instance and open your fav
     serverPort: [<span style="color:#ff628c">4000</span>],
     sparqlEndpoint: {
         <span style="color:#3ad900">'</span>generic<span style="color:#3ad900">'</span>: {
-            host: <span style="color:#3ad900">'</span>localhost<span style="color:#3ad900">'</span>, port: <span style="color:#ff628c">8890</span>, path: <span style="color:#3ad900">'</span>/sparql<span style="color:#3ad900">'</span>, type: <span style="color:#3ad900">'</span>virtuoso<span style="color:#3ad900">'</span>
+            host: <span style="color:#3ad900">'</span>localhost<span style="color:#3ad900">'</span>, port: <span style="color:#ff628c">8890</span>, path: <span style="color:#3ad900">'</span>/sparql<span style="color:#3ad900">'</span>, endpointType: <span style="color:#3ad900">'</span>virtuoso<span style="color:#3ad900">'</span>
         }
     },
     dbpediaLookupService: [
@@ -72,11 +72,11 @@ Go to the directoy where you have installed your LD-R instance and open your fav
     serverPort: [<span style="color:#ff628c">4000</span>],
     sparqlEndpoint: {
         <span style="color:#3ad900">'</span>generic<span style="color:#3ad900">'</span>: {
-            host: <span style="color:#3ad900">'</span>localhost<span style="color:#3ad900">'</span>, port: <span style="color:#ff628c">8890</span>, path: <span style="color:#3ad900">'</span>/sparql<span style="color:#3ad900">'</span>, type: <span style="color:#3ad900">'</span>virtuoso<span style="color:#3ad900">'</span>
+            host: <span style="color:#3ad900">'</span>localhost<span style="color:#3ad900">'</span>, port: <span style="color:#ff628c">8890</span>, path: <span style="color:#3ad900">'</span>/sparql<span style="color:#3ad900">'</span>, endpointType: <span style="color:#3ad900">'</span>virtuoso<span style="color:#3ad900">'</span>
         },
         <span style="color:#08f;font-style:italic"><span style="color:#e1efff">//</span>added a new endpoint</span>
         <span style="color:#3ad900">'</span>http://live.dbpedia.org/sparql<span style="color:#3ad900">'</span>: {
-            host: <span style="color:#3ad900">'</span>live.dbpedia.org<span style="color:#3ad900">'</span>, port: <span style="color:#ff628c">80</span>, path: <span style="color:#3ad900">'</span>/sparql<span style="color:#3ad900">'</span>, useDefaultGraph: <span style="color:#ff628c">1</span>, type: <span style="color:#3ad900">'</span>virtuoso<span style="color:#3ad900">'</span>
+            host: <span style="color:#3ad900">'</span>live.dbpedia.org<span style="color:#3ad900">'</span>, port: <span style="color:#ff628c">80</span>, path: <span style="color:#3ad900">'</span>/sparql<span style="color:#3ad900">'</span>, graphName: <span style="color:#ff628c">'default'</span>, endpointType: <span style="color:#3ad900">'</span>virtuoso<span style="color:#3ad900">'</span>
         },
     },
     dbpediaLookupService: [
@@ -93,7 +93,7 @@ Go to the directoy where you have installed your LD-R instance and open your fav
   <i class="ui big yellow info icon"></i>
   If you want to connect to a another type of triple store e.g. <a href="http://stardog.com/">Stardog</a>, You can use the following server configuration:
   <pre style="background:#002240;color:#fff">        'http<span style="color:#ff9d00">://</span>localhost<span style="color:#ff9d00">:</span><span style="color:#ff628c">5820</span><span style="color:#ff9d00">/</span>tutorial<span style="color:#ff9d00">/</span>query'<span style="color:#ff9d00">:</span> {
-            host<span style="color:#ff9d00">:</span> 'localhost'<span style="color:#e1efff">,</span> port<span style="color:#ff9d00">:</span> <span style="color:#ff628c">5820</span><span style="color:#e1efff">,</span> path<span style="color:#ff9d00">:</span> '<span style="color:#ff9d00">/</span>tutorial<span style="color:#ff9d00">/</span>query'<span style="color:#e1efff">,</span> useDefaultGraph<span style="color:#ff9d00">:</span> <span style="color:#ff628c">1</span><span style="color:#e1efff">,</span> <span style="color:#ff9d00">type</span><span style="color:#ff9d00">:</span> 'stardog'
+            host<span style="color:#ff9d00">:</span> 'localhost'<span style="color:#e1efff">,</span> port<span style="color:#ff9d00">:</span> <span style="color:#ff628c">5820</span><span style="color:#e1efff">,</span> path<span style="color:#ff9d00">:</span> '<span style="color:#ff9d00">/</span>tutorial<span style="color:#ff9d00">/</span>query'<span style="color:#e1efff">,</span> graphName<span style="color:#ff9d00">:</span> <span style="color:#ff628c">'default'</span><span style="color:#e1efff">,</span> <span style="color:#ff9d00">endpointType</span><span style="color:#ff9d00">:</span> 'stardog'
         }
   </pre>
  You would just need to use the correct port (if it is not 5820) and add your database name (replace the 'tutorial' with your own database name).
