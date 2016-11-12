@@ -17,8 +17,9 @@ class DefaultHTMLLayout extends React.Component {
                 {/* Vendors css bundle */
                     this.props.addAssets ? <link href="/public/css/vendor.bundle.css" rel="stylesheet" type="text/css" />: <style></style>
                 }
-                <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-
+                {/* Google Map API related lib */}
+                <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBv4tIDpAtiBRgrRhY9ITnuV0vVlgMlntI">
+                </script>
             </head>
             <body>
                 <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>
