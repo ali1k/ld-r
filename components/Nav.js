@@ -1,7 +1,7 @@
 'use strict';
 import React from 'react';
 import {NavLink} from 'fluxible-router';
-import {appFullTitle, appShortTitle, enableAuthentication} from '../configs/general';
+import {appFullTitle, appShortTitle, enableAuthentication, enableDynamicReactorConfiguration,enableDynamicServerConfiguration,enableDynamicfacetsConfiguration, configDatasetURI} from '../configs/general';
 
 class Nav extends React.Component {
     componentDidMount(){
@@ -21,7 +21,7 @@ class Nav extends React.Component {
                 userMenu = <div className="ui right dropdown item">
                                 {user.accountName} <i className="dropdown icon"></i>
                                 <div className="menu">
-                                    <NavLink className="item" routeName="resource" href={'/dataset/' + encodeURIComponent(user.graphName) + '/resource/' + encodeURIComponent(user.id)}>Profile</NavLink>
+                                    <NavLink className="item" routeName="resource" href={'/dataset/' + encodeURIComponent(user.datasetURI) + '/resource/' + encodeURIComponent(user.id)}>Profile</NavLink>
                                     {parseInt(user.isSuperUser) ? <NavLink className="item" routeName="users" href="/users">Users List</NavLink> : ''}
                                     <a href="/logout" className="item">Logout</a>
                                 </div>
@@ -32,13 +32,20 @@ class Nav extends React.Component {
         }
         return (
             <nav ref="defaultNavbar" className="ui blue menu inverted navbar page grid">
-                    <NavLink routeName="home" className="brand item" activeClass="active"><img style={{height: 20, width: 20}} className="ui mini image" src="/assets/img/ld-reactor.gif" alt="ld-reactor" /></NavLink>
-                    <NavLink routeName="about" className="item" activeClass="active">About {appShortTitle} </NavLink>
-                    <NavLink routeName="datasets" className="item" activeClass="active" href="/datasets"> Datasets</NavLink>
+                    <NavLink routeName="home" className="brand item" href='/'>
+                        {this.props.loading ? <img src="/assets/img/loader.gif" alt="loading..." style={{height: 30, width: 30}} /> : <img style={{height: 22, width: 22}} className="ui mini image" src="/assets/img/ld-reactor.gif" alt="ld-reactor" />}
+                    </NavLink>
+                    <NavLink routeName="about" className="item">About {appShortTitle} </NavLink>
+                    <NavLink routeName="datasets" className="item" href="/datasets"> Datasets</NavLink>
                     <div className="right menu">
                         <div className="item link" onClick={this.showHelpModal}>
                                 <i className="small help circle icon"></i>
                         </div>
+                        {(enableDynamicReactorConfiguration || enableDynamicServerConfiguration || enableDynamicfacetsConfiguration) ?
+                            <a href={'/browse/' + encodeURIComponent(configDatasetURI)} className="ui item link" title="Configuration Manager">
+                                <i className="ui black settings icon"></i>
+                            </a>
+                        : ''}
                         <a href="http://github.com/ali1k/ld-r" className="ui item link">
                                 <i className="github circle icon"></i> Github
                         </a>

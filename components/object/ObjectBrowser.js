@@ -17,14 +17,14 @@ class ObjectBrowser extends React.Component {
             case 'CheckboxItem':
                 browser = this.props.spec.instances.map(function(node, index) {
                     return (
-                        <CheckboxItem graphName={self.props.graphName} shortenURI={self.props.shortenURI} key={index} spec={node} config={self.props.config} total={!self.props.spec.propertyURI ? 0 : node.total} onCheck={self.handleSelect.bind(self)}/>
+                        <CheckboxItem datasetURI={self.props.datasetURI} shortenURI={self.props.shortenURI} key={index} spec={node} config={self.props.config} total={!self.props.spec.propertyURI ? 0 : node.total} onCheck={self.handleSelect.bind(self)}/>
                     );
                 });
             break;
             default:
             browser = this.props.spec.instances.map(function(node, index) {
                 return (
-                    <CheckboxItem graphName={self.props.graphName} shortenURI={self.props.shortenURI} key={index} spec={node} config={self.props.config} total={!self.props.spec.propertyURI ? 0 : node.total} onCheck={self.handleSelect.bind(self)}/>
+                    <CheckboxItem datasetURI={self.props.datasetURI} shortenURI={self.props.shortenURI} key={index} spec={node} config={self.props.config} total={!self.props.spec.propertyURI ? 0 : node.total} onCheck={self.handleSelect.bind(self)}/>
                 );
             });
         }

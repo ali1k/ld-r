@@ -7,6 +7,8 @@ import DBpediaInput from './editor/individual/DBpediaInput';
 import PasswordInput from './editor/individual/PasswordInput';
 import LanguageInput from './editor/individual/LanguageInput';
 import BasicCalendarInput from './editor/individual/BasicCalendarInput';
+import PrefixBasedInput from './editor/individual/PrefixBasedInput';
+import ToggleEdit from './editor/individual/ToggleEdit';
 
 class ObjectIEditor extends React.Component {
     handleDataEdit(value){
@@ -46,6 +48,9 @@ class ObjectIEditor extends React.Component {
         case 'BasicTextareaInput':
             editor = <BasicTextareaInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
             break;
+        case 'ToggleEdit':
+            editor = <ToggleEdit spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
+            break;
         case 'PasswordInput':
             editor = <PasswordInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;
             break;
@@ -60,6 +65,9 @@ class ObjectIEditor extends React.Component {
             break;
         case 'BasicOptionInput':
             editor = <BasicOptionInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;
+            break;
+        case 'PrefixBasedInput':
+            editor = <PrefixBasedInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;
             break;
         default:
             editor = <BasicIndividualInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;

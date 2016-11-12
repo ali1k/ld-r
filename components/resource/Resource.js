@@ -2,6 +2,8 @@ import React from 'react';
 import PropertyReactor from '../reactors/PropertyReactor';
 import {NavLink} from 'fluxible-router';
 import URIUtil from '../utils/URIUtil';
+import cloneResource from '../../actions/cloneResource';
+
 class Resource extends React.Component {
     constructor(props) {
         super(props);
@@ -9,10 +11,17 @@ class Resource extends React.Component {
     componentDidMount() {
         //scroll to top of the page
         if(this.props.config && this.props.config.readOnly){
-            let body = $("html, body");
+            let body = $('html, body');
             body.stop().animate({scrollTop:0}, '500', 'swing', function() {
             });
         }
+    }
+    handleCloneResource(datasetURI, resourceURI, e) {
+        this.context.executeAction(cloneResource, {
+            dataset: datasetURI,
+            resourceURI: resourceURI
+        });
+        e.stopPropagation();
     }
     includesProperty(list, resource, property) {
         let out = false;
@@ -30,7 +39,7 @@ class Resource extends React.Component {
                 if(parseInt(user.isSuperUser)){
                     return {access: true, type: 'full'};
                 }else{
-                    if(graph && user.editorOfGraph.indexOf(graph) !== -1){
+                    if(graph && user.editorOfDataset.indexOf(graph) !== -1){
                         return {access: true, type: 'full'};
                     }else{
                         if(resource && user.editorOfResource.indexOf(resource) !== -1){
@@ -83,7 +92,7 @@ class Resource extends React.Component {
                                 configReadOnly = true;
                             }else{
                                 //check access levels
-                                accessLevel = self.checkAccess(user, self.props.graphName, self.props.resource, node.propertyURI);
+                                accessLevel = self.checkAccess(user, self.props.datasetURI , self.props.resource, node.propertyURI);
                                 if(accessLevel.access){
                                     configReadOnly = false;
                                 }else{
@@ -92,7 +101,7 @@ class Resource extends React.Component {
                             }
                         }else{
                             //check access levels
-                            accessLevel = self.checkAccess(user, self.props.graphName, self.props.resource, node.propertyURI);
+                            accessLevel = self.checkAccess(user, self.props.datasetURI , self.props.resource, node.propertyURI);
                             if(accessLevel.access){
                                 configReadOnly = false;
                             }else{
@@ -102,7 +111,7 @@ class Resource extends React.Component {
                     }
                 }
                 return (
-                    <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} graphName={self.props.graphName} resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
+                    <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
                 );
             }
         });
@@ -115,7 +124,7 @@ class Resource extends React.Component {
             }
             tabsDIV = this.props.config.propertyCategories.map(function(node, index) {
                 return (
-                    <NavLink className={(node === currentCategory ? 'item link active' : 'item link')} key={index} routeName="resource" href={'/dataset/' + encodeURIComponent(self.props.graphName) + '/resource/' + encodeURIComponent(self.props.resource) + '/' + node + '/' + encodeURIComponent(self.props.propertyPath)}>
+                    <NavLink className={(node === currentCategory ? 'item link active' : 'item link')} key={index} routeName="resource" href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(self.props.resource) + '/' + node + '/' + encodeURIComponent(self.props.propertyPath)}>
                       {node}
                     </NavLink>
                 );
@@ -146,21 +155,38 @@ class Resource extends React.Component {
                             </div>
                       </div>;
         }
+        let datasetTitle = this.props.datasetURI;
+        if(this.props.config && this.props.config.datasetLabel){
+            datasetTitle = this.props.config.datasetLabel;
+        }
         let breadcrumb;
         if(self.props.propertyPath.length > 1){
             breadcrumb = <div className="ui large breadcrumb">
-                          <a className="section" href={'/dataset/' + encodeURIComponent(self.props.graphName) + '/resource/' + encodeURIComponent(self.props.propertyPath[0])}>{self.props.propertyPath[0]}</a>
-                          <i className="right chevron icon divider"></i>
+                        <a className="section" href={'/dataset/1/' + encodeURIComponent(self.props.datasetURI )}><i className="cubes icon"></i>{datasetTitle}</a>
+                        <i className="big right chevron icon divider"></i>
+                          <a className="section" href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(self.props.propertyPath[0])}><i className="cube icon"></i>{URIUtil.getURILabel(self.props.propertyPath[0])}</a>
+                          <i className="big right arrow icon divider"></i>
                           <div className="active section">{URIUtil.getURILabel(self.props.propertyPath[1])}</div>
                         </div>;
+        }else{
+            breadcrumb = <div className="ui large breadcrumb">
+                        <a className="section" href={'/dataset/1/' + encodeURIComponent(self.props.datasetURI )}><i className="cubes icon"></i>{datasetTitle}</a>
+                        <i className="big right chevron icon divider"></i>
+                        </div>;
+        }
+        let cloneable = 0;
+        if (self.props.config && !this.props.readOnly && typeof self.props.config.allowResourceClone !== 'undefined' && parseInt(self.props.config.allowResourceClone)) {
+            cloneable = 1;
         }
         return (
             <div className="ui page grid" ref="resource" itemScope itemType={this.props.resourceType} itemID={this.props.resource}>
                 <div className="ui column">
                     {breadcrumb}
                     <h2>
-                        {this.props.isComplete ? '' : <img src="/assets/img/loader.gif" alt="loading..."/>}
-                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.graphName) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon cube"></i></a> <a href={this.props.resource} target="_blank">{this.props.title}</a>
+                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon cube"></i></a> <a href={this.props.resource} target="_blank">{this.props.title}</a>&nbsp;&nbsp;
+                        {cloneable ?
+                            <a className="medium ui circular basic icon button" onClick={this.handleCloneResource.bind(this, this.props.datasetURI, decodeURIComponent(this.props.resource))} title="clone this resource"><i className="icon teal superscript"></i></a>
+                        : ''}
                     </h2>
                     {mainDIV}
                 </div>
@@ -169,6 +195,7 @@ class Resource extends React.Component {
     }
 }
 Resource.contextTypes = {
+    executeAction: React.PropTypes.func.isRequired,
     getUser: React.PropTypes.func
 };
 export default Resource;

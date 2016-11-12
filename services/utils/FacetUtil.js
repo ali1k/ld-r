@@ -16,12 +16,12 @@ class FacetUtil{
         return property;
     }
     parseCountResourcesByType(body) {
-      let total = 0;
-      let parsed = JSON.parse(body);
-      if(parsed.results.bindings.length){
-          total = parsed.results.bindings[0].total.value;
-      }
-      return total;
+        let total = 0;
+        let parsed = JSON.parse(body);
+        if(parsed.results.bindings.length){
+            total = parsed.results.bindings[0].total.value;
+        }
+        return total;
     }
     parseMasterPropertyValues(body) {
         let self = this;
@@ -32,12 +32,12 @@ class FacetUtil{
         });
         return output;
     }
-    parseSecondLevelPropertyValues(graphName, body) {
+    parseSecondLevelPropertyValues(datasetURI, body) {
         let self = this;
         let output=[];
         let parsed = JSON.parse(body);
         parsed.results.bindings.forEach(function(el) {
-            output.push( {v: el.s.value, label: self.getPropertyLabel(el.s.value), title: (el.title && el.title.value ? el.title.value : ''), g: graphName});
+            output.push( {v: el.s.value, label: self.getPropertyLabel(el.s.value), title: (el.title && el.title.value ? el.title.value : ''), d: datasetURI});
         });
         return output;
     }

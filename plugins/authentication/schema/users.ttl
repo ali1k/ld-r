@@ -10,7 +10,7 @@
 @prefix dbr: <http://dbpedia.org/resource/> .
 @prefix dbo: <http://dbpedia.org/ontology/> .
 
-<https://ld-r.org/user/admin> a foaf:Person ;
+<https://ld-r.org/user/admin> a foaf:Person, ldr:User ;
       foaf:firstName "Admin" ;
       foaf:lastName "User" ;
       foaf:organization <http://dbpedia.org/resource/VU_University_Amsterdam>;
@@ -23,7 +23,7 @@
       ldr:isSuperUser "1"^^xsd:Integer .
 
 #non-super users will have the following access level properties:
-#ldr:editorOfGraph
+#ldr:editorOfDataset
 #ldr:editorOfResource
 #ldr:editorOfProperty -> blank node
 #                               ldr: resource

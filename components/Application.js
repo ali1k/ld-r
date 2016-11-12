@@ -25,7 +25,7 @@ class Application extends React.Component {
         //render content
         return (
             <div>
-                <Nav />
+                <Nav loading={this.props.ApplicationStore.loading} />
                 <Handler />
                 <HelpModal />
             </div>

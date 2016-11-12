@@ -1,5 +1,4 @@
 import React from 'react';
-import {config} from '../../configs/reactor';
 import ResourceList from './ResourceList';
 import ResourceListPager from './ResourceListPager';
 import URIUtil from '../utils/URIUtil';
@@ -30,21 +29,35 @@ class Dataset extends React.Component {
             }
         }
         let datasetTitle;
-        if(this.props.graphName){
-            datasetTitle = <a target="_blank" href={this.props.graphName}> {this.props.graphName} </a>;
-            if(config.dataset && config.dataset[this.props.graphName] && config.dataset[this.props.graphName].datasetLabel){
-                datasetTitle = <a target="_blank" href={this.props.graphName}> {config.dataset[this.props.graphName].datasetLabel} </a>;
+        if(this.props.datasetURI){
+            datasetTitle = <a target="_blank" href={this.props.datasetURI}> {this.props.datasetURI} </a>;
+            if(this.props.config && this.props.config.datasetLabel){
+                datasetTitle = <a target="_blank" href={this.props.datasetURI}> {this.props.config.datasetLabel} </a>;
             }
+        }
+        let createResourceDIV = '';
+        if(this.props.config && !this.props.readOnly && this.props.config.allowResourceNew){
+            createResourceDIV = <div className="ui list">
+                <div className="item">
+                    <div  className="medium ui basic icon labeled button" onClick={this.props.onCreateResource.bind(this, this.props.datasetURI)}>
+                        <i className="cube square large blue icon "></i> <i className="add black icon"></i> Add a New Resource
+                        </div>
+                    </div>
+                <br/>
+             </div>;
         }
         return (
             <div className="ui page grid" ref="dataset">
                 <div className="ui column">
                     <div className="ui segment top attached">
-                        <h3>{this.props.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.graphName)}><span className="ui big black circular label">{this.addCommas(this.props.total)}</span></a> : ''} Resources of type {typeSt} in {datasetTitle ? datasetTitle : ' all local datasets'}</h3>
-                        <ResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} graphName={this.props.graphName} isBig={true} config={this.props.config}/>
+                        <h3>{this.props.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI)}><span className="ui big black circular label">{this.addCommas(this.props.total)}</span></a> : ''} Resources of type {typeSt} in {datasetTitle ? datasetTitle : ' all local datasets'}</h3>
+                        <ResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={true} config={this.props.config} onCloneResource={this.props.onCloneResource}/>
                     </div>
                     <div className= "ui secondary segment bottom attached">
-                        <ResourceListPager graphName={this.props.graphName} total={this.props.total} threshold={10} currentPage={this.props.page} maxNumberOfResourcesOnPage={this.props.config.maxNumberOfResourcesOnPage}/>
+                        <ResourceListPager datasetURI={this.props.datasetURI} total={this.props.total} threshold={10} currentPage={this.props.page} maxNumberOfResourcesOnPage={this.props.config.maxNumberOfResourcesOnPage}/>
+                    </div>
+                    <div className= "ui bottom attached">
+                        {createResourceDIV}
                     </div>
                 </div>
             </div>

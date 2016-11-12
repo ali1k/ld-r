@@ -11,14 +11,16 @@ class DBpediaInput extends React.Component {
         if(this.props.spec.isDefault){
             v = this.createDefaultValue(this.props.spec.valueType, this.props.spec.dataType);
         }
-        //to initialize value in Property state
-        this.props.onDataEdit(v);
         this.state = {value: v};
     }
     componentDidMount() {
         if(!this.props.noFocus){
             ReactDOM.findDOMNode(this.refs.basicIndividualInput).focus();
         }
+    }
+    componentWillMount() {
+        //to initialize value in Property state
+        this.props.onDataEdit(this.state.value);
     }
     handleKeyDown(evt) {
         if(this.props.allowActionByKey){

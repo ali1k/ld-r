@@ -82,7 +82,7 @@ class AggregateObjectReactor extends React.Component {
                             return undefined; // stop processing this iteration
                         }
                         return (
-                            <IndividualObject key={index} inEditMode={true} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.property} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
+                            <IndividualObject key={index} inEditMode={true} readOnly={self.props.readOnly} spec={node} config={self.props.config} datasetURI={self.props.datasetURI} resource={self.props.resource} property={self.props.property} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
                         );
                     });
                 }
@@ -90,7 +90,7 @@ class AggregateObjectReactor extends React.Component {
         }else{
             if(this.props.config){
                 if(this.props.config.objectAViewer){
-                    dataViewType = <ObjectAViewer graphName={this.props.graphName} resource={this.props.resource} property={this.props.property} spec={this.props.spec} config={this.props.config}/>;
+                    dataViewType = <ObjectAViewer datasetURI={this.props.datasetURI} resource={this.props.resource} property={this.props.property} spec={this.props.spec} config={this.props.config}/>;
                 }else{
                     isIndividual = true;
                     dataViewType = this.props.spec.instances.map(function(node, index) {
@@ -98,7 +98,7 @@ class AggregateObjectReactor extends React.Component {
                             return undefined; // stop processing this iteration
                         }
                         return (
-                            <IndividualObject key={index} inEditMode={false} readOnly={self.props.readOnly} spec={node} config={self.props.config} graphName={self.props.graphName} resource={self.props.resource} property={self.props.property} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
+                            <IndividualObject key={index} inEditMode={false} readOnly={self.props.readOnly} spec={node} config={self.props.config} datasetURI={self.props.datasetURI} resource={self.props.resource} property={self.props.property} isOnlyChild={self.props.isOnlyChild} onDelete={self.props.onIndividualDelete} onUpdate={self.props.onIndividualUpdate} onDetailUpdate={self.props.onIndividualDetailUpdate}/>
                         );
                     });
                 }

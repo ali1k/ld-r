@@ -15,14 +15,16 @@ class BasicCalendarInput extends React.Component {
         if(this.props.spec.isDefault){
             v = this.createDefaultValue();
         }
-        //to initialize value in Property state
-        this.props.onDataEdit(v);
         this.state = {value: v};
     }
     componentDidMount() {
         if(!this.props.noFocus){
             ReactDOM.findDOMNode(this.refs.basicCalendarInput).focus();
         }
+    }
+    componentWillMount() {
+        //to initialize value in Property state
+        this.props.onDataEdit(this.state.value);
     }
     getFormat() {
         //default format

@@ -9,6 +9,7 @@ class ResourceStore extends BaseStore {
     }
     updatePropertyList(payload) {
         this.graphName = payload.graphName;
+        this.datasetURI = payload.datasetURI;
         this.resourceURI = payload.resourceURI;
         this.resourceType = payload.resourceType;
         this.currentCategory = payload.currentCategory;
@@ -17,11 +18,11 @@ class ResourceStore extends BaseStore {
         this.properties = utilObject.preservePropertiesOrder(this.properties, payload.properties);
         this.title = payload.title ? payload.title : payload.resourceURI;
         this.config = payload.config;
-        this.isComplete = 1;
         this.emitChange();
     }
     cleanAll() {
         this.properties = [];
+        this.datasetURI = '';
         this.graphName = '';
         this.currentCategory = 0;
         this.resourceURI = '';
@@ -29,27 +30,22 @@ class ResourceStore extends BaseStore {
         this.title = '';
         this.propertyPath = [];
         this.config = {};
-        this.isComplete = 1;
     }
     cleanResource() {
         this.cleanAll();
         this.emitChange();
     }
-    startTask () {
-        this.isComplete = 0;
-        this.emitChange();
-    }
     getState() {
         return {
             graphName: this.graphName,
+            datasetURI: this.datasetURI,
             resourceURI: this.resourceURI,
             resourceType: this.resourceType,
             title: this.title,
             currentCategory: this.currentCategory,
             properties: this.properties,
             propertyPath: this.propertyPath,
-            config: this.config,
-            isComplete: this.isComplete
+            config: this.config
         };
     }
     dehydrate() {
@@ -61,6 +57,7 @@ class ResourceStore extends BaseStore {
         this.resourceType = state.resourceType;
         this.title = state.title;
         this.graphName = state.graphName;
+        this.datasetURI = state.datasetURI;
         this.currentCategory = state.currentCategory;
         this.propertyPath = state.propertyPath;
         this.config = state.config;
@@ -70,8 +67,7 @@ class ResourceStore extends BaseStore {
 ResourceStore.storeName = 'ResourceStore'; // PR open in dispatchr to remove this need
 ResourceStore.handlers = {
     'LOAD_RESOURCE_SUCCESS': 'updatePropertyList',
-    'CLEAN_RESOURCE_SUCCESS': 'cleanResource',
-    'START_TASK_RESOURCE': 'startTask'
+    'CLEAN_RESOURCE_SUCCESS': 'cleanResource'
 };
 
 export default ResourceStore;

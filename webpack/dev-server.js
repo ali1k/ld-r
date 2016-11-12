@@ -20,7 +20,7 @@ const options = {
         '*': { target: `http://${host}:${devPort}` }
     },
     stats: {
-        //colors: true,
+        colors: true,
         chunks:false
     }
 };

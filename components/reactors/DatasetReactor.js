@@ -4,10 +4,24 @@ import {connectToStores} from 'fluxible-addons-react';
 import {enableAuthentication} from '../../configs/general';
 import getResourcesCount from '../../actions/getResourcesCount';
 import Dataset from '../dataset/Dataset';
+import cloneResource from '../../actions/cloneResource';
+import createResource from '../../actions/createResource';
+
 
 class DatasetReactor extends React.Component {
     componentDidMount() {
-        this.context.executeAction(getResourcesCount, {id: this.props.DatasetStore.dataset.graphName});
+
+    }
+    handleCloneResource(datasetURI, resourceURI) {
+        this.context.executeAction(cloneResource, {
+            dataset: datasetURI,
+            resourceURI: resourceURI
+        });
+    }
+    handleCreateResource(datasetURI) {
+        this.context.executeAction(createResource, {
+            dataset: datasetURI
+        });
     }
     //removes properties from an object
     configMinus(config, props) {
@@ -20,21 +34,23 @@ class DatasetReactor extends React.Component {
         return o;
     }
     render() {
-        let graphName = this.props.DatasetStore.dataset.graphName;
+        let datasetURI = this.props.DatasetStore.dataset.datasetURI;
         let resources = this.props.DatasetStore.dataset.resources;
         let page = this.props.DatasetStore.dataset.page;
         let total = this.props.DatasetStore.dataset.total;
+        let isComplete = this.props.DatasetStore.isComplete;
         let config = this.props.DatasetStore.dataset.config;
         let datasetReactor;
         if(config && config.datasetReactor){
             switch(config.datasetReactor[0]){
                 case 'Dataset':
-                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} graphName={graphName} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])}/>;
+                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)}/>;
                 break;
                 default:
-                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} graphName={graphName} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])}/>;
+                    datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)}/>;
             }
         }
+
         return (
             <div ref="datasetReactor">
                 {datasetReactor}

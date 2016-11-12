@@ -2,20 +2,29 @@
 import {getQueryDataTypeValue} from '../utils/helpers';
 class DatasetQuery{
     constructor() {
-        /*jshint multistr: true */
-        this.prefixes='\
-        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#> \
-        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \
-        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \
-        PREFIX owl: <http://www.w3.org/2002/07/owl#> \
-        PREFIX dcterms: <http://purl.org/dc/terms/> \
-        PREFIX void: <http://rdfs.org/ns/void#> \
-        PREFIX foaf: <http://xmlns.com/foaf/0.1/> \
-        PREFIX skos: <http://www.w3.org/2004/02/skos/core#> \
-        ';
+        this.prefixes=`
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX owl: <http://www.w3.org/2002/07/owl#>
+        PREFIX dcterms: <http://purl.org/dc/terms/>
+        PREFIX void: <http://rdfs.org/ns/void#>
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        `;
         this.query='';
     }
-    countResourcesByType(graphName, type) {
+    prepareGraphName(graphName){
+        let gStart = 'GRAPH <'+ graphName +'> { ';
+        let gEnd = ' } ';
+        if(!graphName || graphName === 'default'){
+            gStart =' ';
+            gEnd = ' ';
+        }
+        return {gStart: gStart, gEnd: gEnd}
+    }
+    countResourcesByType(endpointParameters, graphName, type) {
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = '?resource a <'+ type + '> .';
         //will get all the types
         if(!type.length || (type.length && !type[0]) ){
@@ -30,28 +39,17 @@ class DatasetQuery{
             st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
         }
         //go to default graph if no graph name is given
-        if(String(graphName)!=='' && graphName){
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT (count(?resource) AS ?total) WHERE {\
-                { GRAPH <' + graphName + '> \
-                    { '+ st +' \
-                    } \
-                } \
-            }  \
-            ';
-        }else{
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT (count(?resource) AS ?total) WHERE { \
-                { '+ st +' \
-                }\
-            }  \
-            ';
+        this.query = `
+        SELECT (count(?resource) AS ?total) WHERE {
+            ${gStart}
+                ${st}
+            ${gEnd}
         }
+        `;
         return this.prefixes + this.query;
     }
-    getResourcesByType(graphName, rconfig, limit, offset) {
+    getResourcesByType(endpointParameters, graphName, rconfig, limit, offset) {
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
         let type = rconfig.resourceFocusType;
         let resourceLabelProperty;
         if(rconfig.resourceLabelProperty){
@@ -86,34 +84,15 @@ class DatasetQuery{
             });
             st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
         }
-        //go to default graph if no graph name is given
-        if(String(graphName)!=='' && graphName){
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT DISTINCT ?resource ?title ?label WHERE {\
-                { GRAPH <' + graphName + '> \
-                    { '+ st +' \
-                    OPTIONAL { ?resource rdfs:label ?label .} '+ optPhase + bindPhase +' \
-                    } \
-                }\
-            } LIMIT ' + limit + ' OFFSET ' + offset + ' \
-            ';
-        }else{
-            /*jshint multistr: true */
-            this.query = '\
-            SELECT DISTINCT ?resource ?title ?label ?graphName WHERE { \
-                { GRAPH ?graphName \
-                    { '+ st +' \
-                    OPTIONAL { ?resource rdfs:label ?label .} '+ optPhase + bindPhase +' \
-                    }\
-                } \
-                UNION \
-                { '+ st +' \
-                    OPTIONAL { ?resource rdfs:label ?label .} '+ optPhase + bindPhase +' \
-                }\
-            } LIMIT ' + limit + ' OFFSET ' + offset + ' \
-            ';
-        }
+        this.query = `
+        SELECT DISTINCT ?resource ?title ?label WHERE {
+            ${gStart}
+                ${st}
+                OPTIONAL { ?resource rdfs:label ?label .} ${optPhase} ${bindPhase}
+            ${gEnd}
+
+        } LIMIT ${limit} OFFSET ${offset}
+        `;
         return this.prefixes + this.query;
     }
 }
