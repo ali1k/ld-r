@@ -80,7 +80,8 @@ export default {
             //for configuration manager
             'http://ld-r.org/configurations': {
                 'http://www.w3.org/2000/01/rdf-schema#label': {
-                    allowPropertyDelete: 0
+                    allowPropertyDelete: 0,
+                    label: ['Description']
                 },
                 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
                     isHidden: 0,
