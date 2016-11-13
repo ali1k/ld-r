@@ -24,6 +24,7 @@ export default {
                 allowPropertyDelete: 1,
                 allowResourceNew: 1,
                 allowPropertyNew: 1,
+                allowNewValue: 1,
                 resourceFocusType: ['https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#ReactorConfig', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#ServerConfig', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#FacetsConfig'],
                 datasetLabel: ['LD-R Configurations'],
                 resourceLabelProperty: ['http://www.w3.org/2000/01/rdf-schema#label']
@@ -81,7 +82,8 @@ export default {
             'http://ld-r.org/configurations': {
                 'http://www.w3.org/2000/01/rdf-schema#label': {
                     allowPropertyDelete: 0,
-                    label: ['Description']
+                    label: ['Description'],
+                    allowNewValue: 0
                 },
                 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
                     isHidden: 0,
@@ -99,7 +101,8 @@ export default {
                         {label: 'Dataset-Property', value: 'DP'},
                         {label: 'Resource-Property', value: 'RP'},
                         {label: 'Dataset-Resource-Property', value: 'DRP'},
-                    ]
+                    ],
+                    allowNewValue: 0
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#dataset': {
                     shortenURI: 0
@@ -138,14 +141,43 @@ export default {
                     objectIViewer:['ToggleView'],
                     objectIEditor:['ToggleEdit'],
                     onValue: ['1'],
-                    offValue: ['0']
+                    offValue: ['0'],
+                    allowNewValue: 0
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#useReasoning': {
                     label: ['Use Reasoning?'],
                     objectIViewer:['ToggleView'],
                     objectIEditor:['ToggleEdit'],
                     onValue: ['1'],
-                    offValue: ['0']
+                    offValue: ['0'],
+                    allowNewValue: 0
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#host': {
+                    allowNewValue: 0
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#port': {
+                    allowNewValue: 0
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#path': {
+                    allowNewValue: 0
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#graphName': {
+                    label: ['Graph Name'],
+                    hint: ['use "default" to consider all graph names'],
+                    allowNewValue: 0
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#endpointType': {
+                    label: ['Endpoint Type'],
+                    allowNewValue: 0,
+                    objectIEditor: ['BasicOptionInput'],
+                    objectIViewer: ['BasicOptionView'],
+                    allowUserDefinedValue: 1,
+                    options: [
+                        {label: 'ClioPatria', value: 'cliopatria'},
+                        {label: 'Virtuoso', value: 'virtuoso'},
+                        {label: 'Stardog', value: 'stardog'},
+                        {label: 'Sesame', value: 'sesame'}
+                    ]
                 }
             },
             //for user page
