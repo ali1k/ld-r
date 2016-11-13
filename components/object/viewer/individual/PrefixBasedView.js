@@ -21,13 +21,24 @@ class PrefixBasedView extends React.Component {
         }
     }
     preparePrefix(uri){
-        return this.makeShorten(uri, this.getPrefix(uri));
+        //case of propertyPath
+        let out = [];
+        let tmp = uri.split('->');
+        if(tmp.length > 1){
+            tmp.forEach((v)=>{
+
+                out.push(this.makeShorten(v, this.getPrefix(v)))
+            })
+            return out.join('->');
+        }else{
+            return this.makeShorten(uri, this.getPrefix(uri));
+        }
     }
     render() {
-        let outputDIV, shotened;
-        if(this.props.spec.valueType === 'uri'){
-            shotened = this.preparePrefix(this.props.spec.value);
-            outputDIV = <a href={this.props.spec.value} target="_blank"> {shotened} </a>;
+        let outputDIV, shortened;
+        if(this.props.spec.valueType === 'uri' || this.props.spec.value.indexOf('http://') !== -1){
+            shortened = this.preparePrefix(this.props.spec.value);
+            outputDIV = <a href={this.props.spec.value} target="_blank"> {shortened} </a>;
         }else{
             outputDIV = <span> {this.props.spec.value} </span>;
         }

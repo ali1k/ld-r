@@ -69,19 +69,49 @@ class PrefixBasedInput extends React.Component {
         }
     }
     preparePrefix(uri){
-        return this.makeShorten(uri, this.getPrefix(uri));
+        //case of propertyPath
+        let out = [];
+        let tmp = uri.split('->');
+        if(tmp.length > 1){
+            tmp.forEach((v)=>{
+                out.push(this.makeShorten(v, this.getPrefix(v)))
+            })
+            return out.join('->');
+        }else{
+            return this.makeShorten(uri, this.getPrefix(uri));
+        }
+    }
+    removePrefix(uri){
+        //case of propertyPath
+        let out = [];
+        let tmp = uri.split('->');
+        if(tmp.length > 1){
+            tmp.forEach((v)=>{
+                out.push(v.replace(v.split(':')[0] + ':', list[v.split(':')[0]]));
+            })
+            return out.join('->');
+        }else{
+            let tmp2 = value.split(':');
+            return v.replace(tmp2[0] + ':', list[tmp2[0]]);
+        }
     }
     applyPrefix(value) {
-        let tmp = value.split(':');
-        if (tmp.length && value.indexOf('http://') === -1) {
-            if (list[tmp[0]]) {
-                return value.replace(tmp[0] + ':', list[tmp[0]]);
+        let tmp = value.split('->');
+        if(tmp.length > 1){
+            return this.removePrefix(value);
+        }else{
+            let tmp2 = value.split(':');
+            if (tmp2.length && value.indexOf('http://') === -1) {
+                if (list[tmp2[0]]) {
+                    return value.replace(tmp2[0] + ':', list[tmp2[0]]);
+                } else {
+                    return value;
+                }
             } else {
                 return value;
             }
-        } else {
-            return value;
         }
+
     }
     handleChange(event) {
         this.props.onDataEdit(this.applyPrefix(event.target.value.trim()));
