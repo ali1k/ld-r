@@ -1,6 +1,7 @@
 import {enableDynamicReactorConfiguration, enableDynamicServerConfiguration, enableDynamicFacetsConfiguration, configDatasetURI, enableAutomaticConfiguration, authDatasetURI} from '../../configs/general';
 import {getStaticEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
 import rp from 'request-promise';
+const ldr_prefix = 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#';
 
 class DynamicConfigurator {
     getDynamicDatasets(callback) {
@@ -440,20 +441,22 @@ class DynamicConfigurator {
     parsePropertyConfigs(config, propertyURI, body) {
         let output = config;
         let parsed = JSON.parse(body);
+        let settingProp = '';
         parsed.results.bindings.forEach(function(el) {
+            settingProp = el.setting.value.replace(ldr_prefix, '').trim();
             if(el.scope.value === 'P'){
                 if(!output.property[propertyURI]){
                     output.property[propertyURI] = {};
                 }
                 //assume that all values will be stored in an array expect numbers: Not-a-Number
                 if(!isNaN(el.settingValue.value)){
-                    output.property[propertyURI][el.setting.value.split('#')[1]]= parseInt(el.settingValue.value);
+                    output.property[propertyURI][settingProp]= parseInt(el.settingValue.value);
                 }else{
-                    if(!output.property[propertyURI][el.setting.value.split('#')[1]]){
-                        output.property[propertyURI][el.setting.value.split('#')[1]] = []
+                    if(!output.property[propertyURI][settingProp]){
+                        output.property[propertyURI][settingProp] = []
                     }
-                    if(output.property[propertyURI][el.setting.value.split('#')[1]].indexOf() === -1) {
-                        output.property[propertyURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                    if(output.property[propertyURI][settingProp].indexOf() === -1) {
+                        output.property[propertyURI][settingProp].push(el.settingValue.value);
                     }
 
                 }
@@ -466,13 +469,13 @@ class DynamicConfigurator {
                 }
                 //assume that all values will be stored in an array expect numbers: Not-a-Number
                 if(!isNaN(el.settingValue.value)){
-                    output.dataset_property[el.dataset.value][propertyURI][el.setting.value.split('#')[1]] = parseInt(el.settingValue.value);
+                    output.dataset_property[el.dataset.value][propertyURI][settingProp] = parseInt(el.settingValue.value);
                 }else{
-                    if(!output.dataset_property[el.dataset.value][propertyURI][el.setting.value.split('#')[1]]){
-                        output.dataset_property[el.dataset.value][propertyURI][el.setting.value.split('#')[1]] = [];
+                    if(!output.dataset_property[el.dataset.value][propertyURI][settingProp]){
+                        output.dataset_property[el.dataset.value][propertyURI][settingProp] = [];
                     }
-                    if(output.dataset_property[el.dataset.value][propertyURI][el.setting.value.split('#')[1]].indexOf(el.settingValue.value) === -1){
-                        output.dataset_property[el.dataset.value][propertyURI][el.setting.value.split('#')[1]].push( el.settingValue.value);
+                    if(output.dataset_property[el.dataset.value][propertyURI][settingProp].indexOf(el.settingValue.value) === -1){
+                        output.dataset_property[el.dataset.value][propertyURI][settingProp].push( el.settingValue.value);
                     }
 
                 }
@@ -486,13 +489,13 @@ class DynamicConfigurator {
                 }
                 //assume that all values will be stored in an array expect numbers: Not-a-Number
                 if(!isNaN(el.settingValue.value)){
-                    output.resource_property[el.resource.value][propertyURI][el.setting.value.split('#')[1]] = parseInt( el.settingValue.value);
+                    output.resource_property[el.resource.value][propertyURI][settingProp] = parseInt( el.settingValue.value);
                 }else{
-                    if(!output.resource_property[el.resource.value][propertyURI][el.setting.value.split('#')[1]]){
-                        output.resource_property[el.resource.value][propertyURI][el.setting.value.split('#')[1]] = [];
+                    if(!output.resource_property[el.resource.value][propertyURI][settingProp]){
+                        output.resource_property[el.resource.value][propertyURI][settingProp] = [];
                     }
-                    if(output.resource_property[el.resource.value][propertyURI][el.setting.value.split('#')[1]].indexOf() === -1){
-                        output.resource_property[el.resource.value][propertyURI][el.setting.value.split('#')[1]].push( el.settingValue.value);
+                    if(output.resource_property[el.resource.value][propertyURI][settingProp].indexOf() === -1){
+                        output.resource_property[el.resource.value][propertyURI][settingProp].push( el.settingValue.value);
                     }
 
                 }
@@ -510,13 +513,13 @@ class DynamicConfigurator {
                 }
                 //assume that all values will be stored in an array expect numbers: Not-a-Number
                 if(!isNaN(el.settingValue.value)){
-                    output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][el.setting.value.split('#')[1]]= parseInt(el.settingValue.value);
+                    output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][settingProp]= parseInt(el.settingValue.value);
                 }else{
-                    if(!output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][el.setting.value.split('#')[1]]){
-                        output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][el.setting.value.split('#')[1]] = [];
+                    if(!output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][settingProp]){
+                        output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][settingProp] = [];
                     }
-                    if(output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][el.setting.value.split('#')[1]].indexOf() === -1){
-                        output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                    if(output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][settingProp].indexOf() === -1){
+                        output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][settingProp].push(el.settingValue.value);
                     }
 
                 }
@@ -528,19 +531,21 @@ class DynamicConfigurator {
     parseResourceConfigs(config, resourceURI, body) {
         let output = config;
         let parsed = JSON.parse(body);
+        let settingProp = '';
         parsed.results.bindings.forEach(function(el) {
+            settingProp = el.setting.value.replace(ldr_prefix, '').trim();
             if(el.scope.value === 'R'){
                 if(!output.resource[resourceURI]){
                     output.resource[resourceURI] = {};
                 }
                 //assume that all values will be stored in an array expect numbers: Not-a-Number
                 if(!isNaN(el.settingValue.value)){
-                    output.resource[resourceURI][el.setting.value.split('#')[1]]= parseInt(el.settingValue.value);
+                    output.resource[resourceURI][settingProp]= parseInt(el.settingValue.value);
                 }else{
-                    if(!output.resource[resourceURI][el.setting.value.split('#')[1]]){
-                        output.resource[resourceURI][el.setting.value.split('#')[1]] = []
+                    if(!output.resource[resourceURI][settingProp]){
+                        output.resource[resourceURI][settingProp] = []
                     }
-                    output.resource[resourceURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                    output.resource[resourceURI][settingProp].push(el.settingValue.value);
                 }
             } else if(el.scope.value === 'DR'){
                 if(!output.dataset_resource[el.dataset.value]){
@@ -551,13 +556,13 @@ class DynamicConfigurator {
                 }
                 //assume that all values will be stored in an array expect numbers: Not-a-Number
                 if(!isNaN(el.settingValue.value)){
-                    output.dataset_resource[el.dataset.value][resourceURI][el.setting.value.split('#')[1]] = parseInt(el.settingValue.value);
+                    output.dataset_resource[el.dataset.value][resourceURI][settingProp] = parseInt(el.settingValue.value);
                 }else{
-                    if(!output.dataset_resource[el.dataset.value][resourceURI][el.setting.value.split('#')[1]]){
-                        output.dataset_resource[el.dataset.value][resourceURI][el.setting.value.split('#')[1]] = [];
+                    if(!output.dataset_resource[el.dataset.value][resourceURI][settingProp]){
+                        output.dataset_resource[el.dataset.value][resourceURI][settingProp] = [];
                     }
-                    if(output.dataset_resource[el.dataset.value][resourceURI][el.setting.value.split('#')[1]].indexOf() === -1){
-                        output.dataset_resource[el.dataset.value][resourceURI][el.setting.value.split('#')[1]].push( el.settingValue.value);
+                    if(output.dataset_resource[el.dataset.value][resourceURI][settingProp].indexOf() === -1){
+                        output.dataset_resource[el.dataset.value][resourceURI][settingProp].push( el.settingValue.value);
                     }
 
                 }
@@ -569,20 +574,23 @@ class DynamicConfigurator {
     parseDatasetConfigs(config, datasetURI, body) {
         let output = config;
         let parsed = JSON.parse(body);
+        let settingProp = '';
         parsed.results.bindings.forEach(function(el) {
+            settingProp = '';
             if(el.scope.value === 'D'){
                 if(!output.dataset[datasetURI]){
                     output.dataset[datasetURI] = {};
                 }
+                settingProp = el.setting.value.replace(ldr_prefix, '').trim();
                 //assume that all values will be stored in an array expect numbers: Not-a-Number
                 if(!isNaN(el.settingValue.value)){
-                    output.dataset[datasetURI][el.setting.value.split('#')[1]]= parseInt(el.settingValue.value);
+                    output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value);
                 }else{
-                    if(!output.dataset[datasetURI][el.setting.value.split('#')[1]]){
-                        output.dataset[datasetURI][el.setting.value.split('#')[1]] = []
+                    if(!output.dataset[datasetURI][settingProp]){
+                        output.dataset[datasetURI][settingProp] = []
                     }
-                    if(output.dataset[datasetURI][el.setting.value.split('#')[1]].indexOf (el.settingValue.value) === -1){
-                        output.dataset[datasetURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                    if(output.dataset[datasetURI][settingProp].indexOf (el.settingValue.value) === -1){
+                        output.dataset[datasetURI][settingProp].push(el.settingValue.value);
                     }
 
                 }
@@ -593,6 +601,7 @@ class DynamicConfigurator {
     parseFacetsConfigs(config, datasetURI, body) {
         let output = config;
         let parsed = JSON.parse(body);
+        let settingProp = '';
         parsed.results.bindings.forEach(function(el) {
             if(!output.facets[datasetURI]){
                 output.facets[datasetURI] = {};
@@ -610,15 +619,16 @@ class DynamicConfigurator {
                 output.facets[datasetURI].config[el.configProperty.value] = {};
             }
             //assume that all values will be stored in an array expect numbers: Not-a-Number
+            settingProp = el.setting.value.replace(ldr_prefix, '').trim();
             if(!isNaN(el.settingValue.value)){
-                output.facets[datasetURI].config[el.configProperty.value][el.setting.value.split('#')[1]]= parseInt(el.settingValue.value);
+                output.facets[datasetURI].config[el.configProperty.value][settingProp]= parseInt(el.settingValue.value);
             }else{
-                if(!output.facets[datasetURI].config[el.configProperty.value][el.setting.value.split('#')[1]]){
-                    output.facets[datasetURI].config[el.configProperty.value][el.setting.value.split('#')[1]] = []
+                if(!output.facets[datasetURI].config[el.configProperty.value][settingProp]){
+                    output.facets[datasetURI].config[el.configProperty.value][settingProp] = []
                 }
                 //do not allow duplicate labels
-                if(output.facets[datasetURI].config[el.configProperty.value][el.setting.value.split('#')[1]].indexOf(el.settingValue.value) === -1){
-                    output.facets[datasetURI].config[el.configProperty.value][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                if(output.facets[datasetURI].config[el.configProperty.value][settingProp].indexOf(el.settingValue.value) === -1){
+                    output.facets[datasetURI].config[el.configProperty.value][settingProp].push(el.settingValue.value);
                 }
             }
 
@@ -628,6 +638,7 @@ class DynamicConfigurator {
     parseServerConfigs(config, datasetURI, body) {
         let output = config;
         let parsed = JSON.parse(body);
+        let settingProp = '';
         parsed.results.bindings.forEach(function(el) {
             if(!output.sparqlEndpoint[datasetURI]){
                 output.sparqlEndpoint[datasetURI] = {};
@@ -637,18 +648,18 @@ class DynamicConfigurator {
             output.sparqlEndpoint[datasetURI].path = el.path.value;
             output.sparqlEndpoint[datasetURI].endpointType = el.endpointType.value;
             //assume that all values will be stored in an array expect numbers: Not-a-Number
-
+            settingProp = el.setting.value.replace(ldr_prefix, '').trim();
             if(!isNaN(el.settingValue.value)){
-                output.sparqlEndpoint[datasetURI][el.setting.value.split('#')[1]]= parseInt(el.settingValue.value);
+                output.sparqlEndpoint[datasetURI][settingProp]= parseInt(el.settingValue.value);
             }else{
                 //exception for graphNameValue
-                if(el.setting.value.split('#')[1]==='graphName'){
-                    output.sparqlEndpoint[datasetURI][el.setting.value.split('#')[1]]= el.settingValue.value;
+                if(settingProp==='graphName'){
+                    output.sparqlEndpoint[datasetURI][settingProp]= el.settingValue.value;
                 }else{
-                    if(!output.sparqlEndpoint[datasetURI][el.setting.value.split('#')[1]]){
-                        output.sparqlEndpoint[datasetURI][el.setting.value.split('#')[1]] = []
+                    if(!output.sparqlEndpoint[datasetURI][settingProp]){
+                        output.sparqlEndpoint[datasetURI][settingProp] = []
                     }
-                    output.sparqlEndpoint[datasetURI][el.setting.value.split('#')[1]].push(el.settingValue.value);
+                    output.sparqlEndpoint[datasetURI][settingProp].push(el.settingValue.value);
                 }
 
             }
