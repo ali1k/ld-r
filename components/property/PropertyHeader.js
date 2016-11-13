@@ -1,15 +1,8 @@
-'use strict';
-var React = require('react');
+import React from 'react';
+import { Popup } from 'semantic-ui-react'
 
 class PropertyHeader extends React.Component {
     componentDidMount() {
-        let currentComp = this.refs.propertyHeader;
-        //enable hints
-        /*global $*/
-        $(currentComp).find('.hint')
-        .popup({
-          hoverable: true
-        });
     }
     render() {
         let outputDIV, hintDIV, titleDIV;
@@ -19,7 +12,7 @@ class PropertyHeader extends React.Component {
         }
         titleDIV = <a style={{color:'rgb(98, 91, 95)'}} href={this.props.spec.propertyURI} target="_blank"> {label} </a>;
         if(this.props.config && this.props.config.hint){
-            hintDIV = <a style={{color:'rgb(98, 91, 95)'}} className="hint" data-content={this.props.config.hint[0]}> <i className="item circle info icon link"></i> </a>;
+            hintDIV = <Popup trigger={<i className="item circle info icon link"></i>} content={this.props.config.hint[0]} wide positioning='right center' />;
         }
         switch(this.props.size){
             case '1':

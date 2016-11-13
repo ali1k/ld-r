@@ -33,7 +33,6 @@ class DefaultHTMLLayout extends React.Component {
                 {/* Above are added only to support IE browser */}
                 <script src="/jquery/dist/jquery.min.js"></script>
                 <script src="/semantic-ui/components/transition.min.js"></script>
-                <script src="/semantic-ui/components/popup.min.js"></script>
                 <script src="/semantic-ui/components/dropdown.min.js"></script>
                 <script src="/semantic-ui/components/checkbox.min.js"></script>
                 <script src="/semantic-ui/components/dimmer.min.js"></script>
