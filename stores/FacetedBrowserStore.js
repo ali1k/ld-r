@@ -46,9 +46,27 @@ class FacetedBrowserStore extends BaseStore {
         //overwrite by dynamic
         if(dynamicConfig.facets[datasetURI]){
             for(let p in dynamicConfig.facets[datasetURI]){
-                this.config[p] = dynamicConfig.facets[datasetURI][p];
+                if(!this.config[p]){
+                    this.config[p] = dynamicConfig.facets[datasetURI][p];
+                }else{
+                    if(p === 'list'){
+                        dynamicConfig.facets[datasetURI][p].forEach((el)=> {
+                            if(this.config[p].indexOf(el) === -1){
+                                this.config[p].push(el);
+                            }
+                        })
+                    }else if(p === 'config'){
+                        //console.log(dynamicConfig.facets[datasetURI][p]);
+                        for(let fc in dynamicConfig.facets[datasetURI][p]){
+                            this.config[p][fc] = dynamicConfig.facets[datasetURI][p][fc];
+                        }
+                    }
+
+                }
+
             }
         }
+
     }
     updateFacetResources(payload) {
         //for second level properties
