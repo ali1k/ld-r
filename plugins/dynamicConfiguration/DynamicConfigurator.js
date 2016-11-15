@@ -438,6 +438,52 @@ class DynamicConfigurator {
         }
 
     }
+    createASampleFacetsConfig(configURI, datasetURI, callback) {
+        //do not config if disabled
+        if(!enableDynamicReactorConfiguration){
+            callback(1);
+        }else{
+            const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
+            const graphName = endpointParameters.graphName;
+            const headers = {'Accept': 'application/sparql-results+json'};
+            const outputFormat = 'application/sparql-results+json';
+            //query the triple store for property configs
+            const prefixes = `
+                PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
+                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                PREFIX owl: <http://www.w3.org/2002/07/owl#>
+            `;
+            let graph = ' GRAPH <'+ graphName +'> {';
+            let graphEnd = ' }';
+            if(!graphName || graphName === 'default'){
+                graph ='';
+                graphEnd = '';
+            }
+            let rnc = Math.round(+new Date() / 1000);
+            const query = `
+            INSERT DATA { ${graph}
+                <${configURI}> a ldr:FacetsConfig ;
+                         ldr:dataset <${datasetURI}> ;
+                         rdfs:label "Facet Config ${rnc}" ;
+                         ldr:list rdf:type ;
+                         ldr:config <http://ld-r.org/fpc${rnc}> .
+            ${graphEnd} }
+            `;
+            //send request
+            //console.log(prefixes + query);
+            let self = this;
+            let HTTPQueryObject = getHTTPQuery('update', prefixes + query, endpointParameters, outputFormat);
+            rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                callback(1);
+            }).catch(function (err) {
+                console.log('Error in sample facet config creation update query:', prefixes + query);
+                console.log('---------------------------------------------------------');
+                callback(0);
+            });
+        }
+
+    }
     parsePropertyConfigs(config, propertyURI, body) {
         let output = config;
         let parsed = JSON.parse(body);

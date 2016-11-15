@@ -83,5 +83,10 @@ export default {
         dynamicConfigurator.prepareNewDatasetConfig(datasetURI, (res)=> {
             callback(res);
         });
+    },
+    createASampleFacetsConfig: function(configURI, datasetURI, callback) {
+        dynamicConfigurator.createASampleFacetsConfig(configURI, datasetURI, (res)=> {
+            callback(res);
+        });
     }
 }

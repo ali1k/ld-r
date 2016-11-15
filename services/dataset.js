@@ -1,6 +1,6 @@
 'use strict';
 import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
-import {getDynamicEndpointParameters, getDynamicDatasets, prepareNewDatasetConfig} from './utils/dynamicHelpers';
+import {getDynamicEndpointParameters, getDynamicDatasets, prepareNewDatasetConfig, createASampleFacetsConfig} from './utils/dynamicHelpers';
 import {enableAuthentication, authDatasetURI, configDatasetURI, defaultDatasetURI} from '../configs/general';
 import staticReactor from '../configs/reactor';
 import staticFacets from '../configs/facets';
@@ -149,6 +149,11 @@ export default {
             datasetURI = params.dataset;
             prepareNewDatasetConfig(datasetURI, (res)=>{
                 callback(null, {success: res});
+            });
+        }else if (resource === 'dataset.newFacetsConfig') {
+            let sresourceURI = configDatasetURI[0] + '/c' + Math.round(+new Date() / 1000);;
+            createASampleFacetsConfig(sresourceURI, params.dataset, (res)=>{
+                callback(null, {datasetURI: configDatasetURI[0], resourceURI: sresourceURI});
             });
         }
     }

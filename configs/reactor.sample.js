@@ -32,6 +32,7 @@ export default {
             //example reactor config
             'http://live.dbpedia.org/sparql': {
                 readOnly: 1,
+                allowInlineConfig: 1,
                 resourceFocusType: ['http://dbpedia.org/ontology/University'],
                 datasetLabel: ['DBpedia Universities']
             }

@@ -3,6 +3,7 @@ import Facet from './Facet';
 import {NavLink} from 'fluxible-router';
 import FacetedBrowserStore from '../stores/FacetedBrowserStore';
 import {connectToStores} from 'fluxible-addons-react';
+import createASampleFacetsConfig from '../actions/createASampleFacetsConfig';
 import loadFacets from '../actions/loadFacets';
 import ResourceList from './dataset/ResourceList';
 import ResourceListPager from './dataset/ResourceListPager';
@@ -14,6 +15,9 @@ class FacetedBrowser extends React.Component {
     }
     gotoPage(page) {
         this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: page, selection: { prevSelection: this.state.selection}});
+    }
+    createFConfig(datasetURI) {
+        this.context.executeAction(createASampleFacetsConfig, {dataset: datasetURI});
     }
     addCommas(n){
         let rx = /(\d+)(\d{3})/;
@@ -169,6 +173,7 @@ class FacetedBrowser extends React.Component {
     render() {
         let self = this;
         let showFactes = 0;
+        let configDiv = '';
         let properties = this. buildMasterFacet(this.props.FacetedBrowserStore.datasetURI);
         //console.log(self.props.FacetedBrowserStore.facets);
         //if no default graph is selected, show all the graph names
@@ -195,6 +200,9 @@ class FacetedBrowser extends React.Component {
             if(dcnf.datasetLabel){
                 datasetTitle = <a target="_blank" href={this.props.FacetedBrowserStore.datasetURI}> {dcnf.datasetLabel} </a>;
             }
+            if(dcnf.allowInlineConfig){
+                configDiv = <a onClick={this.createFConfig.bind(this, this.props.FacetedBrowserStore.datasetURI)} className="ui icon mini black circular button"><i className="ui settings icon"></i> </a>;
+            }
             if(this.props.FacetedBrowserStore.total){
                 resourceDIV = <div className="ui segment">
                                 <h3 className="ui header">
@@ -209,6 +217,7 @@ class FacetedBrowser extends React.Component {
                 <div className="ui page grid" ref="facetedBrowser">
                         <div className="ui stackable four wide column">
                             <Facet color="green" onCheck={this.handleOnCheck.bind(this, 1, 'uri', '')} key="master" maxHeight={500} minHeight={300} spec={{property: '', propertyURI: '', instances: properties}} config={{label: 'Properties'}} datasetURI={this.props.FacetedBrowserStore.datasetURI}/>
+                            {configDiv}
                         </div>
                         {facetsDIV}
                         <div className={'ui stackable ' + resSize + ' wide column'}>
