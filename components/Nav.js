@@ -19,7 +19,6 @@ class Nav extends React.Component {
         let configMenu = <a href={'/browse/' + encodeURIComponent(configDatasetURI)} className="ui item link" title="Configuration Manager">
             <i className="ui black settings icon"></i>
         </a>;
-
         if(enableAuthentication){
             if(user){
                 userMenu = <div className="ui right dropdown item">
@@ -37,18 +36,12 @@ class Nav extends React.Component {
         }
         return (
             <nav ref="defaultNavbar" className="ui blue menu inverted navbar page grid">
-                    <NavLink routeName="home" className="brand item" href='http://ld-r.org'>
+                    <NavLink routeName="home" className="brand item" href='/'>
                         {this.props.loading ? <img src="/assets/img/loader.gif" alt="loading..." style={{height: 30, width: 30}} /> : <img style={{height: 22, width: 22}} className="ui mini image" src="/assets/img/ld-reactor.gif" alt="ld-reactor" />}
                     </NavLink>
-                    <a className="item" href="http://ld-r.org/" data-section="home">LD-R</a>
-                    <a className="item" href="http://ld-r.org/docs/quickstart.html" data-section="quickstart">
-                      Quick Start
-                    </a>
-                    <NavLink routeName="datasets" className="item" href="/">Demo</NavLink>
+                    <NavLink routeName="about" className="item">About {appShortTitle} </NavLink>
+                    <NavLink routeName="datasets" className="item" href="/datasets"> Datasets</NavLink>
                     <div className="right menu">
-                        <a href="/public/js/stats.html" className="ui item link" target="_blank" title="components stat">
-                                <i className="lab icon"></i>
-                        </a>
                         <div className="item link" onClick={this.showHelpModal}>
                                 <i className="small help circle icon"></i>
                         </div>
