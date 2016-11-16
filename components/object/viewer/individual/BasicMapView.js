@@ -5,7 +5,7 @@ class BasicMapView extends React.Component {
     render() {
         let val, outputDIV, coordinates;
         val = this.props.spec.value;
-        let zoomLevel = 16;
+        let zoomLevel = 14;
         if(this.props.config && this.props.config.zoomLevel){
             zoomLevel = this.props.config.zoomLevel;
         }

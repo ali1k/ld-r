@@ -1,37 +1,29 @@
 import React from 'react';
-import {GoogleMap, Marker} from "react-google-maps";
+import {GoogleMap, Marker} from 'react-google-maps';
 class GoogleMapView extends React.Component {
-      constructor (...args) {
+    constructor(...args) {
         super(...args);
         this.state = {
-          markers: this.props.markers
+            markers: this.props.markers
         };
-      }
-      toMarker (marker, index) {
+    }
+    toMarker(marker, index) {
+        return (<Marker position={marker.position} key={marker.key}/>);
+    }
+    render() {
         return (
-          <Marker
-            position={marker.position}
-            key={marker.key} />
+            <GoogleMap containerProps={{
+                style: {
+                    minHeight: 200,
+                    minWidth:200
+                }
+            }} ref='map' googleMapsApi={'undefined' !== typeof google
+                ? google.maps
+                : null} zoom={this.props.zoomLevel} center={this.props.center}>
+                {this.state.markers.map(this.toMarker, this)}
+            </GoogleMap>
         );
-      }
-      render () {
-        return (
-          <GoogleMap containerProps={{
-              style: {
-                  minHeight: "200px",
-                  minWidth: "200px"
-              },
-            }}
-            ref="map"
-            googleMapsApi={
-              "undefined" !== typeof google ? google.maps : null
-            }
-            zoom={this.props.zoomLevel}
-            center={this.props.center} >
-            {this.state.markers.map(this.toMarker, this)}
-          </GoogleMap>
-        );
-      }
+    }
 }
 
 export default GoogleMapView;
