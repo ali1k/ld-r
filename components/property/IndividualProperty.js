@@ -64,7 +64,7 @@ class IndividualProperty extends React.Component {
             <div ref='individualProperty'>
                 <div className="ui horizontal list">
                     <div className="item">
-                        <PropertyHeader spec={this.props.spec} config={this.props.config} size="3" />
+                        <PropertyHeader spec={this.props.spec} config={this.props.config} size="3" datasetURI={this.props.datasetURI} resourceURI={this.props.resource} propertyURI={this.props.property}/>
                     </div>
                 </div>
                 <div className="ui dividing header"></div>
