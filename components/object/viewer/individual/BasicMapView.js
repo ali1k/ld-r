@@ -17,7 +17,7 @@ class BasicMapView extends React.Component {
             outputDIV = <span> {val} </span>;
         }
         return (
-            <div className="ui" ref="basicIndividualView">
+            <div className="ui" ref="basicMapView">
                 {outputDIV}
             </div>
         );
