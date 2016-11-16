@@ -1,6 +1,6 @@
 import React from 'react';
 import {connectToStores} from 'fluxible-addons-react';
-import GoogleMapView from './GoogleMapView';
+import GoogleMapView from '../common/GoogleMapView';
 import BasicAggregateView from './BasicAggregateView';
 import DBpediaGMapStore from '../../../../stores/DBpediaGMapStore';
 import getCoordinates from '../../../../actions/getCoordinates';
