@@ -1,6 +1,13 @@
 'use strict';
 import async from 'async';
 import Configurator from './Configurator';
+function compareProps(a,b) {
+    if (a.property < b.property)
+        return -1;
+    if (a.property > b.property)
+            return 1;
+    return 0;
+}
 class ResourceUtil {
     getPropertyLabel(uri) {
         var property = '';
@@ -121,6 +128,8 @@ class ResourceUtil {
                         instances: el.instances
                     });
                 });
+                //sort final output in a consistent way
+                finalOutput.sort(compareProps);
                 //make the right title for resource if propertyLabel is defined in config
                 let newTitel = title;
                 if (rconfig && rconfig.resourceLabelProperty && rconfig.resourceLabelProperty.length) {
