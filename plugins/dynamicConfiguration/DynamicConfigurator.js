@@ -244,12 +244,16 @@ class DynamicConfigurator {
         }
 
     }
-    createASampleReactorConfig(scope, datasetURI, resourceURI, propertyURI, options, callback) {
+    createASampleReactorConfig(user, scope, datasetURI, resourceURI, propertyURI, options, callback) {
         let exceptions = [configDatasetURI[0], authDatasetURI[0]];
         //do not config if disabled or exceptions
         if(!enableDynamicReactorConfiguration || exceptions.indexOf(datasetURI) !== -1){
             callback(0);
         }else{
+            let userSt = '';
+            if(user && user.accountName !== 'open'){
+                userSt=` ldr:createdBy <${user.id}> ;`;
+            }
             //start config
             const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
             const graphName = endpointParameters.graphName;
@@ -261,7 +265,6 @@ class DynamicConfigurator {
                 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
-                PREFIX dcterms: <http://purl.org/dc/terms/>
             `;
             let graph = ' GRAPH <'+ graphName +'> {';
             let graphEnd = ' }';
@@ -330,7 +333,8 @@ class DynamicConfigurator {
             INSERT DATA { ${graph}
                 <${rnc}> a ldr:ReactorConfig ;
                          ${st}
-                         dcterms:created "${currentDate}"^^xsd:dateTime;
+                         ldr:createdOn "${currentDate}"^^xsd:dateTime;
+                         ${userSt}
                          ldr:scope "${scope}" .
             ${graphEnd} }
             `;
@@ -485,11 +489,15 @@ class DynamicConfigurator {
         }
 
     }
-    createASampleFacetsConfig(configURI, datasetURI, callback) {
+    createASampleFacetsConfig(user, configURI, datasetURI, callback) {
         //do not config if disabled
         if(!enableDynamicReactorConfiguration){
             callback(1);
         }else{
+            let userSt = '';
+            if(user && user.accountName !== 'open'){
+                userSt=` ldr:createdBy <${user.id}> ;`;
+            }
             const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
             const graphName = endpointParameters.graphName;
             const headers = {'Accept': 'application/sparql-results+json'};
@@ -500,7 +508,6 @@ class DynamicConfigurator {
                 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
-                PREFIX dcterms: <http://purl.org/dc/terms/>
             `;
             let graph = ' GRAPH <'+ graphName +'> {';
             let graphEnd = ' }';
@@ -517,7 +524,8 @@ class DynamicConfigurator {
                          ldr:dataset <${datasetURI}> ;
                          rdfs:label "Facet Config ${rnc}" ;
                          ldr:list rdf:type ;
-                         dcterms:created "${currentDate}"^^xsd:dateTime;
+                         ldr:createdOn "${currentDate}"^^xsd:dateTime;
+                         ${userSt}
                          ldr:config <http://ld-r.org/fpc${rnc}> .
             ${graphEnd} }
             `;

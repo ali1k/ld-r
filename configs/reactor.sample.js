@@ -67,6 +67,18 @@ export default {
                 allowPropertyDelete: 0,
                 objectIViewer: ['PrefixBasedView'],
                 objectIEditor: ['PrefixBasedInput']
+            },
+            'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy' : {
+                isHidden: 0,
+                allowNewValue: 0,
+                allowPropertyDelete: 0,
+                readOnly: 1,
+            },
+            'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdOn' : {
+                isHidden: 0,
+                allowNewValue: 0,
+                allowPropertyDelete: 0,
+                readOnly: 1,
             }
         },
         //---------depth 2------------
@@ -89,12 +101,6 @@ export default {
                 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
                     isHidden: 0,
                     shortenURI: 0
-                },
-                'http://purl.org/dc/terms/created' : {
-                    isHidden: 0,
-                    allowNewValue: 0,
-                    allowPropertyDelete: 0,
-                    readOnly: 1,
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#scope': {
                     hint: ['Determines the type of scope in LD-R'],

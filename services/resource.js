@@ -270,55 +270,21 @@ export default {
             }
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.cloneResource(endpointParameters, graphName, params.resourceURI, newResourceURI);
-                async.parallel([
-                    (cback) => {
-                        //send request
-                        HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
-                        rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
-                            if(enableLogs){
-                                log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
-                            }
-                            cback();
-                        }).catch(function (err) {
-                            console.log(err);
-                            if(enableLogs){
-                                log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
-                            }
-                            cback();
-                        });
-                    },
-                    (cback) => {
-                        //we should add this resource into user's profile too
-                        if(enableAuthentication){
-                            let query2 = queryObject.getPrefixes() + queryObject.addTriple(endpointParameters, prepareDG(authDatasetURI[0]).g, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', newResourceURI, 'uri', '');
-                            //send request
-                            HTTPQueryObject = getHTTPQuery('update', query2, endpointParameters, outputFormat);
-                            rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
-                                if(enableLogs){
-                                    log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
-                                }
-                                cback();
-                            }).catch(function (err) {
-                                console.log(err);
-                                if(enableLogs){
-                                    log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
-                                }
-                                cback();
-                            });
-                        }else{
-                            cback();
-                        }
+                query = queryObject.getPrefixes() + queryObject.cloneResource(endpointParameters, user, graphName, params.resourceURI, newResourceURI);
+                HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
+                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                    if(enableLogs){
+                        log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                     }
-                ],
-                // final callback
-                (err, results) => {
-                    if (err){
-                        callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
-                        return;
+                    callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
+                }).catch(function (err) {
+                    console.log(err);
+                    if(enableLogs){
+                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
                     callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
                 });
+
             });
         } else if (resource === 'resource.property') {
             datasetURI = params.dataset;
@@ -374,56 +340,17 @@ export default {
             }
             getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.newResource(endpointParameters, graphName, newResourceURI);
-                async.parallel([
-                    (cback) => {
-                        //send request
-                        HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
-                        rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
-                            if(enableLogs){
-                                log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
-                            }
-                            cback();
-                        }).catch(function (err) {
-                            console.log(err);
-                            if(enableLogs){
-                                log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
-                            }
-                            cback();
-                        });
-                    },
-                    (cback) => {
-                        //we should add this resource into user's profile too
-                        if(enableAuthentication){
-                            let query2 = queryObject.getPrefixes() + queryObject.addTriple(endpointParameters, prepareDG(authDatasetURI[0]).g, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', newResourceURI, 'uri', '');
-                            if(params.isNewDataset){
-                                //when a new dataset is created
-                                query2 = query2 + ' ; ' + queryObject.addTriple(endpointParameters, prepareDG(authDatasetURI[0]).g, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfDataset', datasetURI, 'uri', '');
-                            }
-                            //send request
-                            HTTPQueryObject = getHTTPQuery('update', query2, endpointParameters, outputFormat);
-                            rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
-                                if(enableLogs){
-                                    log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
-                                }
-                                cback();
-                            }).catch(function (err) {
-                                console.log(err);
-                                if(enableLogs){
-                                    log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
-                                }
-                                cback();
-                            });
-                        }else{
-                            cback();
-                        }
+                query = queryObject.getPrefixes() + queryObject.newResource(endpointParameters, user, graphName, newResourceURI);
+                HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
+                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                    if(enableLogs){
+                        log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                     }
-                ],
-                // final callback
-                (err, results) => {
-                    if (err){
-                        callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
-                        return;
+                    callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
+                }).catch(function (err) {
+                    console.log(err);
+                    if(enableLogs){
+                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
                     callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
                 });
@@ -431,12 +358,12 @@ export default {
 
         } else if (resource === 'resource.newReactorConfig') {
             datasetURI = params.dataset;
-            createASampleReactorConfig(params.scope, datasetURI, params.resourceURI, params.propertyURI, params.options, (res)=>{
+            createASampleReactorConfig(req.user, params.scope, datasetURI, params.resourceURI, params.propertyURI, params.options, (res)=>{
                 callback(null, {datasetURI: configDatasetURI[0], resourceURI: res, redirect: params.redirect});
             });
         }else if (resource === 'resource.newFacetsConfig') {
             let sresourceURI = configDatasetURI[0] + '/c' + Math.round(+new Date() / 1000);;
-            createASampleFacetsConfig(sresourceURI, params.dataset, (res)=>{
+            createASampleFacetsConfig(req.user, sresourceURI, params.dataset, (res)=>{
                 callback(null, {datasetURI: configDatasetURI[0], resourceURI: sresourceURI, redirect: params.redirect});
             });
         }

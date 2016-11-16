@@ -39,13 +39,22 @@ class ResourceQuery{
         `;
         return this.query;
     }
-    cloneResource(endpointParameters, graphName, resourceURI, newResourceURI) {
+    cloneResource(endpointParameters, user, graphName, resourceURI, newResourceURI) {
         //todo: consider different value types
         let {gStart, gEnd} = this.prepareGraphName(graphName);
+        let userSt = '';
+        if(user && user.accountName !== 'open'){
+            userSt=` ldr:createdBy <${user.id}> ;`;
+        }
+        let date = new Date();
+        let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
         this.query = `
         INSERT {
             ${gStart}
-                <${newResourceURI}> ?p ?o ; ldr:cloneOf <${resourceURI}> .
+                <${newResourceURI}> ?p ?o ;
+                ldr:createdOn "${currentDate}"^^xsd:dateTime;
+                ${userSt}
+                ldr:cloneOf <${resourceURI}> .
             ${gEnd}
         } WHERE {
             ${gStart}
@@ -56,13 +65,22 @@ class ResourceQuery{
         `;
         return this.query;
     }
-    newResource(endpointParameters, graphName, newResourceURI) {
+    newResource(endpointParameters, user, graphName, newResourceURI) {
         //todo: consider different value types
         let {gStart, gEnd} = this.prepareGraphName(graphName);
+        let userSt = '';
+        if(user && user.accountName !== 'open'){
+            userSt=` ldr:createdBy <${user.id}> ;`;
+        }
+        let date = new Date();
+        let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
         this.query = `
         INSERT DATA {
             ${gStart}
-                <${newResourceURI}> a ldr:Resource ; rdfs:label "New Resource" .
+                <${newResourceURI}> a ldr:Resource ;
+                ldr:createdOn "${currentDate}"^^xsd:dateTime;
+                ${userSt}
+                rdfs:label "New Resource" .
             ${gEnd}
         }
         `;

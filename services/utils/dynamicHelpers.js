@@ -79,13 +79,13 @@ export default {
             callback(dynamicReactorDS, dynamicFacetsDS);
         });
     },
-    createASampleReactorConfig: function(scope, datasetURI, resourceURI, propertyURI, options, callback) {
-        dynamicConfigurator.createASampleReactorConfig(scope, datasetURI, resourceURI, propertyURI, options, (res)=> {
+    createASampleReactorConfig: function(user, scope, datasetURI, resourceURI, propertyURI, options, callback) {
+        dynamicConfigurator.createASampleReactorConfig(user, scope, datasetURI, resourceURI, propertyURI, options, (res)=> {
             callback(res);
         });
     },
-    createASampleFacetsConfig: function(configURI, datasetURI, callback) {
-        dynamicConfigurator.createASampleFacetsConfig(configURI, datasetURI, (res)=> {
+    createASampleFacetsConfig: function(user, configURI, datasetURI, callback) {
+        dynamicConfigurator.createASampleFacetsConfig(user, configURI, datasetURI, (res)=> {
             callback(res);
         });
     }
