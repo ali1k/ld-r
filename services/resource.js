@@ -1,7 +1,7 @@
 'use strict';
 import {getHTTPQuery, getHTTPGetURL, prepareDG} from './utils/helpers';
-import {getDynamicEndpointParameters} from './utils/dynamicHelpers';
-import {enableLogs, enableAuthentication, authDatasetURI} from '../configs/general';
+import {getDynamicEndpointParameters, createASampleReactorConfig, createASampleFacetsConfig} from './utils/dynamicHelpers';
+import {enableLogs, enableAuthentication, authDatasetURI, configDatasetURI} from '../configs/general';
 import ResourceQuery from './sparql/ResourceQuery';
 import ResourceUtil from './utils/ResourceUtil';
 import rp from 'request-promise';
@@ -429,7 +429,18 @@ export default {
                 });
             });
 
+        } else if (resource === 'resource.newReactorConfig') {
+            datasetURI = params.dataset;
+            createASampleReactorConfig(params.scope, datasetURI, params.resourceURI, params.propertyURI, params.options, (res)=>{
+                callback(null, {datasetURI: configDatasetURI[0], resourceURI: res, redirect: params.redirect});
+            });
+        }else if (resource === 'resource.newFacetsConfig') {
+            let sresourceURI = configDatasetURI[0] + '/c' + Math.round(+new Date() / 1000);;
+            createASampleFacetsConfig(sresourceURI, params.dataset, (res)=>{
+                callback(null, {datasetURI: configDatasetURI[0], resourceURI: sresourceURI, redirect: params.redirect});
+            });
         }
+
     },
     update: (req, resource, params, body, config, callback) => {
         if (resource === 'resource.individualObject') {

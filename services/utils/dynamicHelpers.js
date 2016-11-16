@@ -79,8 +79,8 @@ export default {
             callback(dynamicReactorDS, dynamicFacetsDS);
         });
     },
-    prepareNewDatasetConfig: function(datasetURI, callback) {
-        dynamicConfigurator.prepareNewDatasetConfig(datasetURI, (res)=> {
+    createASampleReactorConfig: function(scope, datasetURI, resourceURI, propertyURI, options, callback) {
+        dynamicConfigurator.createASampleReactorConfig(scope, datasetURI, resourceURI, propertyURI, options, (res)=> {
             callback(res);
         });
     },

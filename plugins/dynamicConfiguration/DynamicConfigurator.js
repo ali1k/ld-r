@@ -244,7 +244,7 @@ class DynamicConfigurator {
         }
 
     }
-    prepareNewDatasetConfig(datasetURI, callback) {
+    createASampleReactorConfig(scope, datasetURI, resourceURI, propertyURI, options, callback) {
         let exceptions = [configDatasetURI[0], authDatasetURI[0]];
         //do not config if disabled or exceptions
         if(!enableDynamicReactorConfiguration || exceptions.indexOf(datasetURI) !== -1){
@@ -261,6 +261,7 @@ class DynamicConfigurator {
                 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
+                PREFIX dcterms: <http://purl.org/dc/terms/>
             `;
             let graph = ' GRAPH <'+ graphName +'> {';
             let graphEnd = ' }';
@@ -273,18 +274,64 @@ class DynamicConfigurator {
             if(configDatasetURI[0].slice(-1) === '/'){
                 rnc = configDatasetURI[0] + 'rcf' + Math.round(+new Date() / 1000);
             }
+            let date = new Date();
+            let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
+            let st = '';
+            if(scope === 'D'){
+                if(options && options.fromScratch){
+                    st= `
+                    ldr:dataset <${datasetURI}> ;
+                    ldr:datasetLabel "${datasetURI}" ;
+                    ldr:readOnly "0" ;
+                    ldr:allowResourceClone "1" ;
+                    ldr:allowPropertyDelete "1" ;
+                    ldr:allowResourceNew "1" ;
+                    ldr:allowPropertyNew "1" ;
+                    ldr:maxNumberOfResourcesOnPage "20" ;
+                    `;
+                }else {
+                    st= `
+                    ldr:dataset <${datasetURI}> ;
+                    ldr:datasetLabel "${datasetURI}" ;
+                    ldr:maxNumberOfResourcesOnPage "20" ;
+                    `;
+                }
+            }else if(scope === 'R'){
+                st= `
+                ldr:resource <${resourceURI}> ;
+                `;
+            }else if(scope === 'P'){
+                st= `
+                ldr:property <${propertyURI}> ;
+                `;
+            }else if(scope === 'DR'){
+                st= `
+                ldr:dataset <${datasetURI}> ;
+                ldr:resource <${resourceURI}> ;
+                `;
+            }else if(scope === 'DP'){
+                st= `
+                ldr:dataset <${datasetURI}> ;
+                ldr:property <${propertyURI}> ;
+                `;
+            }else if(scope === 'RP'){
+                st= `
+                ldr:resource <${resourceURI}> ;
+                ldr:property <${propertyURI}> ;
+                `;
+            }else if(scope === 'DRP'){
+                st= `
+                ldr:dataset <${datasetURI}> ;
+                ldr:resource <${resourceURI}> ;
+                ldr:property <${propertyURI}> ;
+                `;
+            }
             const query = `
             INSERT DATA { ${graph}
                 <${rnc}> a ldr:ReactorConfig ;
-                         ldr:dataset <${datasetURI}> ;
-                         ldr:scope "D" ;
-                         ldr:datasetLabel "${datasetURI}" ;
-                         ldr:readOnly "0" ;
-                         ldr:allowResourceClone "1" ;
-                         ldr:allowPropertyDelete "1" ;
-                         ldr:allowResourceNew "1" ;
-                         ldr:allowPropertyNew "1" ;
-                         ldr:maxNumberOfResourcesOnPage "20" .
+                         ${st}
+                         dcterms:created "${currentDate}"^^xsd:dateTime;
+                         ldr:scope "${scope}" .
             ${graphEnd} }
             `;
             //send request
@@ -292,7 +339,7 @@ class DynamicConfigurator {
             let self = this;
             let HTTPQueryObject = getHTTPQuery('update', prefixes + query, endpointParameters, outputFormat);
             rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
-                callback(1);
+                callback(rnc);
             }).catch(function (err) {
                 console.log('Error in dataset config creation update query:', prefixes + query);
                 console.log('---------------------------------------------------------');
@@ -453,6 +500,7 @@ class DynamicConfigurator {
                 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
                 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
                 PREFIX owl: <http://www.w3.org/2002/07/owl#>
+                PREFIX dcterms: <http://purl.org/dc/terms/>
             `;
             let graph = ' GRAPH <'+ graphName +'> {';
             let graphEnd = ' }';
@@ -460,6 +508,8 @@ class DynamicConfigurator {
                 graph ='';
                 graphEnd = '';
             }
+            let date = new Date();
+            let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
             let rnc = Math.round(+new Date() / 1000);
             const query = `
             INSERT DATA { ${graph}
@@ -467,6 +517,7 @@ class DynamicConfigurator {
                          ldr:dataset <${datasetURI}> ;
                          rdfs:label "Facet Config ${rnc}" ;
                          ldr:list rdf:type ;
+                         dcterms:created "${currentDate}"^^xsd:dateTime;
                          ldr:config <http://ld-r.org/fpc${rnc}> .
             ${graphEnd} }
             `;

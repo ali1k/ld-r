@@ -90,6 +90,12 @@ export default {
                     isHidden: 0,
                     shortenURI: 0
                 },
+                'http://purl.org/dc/terms/created' : {
+                    isHidden: 0,
+                    allowNewValue: 0,
+                    allowPropertyDelete: 0,
+                    readOnly: 1,
+                },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#scope': {
                     hint: ['Determines the type of scope in LD-R'],
                     objectIEditor: ['BasicOptionInput'],

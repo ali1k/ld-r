@@ -17,7 +17,7 @@ class FacetedBrowser extends React.Component {
         this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: page, selection: { prevSelection: this.state.selection}});
     }
     createFConfig(datasetURI) {
-        this.context.executeAction(createASampleFacetsConfig, {dataset: datasetURI});
+        this.context.executeAction(createASampleFacetsConfig, {dataset: datasetURI, redirect: 1});
     }
     addCommas(n){
         let rx = /(\d+)(\d{3})/;
