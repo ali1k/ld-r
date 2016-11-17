@@ -2,14 +2,18 @@ import {enableDynamicReactorConfiguration, enableDynamicServerConfiguration, ena
 import {getStaticEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
 import rp from 'request-promise';
 const ldr_prefix = 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#';
-
+//todo: allow isSuperUser to access all configs
 class DynamicConfigurator {
-    getDynamicDatasets(callback) {
+    getDynamicDatasets(user, callback) {
         let dynamicReactorDS  = {dataset:{}};
         let dynamicFacetsDS = {facets:{}};
         if(!enableDynamicReactorConfiguration && !enableDynamicFacetsConfiguration){
             callback(dynamicReactorDS, dynamicFacetsDS);
         }else{
+            let userSt = '';
+            if(user && user.accountName !== 'open'){
+                userSt=` ldr:createdBy <${user.id}> ;`;
+            }
             const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
             const graphName = endpointParameters.graphName;
             const headers = {'Accept': 'application/sparql-results+json'};
@@ -29,46 +33,137 @@ class DynamicConfigurator {
             }
             let query = '';
             if(enableDynamicReactorConfiguration){
-                query = `
-                SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?resourceFocusType WHERE {
-                    ${graph}
-                        ?config1 a ldr:ReactorConfig ;
-                                ldr:dataset ?dataset .
-                                OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
-                                OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
-                                OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
-                    ${graphEnd}
+                if(userSt){
+                    query = `
+                    SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?resourceFocusType WHERE {
+                        ${graph}
+                            {
+                            ?config1 a ldr:ReactorConfig ;
+                                    ${userSt}
+                                    ldr:dataset ?dataset .
+                                    OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
+                                    OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
+                                    OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                            }
+                            UNION
+                            {
+                            ?config1 a ldr:ReactorConfig ;
+                                    ldr:dataset ?dataset .
+                                    OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
+                                    OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
+                                    OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                                    filter not exists {
+                                        ?config1 ldr:createdBy ?user.
+                                    }
+                            }
+                        ${graphEnd}
+                    }
+                    `;
+                }else{
+                    query = `
+                    SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?resourceFocusType WHERE {
+                        ${graph}
+                            ?config1 a ldr:ReactorConfig ;
+                                    ldr:dataset ?dataset .
+                                    OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
+                                    OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
+                                    OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                        ${graphEnd}
+                    }
+                    `;
                 }
-                `;
             }
             if(enableDynamicFacetsConfiguration){
-                query = `
-                SELECT DISTINCT ?config2 ?dataset WHERE {
-                    ${graph}
-                        ?config2 a ldr:FacetsConfig ;
-                                ldr:dataset ?dataset .
-                    ${graphEnd}
-                }
-                `;
-            }
-            if(enableDynamicReactorConfiguration && enableDynamicFacetsConfiguration){
-                query = `
-                SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?resourceFocusType WHERE { ${graph}
+                if(userSt){
+                    query = `
+                    SELECT DISTINCT ?config2 ?dataset WHERE {
+                        ${graph}
                         {
-                        ?config1 a ldr:ReactorConfig ;
+                            ?config2 a ldr:FacetsConfig ;
+                                ${userSt}
                                 ldr:dataset ?dataset .
-                                OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
-                                OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
-                                OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
                         }
                         UNION
                         {
-                        ?config2 a ldr:FacetsConfig ;
+                            ?config2 a ldr:FacetsConfig ;
                                 ldr:dataset ?dataset .
+                            filter not exists {
+                                ?config2 ldr:createdBy ?user.
+                            }
                         }
-                ${graphEnd}
+                        ${graphEnd}
+                    }
+                    `;
+                }else{
+                    query = `
+                    SELECT DISTINCT ?config2 ?dataset WHERE {
+                        ${graph}
+                            ?config2 a ldr:FacetsConfig ;
+                                    ldr:dataset ?dataset .
+                        ${graphEnd}
+                    }
+                    `;
                 }
-                `;
+            }
+            if(enableDynamicReactorConfiguration && enableDynamicFacetsConfiguration){
+                if(userSt){
+                    query = `
+                    SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?resourceFocusType WHERE { ${graph}
+                            {
+                            ?config1 a ldr:ReactorConfig ;
+                                    ${userSt}
+                                    ldr:dataset ?dataset .
+                                    OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
+                                    OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
+                                    OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                            }
+                            UNION
+                            {
+                            ?config2 a ldr:FacetsConfig ;
+                                    ${userSt}
+                                    ldr:dataset ?dataset .
+                            }
+                            UNION
+                            {
+                            ?config1 a ldr:ReactorConfig ;
+                                    ldr:dataset ?dataset .
+                                    OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
+                                    OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
+                                    OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                                    filter not exists {
+                                        ?config1 ldr:createdBy ?user.
+                                    }
+                            }
+                            UNION
+                            {
+                            ?config2 a ldr:FacetsConfig ;
+                                    ldr:dataset ?dataset .
+                                filter not exists {
+                                    ?config2 ldr:createdBy ?user.
+                                }
+                            }
+                    ${graphEnd}
+                    }
+                    `;
+                }else{
+                    query = `
+                    SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?resourceFocusType WHERE { ${graph}
+                            {
+                            ?config1 a ldr:ReactorConfig ;
+                                    ldr:dataset ?dataset .
+                                    OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
+                                    OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
+                                    OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                            }
+                            UNION
+                            {
+                            ?config2 a ldr:FacetsConfig ;
+                                    ldr:dataset ?dataset .
+                            }
+                    ${graphEnd}
+                    }
+                    `;
+                }
             }
             //send request
             let self = this;
@@ -83,7 +178,7 @@ class DynamicConfigurator {
         }
 
     }
-    prepareDynamicServerConfig(datasetURI, callback) {
+    prepareDynamicServerConfig(user, datasetURI, callback) {
         let config = {sparqlEndpoint: {}};
         //the following graphs shold be only locally reachable
         let exceptions = [configDatasetURI[0], authDatasetURI[0]];
@@ -91,6 +186,10 @@ class DynamicConfigurator {
         if(!enableDynamicServerConfiguration || exceptions.indexOf(datasetURI) !== -1){
             callback(config);
         }else{
+            let userSt = '';
+            if(user && user.accountName !== 'open'){
+                userSt=` ldr:createdBy <${user.id}> ;`;
+            }
             //start config
             const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
             const graphName = endpointParameters.graphName;
@@ -109,21 +208,58 @@ class DynamicConfigurator {
                 graph ='';
                 graphEnd = '';
             }
-            const query = `
-            SELECT DISTINCT ?config ?label ?host ?port ?path ?endpointType ?setting ?settingValue WHERE {
-                ${graph}
-                    ?config a ldr:ServerConfig ;
-                            ldr:dataset <${datasetURI}> ;
-                            ldr:host ?host ;
-                            ldr:port ?port ;
-                            ldr:path ?path ;
-                            ldr:endpointType ?endpointType ;
-                            ?setting ?settingValue .
-                            OPTIONAL { ?config rdfs:label ?resource . }
-                            FILTER (?setting !=rdf:type && ?setting !=ldr:dataset && ?setting !=ldr:host && ?setting !=ldr:port && ?setting !=ldr:path && ?setting !=ldr:endpointType)
-                ${graphEnd}
+            let query;
+            if(userSt){
+                query = `
+                SELECT DISTINCT ?config ?label ?host ?port ?path ?endpointType ?setting ?settingValue WHERE {
+                    ${graph}
+                    {
+                        ?config a ldr:ServerConfig ;
+                                ${userSt}
+                                ldr:dataset <${datasetURI}> ;
+                                ldr:host ?host ;
+                                ldr:port ?port ;
+                                ldr:path ?path ;
+                                ldr:endpointType ?endpointType ;
+                                ?setting ?settingValue .
+                                OPTIONAL { ?config rdfs:label ?resource . }
+                                FILTER (?setting !=rdf:type && ?setting !=ldr:dataset && ?setting !=ldr:host && ?setting !=ldr:port && ?setting !=ldr:path && ?setting !=ldr:endpointType)
+                    }
+                    UNION
+                    {
+                        ?config a ldr:ServerConfig ;
+                                ldr:dataset <${datasetURI}> ;
+                                ldr:host ?host ;
+                                ldr:port ?port ;
+                                ldr:path ?path ;
+                                ldr:endpointType ?endpointType ;
+                                ?setting ?settingValue .
+                                OPTIONAL { ?config rdfs:label ?resource . }
+                                FILTER (?setting !=rdf:type && ?setting !=ldr:dataset && ?setting !=ldr:host && ?setting !=ldr:port && ?setting !=ldr:path && ?setting !=ldr:endpointType)
+                                filter not exists {
+                                    ?config ldr:createdBy ?user.
+                                }
+                    }
+                    ${graphEnd}
+                }
+                `;
+            }else{
+                query = `
+                SELECT DISTINCT ?config ?label ?host ?port ?path ?endpointType ?setting ?settingValue WHERE {
+                    ${graph}
+                        ?config a ldr:ServerConfig ;
+                                ldr:dataset <${datasetURI}> ;
+                                ldr:host ?host ;
+                                ldr:port ?port ;
+                                ldr:path ?path ;
+                                ldr:endpointType ?endpointType ;
+                                ?setting ?settingValue .
+                                OPTIONAL { ?config rdfs:label ?resource . }
+                                FILTER (?setting !=rdf:type && ?setting !=ldr:dataset && ?setting !=ldr:host && ?setting !=ldr:port && ?setting !=ldr:path && ?setting !=ldr:endpointType)
+                    ${graphEnd}
+                }
+                `;
             }
-            `;
             //send request
             let self = this;
             rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
@@ -137,7 +273,7 @@ class DynamicConfigurator {
         }
 
     }
-    prepareDynamicFacetsConfig(datasetURI, callback) {
+    prepareDynamicFacetsConfig(user, datasetURI, callback) {
         let config = {facets: {}};
         //the following graphs shold be only locally reachable
         let exceptions = [configDatasetURI[0], authDatasetURI[0]];
@@ -145,6 +281,10 @@ class DynamicConfigurator {
         if(!enableDynamicFacetsConfiguration || exceptions.indexOf(datasetURI) !== -1){
             callback(config);
         }else{
+            let userSt = '';
+            if(user && user.accountName !== 'open'){
+                userSt=` ldr:createdBy <${user.id}> ;`;
+            }
             //start config
             const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
             const graphName = endpointParameters.graphName;
@@ -163,21 +303,58 @@ class DynamicConfigurator {
                 graph ='';
                 graphEnd = '';
             }
-            const query = `
-            SELECT DISTINCT ?config ?label ?list ?configProperty ?setting ?settingValue WHERE {
-                ${graph}
-                    ?config a ldr:FacetsConfig ;
-                            ldr:dataset <${datasetURI}> ;
-                            ldr:list ?list ;
-                            ldr:config ?facetPConfig .
-                            OPTIONAL { ?config rdfs:label ?resource . }
-                            ?facetsConfig ldr:property ?configProperty ;
-                                          a ldr:FacetsPropertyConfig ;
-                                          ?setting ?settingValue .
-                            FILTER (?setting !=rdf:type && ?setting !=ldr:property)
-                ${graphEnd}
+            let query;
+            if(userSt){
+                query = `
+                SELECT DISTINCT ?config ?label ?list ?configProperty ?setting ?settingValue WHERE {
+                    ${graph}
+                    {
+                        ?config a ldr:FacetsConfig ;
+                                ldr:dataset <${datasetURI}> ;
+                                ${userSt}
+                                ldr:list ?list ;
+                                ldr:config ?facetPConfig .
+                                OPTIONAL { ?config rdfs:label ?resource . }
+                                ?facetsConfig ldr:property ?configProperty ;
+                                              a ldr:FacetsPropertyConfig ;
+                                              ?setting ?settingValue .
+                                FILTER (?setting !=rdf:type && ?setting !=ldr:property)
+                    }
+                    UNION
+                    {
+                        ?config a ldr:FacetsConfig ;
+                                ldr:dataset <${datasetURI}> ;
+                                ldr:list ?list ;
+                                ldr:config ?facetPConfig .
+                                OPTIONAL { ?config rdfs:label ?resource . }
+                                ?facetsConfig ldr:property ?configProperty ;
+                                              a ldr:FacetsPropertyConfig ;
+                                              ?setting ?settingValue .
+                                FILTER (?setting !=rdf:type && ?setting !=ldr:property)
+                                filter not exists {
+                                    ?config ldr:createdBy ?user.
+                                }
+                    }
+                    ${graphEnd}
+                }
+                `;
+            }else{
+                query = `
+                SELECT DISTINCT ?config ?label ?list ?configProperty ?setting ?settingValue WHERE {
+                    ${graph}
+                        ?config a ldr:FacetsConfig ;
+                                ldr:dataset <${datasetURI}> ;
+                                ldr:list ?list ;
+                                ldr:config ?facetPConfig .
+                                OPTIONAL { ?config rdfs:label ?resource . }
+                                ?facetsConfig ldr:property ?configProperty ;
+                                              a ldr:FacetsPropertyConfig ;
+                                              ?setting ?settingValue .
+                                FILTER (?setting !=rdf:type && ?setting !=ldr:property)
+                    ${graphEnd}
+                }
+                `;
             }
-            `;
             //send request
             //console.log(prefixes + query);
             let self = this;
@@ -192,13 +369,17 @@ class DynamicConfigurator {
             });
         }
     }
-    prepareDynamicDatasetConfig(datasetURI, callback) {
+    prepareDynamicDatasetConfig(user, datasetURI, callback) {
         let config = {dataset: {}};
         let exceptions = [configDatasetURI[0], authDatasetURI[0]];
         //do not config if disabled or exceptions
         if(!enableDynamicReactorConfiguration || exceptions.indexOf(datasetURI) !== -1){
             callback(config);
         }else{
+            let userSt = '';
+            if(user && user.accountName !== 'open'){
+                userSt=` ldr:createdBy <${user.id}> ;`;
+            }
             //start config
             const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
             const graphName = endpointParameters.graphName;
@@ -217,18 +398,50 @@ class DynamicConfigurator {
                 graph ='';
                 graphEnd = '';
             }
-            const query = `
-            SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue WHERE {
-                ${graph}
-                    ?config a ldr:ReactorConfig ;
-                            ldr:dataset <${datasetURI}> ;
-                            ldr:scope ?scope ;
-                            ?setting ?settingValue .
-                            OPTIONAL { ?config rdfs:label ?resource . }
-                            FILTER (?setting !=rdf:type && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset)
-                ${graphEnd}
+            let query;
+            if(userSt){
+                query = `
+                SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue WHERE {
+                    ${graph}
+                    {
+                        ?config a ldr:ReactorConfig ;
+                                ldr:dataset <${datasetURI}> ;
+                                ${userSt}
+                                ldr:scope ?scope ;
+                                ?setting ?settingValue .
+                                OPTIONAL { ?config rdfs:label ?resource . }
+                                FILTER (?setting !=rdf:type && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset)
+                    }
+                    UNION
+                    {
+                        ?config a ldr:ReactorConfig ;
+                                ldr:dataset <${datasetURI}> ;
+                                ldr:scope ?scope ;
+                                ?setting ?settingValue .
+                                OPTIONAL { ?config rdfs:label ?resource . }
+                                FILTER (?setting !=rdf:type && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset)
+                                filter not exists {
+                                    ?config ldr:createdBy ?user.
+                                }
+                    }
+                    ${graphEnd}
+                }
+                `;
+            }else{
+                query = `
+                SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue WHERE {
+                    ${graph}
+                        ?config a ldr:ReactorConfig ;
+                                ldr:dataset <${datasetURI}> ;
+                                ldr:scope ?scope ;
+                                ?setting ?settingValue .
+                                OPTIONAL { ?config rdfs:label ?resource . }
+                                FILTER (?setting !=rdf:type && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset)
+                    ${graphEnd}
+                }
+                `;
             }
-            `;
+
             //send request
             //console.log(prefixes + query);
             let self = this;
@@ -352,12 +565,17 @@ class DynamicConfigurator {
         }
 
     }
-    prepareDynamicResourceConfig(datasetURI, resourceURI, resourceType, callback) {
+    prepareDynamicResourceConfig(user, datasetURI, resourceURI, resourceType, callback) {
         let config = {resource: {}, dataset_resource: {}};
-        //do not config if disabled
-        if(!enableDynamicReactorConfiguration){
+        let exceptions = [configDatasetURI[0], authDatasetURI[0]];
+        //do not config if disabled or exceptions
+        if(!enableDynamicReactorConfiguration || exceptions.indexOf(datasetURI) !== -1){
             callback(config);
         }else{
+            let userSt = '';
+            if(user && user.accountName !== 'open'){
+                userSt=` ldr:createdBy <${user.id}> ;`;
+            }
             let typeFilter = [];
             resourceType.forEach(function(el) {
                 typeFilter.push(`?resource=<${el}>`);
@@ -392,32 +610,95 @@ class DynamicConfigurator {
                 graph ='';
                 graphEnd = '';
             }
-            const query = `
-            SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?treatAsResourceType ?settingValue WHERE { ${graph}
-                    {
-                    ?config a ldr:ReactorConfig ;
-                            ldr:resource ?resource ;
-                            ldr:treatAsResourceType "1" ;
-                            ldr:treatAsResourceType ?treatAsResourceType ;
-                            ldr:scope ?scope ;
-                            ?setting ?settingValue .
-                            OPTIONAL { ?config rdfs:label ?resource . }
-                            OPTIONAL { ?config ldr:dataset ?dataset . }
-                            FILTER (${typeFilterStr}  ?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
-                    }
-                    UNION
-                    {
-                    ?config a ldr:ReactorConfig ;
-                            ldr:resource <${resourceURI}> ;
-                            ldr:scope ?scope ;
-                            ?setting ?settingValue .
-                            OPTIONAL { ?config ldr:dataset ?dataset . }
-                            OPTIONAL { ?config rdfs:label ?resource . }
-                            OPTIONAL { ?config ldr:treatAsResourceType ?treatAsResourceType . }
-                            FILTER (?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
-                    }
-            ${graphEnd}   } ORDER BY DESC(?treatAsResourceType)
-            `;
+            let query;
+            if(user){
+                query = `
+                SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?treatAsResourceType ?settingValue WHERE { ${graph}
+                        {
+                        ?config a ldr:ReactorConfig ;
+                                ${userSt}
+                                ldr:resource ?resource ;
+                                ldr:treatAsResourceType "1" ;
+                                ldr:treatAsResourceType ?treatAsResourceType ;
+                                ldr:scope ?scope ;
+                                ?setting ?settingValue .
+                                OPTIONAL { ?config rdfs:label ?resource . }
+                                OPTIONAL { ?config ldr:dataset ?dataset . }
+                                FILTER (${typeFilterStr}  ?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
+                        }
+                        UNION
+                        {
+                        ?config a ldr:ReactorConfig ;
+                                ${userSt}
+                                ldr:resource <${resourceURI}> ;
+                                ldr:scope ?scope ;
+                                ?setting ?settingValue .
+                                OPTIONAL { ?config ldr:dataset ?dataset . }
+                                OPTIONAL { ?config rdfs:label ?resource . }
+                                OPTIONAL { ?config ldr:treatAsResourceType ?treatAsResourceType . }
+                                FILTER (?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
+                        }
+                        UNION
+                ${graphEnd}   } ORDER BY DESC(?treatAsResourceType)
+                `;
+            }else{
+                query = `
+                SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?treatAsResourceType ?settingValue WHERE { ${graph}
+                        {
+                        ?config a ldr:ReactorConfig ;
+                                ldr:resource ?resource ;
+                                ldr:treatAsResourceType "1" ;
+                                ldr:treatAsResourceType ?treatAsResourceType ;
+                                ldr:scope ?scope ;
+                                ?setting ?settingValue .
+                                OPTIONAL { ?config rdfs:label ?resource . }
+                                OPTIONAL { ?config ldr:dataset ?dataset . }
+                                FILTER (${typeFilterStr}  ?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
+                        }
+                        UNION
+                        {
+                        ?config a ldr:ReactorConfig ;
+                                ldr:resource <${resourceURI}> ;
+                                ldr:scope ?scope ;
+                                ?setting ?settingValue .
+                                OPTIONAL { ?config ldr:dataset ?dataset . }
+                                OPTIONAL { ?config rdfs:label ?resource . }
+                                OPTIONAL { ?config ldr:treatAsResourceType ?treatAsResourceType . }
+                                FILTER (?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
+                        }
+                        UNION
+                        {
+                        ?config a ldr:ReactorConfig ;
+                                ldr:resource ?resource ;
+                                ldr:treatAsResourceType "1" ;
+                                ldr:treatAsResourceType ?treatAsResourceType ;
+                                ldr:scope ?scope ;
+                                ?setting ?settingValue .
+                                OPTIONAL { ?config rdfs:label ?resource . }
+                                OPTIONAL { ?config ldr:dataset ?dataset . }
+                                FILTER (${typeFilterStr}  ?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
+                                filter not exists {
+                                    ?config ldr:createdBy ?user.
+                                }
+                        }
+                        UNION
+                        {
+                        ?config a ldr:ReactorConfig ;
+                                ldr:resource <${resourceURI}> ;
+                                ldr:scope ?scope ;
+                                ?setting ?settingValue .
+                                OPTIONAL { ?config ldr:dataset ?dataset . }
+                                OPTIONAL { ?config rdfs:label ?resource . }
+                                OPTIONAL { ?config ldr:treatAsResourceType ?treatAsResourceType . }
+                                FILTER (?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
+                                filter not exists {
+                                    ?config ldr:createdBy ?user.
+                                }
+                        }
+                ${graphEnd}   } ORDER BY DESC(?treatAsResourceType)
+                `;
+            }
+
             //send request
             //console.log(prefixes + query);
             let self = this;
@@ -435,12 +716,17 @@ class DynamicConfigurator {
 
 
     }
-    prepareDynamicPropertyConfig(datasetURI, resourceURI, resourceType, propertyURI, callback) {
+    prepareDynamicPropertyConfig(user, datasetURI, resourceURI, resourceType, propertyURI, callback) {
         let config = {property: {}, dataset_property: {}, resource_property: {}, dataset_resource_property: {}};
-        //do not config if disabled
-        if(!enableDynamicReactorConfiguration){
+        let exceptions = [configDatasetURI[0], authDatasetURI[0]];
+        //do not config if disabled or exceptions
+        if(!enableDynamicReactorConfiguration || exceptions.indexOf(datasetURI) !== -1){
             callback(config);
         }else{
+            let userSt = '';
+            if(user && user.accountName !== 'open'){
+                userSt=` ldr:createdBy <${user.id}> ;`;
+            }
             //start config
             const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
             const graphName = endpointParameters.graphName;
@@ -459,20 +745,56 @@ class DynamicConfigurator {
                 graph ='';
                 graphEnd = '';
             }
-            const query = `
-            SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?settingValue WHERE {
-                ${graph}
-                    ?config a ldr:ReactorConfig ;
-                            ldr:property <${propertyURI}> ;
-                            ldr:scope ?scope ;
-                            ?setting ?settingValue .
-                            OPTIONAL { ?config ldr:dataset ?dataset . }
-                            OPTIONAL { ?config ldr:resource ?resource . }
-                            OPTIONAL { ?config rdfs:label ?label . }
-                            FILTER (?setting !=rdf:type && ?setting !=ldr:property && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset && ?setting !=ldr:resource)
-                ${graphEnd}
+            let query;
+            if(userSt){
+                query = `
+                SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?settingValue WHERE {
+                    ${graph}
+                    {
+                        ?config a ldr:ReactorConfig ;
+                                ${userSt}
+                                ldr:property <${propertyURI}> ;
+                                ldr:scope ?scope ;
+                                ?setting ?settingValue .
+                                OPTIONAL { ?config ldr:dataset ?dataset . }
+                                OPTIONAL { ?config ldr:resource ?resource . }
+                                OPTIONAL { ?config rdfs:label ?label . }
+                                FILTER (?setting !=rdf:type && ?setting !=ldr:property && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset && ?setting !=ldr:resource)
+                    }
+                    UNION
+                    {
+                        ?config a ldr:ReactorConfig ;
+                                ldr:property <${propertyURI}> ;
+                                ldr:scope ?scope ;
+                                ?setting ?settingValue .
+                                OPTIONAL { ?config ldr:dataset ?dataset . }
+                                OPTIONAL { ?config ldr:resource ?resource . }
+                                OPTIONAL { ?config rdfs:label ?label . }
+                                FILTER (?setting !=rdf:type && ?setting !=ldr:property && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset && ?setting !=ldr:resource)
+                                filter not exists {
+                                    ?config ldr:createdBy ?user.
+                                }
+                    }
+                    ${graphEnd}
+                }
+                `;
+            }else{
+                query = `
+                SELECT DISTINCT ?config ?scope ?label ?setting ?dataset ?resource ?settingValue WHERE {
+                    ${graph}
+                        ?config a ldr:ReactorConfig ;
+                                ldr:property <${propertyURI}> ;
+                                ldr:scope ?scope ;
+                                ?setting ?settingValue .
+                                OPTIONAL { ?config ldr:dataset ?dataset . }
+                                OPTIONAL { ?config ldr:resource ?resource . }
+                                OPTIONAL { ?config rdfs:label ?label . }
+                                FILTER (?setting !=rdf:type && ?setting !=ldr:property && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset && ?setting !=ldr:resource)
+                    ${graphEnd}
+                }
+                `;
             }
-            `;
+
             //send request
             //console.log(prefixes + query);
             let self = this;

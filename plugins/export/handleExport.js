@@ -7,7 +7,7 @@ let appShortTitle = generalConfig.appShortTitle;
 let appFullTitle = generalConfig.appFullTitle;
 
 let exportResource = function(format, datasetURI, resourceURI, req, res) {
-    helpers2.getDynamicEndpointParameters([datasetURI], (endpoint) => {
+    helpers2.getDynamicEndpointParameters(req.user, [datasetURI], (endpoint) => {
         let httpOptions = endpoint.httpOptions;
         let outputFormat;
         switch (format.toLowerCase()) {

@@ -49,7 +49,7 @@ export default {
                 user = {accountName: 'open'};
             }
             //graph name used for server settings and configs
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 resourceURI = params.resource;
                 propertyPath = decodeURIComponent(params.propertyPath);
@@ -63,7 +63,7 @@ export default {
                 let props;
                 rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                     //exceptional case for user properties: we hide some admin props from normal users
-                    utilObject.parseProperties(res, datasetURI, resourceURI, category, propertyPath, (cres)=> {
+                    utilObject.parseProperties(user, res, datasetURI, resourceURI, category, propertyPath, (cres)=> {
                         if(datasetURI === authDatasetURI[0] && !parseInt(user.isSuperUser)){
                             props = utilObject.deleteAdminProperties(cres.props);
                         }else{
@@ -109,13 +109,13 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 query = queryObject.getPrefixes() + queryObject.getProperties(endpointParameters, graphName, objectURI);
                 //build http uri
                 //send request
                 rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
-                    utilObject.parseObjectProperties(res, datasetURI, resourceURI, propertyURI, (cres)=> {
+                    utilObject.parseObjectProperties(user, res, datasetURI, resourceURI, propertyURI, (cres)=> {
                         callback(null, {
                             objectURI: objectURI,
                             objectType: cres.objectType,
@@ -156,7 +156,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 query = queryObject.getPrefixes() + queryObject.addTriple(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
                 //build http uri
@@ -195,7 +195,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 query = queryObject.getPrefixes() + queryObject.updateObjectTriples(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData);
                 async.parallel([
@@ -268,7 +268,7 @@ export default {
             if(datasetURI.slice(-1) === '/'){
                 newResourceURI = datasetURI + 'c' + Math.round(+new Date() / 1000);
             }
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 query = queryObject.getPrefixes() + queryObject.cloneResource(endpointParameters, user, graphName, params.resourceURI, newResourceURI);
                 HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
@@ -300,7 +300,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 query = queryObject.getPrefixes() + queryObject.addTriple(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.objectValue, 'literal', '');
                 //build http uri
@@ -338,7 +338,7 @@ export default {
             if(datasetURI.slice(-1) === '/'){
                 newResourceURI = datasetURI + 'n' + Math.round(+new Date() / 1000);
             }
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 query = queryObject.getPrefixes() + queryObject.newResource(endpointParameters, user, graphName, newResourceURI);
                 HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
@@ -390,7 +390,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 query = queryObject.getPrefixes() + queryObject.updateTriple(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType);
                 //build http uri
@@ -437,7 +437,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 query = queryObject.getPrefixes() + queryObject.updateObjectTriples(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData);
                 //build http uri
@@ -477,7 +477,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 query = queryObject.getPrefixes() + queryObject.updateTriples(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.changes);
                 //build http uri
@@ -520,7 +520,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 query = queryObject.getPrefixes() + queryObject.deleteTriple(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.objectValue, params.valueType, params.dataType);
                 //build http uri
@@ -558,7 +558,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 query = queryObject.getPrefixes() + queryObject.deleteTriples(endpointParameters, graphName, params.resourceURI, params.propertyURI, params.changes);
                 //build http uri
@@ -595,7 +595,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 //delete all values
                 query = queryObject.getPrefixes() + queryObject.deleteTriple(endpointParameters, graphName, params.resourceURI, params.propertyURI, 0, 0, 0);

@@ -25,7 +25,7 @@ class ResourceUtil {
         property = property.charAt(0).toUpperCase() + property.slice(1);
         return property;
     }
-    parseProperties(body, datasetURI, resourceURI, category, propertyPath, callback) {
+    parseProperties(user, body, datasetURI, resourceURI, category, propertyPath, callback) {
         let configurator = new Configurator();
         let configExceptional = {},
             config = {},
@@ -51,7 +51,7 @@ class ResourceUtil {
         title = rpIndex.title;
         resourceType = rpIndex.resourceType;
         //resource config
-        configurator.prepareResourceConfig(1, datasetURI, resourceURI, resourceType, (rconfig)=> {
+        configurator.prepareResourceConfig(user, 1, datasetURI, resourceURI, resourceType, (rconfig)=> {
             if (rconfig.usePropertyCategories) {
                 //allow filter by category
                 if (!category) {
@@ -66,7 +66,7 @@ class ResourceUtil {
             if (propertyPath && propertyPath.length) {
                 asyncTasks.push(function(callback){
                     //it is only for property path
-                    configurator.preparePropertyConfig(1, datasetURI, resourceURI, resourceType, propertyPath[1], (res)=> {
+                    configurator.preparePropertyConfig(user, 1, datasetURI, resourceURI, resourceType, propertyPath[1], (res)=> {
                         configExceptional = res;
                         callback();
                     });
@@ -74,7 +74,7 @@ class ResourceUtil {
             }
             for(let propURI in rpIndex.propIndex){
                 asyncTasks.push(function(callback2){
-                    configurator.preparePropertyConfig(1, datasetURI, resourceURI, resourceType, propURI, (config)=> {
+                    configurator.preparePropertyConfig(user, 1, datasetURI, resourceURI, resourceType, propURI, (config)=> {
                         //handle categories
 
                         if (filterByCategory) {
@@ -212,11 +212,11 @@ class ResourceUtil {
         }
         return extensions[index].config;
     }
-    parseObjectProperties(body, datasetURI, resourceURI, propertyURI, callback) {
+    parseObjectProperties(user, body, datasetURI, resourceURI, propertyURI, callback) {
         let title, objectType = '';
         let configurator = new Configurator();
         let config = {};
-        configurator.preparePropertyConfig(1, datasetURI, resourceURI, 0, propertyURI, (configExceptional)=> {
+        configurator.preparePropertyConfig(user, 1, datasetURI, resourceURI, 0, propertyURI, (configExceptional)=> {
             let self = this;
             let parsed = JSON.parse(body);
             let output = [],
@@ -225,7 +225,7 @@ class ResourceUtil {
             if (parsed.results.bindings.length) {
                 parsed.results.bindings.forEach(function(el) {
                     asyncTasks.push(function(callback){
-                        configurator.preparePropertyConfig(1, datasetURI, resourceURI, 0, el.p.value, (config)=> {
+                        configurator.preparePropertyConfig(user, 1, datasetURI, resourceURI, 0, el.p.value, (config)=> {
                             if (el.p.value === 'http://purl.org/dc/terms/title') {
                                 title = el.o.value;
                             } else if (el.p.value === 'http://www.w3.org/2000/01/rdf-schema#label') {

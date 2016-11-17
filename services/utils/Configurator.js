@@ -35,7 +35,7 @@ class Configurator{
         }
         return output;
     }
-    prepareDatasetConfig(useGeneric, datasetURI, callback) {
+    prepareDatasetConfig(user, useGeneric, datasetURI, callback) {
         let config = this.cloneConfig(this.config);
         //default config comes from generic dataset
         let output = {};
@@ -44,7 +44,7 @@ class Configurator{
         }
 
         //retrieve all dynamic resource configs stored in the triple store
-        dynamicConfigurator.prepareDynamicDatasetConfig(datasetURI, (dynamicConfig)=> {
+        dynamicConfigurator.prepareDynamicDatasetConfig(user, datasetURI, (dynamicConfig)=> {
             //console.log(dynamicConfig.dataset);
             if(config.dataset[datasetURI]){
                 //there is a user-defined config, overwrite default config then
@@ -62,7 +62,7 @@ class Configurator{
         })
 
     }
-    prepareResourceConfig(useGeneric, datasetURI, resourceURI, resourceType, callback) {
+    prepareResourceConfig(user, useGeneric, datasetURI, resourceURI, resourceType, callback) {
         //resource type can be a set of values
         if(!Array.isArray(resourceType)){
             resourceType=[resourceType];
@@ -74,12 +74,12 @@ class Configurator{
             output = this.prepareGenericConfig(2);
         }
         //get the dataset config
-        this.prepareDatasetConfig(0, datasetURI, (tmp)=> {
+        this.prepareDatasetConfig(user, 0, datasetURI, (tmp)=> {
             for(let prop in tmp) {
                 output[prop] = tmp[prop];
             }
             //retrieve all dynamic resource configs stored in the triple store
-            dynamicConfigurator.prepareDynamicResourceConfig(datasetURI, resourceURI, resourceType, (dynamicConfig)=> {
+            dynamicConfigurator.prepareDynamicResourceConfig(user, datasetURI, resourceURI, resourceType, (dynamicConfig)=> {
                 //console.log(dynamicConfig);
                 //go to user-defined scopes
                 //it goes from less-specific to most-specific config
@@ -148,7 +148,7 @@ class Configurator{
         });
 
     }
-    preparePropertyConfig(useGeneric, datasetURI, resourceURI, resourceType, propertyURI, callback) {
+    preparePropertyConfig(user, useGeneric, datasetURI, resourceURI, resourceType, propertyURI, callback) {
         if(!Array.isArray(resourceType)){
             resourceType=[resourceType];
         }
@@ -158,14 +158,14 @@ class Configurator{
             output = this.prepareGenericConfig(3);
         }
         //first we need to get upper level configs that come from resource config
-        this.prepareResourceConfig(0, datasetURI, resourceURI, resourceType, (tmp)=> {
+        this.prepareResourceConfig(user, 0, datasetURI, resourceURI, resourceType, (tmp)=> {
             //owerwrite generic ones
             for(let prop in tmp) {
                 output[prop] = tmp[prop];
             }
 
             //retrieve all dynamic property configs stored in the triple store
-            dynamicConfigurator.prepareDynamicPropertyConfig(datasetURI, resourceURI, resourceType, propertyURI, (dynamicConfig)=> {
+            dynamicConfigurator.prepareDynamicPropertyConfig(user, datasetURI, resourceURI, resourceType, propertyURI, (dynamicConfig)=> {
                 //console.log(dynamicConfig);
                 if(config.property[propertyURI]){
                     for(let prop in config.property[propertyURI]) {

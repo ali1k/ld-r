@@ -24,27 +24,26 @@ export default {
     read: (req, resource, params, config, callback) => {
         if (resource === 'dataset.resourcesByType') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
-
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI, graphName: graphName, resources: [], page: params.page, config: rconfig});
+                    return 0;
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 //config handler
-                configurator.prepareDatasetConfig(1, datasetURI, (rconfig)=> {
+                configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
                     let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
                     if(!maxOnPage){
                         maxOnPage = 20;
                     }
                     let offset = (params.page - 1) * maxOnPage;
-                    //control access on authentication
-                    if(enableAuthentication){
-                        if(!req.user){
-                            callback(null, {datasetURI: datasetURI, graphName: graphName, resources: [], page: params.page, config: rconfig});
-                            return 0;
-                        }else{
-                            user = req.user;
-                        }
-                    }else{
-                        user = {accountName: 'open'};
-                    }
                     query = queryObject.getResourcesByType(endpointParameters, graphName, rconfig, maxOnPage, offset);
                     //build http uri
                     //send request
@@ -66,22 +65,22 @@ export default {
 
         } else if (resource === 'dataset.countResourcesByType') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI, graphName: graphName, total: 0});
+                    return 0;
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
 
                 //config handler
-                configurator.prepareDatasetConfig(1, datasetURI, (rconfig)=> {
-                    //control access on authentication
-                    if(enableAuthentication){
-                        if(!req.user){
-                            callback(null, {datasetURI: datasetURI, graphName: graphName, total: 0});
-                            return 0;
-                        }else{
-                            user = req.user;
-                        }
-                    }else{
-                        user = {accountName: 'open'};
-                    }
+                configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
                     query = queryObject.countResourcesByType(endpointParameters, graphName, rconfig.resourceFocusType);
                     //console.log(query);
                     //build http uri
@@ -139,7 +138,7 @@ export default {
                     }
                 }
             }
-            getDynamicDatasets((dynamicReactorDS, dynamicFacetsDS)=>{
+            getDynamicDatasets(user, (dynamicReactorDS, dynamicFacetsDS)=>{
                 callback(null, {dynamicReactorDS: dynamicReactorDS, dynamicFacetsDS: dynamicFacetsDS, staticReactorDS: staticReactorDS, staticFacetsDS: staticFacetsDS});
             });
         }

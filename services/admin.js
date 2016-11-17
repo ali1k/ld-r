@@ -36,7 +36,7 @@ export default {
                 user = {accountName: 'open'};
             }
             //build http uri
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 query = queryObject.getUsers(endpointParameters, graphName);
                 //send request
@@ -75,7 +75,7 @@ export default {
                 user = {accountName: 'open'};
             }
             datasetURI = authDatasetURI[0];
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=> {
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=> {
                 graphName = endpointParameters.graphName;
 
                 query = queryObject.activateUser(endpointParameters, graphName, params.resourceURI);

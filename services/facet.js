@@ -36,7 +36,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 //resource focus type
                 let rftconfig = configurator.getResourceFocusType(0, datasetURI);
@@ -70,7 +70,7 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 //do not query if unselected
                 if(!Boolean(params.selection.status)){
@@ -82,7 +82,7 @@ export default {
                     });
                     return 0;
                 }
-                configurator.prepareDatasetConfig(1, datasetURI, (rconfig)=> {
+                configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
                     //resource focus type
                     let rftconfig = configurator.getResourceFocusType(rconfig, datasetURI);
                     query = queryObject.getMasterPropertyValues(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.value));
@@ -105,26 +105,26 @@ export default {
         //handles changes in second level facets
         } else if (resource === 'facet.facetsSecondLevel') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
-            getDynamicEndpointParameters(datasetURI, (endpointParameters)=>{
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI, graphName: '', facets: {}, total: 0, page: 1});
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 //config handler
-                configurator.prepareDatasetConfig(1, datasetURI, (rconfig)=> {
+                configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
                     //resource focus type
                     let rftconfig = configurator.getResourceFocusType(rconfig, graphName);
 
                     let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
                     if(!maxOnPage){
                         maxOnPage = 20;
-                    }
-                   //control access on authentication
-                    if(enableAuthentication){
-                        if(!req.user){
-                            callback(null, {datasetURI: datasetURI, graphName: graphName, facets: {}, total: 0, page: 1});
-                        }else{
-                            user = req.user;
-                        }
-                    }else{
-                        user = {accountName: 'open'};
                     }
                     if(params.mode === 'init'){
                         //get all resources
@@ -159,6 +159,16 @@ export default {
             });
         } else if (resource === 'facet.dynamicConfig') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI, graphName: '', facets: {}, total: 0, page: 1});
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
             let staticConfig = {facets: {}};
             let dynamicConfig = {facets: {}};
             let staticDatasetConfig = {dataset: {}};
@@ -176,12 +186,12 @@ export default {
 
             async.parallel([
                 (cback) => {
-                    getDynamicFacetsConfig(datasetURI, (dynamicConfig)=>{
+                    getDynamicFacetsConfig(user, datasetURI, (dynamicConfig)=>{
                         cback(null,dynamicConfig);
                     });
                 },
                 (cback) => {
-                    getDynamicDatasetConfig(datasetURI, (dynamicConfig)=>{
+                    getDynamicDatasetConfig(user, datasetURI, (dynamicConfig)=>{
                         cback(null,dynamicConfig);
                     });
                 }

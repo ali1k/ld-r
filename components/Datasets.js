@@ -38,6 +38,7 @@ class Datasets extends React.Component {
         let optionsList, output ='', outputDSS;
         let color = 'black';
         let user = this.context.getUser();
+        let createDatasetDIV = '';
         let info = <div className="ui blue message">
                         The list contains only the datasets for which at least one <b>config scope</b> is found!
                    </div>;
@@ -45,6 +46,16 @@ class Datasets extends React.Component {
         if(enableAuthentication && !user){
             output = <div className="ui warning message"><div className="header"> Please <a href="/register">Register</a> or <a href="/login">Login</a> to see the datasets.</div></div>;
         }else{
+            if(enableAddingNewDatasets){
+                createDatasetDIV = <div className="ui list">
+                    <div className="item">
+                        <div  className="medium ui basic icon labeled button" onClick={this.handleCreateDataset.bind(this)}>
+                            <i className="cubes square large blue icon "></i> <i className="add black icon"></i>Add a New Dataset
+                            </div>
+                        </div>
+                    <br/>
+                 </div>;
+            }
             if(!dss.length){
                 if(defaultDatasetURI[0]){
                     output = <div className="ui item" key={defaultDatasetURI[0]}> <div className="content"> <i className="ui blue icon cubes"></i> <a href={'/dataset/1/' + encodeURIComponent(defaultDatasetURI[0])} title="go to resource list">{defaultDatasetURI[0]}</a> <i className="ui green flag icon" title="default dataset"></i> </div> </div>;
@@ -76,17 +87,6 @@ class Datasets extends React.Component {
                 });
             }
 
-        }
-        let createDatasetDIV = '';
-        if(enableAddingNewDatasets){
-            createDatasetDIV = <div className="ui list">
-                <div className="item">
-                    <div  className="medium ui basic icon labeled button" onClick={this.handleCreateDataset.bind(this)}>
-                        <i className="cubes square large blue icon "></i> <i className="add black icon"></i>Add a New Dataset
-                        </div>
-                    </div>
-                <br/>
-             </div>;
         }
         return (
             <div className="ui page grid" ref="datasets">

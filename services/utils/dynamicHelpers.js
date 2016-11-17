@@ -2,7 +2,7 @@ import {sparqlEndpoint} from '../../configs/server';
 import {defaultDatasetURI} from '../../configs/general';
 import DynamicConfigurator from '../../plugins/dynamicConfiguration/DynamicConfigurator';
 let dynamicConfigurator = new DynamicConfigurator();
-let prepareDGFunc = function (datasetURI, callback){
+let prepareDGFunc = function (user, datasetURI, callback){
     let d = datasetURI, g = datasetURI, options = {};
     //try default graph if no datasetURI is given
     if(String(defaultDatasetURI[0]) !==''){
@@ -10,7 +10,7 @@ let prepareDGFunc = function (datasetURI, callback){
             d = defaultDatasetURI[0];
         }
     }
-    dynamicConfigurator.prepareDynamicServerConfig(d, (dynamicConfig)=> {
+    dynamicConfigurator.prepareDynamicServerConfig(user, d, (dynamicConfig)=> {
         if(sparqlEndpoint[d]){
             options = sparqlEndpoint[d];
             if(sparqlEndpoint[d].graphName){
@@ -43,9 +43,8 @@ let prepareDGFunc = function (datasetURI, callback){
     });
 }
 export default {
-    getDynamicEndpointParameters: function(datasetURI, callback) {
-        prepareDGFunc(datasetURI, (config)=> {
-
+    getDynamicEndpointParameters: function(user, datasetURI, callback) {
+        prepareDGFunc(user, datasetURI, (config)=> {
             let httpOptions;
             let d = config.d;
             let g = config.g;
@@ -64,18 +63,18 @@ export default {
         });
 
     },
-    getDynamicFacetsConfig: function(datasetURI, callback) {
-        dynamicConfigurator.prepareDynamicFacetsConfig(datasetURI, (dynamicConfig)=> {
+    getDynamicFacetsConfig: function(user, datasetURI, callback) {
+        dynamicConfigurator.prepareDynamicFacetsConfig(user, datasetURI, (dynamicConfig)=> {
             callback(dynamicConfig);
         });
     },
-    getDynamicDatasetConfig: function(datasetURI, callback) {
-        dynamicConfigurator.prepareDynamicDatasetConfig(datasetURI, (dynamicConfig)=> {
+    getDynamicDatasetConfig: function(user, datasetURI, callback) {
+        dynamicConfigurator.prepareDynamicDatasetConfig(user, datasetURI, (dynamicConfig)=> {
             callback(dynamicConfig);
         });
     },
-    getDynamicDatasets: function(callback) {
-        dynamicConfigurator.getDynamicDatasets((dynamicReactorDS, dynamicFacetsDS)=> {
+    getDynamicDatasets: function(user, callback) {
+        dynamicConfigurator.getDynamicDatasets(user, (dynamicReactorDS, dynamicFacetsDS)=> {
             callback(dynamicReactorDS, dynamicFacetsDS);
         });
     },
