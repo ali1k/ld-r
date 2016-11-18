@@ -237,7 +237,7 @@ class IndividualObject extends React.Component {
                                 <div className="twelve wide column field">
                                     {dataViewType}
                                 </div>
-                                <div className="four wide column field fadeInLeft">
+                                <div className="four wide column field animated pulse">
                                     {detailDIV}
                                     {editDIV}
                                     {deleteDIV}
