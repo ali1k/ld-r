@@ -1,4 +1,6 @@
 'use strict';
+import {checkAccess} from './helpers';
+
 class FacetUtil{
     constructor() {
 
@@ -32,12 +34,20 @@ class FacetUtil{
         });
         return output;
     }
-    parseSecondLevelPropertyValues(datasetURI, body) {
+    parseSecondLevelPropertyValues(user, datasetURI, body) {
         let self = this;
         let output=[];
+        let accessLevel = {access: false};
         let parsed = JSON.parse(body);
         parsed.results.bindings.forEach(function(el) {
-            output.push( {v: el.s.value, label: self.getPropertyLabel(el.s.value), title: (el.title && el.title.value ? el.title.value : ''), d: datasetURI});
+            if(user){
+                /*
+                if(user.id == el.instances[0].value) {
+                    userIsCreator = 1;
+                }*/
+                accessLevel=checkAccess(user, datasetURI, el.s.value, 0);
+            }
+            output.push( {v: el.s.value, label: self.getPropertyLabel(el.s.value), title: (el.title && el.title.value ? el.title.value : ''), d: datasetURI, accessLevel: accessLevel});
         });
         return output;
     }

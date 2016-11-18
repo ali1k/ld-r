@@ -3,7 +3,7 @@ import {defaultDatasetURI, enableDynamicServerConfiguration} from '../../configs
 import validUrl from 'valid-url';
 import queryString from 'query-string';
 
-let prepareStaticDGFunc = function (datasetURI){
+let prepareStaticDGFunc = (datasetURI)=>{
     let d = datasetURI, g = datasetURI;
     //try default graph if no datasetURI is given
     if(String(defaultDatasetURI[0]) !==''){
@@ -31,6 +31,17 @@ let prepareStaticDGFunc = function (datasetURI){
         d = 'generic';
     }
     return {d: d, g: g};
+}
+
+let includesProperty = (list, resource, property)=> {
+    let out = false;
+    list.forEach(function(el) {
+        if (el.r === resource && el.p === property) {
+            out = true;
+            return out;
+        }
+    });
+    return out;
 }
 
 export default {
@@ -118,6 +129,39 @@ export default {
             gEnd = ' ';
         }
         return {gStart: gStart, gEnd: gEnd}
+    },
+    checkAccess(user, graph, resource, property) {
+        if (parseInt(user.isSuperUser)) {
+            return {
+                access: true,
+                type: 'full'
+            };
+        } else {
+            if (graph && user.editorOfDataset.indexOf(graph) !== -1) {
+                return {
+                    access: true,
+                    type: 'full'
+                };
+            } else {
+                if (resource && user.editorOfResource.indexOf(resource) !== -1) {
+                    return {
+                        access: true,
+                        type: 'full'
+                    };
+                } else {
+                    if (property && includesProperty(user.editorOfProperty, resource, property)) {
+                        return {
+                            access: true,
+                            type: 'partial'
+                        };
+                    } else {
+                        return {
+                            access: false
+                        };
+                    }
+                }
+            }
+        }
     },
     getQueryDataTypeValue(valueType, dataType, objectValue) {
         let newValue, dtype;

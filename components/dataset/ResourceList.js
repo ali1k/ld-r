@@ -41,43 +41,6 @@ class ResourceList extends React.Component {
         this.props.onCloneResource(datasetURI, resourceURI);
         e.stopPropagation();
     }
-    includesProperty(list, resource) {
-        let out = false;
-        list.forEach(function(el) {
-            if (el.r === resource) {
-                out = true;
-                return out;
-            }
-        });
-        return out;
-    }
-    checkAccess(user, graph, resource) {
-        if (this.props.enableAuthentication) {
-            if (user) {
-                if (parseInt(user.isSuperUser)) {
-                    return {access: true, type: 'full'};
-                } else {
-                    if (graph && user.editorOfDataset.indexOf(graph) !== -1) {
-                        return {access: true, type: 'full'};
-                    } else {
-                        if (resource && user.editorOfResource.indexOf(resource) !== -1) {
-                            return {access: true, type: 'full'};
-                        } else {
-                            if (resource && this.includesProperty(user.editorOfProperty, resource)) {
-                                return {access: true, type: 'partial'};
-                            } else {
-                                return {access: false};
-                            }
-                        }
-                    }
-                }
-            } else {
-                return {access: false};
-            }
-        } else {
-            return {access: true, type: 'full'};
-        }
-    }
     render() {
         let self = this;
         let user = this.context.getUser();
@@ -111,7 +74,7 @@ class ResourceList extends React.Component {
                         dbClass = 'green cube icon';
                     }
                 } else {
-                    userAccess = self.checkAccess(user, node.d, node.v);
+                    userAccess = node.accessLevel;
                     if (userAccess.access) {
                         if (userAccess.type === 'full') {
                             dbClass = 'green cube icon';

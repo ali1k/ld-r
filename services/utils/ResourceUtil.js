@@ -1,11 +1,12 @@
 'use strict';
 import async from 'async';
 import Configurator from './Configurator';
+import {checkAccess} from './helpers';
 function compareProps(a,b) {
     if (a.property < b.property)
         return -1;
     if (a.property > b.property)
-            return 1;
+        return 1;
     return 0;
 }
 class ResourceUtil {
@@ -125,7 +126,7 @@ class ResourceUtil {
                         if(user.id == el.instances[0].value) {
                             userIsCreator = 1;
                         }
-                        accessLevel=self.checkAccess(user, datasetURI, resourceURI, el.propertyURI);
+                        accessLevel=checkAccess(user, datasetURI, resourceURI, el.propertyURI);
                         modifiedConfig.access =accessLevel.access;
                     }
 
@@ -329,49 +330,6 @@ class ResourceUtil {
             }
         });
         return out;
-    }
-    includesProperty(list, resource, property) {
-        let out = false;
-        list.forEach(function(el) {
-            if (el.r === resource && el.p === property) {
-                out = true;
-                return out;
-            }
-        });
-        return out;
-    }
-    checkAccess(user, graph, resource, property) {
-        if (parseInt(user.isSuperUser)) {
-            return {
-                access: true,
-                type: 'full'
-            };
-        } else {
-            if (graph && user.editorOfDataset.indexOf(graph) !== -1) {
-                return {
-                    access: true,
-                    type: 'full'
-                };
-            } else {
-                if (resource && user.editorOfResource.indexOf(resource) !== -1) {
-                    return {
-                        access: true,
-                        type: 'full'
-                    };
-                } else {
-                    if (property && this.includesProperty(user.editorOfProperty, resource, property)) {
-                        return {
-                            access: true,
-                            type: 'partial'
-                        };
-                    } else {
-                        return {
-                            access: false
-                        };
-                    }
-                }
-            }
-        }
     }
     //--------------------------------------------------------
 }

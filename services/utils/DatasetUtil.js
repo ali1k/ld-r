@@ -1,4 +1,6 @@
 'use strict';
+import {checkAccess} from './helpers';
+
 class DatasetUtil {
     constructor() {
 
@@ -15,17 +17,25 @@ class DatasetUtil {
         }
         return property;
     }
-
-    parseResourcesByType(body, datasetURI) {
+    parseResourcesByType(user, body, datasetURI) {
         let output = [];
+        let accessLevel = {access: false};
         let parsed = JSON.parse(body);
         if (parsed.results.bindings.length) {
             parsed.results.bindings.forEach(function(el) {
+                if(user){
+                    /*
+                    if(user.id == el.instances[0].value) {
+                        userIsCreator = 1;
+                    }*/
+                    accessLevel=checkAccess(user, datasetURI, el.resource.value, 0);
+                }
                 output.push({
                     v: el.resource.value,
                     d: datasetURI,
                     title: el.title ? el.title.value : '',
-                    label: el.label ? el.label.value : ''
+                    label: el.label ? el.label.value : '',
+                    accessLevel: accessLevel
                 });
             });
         }
