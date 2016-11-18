@@ -105,7 +105,7 @@ class ResourceUtil {
                     });
                 });
             }
-            let modifiedConfig;
+            let modifiedConfig, accessLevel, userIsCreator=0;
             //run all tasks in parallel
             async.parallelLimit(asyncTasks, 10, ()=>{
                 output.forEach(function(el) {
@@ -121,6 +121,14 @@ class ResourceUtil {
                             }
                         });
                     }
+                    if(user){
+                        if(user.id == el.instances[0].value) {
+                            userIsCreator = 1;
+                        }
+                        accessLevel=self.checkAccess(user, datasetURI, resourceURI, el.propertyURI);
+                        modifiedConfig.access =accessLevel.access;
+                    }
+
                     finalOutput.push({
                         propertyURI: el.propertyURI,
                         property: el.property,
@@ -130,6 +138,22 @@ class ResourceUtil {
                 });
                 //sort final output in a consistent way
                 finalOutput.sort(compareProps);
+                //handle permissions
+                if(userIsCreator){
+                    finalOutput.forEach(function(el) {
+                        if(!el.config.readOnly){
+                            el.config.readOnly = 0;
+                            delete el.config.access;
+                        }
+                    });
+                }else{
+                    finalOutput.forEach(function(el) {
+                        if(!el.config.readOnly){
+                            el.config.readOnly = el.config.access ? 0 : 1;
+                            delete el.config.access;
+                        }
+                    });
+                }
                 //make the right title for resource if propertyLabel is defined in config
                 let newTitel = title;
                 if (rconfig && rconfig.resourceLabelProperty && rconfig.resourceLabelProperty.length) {
@@ -140,6 +164,7 @@ class ResourceUtil {
                             tmpArr.push(el.instances[0].value);
                         }
                     });
+
                     if (tmpArr.length) {
                         newTitel = tmpArr.join('-');
                     } else {

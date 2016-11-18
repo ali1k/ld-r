@@ -23,43 +23,6 @@ class PersonResource extends React.Component {
         });
         e.stopPropagation();
     }
-    includesProperty(list, resource, property) {
-        let out = false;
-        list.forEach(function(el) {
-            if (el.r === resource && el.p === property){
-                out = true;
-                return out;
-            }
-        });
-        return out;
-    }
-    checkAccess(user, graph, resource, property) {
-        if(this.props.enableAuthentication) {
-            if(user){
-                if(parseInt(user.isSuperUser)){
-                    return {access: true, type: 'full'};
-                }else{
-                    if(graph && user.editorOfDataset.indexOf(graph) !== -1){
-                        return {access: true, type: 'full'};
-                    }else{
-                        if(resource && user.editorOfResource.indexOf(resource) !== -1){
-                            return {access: true, type: 'full'};
-                        }else{
-                            if(property && this.includesProperty(user.editorOfProperty, resource, property)){
-                                return {access: true, type: 'partial'};
-                            }else{
-                                return {access: false};
-                            }
-                        }
-                    }
-                }
-            }else{
-                return {access: false};
-            }
-        }else{
-            return {access: true, type: 'full'};
-        }
-    }
     render() {
         let readOnly = 1;
         let user = this.context.getUser();
@@ -82,31 +45,11 @@ class PersonResource extends React.Component {
                 if(readOnly){
                     configReadOnly = true;
                 }else{
-                    //the super user can edit all visible properties even readOnly ones!
-                    if(user && parseInt(user.isSuperUser)){
-                        configReadOnly = false;
-                    }else{
-                        //it property is readOnly from config
-                        if(node.config){
-                            if(node.config.readOnly){
-                                configReadOnly = true;
-                            }else{
-                                //check access levels
-                                accessLevel = self.checkAccess(user, self.props.datasetURI , self.props.resource, node.propertyURI);
-                                if(accessLevel.access){
-                                    configReadOnly = false;
-                                }else{
-                                    configReadOnly = true;
-                                }
-                            }
+                    if(node.config){
+                        if(node.config.readOnly){
+                            configReadOnly = true;
                         }else{
-                            //check access levels
-                            accessLevel = self.checkAccess(user, self.props.datasetURI , self.props.resource, node.propertyURI);
-                            if(accessLevel.access){
-                                configReadOnly = false;
-                            }else{
-                                configReadOnly = true;
-                            }
+                            configReadOnly = false;
                         }
                     }
                 }

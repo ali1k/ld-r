@@ -638,7 +638,6 @@ class DynamicConfigurator {
                                 OPTIONAL { ?config ldr:treatAsResourceType ?treatAsResourceType . }
                                 FILTER (?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
                         }
-                        UNION
                 ${graphEnd}   } ORDER BY DESC(?treatAsResourceType)
                 `;
             }else{
