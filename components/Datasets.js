@@ -79,7 +79,7 @@ class Datasets extends React.Component {
                             }
                         }
                     }
-                    return <div className="ui item" key={ds.d}> <div className="content"> <i className={'ui icon cubes ' + color}></i> <a href={'/dataset/1/' + encodeURIComponent(ds.d)} title="go to resource list">{ds.features && ds.features.datasetLabel ? ds.features.datasetLabel : ds.d}</a> {ds.features && ds.features.resourceFocusType ? <span className="ui small circular label"> {self.prepareFocusList(ds.features.resourceFocusType)} </span> : ''}
+                    return <div className="ui animated slideInDown item" key={ds.d}> <div className="content"> <i className={'ui icon cubes ' + color}></i> <a href={'/dataset/1/' + encodeURIComponent(ds.d)} title="go to resource list">{ds.features && ds.features.datasetLabel ? ds.features.datasetLabel : ds.d}</a> {ds.features && ds.features.resourceFocusType ? <span className="ui small circular label"> {self.prepareFocusList(ds.features.resourceFocusType)} </span> : ''}
                     {ds.features && ds.features.isBrowsable ? <a className="ui grey label" href={'/browse/' + encodeURIComponent(ds.d)} title="browse"><i className="zoom icon"></i>browse</a> : ''}
                     {ds.features && ds.features.isStaticDynamic ? <i className="ui brown theme icon" title="loaded from both static and dynamic config"></i> :''}
                     {ds.features && ds.features.isDynamic && !ds.features.isStaticDynamic ? <i className="ui orange theme icon" title="loaded from dynamic config"></i> :''}
