@@ -1,5 +1,5 @@
 import {sparqlEndpoint} from '../../configs/server';
-import {defaultDatasetURI, enableDynamicServerConfiguration} from '../../configs/general';
+import {defaultDatasetURI, enableDynamicServerConfiguration, enableAuthentication} from '../../configs/general';
 import validUrl from 'valid-url';
 import queryString from 'query-string';
 
@@ -131,25 +131,31 @@ export default {
         return {gStart: gStart, gEnd: gEnd}
     },
     checkAccess(user, graph, resource, property) {
+        if(!enableAuthentication){
+            return {
+                access: true,
+                type: 'full'
+            };            
+        }
         if (parseInt(user.isSuperUser)) {
             return {
                 access: true,
                 type: 'full'
             };
         } else {
-            if (graph && user.editorOfDataset.indexOf(graph) !== -1) {
+            if (graph && user.editorOfDataset && user.editorOfDataset.indexOf(graph) !== -1) {
                 return {
                     access: true,
                     type: 'full'
                 };
             } else {
-                if (resource && user.editorOfResource.indexOf(resource) !== -1) {
+                if (resource && user.editorOfResource && user.editorOfResource.indexOf(resource) !== -1) {
                     return {
                         access: true,
                         type: 'full'
                     };
                 } else {
-                    if (property && includesProperty(user.editorOfProperty, resource, property)) {
+                    if (property && user.editorOfProperty && includesProperty(user.editorOfProperty, resource, property)) {
                         return {
                             access: true,
                             type: 'partial'

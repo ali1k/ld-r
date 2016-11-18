@@ -70,7 +70,7 @@ class ResourceReactor extends React.Component {
             }
         }
         let newPropDIV = '';
-        if(config && config.allowPropertyNew){
+        if(config && config.allowPropertyNew && !config.readOnly){
             newPropDIV =  <div className="ui page grid">
                                 <div className="ui column"><div className="ui grey message form">
                                 <PrefixBasedInput noFocus={true} spec={{value:''}} onDataEdit={this.handleNewPropertyEdit.bind(this)} placeholder="Enter the URI of the property. You can use common prefixes e.g. foaf:name"/>

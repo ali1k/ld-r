@@ -187,7 +187,7 @@ class PropertyReactor extends React.Component {
             }
         }
         let propDeleteDIV = '';
-        if(propConfig.allowPropertyDelete){
+        if(propConfig.allowPropertyDelete && !this.props.config.readOnly){
             propDeleteDIV = <div className="ui list">
                 <div className="item">
                     <div  className="medium ui basic icon labeled button" onClick={this.handleDeleteProperty.bind(this)}>

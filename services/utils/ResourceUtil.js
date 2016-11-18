@@ -157,21 +157,25 @@ class ResourceUtil {
                 }
                 //make the right title for resource if propertyLabel is defined in config
                 let newTitel = title;
-                if (rconfig && rconfig.resourceLabelProperty && rconfig.resourceLabelProperty.length) {
-                    newTitel = '';
-                    let tmpArr = [];
-                    finalOutput.forEach(function(el) {
-                        if (rconfig.resourceLabelProperty.indexOf(el.propertyURI) !== -1) {
-                            tmpArr.push(el.instances[0].value);
-                        }
-                    });
+                if(rconfig){
+                    rconfig.userIsCreator = userIsCreator;
+                    if (rconfig.resourceLabelProperty && rconfig.resourceLabelProperty.length) {
+                        newTitel = '';
+                        let tmpArr = [];
+                        finalOutput.forEach(function(el) {
+                            if (rconfig.resourceLabelProperty.indexOf(el.propertyURI) !== -1) {
+                                tmpArr.push(el.instances[0].value);
+                            }
+                        });
 
-                    if (tmpArr.length) {
-                        newTitel = tmpArr.join('-');
-                    } else {
-                        newTitel = title;
+                        if (tmpArr.length) {
+                            newTitel = tmpArr.join('-');
+                        } else {
+                            newTitel = title;
+                        }
                     }
                 }
+
                 callback( {
                     props: finalOutput,
                     title: newTitel,
