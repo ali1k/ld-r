@@ -1,5 +1,7 @@
 import React from 'react';
-
+/**
+display DBpedia resources
+*/
 class BasicDBpediaView extends React.Component {
     getTitlefromURI(uri) {
         if(uri){
@@ -32,7 +34,7 @@ class BasicDBpediaView extends React.Component {
             link = this.props.spec.value;
             if(this.isDBpediaURI(this.props.spec.value)){
                 label = '<' + this.getTitlefromURI(this.props.spec.value) + '>';
-                if(this.props.config.asWikipedia){
+                if(this.props.config.asWikipedia || this.props.asWikipedia){
                     link = this.getWikipediaURI(this.props.spec.value);
                 }
             }
@@ -47,5 +49,18 @@ class BasicDBpediaView extends React.Component {
         );
     }
 }
-
+BasicDBpediaView.propTypes = {
+    /**
+    display wikipedia page URI instead of DBpedia one
+    */
+    asWikipedia: React.PropTypes.bool,
+    /**
+    LD-R Configurations object
+    */
+    config: React.PropTypes.object,
+    /**
+    LD-R spec
+    */
+    spec: React.PropTypes.object
+};
 export default BasicDBpediaView;

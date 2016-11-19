@@ -1,6 +1,8 @@
 import React from 'react';
 import {list} from '../../../../data/ISO3166_1_alpha2';
-
+/**
+Display the country codes based on ISO3166_1_alpha2.
+*/
 class TwoLetterCountryView extends React.Component {
     getCountry(code) {
         if(list[code]){
@@ -23,5 +25,10 @@ class TwoLetterCountryView extends React.Component {
         );
     }
 }
-
+TwoLetterCountryView.propTypes = {
+    /**
+    LD-R spec
+    */
+    spec: React.PropTypes.object
+};
 export default TwoLetterCountryView;

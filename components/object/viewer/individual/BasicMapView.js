@@ -1,6 +1,8 @@
 import React from 'react';
 import GoogleMapView from '../common/GoogleMapView';
-
+/**
+display geo coordinates (POINT) on Google Map
+*/
 class BasicMapView extends React.Component {
     render() {
         let val, outputDIV, coordinates;
@@ -8,6 +10,9 @@ class BasicMapView extends React.Component {
         let zoomLevel = 14;
         if(this.props.config && this.props.config.zoomLevel){
             zoomLevel = this.props.config.zoomLevel;
+        }
+        if(this.props.zoomLevel){
+            zoomLevel = this.props.zoomLevel;
         }
         if(this.props.spec.valueType === 'typed-literal' && this.props.spec.dataType==='http://www.openlinksw.com/schemas/virtrdf#Geometry'){
             val = val.replace('POINT(', '').replace(')', '');
@@ -23,5 +28,18 @@ class BasicMapView extends React.Component {
         );
     }
 }
-
+BasicMapView.propTypes = {
+    /**
+    Default level of zoom on the map
+    */
+    zoomLevel: React.PropTypes.number,
+    /**
+    LD-R Configurations object
+    */
+    config: React.PropTypes.object,
+    /**
+    LD-R spec
+    */
+    spec: React.PropTypes.object
+};
 export default BasicMapView;

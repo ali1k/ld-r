@@ -1,6 +1,8 @@
 import React from 'react';
 import {list} from '../../../../data/prefixes';
-
+/**
+Display compact URIs using common prefixes
+*/
 class PrefixBasedView extends React.Component {
     getPrefix(uri) {
         let o = {prefix: '', url: ''};
@@ -49,5 +51,14 @@ class PrefixBasedView extends React.Component {
         );
     }
 }
-
+PrefixBasedView.propTypes = {
+    /**
+    LD-R Configurations object
+    */
+    config: React.PropTypes.object,
+    /**
+    LD-R spec
+    */
+    spec: React.PropTypes.object
+};
 export default PrefixBasedView;

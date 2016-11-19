@@ -1,6 +1,8 @@
 import React from 'react';
 import URIUtil from '../../../utils/URIUtil';
-
+/**
+display values from an option/value list
+*/
 class BasicOptionView extends React.Component {
     prepareOption(value){
         let label = value;
@@ -33,5 +35,11 @@ class BasicOptionView extends React.Component {
         );
     }
 }
-
+BasicOptionView.propTypes = {
+    config: React.PropTypes.object,
+    /**
+    LD-R spec
+    */
+    spec: React.PropTypes.object
+};
 export default BasicOptionView;

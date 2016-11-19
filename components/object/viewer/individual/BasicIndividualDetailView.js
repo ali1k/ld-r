@@ -1,7 +1,9 @@
 import React from 'react';
 import PropertyHeader from '../../../property/PropertyHeader';
 import ObjectIViewer from '../../ObjectIViewer';
-
+/**
+Default component to display object with properties
+*/
 class BasicIndividualDetailView extends React.Component {
     componentDidMount() {
         let currentComp = this.refs.detailProperties;
@@ -44,5 +46,18 @@ class BasicIndividualDetailView extends React.Component {
         );
     }
 }
-
+BasicIndividualDetailView.propTypes = {
+    /**
+    Container dataset URI
+    */
+    datasetURI: React.PropTypes.string,
+    /**
+    LD-R Configurations object
+    */
+    config: React.PropTypes.object,
+    /**
+    LD-R spec
+    */
+    spec: React.PropTypes.object
+};
 export default BasicIndividualDetailView;

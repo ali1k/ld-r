@@ -1,14 +1,17 @@
 import React from 'react';
 import URIUtil from '../../../utils/URIUtil';
+/**
+Default component to display object values
+*/
 class BasicIndividualView extends React.Component {
     render() {
         let val, outputDIV;
         val = this.props.spec.value;
         if(this.props.spec.valueType === 'uri'){
             if(this.props.config){
-                if(this.props.config.truncateURI){
+                if(this.props.config.truncateURI || this.props.truncateURI){
                     val = '<' + URIUtil.truncateMiddle(val, 50, '') + '>';
-                }else if (this.props.config.shortenURI) {
+                }else if (this.props.config.shortenURI || this.props.shortenURI) {
                     val = '<' + URIUtil.getURILabel(val) + '>';
                 }
             }
@@ -23,5 +26,22 @@ class BasicIndividualView extends React.Component {
         );
     }
 }
-
+BasicIndividualView.propTypes = {
+    /**
+    truncate URI from the middle
+    */
+    truncateURI: React.PropTypes.bool,
+    /**
+    only show the last part of the URI
+    */
+    shortenURI: React.PropTypes.bool,
+    /**
+    LD-R Configurations object
+    */
+    config: React.PropTypes.object,
+    /**
+    LD-R spec
+    */
+    spec: React.PropTypes.object
+};
 export default BasicIndividualView;

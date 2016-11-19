@@ -1,6 +1,8 @@
 import React from 'react';
 import {list} from '../../../../data/languages';
-
+/**
+display language values provided by iso639-1
+*/
 class LanguageView extends React.Component {
     getCodefromURI(uri) {
         if(uri){
@@ -38,5 +40,14 @@ class LanguageView extends React.Component {
         );
     }
 }
-
+LanguageView.propTypes = {
+    /**
+    LD-R Configurations object
+    */
+    config: React.PropTypes.object,
+    /**
+    LD-R spec
+    */
+    spec: React.PropTypes.object
+};
 export default LanguageView;

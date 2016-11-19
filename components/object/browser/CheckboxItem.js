@@ -35,8 +35,8 @@ class CheckboxItem extends React.Component {
             }
             if(this.props.spec.valueType === 'uri'){
                 if(this.props.config && this.props.config.hasLinkedValue){
-                    if(this.props.config.linkedGraph){
-                        datasetURI = this.props.config.linkedGraph[0];
+                    if(this.props.config.containerDatasetURI){
+                        datasetURI = this.props.config.containerDatasetURI[0];
                     }
                     title = <a className="ui label" href={'/dataset/' + encodeURIComponent(datasetURI) + '/resource/' + encodeURIComponent(this.props.spec.value)} target="_blank"> {title} </a>;
                 }else{
