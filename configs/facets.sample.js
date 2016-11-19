@@ -17,6 +17,9 @@ export default {
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy'
             ],
             config: {
+                'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
+                    objectBrowser: ['TagListBrowser']
+                },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#dataset': {
                     shortenURI: 0
                 },
@@ -50,6 +53,9 @@ export default {
             config: {
                 'http://dbpedia.org/property/established': {
                     label: ['Established Year']
+                },
+                'http://dbpedia.org/ontology/country': {
+                    objectBrowser: ['TagListBrowser']
                 }
             }
         }

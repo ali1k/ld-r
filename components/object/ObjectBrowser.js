@@ -1,5 +1,6 @@
 import React from 'react';
 import CheckboxItem from './browser/CheckboxItem';
+import TagListBrowser from './browser/TagListBrowser';
 
 class ObjectBrowser extends React.Component {
     handleSelect(status, value) {
@@ -20,6 +21,9 @@ class ObjectBrowser extends React.Component {
                         <CheckboxItem datasetURI={self.props.datasetURI} shortenURI={self.props.shortenURI} key={index} spec={node} config={self.props.config} total={!self.props.spec.propertyURI ? 0 : node.total} onCheck={self.handleSelect.bind(self)}/>
                     );
                 });
+            break;
+            case 'TagListBrowser':
+                browser = <TagListBrowser datasetURI={self.props.datasetURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;
             break;
             default:
             browser = this.props.spec.instances.map(function(node, index) {
