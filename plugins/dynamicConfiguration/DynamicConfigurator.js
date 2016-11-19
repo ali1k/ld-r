@@ -2,7 +2,6 @@ import {enableDynamicReactorConfiguration, enableDynamicServerConfiguration, ena
 import {getStaticEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
 import rp from 'request-promise';
 const ldr_prefix = 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#';
-//todo: allow isSuperUser to access all configs
 class DynamicConfigurator {
     getDynamicDatasets(user, callback) {
         let dynamicReactorDS  = {dataset:{}};
@@ -11,7 +10,8 @@ class DynamicConfigurator {
             callback(dynamicReactorDS, dynamicFacetsDS);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open'){
+            //admin has full power on editing
+            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
@@ -187,7 +187,7 @@ class DynamicConfigurator {
             callback(config);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open'){
+            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             //start config
@@ -282,7 +282,7 @@ class DynamicConfigurator {
             callback(config);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open'){
+            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             //start config
@@ -377,7 +377,7 @@ class DynamicConfigurator {
             callback(config);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open'){
+            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             //start config
@@ -464,7 +464,7 @@ class DynamicConfigurator {
             callback(0);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open'){
+            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             //start config
@@ -573,7 +573,7 @@ class DynamicConfigurator {
             callback(config);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open'){
+            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             let typeFilter = [];
@@ -723,7 +723,7 @@ class DynamicConfigurator {
             callback(config);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open'){
+            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             //start config
@@ -816,7 +816,7 @@ class DynamicConfigurator {
             callback(1);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open'){
+            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);

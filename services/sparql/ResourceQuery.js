@@ -43,7 +43,7 @@ class ResourceQuery{
         //todo: consider different value types
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let userSt = '';
-        if(user && user.accountName !== 'open'){
+        if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
             userSt=` ldr:createdBy <${user.id}> ;`;
         }
         let date = new Date();
@@ -69,7 +69,7 @@ class ResourceQuery{
         //todo: consider different value types
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let userSt = '';
-        if(user && user.accountName !== 'open'){
+        if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
             userSt=` ldr:createdBy <${user.id}> ;`;
         }
         let date = new Date();
