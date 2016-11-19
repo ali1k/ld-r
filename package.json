@@ -21,7 +21,8 @@
     "dev:windows": "node ./webpack/dev-server.js",
     "lint": "eslint ./*.js ./**/*.js",
     "start": "node start.js",
-    "validate": "npm ls"
+    "validate": "npm ls",
+    "generate:docs": "react-docgen components/object/viewer/individual/ > documentation/object-viewer-individual.json"
   },
   "license": "Apache-2.0",
   "dependencies": {
