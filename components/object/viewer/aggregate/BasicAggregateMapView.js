@@ -3,7 +3,8 @@ import GoogleMapView from '../common/GoogleMapView';
 
 class BasicAggregateMapView extends React.Component {
     render() {
-        let val, outputDIV, coordinates, coordinatesArr=[];
+        let self = this;
+        let val, outputDIV, coordinates, long, lat, coordinatesArr=[];
         let zoomLevel = 8;
         if(this.props.config && this.props.config.zoomLevel){
             zoomLevel = this.props.config.zoomLevel;
@@ -12,11 +13,15 @@ class BasicAggregateMapView extends React.Component {
             if(!node){
                 return undefined; // stop processing this iteration
             }
-            if(node.valueType === 'typed-literal' && node.dataType==='http://www.openlinksw.com/schemas/virtrdf#Geometry'){
-                val = node.value.replace('POINT(', '').replace(')', '');
-                coordinates = val.split(' ');
-                coordinatesArr.push({position: {lat: parseFloat(coordinates[1]), lng: parseFloat(coordinates[0])}, key: node.value});
+            val = node.value.replace('POINT(', '').replace(')', '');
+            coordinates = val.split(' ');
+            long = parseFloat(coordinates[0]);
+            lat = parseFloat(coordinates[1]);
+            if((self.props.config && self.props.config.swapLongLat) || self.props.swapLongLat){
+                long = parseFloat(coordinates[1]);
+                lat = parseFloat(coordinates[0]);
             }
+            coordinatesArr.push({position: {lat: lat, lng: long}, key: node.value});
         });
         return (
             <div className="ui" ref="basicAggregateMapView">

@@ -5,7 +5,7 @@ display geo coordinates (POINT) on Google Map
 */
 class BasicMapView extends React.Component {
     render() {
-        let val, outputDIV, coordinates;
+        let val, outputDIV, coordinates, long, lat;
         val = this.props.spec.value;
         let zoomLevel = 14;
         if(this.props.config && this.props.config.zoomLevel){
@@ -14,10 +14,16 @@ class BasicMapView extends React.Component {
         if(this.props.zoomLevel){
             zoomLevel = this.props.zoomLevel;
         }
-        if(this.props.spec.valueType === 'typed-literal' && this.props.spec.dataType==='http://www.openlinksw.com/schemas/virtrdf#Geometry'){
-            val = val.replace('POINT(', '').replace(')', '');
-            coordinates = val.split(' ');
-            outputDIV = <GoogleMapView key={this.props.spec.value} markers={[{position: {lat: parseFloat(coordinates[1]), lng: parseFloat(coordinates[0])}, key: this.props.spec.value}]} zoomLevel={zoomLevel} center={{lat: parseFloat(coordinates[1]), lng: parseFloat(coordinates[0])}}/>;
+        val = val.replace('POINT(', '').replace(')', '');
+        coordinates = val.split(' ');
+        long = parseFloat(coordinates[0]);
+        lat = parseFloat(coordinates[1]);
+        if((this.props.config && this.props.config.swapLongLat) || this.props.swapLongLat){
+            long = parseFloat(coordinates[1]);
+            lat = parseFloat(coordinates[0]);
+        }
+        if(coordinates.length){
+            outputDIV = <GoogleMapView key={this.props.spec.value} markers={[{position: {lat: lat, lng: long}, key: this.props.spec.value}]} zoomLevel={zoomLevel} center={{lat: lat, lng: long}}/>;
         }else{
             outputDIV = <span> {val} </span>;
         }
@@ -29,6 +35,10 @@ class BasicMapView extends React.Component {
     }
 }
 BasicMapView.propTypes = {
+    /**
+    Swap longitude and latitudes: default is POINT(long lat)
+    */
+    swapLongLat: React.PropTypes.bool,
     /**
     Default level of zoom on the map
     */
