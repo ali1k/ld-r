@@ -27,7 +27,7 @@ let webpackConfig = {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
                 loaders: [
-                    require.resolve('react-hot-loader'),
+                    //require.resolve('react-hot-loader'),
                     require.resolve('babel-loader')
                 ]
             },
