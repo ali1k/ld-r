@@ -309,6 +309,8 @@ class ResourceUtil {
                 });
                 //run all tasks in parallel
                 async.parallelLimit(asyncTasks, 10, function(){
+                    //sort final output in a consistent way
+                    output.sort(compareProps);
                     output.forEach(function(el) {
                         if (propIndex[el.propertyURI]) {
                             finalOutput.push({
@@ -322,6 +324,7 @@ class ResourceUtil {
                             propIndex[el.propertyURI] = null;
                         }
                     });
+
                     callback({
                         props: finalOutput,
                         title: title,
