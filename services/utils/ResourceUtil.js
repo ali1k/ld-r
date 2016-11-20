@@ -106,6 +106,13 @@ class ResourceUtil {
                     });
                 });
             }
+            let userIsEditor = 0, checkEditorship;
+            if(user){
+                checkEditorship=checkAccess(user, datasetURI, resourceURI, 0);
+                if(checkEditorship.access && checkEditorship.type === 'full'){
+                    userIsEditor = 1;
+                }
+            }
             let modifiedConfig, accessLevel, userIsCreator=0;
             //run all tasks in parallel
             async.parallelLimit(asyncTasks, 10, ()=>{
@@ -123,7 +130,7 @@ class ResourceUtil {
                         });
                     }
                     if(user){
-                        if(user.id == el.instances[0].value) {
+                        if(el.propertyURI==='https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy' && user.id == el.instances[0].value) {
                             userIsCreator = 1;
                         }
                         accessLevel=checkAccess(user, datasetURI, resourceURI, el.propertyURI);
@@ -159,6 +166,7 @@ class ResourceUtil {
                 let newTitel = title;
                 if(rconfig){
                     rconfig.userIsCreator = userIsCreator;
+                    rconfig.userIsEditor = userIsEditor;
                     if (rconfig.resourceLabelProperty && rconfig.resourceLabelProperty.length) {
                         newTitel = '';
                         let tmpArr = [];
