@@ -76,6 +76,7 @@ server.use('/es6-shim', express.static(path.join(__dirname, '/node_modules/es6-s
 server.use('/semantic-ui', express.static(path.join(__dirname, '/node_modules/semantic-ui-css')));
 server.use('/jquery', express.static(path.join(__dirname, '/node_modules/jquery')));
 server.use('/animate.css', express.static(path.join(__dirname, '/node_modules/animate.css')));
+server.use('/leaflet', express.static(path.join(__dirname, '/node_modules/leaflet')));
 
 server.use('/assets', express.static(path.join(__dirname, '/assets')));
 // Get access to the fetchr plugin instance

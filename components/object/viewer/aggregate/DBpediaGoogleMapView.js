@@ -1,6 +1,6 @@
 import React from 'react';
 import {connectToStores} from 'fluxible-addons-react';
-import GoogleMapView from '../common/GoogleMapView';
+import LeafletMapView from '../common/LeafletMapView';
 import BasicAggregateView from './BasicAggregateView';
 import DBpediaGMapStore from '../../../../stores/DBpediaGMapStore';
 import getCoordinates from '../../../../actions/getCoordinates';
@@ -32,7 +32,7 @@ class DBpediaGoogleMapView extends React.Component {
     render () {
         return (
             <div ref="DBpediaGoogleMapView">
-                    {this.props.DBpediaGMapStore.coordinates.length? <GoogleMapView key={this.props.DBpediaGMapStore.coordinates.length} markers={this.props.DBpediaGMapStore.coordinates} zoomLevel={3} center={{lat: 48.2000, lng: 16.3500}}/> :''}
+                    {this.props.DBpediaGMapStore.coordinates.length? <LeafletMapView key={this.props.DBpediaGMapStore.coordinates.length} markers={this.props.DBpediaGMapStore.coordinates} zoomLevel={3} center={{lat: 48.2000, lng: 16.3500}}/> :''}
                    <BasicAggregateView spec={this.props.spec} config={this.props.config} />
             </div>
     	);

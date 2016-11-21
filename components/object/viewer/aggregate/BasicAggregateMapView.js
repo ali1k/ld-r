@@ -1,5 +1,5 @@
 import React from 'react';
-import GoogleMapView from '../common/GoogleMapView';
+import LeafletMapView from '../common/LeafletMapView';
 
 class BasicAggregateMapView extends React.Component {
     render() {
@@ -25,7 +25,7 @@ class BasicAggregateMapView extends React.Component {
         });
         return (
             <div className="ui" ref="basicAggregateMapView">
-                <GoogleMapView key="bamv" markers={coordinatesArr} zoomLevel={zoomLevel} center={{lat: coordinatesArr[0].position.lat, lng: coordinatesArr[0].position.lng}}/>
+                <LeafletMapView key="bamv" markers={coordinatesArr} zoomLevel={zoomLevel} center={{lat: coordinatesArr[0].position.lat, lng: coordinatesArr[0].position.lng}}/>
             </div>
         );
     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import GoogleMapView from '../common/GoogleMapView';
+import LeafletMapView from '../common/LeafletMapView';
 /**
 display geo coordinates (POINT) on Google Map
 */
@@ -23,7 +23,7 @@ class BasicMapView extends React.Component {
             lat = parseFloat(coordinates[0]);
         }
         if(coordinates.length){
-            outputDIV = <GoogleMapView key={this.props.spec.value} markers={[{position: {lat: lat, lng: long}, key: this.props.spec.value}]} zoomLevel={zoomLevel} center={{lat: lat, lng: long}}/>;
+            outputDIV = <div><LeafletMapView key={this.props.spec.value} markers={[{position: {lat: lat, lng: long}, key: this.props.spec.value}]} zoomLevel={zoomLevel} center={{lat: lat, lng: long}}/>{this.props.spec.value}</div>;
         }else{
             outputDIV = <span> {val} </span>;
         }
