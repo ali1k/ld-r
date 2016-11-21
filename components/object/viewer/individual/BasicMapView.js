@@ -23,7 +23,7 @@ class BasicMapView extends React.Component {
             lat = parseFloat(coordinates[0]);
         }
         if(coordinates.length){
-            outputDIV = <div><LeafletMapView key={this.props.spec.value} markers={[{position: {lat: lat, lng: long}, key: this.props.spec.value}]} zoomLevel={zoomLevel} center={{lat: lat, lng: long}}/>{this.props.spec.value}</div>;
+            outputDIV = <LeafletMapView key={this.props.spec.value} markers={[{position: {lat: lat, lng: long}, key: this.props.spec.value}]} zoomLevel={zoomLevel} center={{lat: lat, lng: long}}/>;
         }else{
             outputDIV = <span> {val} </span>;
         }

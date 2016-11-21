@@ -59,7 +59,7 @@ class ResourceQuery{
         } WHERE {
             ${gStart}
                 <${resourceURI}> ?p ?o .
-                FILTER (?p != ldr:cloneOf)
+                FILTER (?p != ldr:cloneOf && ?p != ldr:createdOn && ?p != ldr:createdBy)
             ${gEnd}
         }
         `;
