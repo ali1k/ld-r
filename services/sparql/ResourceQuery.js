@@ -35,7 +35,7 @@ class ResourceQuery{
                     <${resourceURI}> ?p ?o .
                     OPTIONAL {?o ?uri ?extendedVal .}
                 ${gEnd}
-            } GROUP BY ?p ?o ORDER BY ?p ?o
+            } GROUP BY ?p ?o
         `;
         return this.query;
     }
