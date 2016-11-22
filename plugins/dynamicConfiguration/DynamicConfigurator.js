@@ -1064,12 +1064,18 @@ class DynamicConfigurator {
     parseServerConfigs(config, datasetURI, body) {
         let output = config;
         let parsed = JSON.parse(body);
-        let settingProp = '';
+        let settingProp = '', host ='';
         parsed.results.bindings.forEach(function(el) {
             if(!output.sparqlEndpoint[datasetURI]){
                 output.sparqlEndpoint[datasetURI] = {};
             }
-            output.sparqlEndpoint[datasetURI].host = el.host.value;
+            host = el.host.value.replace('http://', '');
+            //do not allow localhost on dynamic server config
+            if(host === 'localhost' || host === '127.0.0.1'){
+                output.sparqlEndpoint[datasetURI].host = 'example.com';
+            }else{
+                output.sparqlEndpoint[datasetURI].host = host;
+            }
             output.sparqlEndpoint[datasetURI].port = el.port.value;
             output.sparqlEndpoint[datasetURI].path = el.path.value;
             output.sparqlEndpoint[datasetURI].endpointType = el.endpointType.value;
