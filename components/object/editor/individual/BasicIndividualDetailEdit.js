@@ -25,29 +25,31 @@ class BasicIndividualDetailEdit extends React.Component {
     render() {
         let self = this;
         let list = this.props.spec.extendedViewData.map(function(node, index) {
-            let llist = node.spec.instances.map(function(instance, index2){
+            if(node.config && !node.config.readOnly){
+                let llist = node.spec.instances.map(function(instance, index2){
+                    return (
+                        <ObjectIEditor noFocus="1" key={index + '_' + index2} spec={instance} config={node.config} datasetURI={self.props.datasetURI} onDataEdit={self.handleDetailDataEdit.bind(self, node.spec.propertyURI, instance.valueType, instance.dataType)}/>
+                    );
+                });
                 return (
-                    <ObjectIEditor noFocus="1" key={index + '_' + index2} spec={instance} config={node.config} datasetURI={self.props.datasetURI} onDataEdit={self.handleDetailDataEdit.bind(self, node.spec.propertyURI, instance.valueType, instance.dataType)}/>
-                );
-            });
-            return (
-                <div className="item" key={index}>
-                    <div className="ui">
-                        <div className="ui horizontal list">
-                            <div className="item">
-                                <PropertyHeader spec={node.spec} config={node.config} size="4" />
+                    <div className="item" key={index}>
+                        <div className="ui">
+                            <div className="ui horizontal list">
+                                <div className="item">
+                                    <PropertyHeader spec={node.spec} config={node.config} size="4" />
+                                </div>
+                            </div>
+                            <div className="ui dividing header"></div>
+                            <div className="fourteen wide column field list">
+                                    {llist}
+                            </div>
+                            <div className="one wide column field">
+
                             </div>
                         </div>
-                        <div className="ui dividing header"></div>
-                        <div className="fourteen wide column field list">
-                                {llist}
-                        </div>
-                        <div className="one wide column field">
-
-                        </div>
                     </div>
-                </div>
-            );
+                );
+            }
         });
         return (
             <div ref="detailPropertiesEdit">

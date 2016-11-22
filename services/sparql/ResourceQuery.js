@@ -165,6 +165,35 @@ class ResourceQuery{
         }
         return self.query;
     }
+    createObjectDetails (endpointParameters, user, graphName, resourceURI, propertyURI, oldObjectValue, newObjectValue, valueType, dataType, detailData) {
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
+        let date = new Date();
+        let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
+        let userSt = '';
+        let dateSt = '';
+        this.query= '';
+        if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
+            let dateSt = ` ldr:createdOn "${currentDate}"^^xsd:dateTime;`;
+            userSt=` ldr:createdBy <${user.id}> .`;
+            this.query = `
+            INSERT DATA {
+                ${gStart}
+                    <${newObjectValue}>
+                    ldr:createdOn "${currentDate}"^^xsd:dateTime;
+                    ${userSt}
+                ${gEnd}
+            };
+            `;
+        }
+        let self=this;
+        self.query = self.query + self.deleteTriple(endpointParameters, graphName, resourceURI, propertyURI, oldObjectValue, valueType, dataType) + ' ; ' + self.addTriple(endpointParameters, graphName, resourceURI, propertyURI, newObjectValue, valueType, dataType) + ' ; ';
+        for (let propURI in detailData) {
+            self.query = self.query + self.deleteTriple(endpointParameters, graphName, oldObjectValue, propURI, '', detailData[propURI].valueType, detailData[propURI].dataType) + ' ; ';
+            self.query = self.query + self.addTriple(endpointParameters, graphName, newObjectValue, propURI, detailData[propURI].value, detailData[propURI].valueType, detailData[propURI].dataType)+ ' ; ';
+        }
+
+        return this.query;
+    }
 
 }
 export default ResourceQuery;
