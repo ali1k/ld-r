@@ -19,9 +19,16 @@ class BasicLinkedIndividualView extends React.Component {
                 }
             }
         }
-        outputDIV = <NavLink routeName="resource" className="ui label" href={'/dataset/' + encodeURIComponent(datasetURI) + '/resource/' + encodeURIComponent(this.props.spec.value) + '/' + this.props.category + '/' + encodeURIComponent(this.props.propertyPath)}>
-            <i className="black cube icon"></i> {val}
-                    </NavLink>;
+        if(this.props.openInNewWindows || (this.props.config && this.props.config.openInNewWindows)){
+            outputDIV = <a target="_blank" className="ui label" href={'/dataset/' + encodeURIComponent(datasetURI) + '/resource/' + encodeURIComponent(this.props.spec.value) + '/' + this.props.category + '/' + encodeURIComponent(this.props.propertyPath)}>
+                <i className="black cube icon"></i> {val}
+                </a>;
+        }else{
+            outputDIV = <NavLink routeName="resource" className="ui label" href={'/dataset/' + encodeURIComponent(datasetURI) + '/resource/' + encodeURIComponent(this.props.spec.value) + '/' + this.props.category + '/' + encodeURIComponent(this.props.propertyPath)}>
+                <i className="black cube icon"></i> {val}
+                        </NavLink>;
+        }
+
         return (
             <div className="ui" ref="basicLinkedIndividualView">
                 {outputDIV}
@@ -30,6 +37,10 @@ class BasicLinkedIndividualView extends React.Component {
     }
 }
 BasicLinkedIndividualView.propTypes = {
+    /**
+    Opens the link in a new windows
+    */
+    openInNewWindows: React.PropTypes.bool,
     /**
     Container dataset URI
     */
