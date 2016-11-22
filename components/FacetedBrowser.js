@@ -216,7 +216,7 @@ class FacetedBrowser extends React.Component {
             return (
                 <div className="ui page grid" ref="facetedBrowser">
                         <div className="ui stackable four wide column">
-                            <Facet color="green" onCheck={this.handleOnCheck.bind(this, 1, 'uri', '')} key="master" maxHeight={500} minHeight={300} spec={{property: '', propertyURI: '', instances: properties}} config={{label: 'Properties'}} datasetURI={this.props.FacetedBrowserStore.datasetURI}/>
+                            <Facet color="green" onCheck={this.handleOnCheck.bind(this, 1, 'uri', '')} key="master" maxHeight={500} minHeight={300} spec={{property: '', propertyURI: '', instances: properties}} config={{label: 'Selected Properties'}} datasetURI={this.props.FacetedBrowserStore.datasetURI}/>
                             {configDiv}
                         </div>
                         {facetsDIV}

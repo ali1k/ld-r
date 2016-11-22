@@ -5,6 +5,7 @@ display geo coordinates (POINT) on Google Map
 */
 class BasicMapView extends React.Component {
     parseVirtPolygon(val) {
+
         let out = [];
         if (val.indexOf('POLYGON') !== -1) {
             let tmp = val.split(')');
