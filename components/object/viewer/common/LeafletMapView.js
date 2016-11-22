@@ -7,24 +7,42 @@ class LeafletMapView extends React.Component {
     render() {
         let self = this;
         if (process.env.BROWSER) {
-            let {Map, Marker, Popup, TileLayer} = require('react-leaflet');
+            let outputDIV, outputDIV1,outputDIV2;
+            let {Map, Marker, Popup, TileLayer, Polygon} = require('react-leaflet');
+            if(self.props.markers && self.props.markers.length){
+                outputDIV1 = self.props.markers.map((marker, index)=> {
+                    return (
+                        <Marker key={index} position={[marker.position.lat, marker.position.lng]}>
+                            <Popup>
+                                <span>{marker.position.lat}, {marker.position.lng}</span>
+                            </Popup>
+                        </Marker>
+                    );
+                })
+            }
+            if(self.props.polygons && self.props.polygons.length){
+                outputDIV2 = self.props.polygons.map((polygon, index)=> {
+                    return (
+                        <Polygon color='purple' key={index} positions={polygon}/>
+                    );
+                })
+            }
+            if(outputDIV1){
+                outputDIV = outputDIV1;
+            }
+            if(outputDIV2){
+                outputDIV = outputDIV2;
+            }
+            if(outputDIV1 && outputDIV2){
+                outputDIV = outputDIV1+outputDIV2;
+            }
             return (
                 <Map ref='map' center={[self.props.center.lat, self.props.center.lng]} zoom={self.props.zoomLevel} style={{minHeight: 200, minWidth: 200}}>
                    <TileLayer style={{height: '200px', position: 'relative'}}
                      url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                    />
-                    {
-                        self.props.markers.map((marker, index)=> {
-                            return (
-                                <Marker key={index} position={[marker.position.lat, marker.position.lng]}>
-                                    <Popup>
-                                        <span>{marker.position.lat}, {marker.position.lng}</span>
-                                    </Popup>
-                                </Marker>
-                            );
-                        })
-                    }
+                    {outputDIV}
                 </Map>
             );
         }else {
