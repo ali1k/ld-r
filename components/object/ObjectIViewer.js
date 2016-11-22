@@ -8,6 +8,7 @@ import BasicOptionView from './viewer/individual/BasicOptionView';
 import PasswordView from './viewer/individual/PasswordView';
 import LanguageView from './viewer/individual/LanguageView';
 import TwoLetterCountryView from './viewer/individual/TwoLetterCountryView';
+import ThreeLetterCountryView from './viewer/individual/ThreeLetterCountryView';
 import BasicDateTimeView from './viewer/individual/BasicDateTimeView';
 import PrefixBasedView from './viewer/individual/PrefixBasedView';
 import ToggleView from './viewer/individual/ToggleView';
@@ -84,6 +85,9 @@ class ObjectIViewer extends React.Component {
                 break;
             case 'TwoLetterCountryView':
                 viewer = <TwoLetterCountryView spec={this.props.spec} config={this.props.config}/>;
+                break;
+            case 'ThreeLetterCountryView':
+                viewer = <ThreeLetterCountryView spec={this.props.spec} config={this.props.config}/>;
                 break;
             default:
                 viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
