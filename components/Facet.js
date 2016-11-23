@@ -6,10 +6,16 @@ import SearchInput from 'react-search-input';
 class Facet extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchTerm: ''};
+        this.state = {searchTerm: '', selected: []};
     }
     checkItem(status, value) {
         this.props.onCheck(status, value, this.props.spec.propertyURI);
+        let pos = this.state.selected.indexOf(value);
+        if(pos === -1){
+            this.state.selected.push(value);
+        }else{
+            this.state.selected.splice(pos, 1);
+        }
     }
     //used for custom sorting
     compare(a, b) {

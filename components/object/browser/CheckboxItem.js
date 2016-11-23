@@ -1,15 +1,14 @@
 import React from 'react';
-import BasicCheckbox from '../editor/individual/BasicCheckbox';
 import ObjectIViewer from '../ObjectIViewer';
 import URIUtil from '../../utils/URIUtil';
+import { Checkbox, Segment } from 'semantic-ui-react';
+
 class CheckboxItem extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {isActive: false};
     }
     checkBox(status) {
         this.props.onCheck(status, this.props.spec.value);
-        this.setState({isActive: status});
     }
     addCommas(n){
         let rx = /(\d+)(\d{3})/;
@@ -44,14 +43,17 @@ class CheckboxItem extends React.Component {
                 }
             }
         }
-        if(this.state.isActive){
+
+        if(this.props.checked){
             title = <b> {title} </b>;
         }
         return (
             <div className="ui" ref="checkboxItem">
                 <div className="ui horizontal list">
                     <div className="item">
-                        <BasicCheckbox onToggle={this.checkBox.bind(this)} notInitialize={true} />
+                        <div className="ui basic icon mini button" onClick={this.checkBox.bind(this)}>
+                            <Checkbox checked={this.props.checked} />
+                        </div>
                     </div>
                     <div className="item">
                         {title}
