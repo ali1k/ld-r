@@ -3,7 +3,22 @@ import Wkt from 'wicket/wicket';
 import LeafletMapView from '../common/LeafletMapView';
 
 class BasicAggregateMapView extends React.Component {
-
+    getFocusPoint(val, components) {
+        let focusPoint = {lat: 52.379189, lng: 4.899431};
+        if(val.indexOf('POLYGON') !== -1 || val.indexOf('Polygon') !== -1 ){
+            focusPoint = {lat: parseFloat(components[0][0].y), lng: parseFloat(components[0][0].x)};
+            if(!focusPoint.lat || focusPoint.lat==='NaN' || !focusPoint.lng || focusPoint.lng==='NaN'){
+                focusPoint = {lat: parseFloat(components[0][1].y), lng: parseFloat(components[0][1].x)};
+            }
+        }else if(val.indexOf('MULTIPOLYGON') !== -1 || val.indexOf('MultiPolygon') !== -1 ){
+            focusPoint = {lat: parseFloat(components[0][0][0].y), lng: parseFloat(components[0][0][0].x)};
+        }else if(val.indexOf('LINESTRING') !== -1 || val.indexOf('LineString') !== -1 ){
+            focusPoint = {lat: parseFloat(components[0].y), lng: parseFloat(components[0].x)};
+        }else if(val.indexOf('MULTILINESTRING') !== -1 || val.indexOf('MultiLineString') !== -1 ){
+            focusPoint = {lat: parseFloat(components[0][0].y), lng: parseFloat(components[0][0].x)};
+        }
+        return focusPoint;
+    }
     render() {
         let self = this;
         let val, outputDIV, coordinates, long, lat, data, coordinatesArr=[], shapesArr=[], focusPoint;
@@ -26,10 +41,7 @@ class BasicAggregateMapView extends React.Component {
                     }
                     try {
                         if(!focusPoint){
-                            focusPoint = {lat: parseFloat(wkt.components[0][0].y), lng: parseFloat(wkt.components[0][0].x)}
-                        }
-                        if(!focusPoint.lat || focusPoint.lat==='NaN' || !focusPoint.lng || focusPoint.lng==='NaN'){
-                            focusPoint = {lat: parseFloat(wkt.components[0][1].y), lng: parseFloat(wkt.components[0][1].x)};
+                            focusPoint = self.getFocusPoint(node.value, wkt.components);
                         }
                         shapesArr.push(wkt.toJson());
                     }
