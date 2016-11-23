@@ -8,7 +8,7 @@ class LeafletMapView extends React.Component {
         let self = this;
         if (process.env.BROWSER) {
             let outputDIV, outputDIV1,outputDIV2;
-            let {Map, Marker, Popup, TileLayer, Polygon} = require('react-leaflet');
+            let {Map, Marker, Popup, TileLayer, GeoJSON} = require('react-leaflet');
             if(self.props.markers && self.props.markers.length){
                 outputDIV1 = self.props.markers.map((marker, index)=> {
                     return (
@@ -20,12 +20,14 @@ class LeafletMapView extends React.Component {
                     );
                 })
             }
-            if(self.props.polygons && self.props.polygons.length){
-                outputDIV2 = self.props.polygons.map((polygon, index)=> {
-                    return (
-                        <Polygon color='purple' key={index} positions={polygon}/>
-                    );
+            if(self.props.geometry && self.props.geometry.length){
+                let features = [];
+                self.props.geometry.forEach((geo, index)=> {
+                    features.push({'type': 'Feature', 'id': index, 'properties': {'name': index}, 'geometry': geo});
+
                 })
+                let geojson= {'type':'FeatureCollection','features': features};
+                outputDIV2 = <GeoJSON data={geojson}/>;
             }
             if(outputDIV1){
                 outputDIV = outputDIV1;

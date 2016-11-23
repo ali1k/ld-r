@@ -13,7 +13,7 @@ let webpackConfig = {
             './client.js'
         ],
         vendor: [
-            'react', 'react-dom', 'async', 'fluxible', 'fluxible-addons-react', 'fluxible-plugin-fetchr', 'fluxible-router', 'moment', 'rc-calendar', 'semantic-ui-react', 'react-leaflet'
+            'react', 'react-dom', 'async', 'fluxible', 'fluxible-addons-react', 'wicket', 'fluxible-plugin-fetchr', 'fluxible-router', 'moment', 'rc-calendar', 'semantic-ui-react', 'react-leaflet'
         ]
     },
     output: {
