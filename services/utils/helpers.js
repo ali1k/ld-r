@@ -135,7 +135,7 @@ export default {
             return {
                 access: true,
                 type: 'full'
-            };            
+            };
         }
         if (parseInt(user.isSuperUser)) {
             return {

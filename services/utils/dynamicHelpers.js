@@ -24,9 +24,14 @@ let prepareDGFunc = function (user, datasetURI, callback){
             }
         }else{
             //do not allow to override server configs by dynamic ones
-            if(dynamicConfig.sparqlEndpoint[d] && dynamicConfig.sparqlEndpoint[d].graphName){
-                g = dynamicConfig.sparqlEndpoint[d].graphName;
-                options = dynamicConfig.sparqlEndpoint[d];
+            if(dynamicConfig.sparqlEndpoint[d]){
+                if(dynamicConfig.sparqlEndpoint[d].graphName){
+                    g = dynamicConfig.sparqlEndpoint[d].graphName;
+                    options = dynamicConfig.sparqlEndpoint[d];
+                }else{
+                    g = d;
+                    options = dynamicConfig.sparqlEndpoint[d];
+                }
             }else{
                 //go for generic SPARQL endpoint
                 options = sparqlEndpoint['generic'];
