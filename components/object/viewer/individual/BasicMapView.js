@@ -32,6 +32,7 @@ class BasicMapView extends React.Component {
                 }
                 catch(err) {
                     console.log(err.message);
+                    outputDIV = <span> {val} </span>;
                 }
             }
         }else{
