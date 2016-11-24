@@ -292,6 +292,12 @@ export default {
             });
         } else if (resource === 'resource.property') {
             datasetURI = params.dataset;
+            //do not allow certain props to be added
+            const forbiddenProps = ['https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#cloneOf', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdOn']
+            if(forbiddenProps.indexOf(params.propertyURI)!== -1){
+                callback(null, {category: params.category, datasetURI: datasetURI, resourceURI: params.resourceURI, propertyURI: params.propertyURI, objectValue: params.objectValue});
+                return 0;
+            }
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
