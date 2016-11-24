@@ -47,7 +47,11 @@ class NewDataset extends React.Component {
                 datasetURI: datasetURI
             });
         }else{
-            let parsed = url.parse(this.state.endpointURI);
+            endpointURI = this.state.endpointURI;
+            if(endpointURI.indexOf('http://') === -1){
+                endpointURI = 'http://' + endpointURI;
+            }
+            let parsed = url.parse(endpointURI);
             host = parsed.hostname;
             path = parsed.pathname;
             if(parsed.port){
