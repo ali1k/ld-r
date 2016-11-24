@@ -1,12 +1,12 @@
 import React from 'react';
 import Facet from './Facet';
 import {NavLink} from 'fluxible-router';
-import FacetedBrowserStore from '../stores/FacetedBrowserStore';
+import FacetedBrowserStore from '../../stores/FacetedBrowserStore';
 import {connectToStores} from 'fluxible-addons-react';
-import createASampleFacetsConfig from '../actions/createASampleFacetsConfig';
-import loadFacets from '../actions/loadFacets';
-import ResourceList from './dataset/ResourceList';
-import ResourceListPager from './dataset/ResourceListPager';
+import createASampleFacetsConfig from '../../actions/createASampleFacetsConfig';
+import loadFacets from '../../actions/loadFacets';
+import ResourceList from './ResourceList';
+import ResourceListPager from './ResourceListPager';
 
 class FacetedBrowser extends React.Component {
     constructor(props) {

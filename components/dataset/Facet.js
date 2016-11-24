@@ -1,6 +1,6 @@
 import React from 'react';
-import PropertyHeader from './property/PropertyHeader';
-import ObjectBrowser from './object/ObjectBrowser';
+import PropertyHeader from '../property/PropertyHeader';
+import ObjectBrowser from '../object/ObjectBrowser';
 import SearchInput from 'react-search-input';
 
 class Facet extends React.Component {

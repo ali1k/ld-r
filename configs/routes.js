@@ -29,7 +29,7 @@ export default {
     facets: {
         path: '/browse/:id?',
         method: 'get',
-        handler: require('../components/FacetedBrowser'),
+        handler: require('../components/dataset/FacetedBrowser'),
         label: 'Faceted Browser',
         action: (context, payload, done) => {
             let datasetURI, page;
