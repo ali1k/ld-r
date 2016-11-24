@@ -86,7 +86,7 @@ class NewDataset extends React.Component {
 
                 <Form.Field label='URL of the SPARQL Endpoint' control='input' placeholder='URL of the SPARQL Endpoint / or leave it empty for generic one!' onChange={this.handleChange.bind(this, 'endpointURI')}/>
 
-                <Form.Field label='Graph Name' control='input' placeholder='Graph Name / or leave it empty for all graphs' onChange={this.handleChange.bind(this, 'Graph Name')}/>
+                <Form.Field label='Graph Name' control='input' placeholder='Graph Name / or leave it empty for all graphs' onChange={this.handleChange.bind(this, 'graphName')}/>
                 <Divider hidden />
                 <div className='ui big blue button' onClick={this.handleCreateDataset.bind(this)}>Add Dataset</div>
                 <Divider hidden />
