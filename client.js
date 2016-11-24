@@ -4,9 +4,10 @@ import React from 'react';
 import debug from 'debug';
 import { createElementWithContext } from 'fluxible-addons-react';
 import app from './app';
+import { AppContainer } from 'react-hot-loader';
 
-const debugClient = debug('linked-data-reactor');
-const dehydratedState = window.App; // Sent from the server
+const debugClient = debug('ld-r');
+let dehydratedState = window.App; // Sent from the server
 
 window.React = ReactDOM; // For chrome dev tool support
 
@@ -26,8 +27,33 @@ app.rehydrate(dehydratedState, (err, context) => {
 
     debugClient('React Rendering');
     ReactDOM.render(
-        createElementWithContext(context),
+        <AppContainer>{createElementWithContext(context)}</AppContainer>,
         mountNode,
         () => debugClient('React Rendered')
     );
 });
+/*
+//for react hot loader
+if (module.hot) {
+    module.hot.accept('./app', () => {
+        // If you use Webpack 2 in ES modules mode, you can
+        // use <App /> here rather than require() a <NextApp />.
+        const NextApp = require('./app');
+        dehydratedState = window.App;
+        // pass in the dehydrated server state from server.js
+        NextApp.rehydrate(dehydratedState, (err, context) => {
+            if (err) {
+                throw err;
+            }
+            window.context = context;
+            const mountNode = document.getElementById('app');
+            debugClient('React Hot Rendering');
+            ReactDOM.render(
+                <AppContainer>{createElementWithContext(context)}</AppContainer>,
+                mountNode,
+                () => debugClient('React Hot Rendered')
+            );
+        });
+    });
+}
+*/

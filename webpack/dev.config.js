@@ -11,6 +11,7 @@ let webpackConfig = {
     },
     entry: {
         main: [
+            'react-hot-loader/patch',
             'webpack-dev-server/client?http://' + host + ':' + mainPort,
             'webpack/hot/only-dev-server',
             './client.js'
@@ -26,10 +27,7 @@ let webpackConfig = {
             {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
-                loaders: [
-                    //require.resolve('react-hot-loader'),
-                    require.resolve('babel-loader')
-                ]
+                loaders: ['babel']
             },
             { test: /\.json$/, loader: 'json-loader'},
             { test: /\.css$/, loader: 'style-loader!css-loader' }
