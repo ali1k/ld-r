@@ -33,7 +33,7 @@ app.rehydrate(dehydratedState, (err, context) => {
     );
 });
 //todo: fix some minor bugs here
-/*
+
 //for react hot loader
 if (module.hot) {
     module.hot.accept('./app', () => {
@@ -57,4 +57,3 @@ if (module.hot) {
         });
     });
 }
-*/
