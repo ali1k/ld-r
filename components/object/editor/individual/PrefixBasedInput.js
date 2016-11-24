@@ -1,6 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {list} from '../../../../data/prefixes';
+import {autocompletelist} from '../../../../data/autocompletes';
+import {Search, Grid, Header} from 'semantic-ui-react';
+import _ from 'lodash';
 
 class PrefixBasedInput extends React.Component {
     constructor(props) {
@@ -10,7 +13,9 @@ class PrefixBasedInput extends React.Component {
             v = this.createDefaultValue(this.props.spec.valueType, this.props.spec.dataType);
         }
         this.state = {
-            value: v
+            value: v,
+            results: [],
+            isLoading: false
         };
     }
     componentDidMount() {
@@ -37,8 +42,8 @@ class PrefixBasedInput extends React.Component {
     }
     createDefaultValue(valueType, dataType) {
         let dynamicDomain = 'http://example.com';
-        if (this.props.config && this.props.config.dynamicResourceDomain) {
-            dynamicDomain = this.props.config.dynamicResourceDomain[0];
+        if (this.props.config && this.props.config.dynamicReautocompletelistDomain) {
+            dynamicDomain = this.props.config.dynamicReautocompletelistDomain[0];
         }
         if (this.props.config && this.props.config.defaultValue) {
             return this.props.config.defaultValue[0];
@@ -113,9 +118,32 @@ class PrefixBasedInput extends React.Component {
         }
 
     }
-    handleChange(event) {
+    resetComponent() {
+        let self = this;
+        this.setState({
+            value: '',
+            results: [],
+            isLoading: false
+        });
+    }
+    //when user clicks on results
+    handleChange(event, result) {
+        this.setState({value: result.title});
+        this.props.onDataEdit(this.applyPrefix(result.title.trim()));
+    }
+    handleSearchChange(event, value) {
         this.props.onDataEdit(this.applyPrefix(event.target.value.trim()));
-        this.setState({value: event.target.value});
+        this.setState({ isLoading: true, value: event.target.value });
+        setTimeout(() => {
+            if (this.state.value.length < 1) return this.resetComponent()
+
+            const re = new RegExp(_.escapeRegExp(this.state.value), 'i')
+            const isMatch = (result) => re.test(result.title)
+            this.setState({
+                isLoading: false,
+                results: _.filter(autocompletelist, isMatch),
+            })
+        }, 500)
     }
     render() {
         let placeholder = '';
@@ -127,9 +155,10 @@ class PrefixBasedInput extends React.Component {
                 placeholder = this.props.placeholder;
             }
         }
+        let { value, results, isLoading } = this.state;
         return (
-            <div className="ui">
-                <input ref="prefixBasedInput" type="text" value={this.preparePrefix(this.state.value)} placeholder={placeholder} onChange={this.handleChange.bind(this)} onKeyDown={this.handleKeyDown.bind(this)}/>
+            <div className="sixteen wide column field">
+                <Search showNoResults={false} icon="cube" ref="prefixBasedInput" type="text" loading={isLoading} value={this.preparePrefix(value)} placeholder={placeholder} onChange={this.handleChange.bind(this)} onKeyDown={this.handleKeyDown.bind(this)} onSearchChange={this.handleSearchChange.bind(this)} results={results}/>
             </div>
         );
     }
