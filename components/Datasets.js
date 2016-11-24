@@ -5,7 +5,6 @@ import {connectToStores} from 'fluxible-addons-react';
 import {enableAuthentication, defaultDatasetURI, enableAddingNewDatasets} from '../configs/general';
 import DatasetsStore from '../stores/DatasetsStore';
 import URIUtil from './utils/URIUtil';
-import createDataset from '../actions/createDataset';
 
 class Datasets extends React.Component {
     componentDidMount() {
@@ -19,8 +18,8 @@ class Datasets extends React.Component {
         return out;
     }
     handleCreateDataset() {
-        this.context.executeAction(createDataset, {
-
+        this.context.executeAction(navigateAction, {
+            url: '/newDataset'
         });
     }
     displayResource(){

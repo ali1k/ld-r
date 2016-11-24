@@ -490,6 +490,10 @@ class DynamicConfigurator {
             if(configDatasetURI[0].slice(-1) === '/'){
                 rnc = configDatasetURI[0] + 'rcf' + Math.round(+new Date() / 1000);
             }
+            let datasetLabel = datasetURI;
+            if(options.datasetLabel){
+                datasetLabel = options.datasetLabel;
+            }
             let date = new Date();
             let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
             let st = '';
@@ -497,7 +501,7 @@ class DynamicConfigurator {
                 if(options && options.fromScratch){
                     st= `
                     ldr:dataset <${datasetURI}> ;
-                    ldr:datasetLabel "${datasetURI}" ;
+                    ldr:datasetLabel "${datasetLabel}" ;
                     ldr:readOnly "0" ;
                     ldr:allowResourceClone "1" ;
                     ldr:allowPropertyDelete "1" ;

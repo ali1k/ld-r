@@ -12,6 +12,9 @@
 @prefix dbr: <http://dbpedia.org/resource/> .
 @prefix dbo: <http://dbpedia.org/ontology/> .
 @prefix swrc: <http://swrc.ontoware.org/ontology#> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix geovocab: <http://geovocab.org/geometry#> .
+@prefix gsp: <http://www.opengis.net/ont/geosparql#> .
 
 #Resource URI config
 <https://ld-r.org/config/r14a> a ldr:ReactorConfig;
@@ -27,11 +30,16 @@
       ldr:treatAsResourceType "1" ;
       ldr:resourceReactor "PersonResource" .
 #Property config
-<https://ld-r.org/config/r12> a ldr:ReactorConfig;
+<https://ld-r.org/config/r12a> a ldr:ReactorConfig;
       ldr:scope "P" ;
       rdfs:label """foaf:thumbnail/dbo:thumbnail to BasicImageView""" ;
       ldr:property foaf:thumbnail, dbo:thumbnail ;
       ldr:objectIViewer "BasicImageView" .
+<https://ld-r.org/config/r12b> a ldr:ReactorConfig;
+        ldr:scope "P" ;
+        rdfs:label """geo:geometry/gsp:asWKT to BasicMapView""" ;
+        ldr:property geo:geometry, gsp:asWKT, geovocab:asWKT ;
+        ldr:objectIViewer "BasicMapView" .
 #Dataset-Property config
 <https://ld-r.org/config/r11> a ldr:ReactorConfig;
         ldr:scope "DP" ;
