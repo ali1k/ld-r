@@ -93,8 +93,8 @@ export default {
             callback(res);
         });
     },
-    createASampleFacetsConfig: function(user, configURI, datasetURI, callback) {
-        dynamicConfigurator.createASampleFacetsConfig(user, configURI, datasetURI, (res)=> {
+    createASampleFacetsConfig: function(user, configURI, datasetURI, options, callback) {
+        dynamicConfigurator.createASampleFacetsConfig(user, configURI, datasetURI, options, (res)=> {
             callback(res);
         });
     }

@@ -879,7 +879,7 @@ class DynamicConfigurator {
         }
 
     }
-    createASampleFacetsConfig(user, configURI, datasetURI, callback) {
+    createASampleFacetsConfig(user, configURI, datasetURI, options, callback) {
         //do not config if disabled
         if(!enableDynamicReactorConfiguration){
             callback(1);
@@ -908,11 +908,15 @@ class DynamicConfigurator {
             let date = new Date();
             let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
             let rnc = Math.round(+new Date() / 1000);
+            let labelSt = ` rdfs:label "Facets Config ${rnc}" ;`;
+            if(options.datasetLabel){
+                labelSt = ` rdfs:label """${options.datasetLabel} Facets Config""" ;`;
+            }
             const query = `
             INSERT DATA { ${graph}
                 <${configURI}> a ldr:FacetsConfig ;
                          ldr:dataset <${datasetURI}> ;
-                         rdfs:label "Facet Config ${rnc}" ;
+                         ${labelSt}
                          ldr:list rdf:type ;
                          ldr:createdOn "${currentDate}"^^xsd:dateTime;
                          ${userSt}
