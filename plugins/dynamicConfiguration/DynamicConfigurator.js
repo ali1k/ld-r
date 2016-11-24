@@ -500,6 +500,7 @@ class DynamicConfigurator {
             if(scope === 'D'){
                 if(options && options.fromScratch){
                     st= `
+                    rdfs:label """${datasetLabel} Reactor Config""" ;
                     ldr:dataset <${datasetURI}> ;
                     ldr:datasetLabel "${datasetLabel}" ;
                     ldr:readOnly "0" ;
@@ -511,8 +512,9 @@ class DynamicConfigurator {
                     `;
                 }else {
                     st= `
+                    rdfs:label """${datasetLabel} Reactor Config""" ;
                     ldr:dataset <${datasetURI}> ;
-                    ldr:datasetLabel "${datasetURI}" ;
+                    ldr:datasetLabel "${datasetLabel}" ;
                     ldr:maxNumberOfResourcesOnPage "20" ;
                     `;
                 }
@@ -563,6 +565,69 @@ class DynamicConfigurator {
                 callback(rnc);
             }).catch(function (err) {
                 console.log('Error in dataset config creation update query:', prefixes + query);
+                console.log('---------------------------------------------------------');
+                callback(0);
+            });
+        }
+
+    }
+    createASampleServerConfig(user, datasetURI, options, callback) {
+        let exceptions = [configDatasetURI[0], authDatasetURI[0]];
+        //do not config if disabled or exceptions
+        if(!enableDynamicReactorConfiguration || exceptions.indexOf(datasetURI) !== -1){
+            callback(0);
+        }else{
+            let userSt = '';
+            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
+                userSt=` ldr:createdBy <${user.id}> ;`;
+            }
+            //start config
+            const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
+            const graphName = endpointParameters.graphName;
+            const headers = {'Accept': 'application/sparql-results+json'};
+            const outputFormat = 'application/sparql-results+json';
+            //query the triple store for property configs
+            const prefixes = `
+                PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
+                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                PREFIX owl: <http://www.w3.org/2002/07/owl#>
+            `;
+            let graph = ' GRAPH <'+ graphName +'> {';
+            let graphEnd = ' }';
+            if(!graphName || graphName === 'default'){
+                graph ='';
+                graphEnd = '';
+            }
+            let rnc = configDatasetURI[0] + '/scf' + Math.round(+new Date() / 1000);
+            //do not add two slashes
+            if(configDatasetURI[0].slice(-1) === '/'){
+                rnc = configDatasetURI[0] + 'scf' + Math.round(+new Date() / 1000);
+            }
+            let date = new Date();
+            let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
+            const query = `
+            INSERT DATA { ${graph}
+                <${rnc}> a ldr:ServerConfig ;
+                         ldr:dataset <${datasetURI}> ;
+                         rdfs:label """${options.datasetLabel} Server Config""";
+                         ldr:host """${options.host}""";
+                         ldr:port """${options.port}""";
+                         ldr:path """${options.path}""";
+                         ldr:endpointType """${options.endpointType}""";
+                         ldr:graphName """${options.graphName}""";
+                         ${userSt}
+                         ldr:createdOn "${currentDate}"^^xsd:dateTime .
+            ${graphEnd} }
+            `;
+            //send request
+            //console.log(prefixes + query);
+            let self = this;
+            let HTTPQueryObject = getHTTPQuery('update', prefixes + query, endpointParameters, outputFormat);
+            rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                callback(rnc);
+            }).catch(function (err) {
+                console.log('Error in server config creation update query:', prefixes + query);
                 console.log('---------------------------------------------------------');
                 callback(0);
             });

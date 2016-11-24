@@ -1,6 +1,6 @@
 'use strict';
 import {getHTTPQuery, getHTTPGetURL, prepareDG} from './utils/helpers';
-import {getDynamicEndpointParameters, createASampleReactorConfig, createASampleFacetsConfig} from './utils/dynamicHelpers';
+import {getDynamicEndpointParameters, createASampleReactorConfig, createASampleFacetsConfig, createASampleServerConfig} from './utils/dynamicHelpers';
 import {enableLogs, enableAuthentication, authDatasetURI, configDatasetURI} from '../configs/general';
 import ResourceQuery from './sparql/ResourceQuery';
 import ResourceUtil from './utils/ResourceUtil';
@@ -365,8 +365,13 @@ export default {
             createASampleReactorConfig(req.user, params.scope, datasetURI, params.resourceURI, params.propertyURI, params.options, (res)=>{
                 callback(null, {datasetURI: configDatasetURI[0], resourceURI: res, redirect: params.redirect});
             });
+        }else if (resource === 'resource.newServerConfig') {
+            datasetURI = params.dataset;
+            createASampleServerConfig(req.user, datasetURI, params.options, (res)=>{
+                callback(null, {datasetURI: datasetURI, redirect: params.redirect});
+            });
         }else if (resource === 'resource.newFacetsConfig') {
-            let sresourceURI = configDatasetURI[0] + '/c' + Math.round(+new Date() / 1000);;
+            let sresourceURI = configDatasetURI[0] + '/c' + Math.round(+new Date() / 1000);
             createASampleFacetsConfig(req.user, sresourceURI, params.dataset, (res)=>{
                 callback(null, {datasetURI: configDatasetURI[0], resourceURI: sresourceURI, redirect: params.redirect});
             });

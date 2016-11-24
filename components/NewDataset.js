@@ -5,11 +5,12 @@ import {enableAuthentication, enableAddingNewDatasets, baseResourceDomain} from 
 import { Button, Divider, Form } from 'semantic-ui-react';
 import url from 'url';
 import createEmptyDataset from '../actions/createEmptyDataset';
+import createFromExistingDataset from '../actions/createFromExistingDataset';
 
 class NewDataset extends React.Component {
     constructor(props){
         super(props);
-        this.state = {datasetLabel: '', endpointURI: ''};
+        this.state = {datasetLabel: '', endpointURI: '', graphName: ''};
     }
     componentDidMount() {
 
@@ -20,10 +21,13 @@ class NewDataset extends React.Component {
             this.setState({datasetLabel: e.target.value.trim()});
         }else if(element=== 'endpointURI'){
             this.setState({endpointURI: e.target.value.trim()});
+        }else if(element=== 'graphName'){
+            this.setState({graphName: e.target.value.trim()});
         }
     }
     handleCreateDataset() {
-        let datasetURI, datasetLabel, endpointURI;
+        let datasetURI, datasetLabel, endpointURI, graphName, host, port, path, endpointType;
+        graphName= 'default';
         datasetLabel= 'd' + Math.round(+new Date() / 1000);
         datasetURI= baseResourceDomain[0] + '/' + datasetLabel;
         //do not add two slashes
@@ -34,15 +38,38 @@ class NewDataset extends React.Component {
         if(this.state.datasetLabel){
             datasetLabel = this.state.datasetLabel;
         }
+        if(this.state.graphName){
+            graphName = this.state.graphName;
+        }
         if(!this.state.endpointURI){
             this.context.executeAction(createEmptyDataset, {
                 datasetLabel: datasetLabel,
                 datasetURI: datasetURI
             });
+        }else{
+            let parsed = url.parse(this.state.endpointURI);
+            host = parsed.hostname;
+            path = parsed.pathname;
+            if(parsed.port){
+                port = parsed.port;
+            }else{
+                port = 80;
+            }
+            endpointType = 'ClioPatria';
+            this.context.executeAction(createFromExistingDataset, {
+                datasetLabel: datasetLabel,
+                datasetURI: datasetURI,
+                graphName: graphName,
+                host: host,
+                port: port,
+                path: path,
+                endpointType: endpointType
+            });
         }
+
     }
     render() {
-        let errorDIV, self = this;
+        let formDIV, errorDIV, self = this;
         let newDatasetID, newDatasetURI;
         let user = this.context.getUser();
         if(enableAuthentication && !user){
@@ -53,30 +80,24 @@ class NewDataset extends React.Component {
             }
         }
         if(!errorDIV){
-            newDatasetID = 'd' + Math.round(+new Date() / 1000);
-            newDatasetURI = baseResourceDomain[0] + '/' + newDatasetID;
-            //do not add two slashes
-            if(baseResourceDomain[0].slice(-1) === '/'){
-                newDatasetURI = baseResourceDomain[0] + 'd' + newDatasetID;
-            }
+            formDIV =
+            <Form size='big'>
+                <Form.Field label='Dataset Label' control='input' placeholder='Dataset Label / or leave empty for a random name!' onChange={this.handleChange.bind(this, 'datasetLabel')}/>
+
+                <Form.Field label='URL of the SPARQL Endpoint' control='input' placeholder='URL of the SPARQL Endpoint / or leave it empty for generic one!' onChange={this.handleChange.bind(this, 'endpointURI')}/>
+
+                <Form.Field label='Graph Name' control='input' placeholder='Graph Name / or leave it empty for all graphs' onChange={this.handleChange.bind(this, 'Graph Name')}/>
+                <Divider hidden />
+                <div className='ui big blue button' onClick={this.handleCreateDataset.bind(this)}>Add Dataset</div>
+                <Divider hidden />
+            </Form>;
         }
-        //console.log(url.parse('http://dbpedia.org'));
-        //hostname
-        //pathname
-        //port 80 if null
         return (
             <div className="ui page grid" ref="datasets">
                 <div className="ui column">
                     <h2>Add a new dataset</h2>
                     {errorDIV}
-                    <Form size='big'>
-                        <Form.Field label='Dataset Label' control='input' placeholder='Dataset Label' onChange={this.handleChange.bind(this, 'datasetLabel')}/>
-
-                        <Form.Field label='URL of the SPARQL Endpoint' control='input' placeholder='URL of the SPARQL Endpoint' onChange={this.handleChange.bind(this, 'endpointURI')}/>
-                        <Divider hidden />
-                        <div className='ui big blue button' onClick={this.handleCreateDataset.bind(this)}>Add Dataset</div>
-                        <Divider hidden />
-                    </Form>
+                    {formDIV}
                 </div>
             </div>
         );

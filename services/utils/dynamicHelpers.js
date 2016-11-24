@@ -83,6 +83,11 @@ export default {
             callback(dynamicReactorDS, dynamicFacetsDS);
         });
     },
+    createASampleServerConfig: function(user, datasetURI, options, callback) {
+        dynamicConfigurator.createASampleServerConfig(user, datasetURI, options, (res)=> {
+            callback(res);
+        });
+    },
     createASampleReactorConfig: function(user, scope, datasetURI, resourceURI, propertyURI, options, callback) {
         dynamicConfigurator.createASampleReactorConfig(user, scope, datasetURI, resourceURI, propertyURI, options, (res)=> {
             callback(res);
