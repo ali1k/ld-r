@@ -5,7 +5,7 @@ class LeafletMapView extends React.Component {
         super(...args);
     }
     styleGeoJSON(feature){
-        return {color: feature.style.color};
+        return {color: feature.style.color, fill:feature.style.fill, fillColor:feature.style.fillColor, fillOpacity:feature.style.fillOpacity, opacity: feature.style.opacity, weight: feature.style.weight};
     }
     render() {
         let self = this;
@@ -25,17 +25,20 @@ class LeafletMapView extends React.Component {
             }
             if(self.props.geometry && self.props.geometry.length){
                 const colors = ['#1a75ff', '#0bc4a7', '#1a48eb', '#ecdc0b', '#ed1ec6', '#d9990b', '#0c0d17', '#e3104f', '#6d8ecf'];
-                let style, features = [];
+                let style, features = [], weights=[];
+                if(self.props.weights){
+                    weights = self.props.weights;
+                }
                 self.props.geometry.forEach((geo, index)=> {
                     style = self.props.styles;
                     if(!style){
-                        style={color: colors[index % colors.length]};
+                        style={fill:true, fillOpacity: weights[index] ? weights[index] : 0.25 , opacity: 1, weight: weights[index] ? (1 + weights[index]) : 3, fillColor:colors[index % colors.length], color: colors[index % colors.length]};
                     }
-                    features.push({'type': 'Feature', 'id': index, 'style': style, 'properties': {'name': index}, 'geometry': geo});
+                    features.push({'type': 'Feature', 'id': index, 'style': style, 'properties': {'name': index, }, 'geometry': geo});
                 })
                 let geojson= {'type':'FeatureCollection','features': features};
                 //console.log(JSON.stringify(geojson));
-                outputDIV2 = <GeoJSON data={geojson} style={self.styleGeoJSON}/>;
+                outputDIV2 = <GeoJSON data={geojson} style={self.styleGeoJSON} />;
             }
             if(outputDIV1){
                 outputDIV = outputDIV1;

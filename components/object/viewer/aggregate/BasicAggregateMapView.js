@@ -22,7 +22,7 @@ class BasicAggregateMapView extends React.Component {
     }
     render() {
         let self = this;
-        let val, outputDIV, coordinates, long, lat, data, coordinatesArr=[], shapesArr=[], focusPoint;
+        let val, outputDIV, coordinates, long, lat, data, coordinatesArr=[], weightArr=[], shapesArr=[], focusPoint;
         let zoomLevel = 9;
         if(this.props.config && this.props.config.zoomLevel){
             zoomLevel = this.props.config.zoomLevel;
@@ -45,6 +45,9 @@ class BasicAggregateMapView extends React.Component {
                             focusPoint = self.getFocusPoint(node.value, wkt.components);
                         }
                         shapesArr.push(wkt.toJson());
+                        if(node.weight){
+                            weightArr.push(node.weight);
+                        }
                     }
                     catch(err) {
                         console.log(err.message);
@@ -80,7 +83,7 @@ class BasicAggregateMapView extends React.Component {
         }else{
             //for polygons
             center = focusPoint;
-            zoomLevel = 8;
+            zoomLevel = 7;
             if(this.props.config && this.props.config.zoomLevel){
                 zoomLevel = this.props.config.zoomLevel;
             }
@@ -99,7 +102,7 @@ class BasicAggregateMapView extends React.Component {
         }
         return (
             <div className="ui" ref="basicAggregateMapView">
-                <LeafletMapView key="bamv" markers={coordinatesArr} geometry={shapesArr} zoomLevel={zoomLevel} center={center} mapWidth={mapWidth} mapHeight={mapHeight}/>
+                <LeafletMapView key="bamv" markers={coordinatesArr} geometry={shapesArr} weights={weightArr} zoomLevel={zoomLevel} center={center} mapWidth={mapWidth} mapHeight={mapHeight}/>
             </div>
         );
     }
