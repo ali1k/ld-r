@@ -5,6 +5,7 @@ module.exports = {
         {title: 'rdfs:comment'},
         {title: 'rdfs:seeAlso'},
         {title: 'owl:sameAs'},
+        {title: 'geo:geometry'},
         {title: 'dcterms:title'},
         {title: 'dcterms:subject'},
         {title: 'dcterms:creator'},
