@@ -315,7 +315,7 @@ class DynamicConfigurator {
                                 ldr:list ?list ;
                                 ldr:config ?facetPConfig .
                                 OPTIONAL { ?config rdfs:label ?resource . }
-                                ?facetsConfig ldr:property ?configProperty ;
+                                ?facetPConfig ldr:property ?configProperty ;
                                               a ldr:FacetsPropertyConfig ;
                                               ?setting ?settingValue .
                                 FILTER (?setting !=rdf:type && ?setting !=ldr:property)
@@ -327,7 +327,7 @@ class DynamicConfigurator {
                                 ldr:list ?list ;
                                 ldr:config ?facetPConfig .
                                 OPTIONAL { ?config rdfs:label ?resource . }
-                                ?facetsConfig ldr:property ?configProperty ;
+                                ?facetPConfig ldr:property ?configProperty ;
                                               a ldr:FacetsPropertyConfig ;
                                               ?setting ?settingValue .
                                 FILTER (?setting !=rdf:type && ?setting !=ldr:property)
@@ -347,7 +347,7 @@ class DynamicConfigurator {
                                 ldr:list ?list ;
                                 ldr:config ?facetPConfig .
                                 OPTIONAL { ?config rdfs:label ?resource . }
-                                ?facetsConfig ldr:property ?configProperty ;
+                                ?facetPConfig ldr:property ?configProperty ;
                                               a ldr:FacetsPropertyConfig ;
                                               ?setting ?settingValue .
                                 FILTER (?setting !=rdf:type && ?setting !=ldr:property)
