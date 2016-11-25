@@ -18,11 +18,20 @@ class GeoListBrowser extends React.Component {
     }
     render() {
         let self = this;
-
+        let cnf = this.props.config;
+        if(!cnf.mapHeight){
+            cnf.mapHeight = 500;
+        }
+        if(!cnf.mapWidth){
+            cnf.mapWidth = 500;
+        }
+        if(!cnf.zoomLevel){
+            cnf.zoomLevel = 6;
+        }
         return (
             <div className="ui" ref="geoListBrowser">
                 {this.props.instances.length > 177 ? 'Error: Maximum 177 geo items can be shown!' :
-                    <BasicAggregateMapView spec={{instances: this.props.instances}} config={this.props.config}/>
+                    <BasicAggregateMapView spec={{instances: this.props.instances}} config={cnf}/>
                 }
             </div>
         );
