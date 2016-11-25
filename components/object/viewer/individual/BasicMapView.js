@@ -56,7 +56,7 @@ class BasicMapView extends React.Component {
                 }
                 try {
                     let focusPoint = this.getFocusPoint(val, wkt.components);
-                    outputDIV = <LeafletMapView key={'shape'} mapWidth={mapWidth} mapHeight={mapHeight} geometry={[wkt.toJson()]} zoomLevel={zoomLevel} center={focusPoint} styles={{color: shapeColor}}/>;
+                    outputDIV = <LeafletMapView key={'shape'} mapWidth={mapWidth} mapHeight={mapHeight} geometry={[wkt.toJson()]} zoomLevel={zoomLevel} center={focusPoint} styles={{color: shapeColor, fill:true, fillOpacity: 0.25 , opacity: 1, weight: 3, fillColor:shapeColor}}/>;
                 }
                 catch(err) {
                     console.log(err.message);
