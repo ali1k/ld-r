@@ -1,6 +1,7 @@
 import React from 'react';
 import TagListBrowser from './browser/TagListBrowser';
 import CheckListBrowser from './browser/CheckListBrowser';
+import GeoListBrowser from './browser/GeoListBrowser';
 
 class ObjectBrowser extends React.Component {
     handleSelect(status, value) {
@@ -20,6 +21,9 @@ class ObjectBrowser extends React.Component {
             break;
             case 'TagListBrowser':
                 browser = <TagListBrowser datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;
+            break;
+            case 'GeoListBrowser':
+                browser = <GeoListBrowser datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;
             break;
             default:
                 browser = <CheckListBrowser datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;

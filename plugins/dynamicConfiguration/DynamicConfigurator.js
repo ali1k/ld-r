@@ -909,7 +909,7 @@ class DynamicConfigurator {
             let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
             let rnc = Math.round(+new Date() / 1000);
             let labelSt = ` rdfs:label "Facets Config ${rnc}" ;`;
-            if(options.datasetLabel){
+            if(options && options.datasetLabel){
                 labelSt = ` rdfs:label """${options.datasetLabel} Facets Config""" ;`;
             }
             const query = `

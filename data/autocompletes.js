@@ -70,6 +70,7 @@ module.exports = {
         {title: 'ldr:extendedOEditor'},
         {title: 'ldr:objectIViewer'},
         {title: 'ldr:objectAViewer'},
+        {title: 'ldr:objectBrowser'},
         {title: 'ldr:extendedOViewer'},
         {title: 'ldr:shortenURI'},
         {title: 'ldr:asWikipedia'},
@@ -100,6 +101,7 @@ module.exports = {
         {title: 'PrefixBasedInput'},
         {title: 'ToggleEdit'},
         {title: 'TagListBrowser'},
+        {title: 'GeoListBrowser'},
         {title: 'CheckListBrowser'}
     ]
 }
