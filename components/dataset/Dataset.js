@@ -30,9 +30,9 @@ class Dataset extends React.Component {
         }
         let datasetTitle;
         if(this.props.datasetURI){
-            datasetTitle = <a target="_blank" href={this.props.datasetURI}> {this.props.datasetURI} </a>;
+            datasetTitle = <a href={'/dataset/1/'+encodeURIComponent(this.props.datasetURI)}> {this.props.datasetURI} </a>;
             if(this.props.config && this.props.config.datasetLabel){
-                datasetTitle = <a target="_blank" href={this.props.datasetURI}> {this.props.config.datasetLabel} </a>;
+                datasetTitle = <a href={'/dataset/1/'+encodeURIComponent(this.props.datasetURI)}> {this.props.config.datasetLabel} </a>;
             }
         }
         let createResourceDIV = '';

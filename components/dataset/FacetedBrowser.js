@@ -196,9 +196,9 @@ class FacetedBrowser extends React.Component {
             let resourceDIV;
             let dcnf = this.props.FacetedBrowserStore.datasetConfig;
             let cnf = this.props.FacetedBrowserStore.config;
-            let datasetTitle = <a target="_blank" href={this.props.FacetedBrowserStore.datasetURI}> {this.props.FacetedBrowserStore.datasetURI} </a>;
+            let datasetTitle = <a target="_blank" href={'/dataset/1/'+encodeURIComponent(this.props.FacetedBrowserStore.datasetURI)}> {this.props.FacetedBrowserStore.datasetURI} </a>;
             if(dcnf.datasetLabel){
-                datasetTitle = <a target="_blank" href={this.props.FacetedBrowserStore.datasetURI}> {dcnf.datasetLabel} </a>;
+                datasetTitle = <a target="_blank" href={'/dataset/1/'+encodeURIComponent(this.props.FacetedBrowserStore.datasetURI)}> {dcnf.datasetLabel} </a>;
             }
             if(dcnf.allowInlineConfig){
                 configDiv = <a onClick={this.createFConfig.bind(this, this.props.FacetedBrowserStore.datasetURI)} className="ui icon mini black circular button"><i className="ui settings icon"></i> </a>;
@@ -206,8 +206,7 @@ class FacetedBrowser extends React.Component {
             if(this.props.FacetedBrowserStore.total){
                 resourceDIV = <div className="ui segment">
                                 <h3 className="ui header">
-                                    <span className="ui blue circular label">{this.addCommas(this.props.FacetedBrowserStore.total)}</span> Resources from {datasetTitle}
-
+                                    {this.props.FacetedBrowserStore.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.FacetedBrowserStore.datasetURI)}><span className="ui black circular label">{this.addCommas(this.props.FacetedBrowserStore.total)}</span></a> : ''} Resources from {datasetTitle}
                                  </h3>
                                 <ResourceList resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} OpenInNewTab={true} isBig={!showFactes} config={dcnf}/>
                                 <ResourceListPager handleClick={this.gotoPage.bind(this)} datasetURI={this.props.FacetedBrowserStore.datasetURI} total={this.props.FacetedBrowserStore.total} threshold={pagerSize} currentPage={this.props.FacetedBrowserStore.page}/>
