@@ -41,7 +41,7 @@ class GeoListBrowser extends React.Component {
         })
         return (
             <div className="ui" ref="geoListBrowser">
-                {this.props.instances.length > 207 ? 'Error: Maximum 207 geo items can be shown!' :
+                {this.props.instances.length > 277 ? 'Error: Maximum 277 geo items can be shown!' :
                     <BasicAggregateMapView spec={{instances: instances}} config={cnf}/>
                 }
             </div>
