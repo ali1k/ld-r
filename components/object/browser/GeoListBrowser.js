@@ -36,7 +36,7 @@ class GeoListBrowser extends React.Component {
         let tmp=0.2;
         this.props.instances.forEach((instance, i)=>{
             tmp = parseInt(instance.total)/totalVals;
-            instances[i].weight = 0.18 + (tmp>=0.5 ? 0.5 : tmp);
+            instances[i].weight = (0.18+tmp)>=0.5 ? 0.5 : tmp;
             instances[i].hint = instance.total;
         })
         return (
