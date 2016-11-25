@@ -39,6 +39,9 @@ class BasicMapView extends React.Component {
             wkt.read(val);
             if(wkt.components && wkt.components.length && wkt.components[0].length){
                 zoomLevel = 9;
+                if(this.props.config && this.props.config.zoomLevel){
+                    zoomLevel = this.props.config.zoomLevel;
+                }
                 if(this.props.zoomLevel){
                     zoomLevel = this.props.zoomLevel;
                 }

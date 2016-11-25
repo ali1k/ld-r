@@ -81,6 +81,9 @@ class BasicAggregateMapView extends React.Component {
             //for polygons
             center = focusPoint;
             zoomLevel = 8;
+            if(this.props.config && this.props.config.zoomLevel){
+                zoomLevel = this.props.config.zoomLevel;
+            }
             if(this.props.zoomLevel){
                 zoomLevel = this.props.zoomLevel;
             }

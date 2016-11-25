@@ -27,10 +27,11 @@ class Facet extends React.Component {
     }
     render() {
         let self = this;
-        let cardClasses = 'ui card ' + (this.props.color ? this.props.color : 'blue');
+        let cardClasses = 'ui segment ' + (this.props.color ? this.props.color : 'blue');
         let descStyle = {
-            minHeight: this.props.minHeight ? this.props.minHeight : 150,
+            minHeight: this.props.minHeight ? this.props.minHeight : 80,
             maxHeight: this.props.maxHeight ? this.props.maxHeight : 200,
+            position: 'relative',
             overflow: 'scroll'
         };
         //order by total count: for performance is done on client-side
@@ -63,8 +64,18 @@ class Facet extends React.Component {
                         </div>
                     </div>
                   </div>
+                  <br/>
                   <div className="extra content">
-                      <SearchInput className="ui mini search icon input" ref="search" onChange={this.searchUpdated.bind(this)} throttle={500}/>
+                      <div className="ui tag horizontal labels">
+                          <SearchInput className="ui mini search icon input" ref="search" onChange={this.searchUpdated.bind(this)} throttle={500}/>
+                          {this.props.spec.property ?
+                              <a className='ui icon mini basic button right floated' onClick={this.props.toggleExpandFacet.bind(this, this.props.spec.propertyURI)}>
+                                  <i className='ui icon expand'></i>
+                              </a>
+                          : ''
+                          }
+                      </div>
+
                   </div>
             </div>
         );

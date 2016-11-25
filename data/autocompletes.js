@@ -54,6 +54,7 @@ module.exports = {
         {title: 'ldr:propertyReactor'},
         {title: 'ldr:category'},
         {title: 'ldr:hint'},
+        {title: 'ldr:zoomLevel'},
         {title: 'ldr:isHidden'},
         {title: 'ldr:defaultValue'},
         {title: 'ldr:allowResourceClone'},
