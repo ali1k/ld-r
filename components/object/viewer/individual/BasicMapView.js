@@ -23,11 +23,14 @@ class BasicMapView extends React.Component {
         return focusPoint;
     }
     render() {
-        let val, outputDIV, coordinates, long, lat;
+        let val, outputDIV, coordinates, long, lat, shapeColor = '#1a75ff';
         val = this.props.spec.value;
         let zoomLevel = 14;
         if(this.props.config && this.props.config.zoomLevel){
             zoomLevel = this.props.config.zoomLevel;
+        }
+        if(this.props.config && this.props.config.shapeColor){
+            shapeColor = this.props.config.shapeColor;
         }
         outputDIV = <span> {val} </span>;
         //identify the type of geo shape
@@ -41,7 +44,7 @@ class BasicMapView extends React.Component {
                 }
                 try {
                     let focusPoint = this.getFocusPoint(val, wkt.components);
-                    outputDIV = <LeafletMapView key={'shape'} geometry={[wkt.toJson()]} zoomLevel={zoomLevel} center={focusPoint} />;
+                    outputDIV = <LeafletMapView key={'shape'} geometry={[wkt.toJson()]} zoomLevel={zoomLevel} center={focusPoint} styles={{color: shapeColor}}/>;
                 }
                 catch(err) {
                     console.log(err.message);
@@ -84,6 +87,10 @@ class BasicMapView extends React.Component {
     }
 }
 BasicMapView.propTypes = {
+    /**
+    Used to customize the color of shape on the map
+    */
+    shapeColor: React.PropTypes.string,
     /**
     Swap longitude and latitudes: default is POINT(long lat)
     */

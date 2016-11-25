@@ -311,7 +311,7 @@ export default {
                     //allow it only for admin user
                 }else{
                     callback(null, {category: params.category, datasetURI: datasetURI, resourceURI: params.resourceURI, propertyURI: params.propertyURI, objectValue: params.objectValue});
-                    return 0;    
+                    return 0;
                 }
             }
             getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{

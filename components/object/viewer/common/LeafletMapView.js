@@ -4,6 +4,9 @@ class LeafletMapView extends React.Component {
     constructor(...args) {
         super(...args);
     }
+    styleGeoJSON(feature){
+        return {color: feature.style.color};
+    }
     render() {
         let self = this;
         if (process.env.BROWSER) {
@@ -21,13 +24,18 @@ class LeafletMapView extends React.Component {
                 })
             }
             if(self.props.geometry && self.props.geometry.length){
-                let features = [];
+                const colors = ['#1a75ff', '#0bc4a7', '#1a48eb', '#ecdc0b', '#ed1ec6', '#d9990b', '#0c0d17', '#e3104f', '#6d8ecf'];
+                let style, features = [];
                 self.props.geometry.forEach((geo, index)=> {
-                    features.push({'type': 'Feature', 'id': index, 'properties': {'name': index}, 'geometry': geo});
-
+                    style = self.props.styles;
+                    if(!style){
+                        style={color: colors[index % colors.length]};
+                    }
+                    features.push({'type': 'Feature', 'id': index, 'style': style, 'properties': {'name': index}, 'geometry': geo});
                 })
                 let geojson= {'type':'FeatureCollection','features': features};
-                outputDIV2 = <GeoJSON data={geojson}/>;
+                //console.log(JSON.stringify(geojson));
+                outputDIV2 = <GeoJSON data={geojson} style={self.styleGeoJSON}/>;
             }
             if(outputDIV1){
                 outputDIV = outputDIV1;

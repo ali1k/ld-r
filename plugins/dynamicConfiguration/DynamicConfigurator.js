@@ -491,7 +491,7 @@ class DynamicConfigurator {
                 rnc = configDatasetURI[0] + 'rcf' + Math.round(+new Date() / 1000);
             }
             let datasetLabel = datasetURI;
-            if(options.datasetLabel){
+            if(options && options.datasetLabel){
                 datasetLabel = options.datasetLabel;
             }
             let date = new Date();
