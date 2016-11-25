@@ -32,6 +32,15 @@ class BasicMapView extends React.Component {
         if(this.props.config && this.props.config.shapeColor){
             shapeColor = this.props.config.shapeColor;
         }
+        let mapHeight, mapWidth;
+        if(this.props.config){
+            if(this.props.config.mapHeight){
+                mapHeight = this.props.config.mapHeight;
+            }
+            if(this.props.config.mapWidth){
+                mapWidth = this.props.config.mapWidth;
+            }
+        }
         outputDIV = <span> {val} </span>;
         //identify the type of geo shape
         if (val.indexOf('POLYGON') !== -1 || val.indexOf('Polygon') !== -1 || val.indexOf('MULTIPOLYGON') !== -1 || val.indexOf('MultiPolygon') !== -1 || val.indexOf('LineString') !== -1 || val.indexOf('MultiLineString') !== -1) {
@@ -47,7 +56,7 @@ class BasicMapView extends React.Component {
                 }
                 try {
                     let focusPoint = this.getFocusPoint(val, wkt.components);
-                    outputDIV = <LeafletMapView key={'shape'} geometry={[wkt.toJson()]} zoomLevel={zoomLevel} center={focusPoint} styles={{color: shapeColor}}/>;
+                    outputDIV = <LeafletMapView key={'shape'} mapWidth={mapWidth} mapHeight={mapHeight} geometry={[wkt.toJson()]} zoomLevel={zoomLevel} center={focusPoint} styles={{color: shapeColor}}/>;
                 }
                 catch(err) {
                     console.log(err.message);
@@ -72,7 +81,7 @@ class BasicMapView extends React.Component {
                     outputDIV = <span> {val} </span>;
                 }else{
                     if(coordinates.length){
-                        outputDIV = <LeafletMapView key={this.props.spec.value} markers={[{position: {lat: lat, lng: long}, key: this.props.spec.value}]} zoomLevel={zoomLevel} center={{lat: lat, lng: long}}/>;
+                        outputDIV = <LeafletMapView key={this.props.spec.value} mapWidth={mapWidth} mapHeight={mapHeight} markers={[{position: {lat: lat, lng: long}, key: this.props.spec.value}]} zoomLevel={zoomLevel} center={{lat: lat, lng: long}}/>;
                     }
                 }
 
@@ -90,6 +99,14 @@ class BasicMapView extends React.Component {
     }
 }
 BasicMapView.propTypes = {
+    /**
+    Height of the Map
+    */
+    mapHeight: React.PropTypes.number,
+    /**
+    Width of the Map
+    */
+    mapWidth: React.PropTypes.number,
     /**
     Used to customize the color of shape on the map
     */

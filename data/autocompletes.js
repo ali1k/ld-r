@@ -55,6 +55,8 @@ module.exports = {
         {title: 'ldr:category'},
         {title: 'ldr:hint'},
         {title: 'ldr:zoomLevel'},
+        {title: 'ldr:mapWidth'},
+        {title: 'ldr:mapHeight'},
         {title: 'ldr:isHidden'},
         {title: 'ldr:defaultValue'},
         {title: 'ldr:allowResourceClone'},

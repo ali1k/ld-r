@@ -46,8 +46,16 @@ class LeafletMapView extends React.Component {
             if(outputDIV1 && outputDIV2){
                 outputDIV = outputDIV1+outputDIV2;
             }
+            let minHeight= 210;
+            let minWidth = 200;
+            if(self.props.mapWidth){
+                minWidth = self.props.mapWidth;
+            }
+            if(self.props.mapHeight){
+                minHeight = self.props.mapHeight;
+            }
             return (
-                <Map ref='map' center={[self.props.center.lat, self.props.center.lng]} zoom={self.props.zoomLevel} style={{minHeight: 210, minWidth: 200}}>
+                <Map ref='map' center={[self.props.center.lat, self.props.center.lng]} zoom={self.props.zoomLevel} style={{minHeight: minHeight, minWidth: minWidth}}>
                    <TileLayer style={{position: 'relative'}}
                      url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
