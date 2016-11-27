@@ -92,12 +92,21 @@ class PrefixBasedInput extends React.Component {
         let tmp = uri.split('->');
         if(tmp.length > 1){
             tmp.forEach((v)=>{
-                out.push(v.replace(v.split(':')[0] + ':', list[v.split(':')[0]]));
+                if(v.split(':')[0]!=='http'){
+                    out.push(v.replace(v.split(':')[0] + ':', list[v.split(':')[0]]));
+                }else{
+                    out.push(v);
+                }
             })
             return out.join('->');
         }else{
-            let tmp2 = value.split(':');
-            return v.replace(tmp2[0] + ':', list[tmp2[0]]);
+            let tmp2 = uri.split(':');
+            if(tmp2[0]!=='http'){
+                return uri.replace(tmp2[0] + ':', list[tmp2[0]]);
+            }else{
+                return uri;
+            }
+
         }
     }
     applyPrefix(value) {

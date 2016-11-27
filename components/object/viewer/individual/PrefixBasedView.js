@@ -28,7 +28,6 @@ class PrefixBasedView extends React.Component {
         let tmp = uri.split('->');
         if(tmp.length > 1){
             tmp.forEach((v)=>{
-
                 out.push(this.makeShorten(v, this.getPrefix(v)))
             })
             return out.join('->');

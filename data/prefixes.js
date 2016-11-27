@@ -256,7 +256,6 @@ module.exports = {
     'hints2005': 'http://purl.org/twc/cabig/model/HINTS2005-1.owl#',
     'hlisting': 'http://sindice.com/hlisting/0.1/',
     'hospital': 'http://www.agfa.com/w3c/2009/hospital#',
-    'http': 'http://www.w3.org/2011/http#',
     'httph': 'http://www.w3.org/2007/ont/httph#',
     'httpvoc': 'http://www.w3.org/2006/http#',
     'human': 'http://eulersharp.sourceforge.net/2003/03swap/human#',
