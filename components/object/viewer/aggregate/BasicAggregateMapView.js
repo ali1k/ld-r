@@ -91,7 +91,7 @@ class BasicAggregateMapView extends React.Component {
                 zoomLevel = this.props.zoomLevel;
             }
         }
-        let mapHeight, mapWidth;
+        let mapHeight, mapWidth, multiColor = 0;
         if(this.props.config){
             if(this.props.mapHeight){
                 mapHeight = this.props.mapHeight;
@@ -105,10 +105,16 @@ class BasicAggregateMapView extends React.Component {
             if(this.props.config.mapWidth){
                 mapWidth = this.props.config.mapWidth;
             }
+            if(this.props.multiColor){
+                multiColor = this.props.multiColor;
+            }
+            if(this.props.config.multiColor){
+                multiColor = this.props.config.multiColor;
+            }
         }
         return (
             <div className="ui" ref="basicAggregateMapView">
-                <LeafletMapView key="bamv" markers={coordinatesArr} geometry={shapesArr} weights={weightArr} zoomLevel={zoomLevel} center={center} mapWidth={mapWidth} mapHeight={mapHeight}/>
+                <LeafletMapView key="bamv" multiColor={multiColor} markers={coordinatesArr} geometry={shapesArr} weights={weightArr} zoomLevel={zoomLevel} center={center} mapWidth={mapWidth} mapHeight={mapHeight}/>
             </div>
         );
     }

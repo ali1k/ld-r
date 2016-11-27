@@ -52,10 +52,10 @@ class GeoListBrowser extends React.Component {
         let tmp=0.2;
         this.props.instances.forEach((instance, i)=>{
             tmp = parseInt(instance.total)/totalVals;
-            instances[i].weight = (0.18+tmp)>=0.5 ? 0.5 : tmp;
+            instances[i].weight = 0.05+tmp;
             instances[i].hint = instance.total;
         })
-        let mapWidth = 230;
+        let mapWidth = 180;
         let mapHeight = 180;
         if(this.props.expanded){
             mapWidth = 430;
@@ -64,7 +64,7 @@ class GeoListBrowser extends React.Component {
         return (
             <div className="ui" ref="geoListBrowser">
                 {this.props.instances.length > 277 ? 'Error: Maximum 277 geo items can be shown!' :
-                    <BasicAggregateMapView mapWidth={mapWidth} mapHeight={mapHeight} spec={{instances: instances}} config={cnf}/>
+                    <BasicAggregateMapView  mapWidth={mapWidth} mapHeight={mapHeight} spec={{instances: instances}} config={cnf}/>
                 }
             </div>
         );
