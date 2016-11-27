@@ -7,21 +7,37 @@ class CheckListBrowser extends React.Component {
         super(props);
         this.state = {selected: []};
     }
-    handleSelect(status, value) {
-        let pos = this.state.selected.indexOf(value);
-        if(pos === -1){
-            this.props.onCheck(1, value);
-            this.state.selected.push(value);
+    doesExist(value){
+        let selected=[];
+        if(!this.props.propertyURI){
+            for(let prop in this.props.selection){
+                selected.push(prop);
+            }
         }else{
+            if(this.props.selection[this.props.propertyURI]){
+                this.props.selection[this.props.propertyURI].forEach((node)=>{
+                    selected.push(node.value);
+                });
+            }
+        }
+        let pos = selected.indexOf(value);
+        if(pos === -1){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    handleSelect(status, value) {
+        if(this.doesExist(value)){
             this.props.onCheck(0, value);
-            this.state.selected.splice(pos, 1);
+        }else{
+            this.props.onCheck(1, value);
         }
     }
     render() {
         let self = this;
-
         let checkDIV = self.props.instances.map((node, index)=>{
-            return (<CheckboxItem checked={self.state.selected.indexOf(node.value) !== -1} key={index} datasetURI={self.props.datasetURI} shortenURI={self.props.shortenURI} key={index} spec={node} config={self.props.config} total={self.props.propertyURI ? node.total: 0} onCheck={self.handleSelect.bind(self)}/>);
+            return (<CheckboxItem checked={self.doesExist(node.value)} key={index} datasetURI={self.props.datasetURI} shortenURI={self.props.shortenURI} key={index} spec={node} config={self.props.config} total={self.props.propertyURI ? node.total: 0} onCheck={self.handleSelect.bind(self)}/>);
         });
         return (
             <div className="ui" ref="checkListBrowser">

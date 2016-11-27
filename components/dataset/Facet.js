@@ -6,16 +6,14 @@ import SearchInput from 'react-search-input';
 class Facet extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchTerm: '', selected: []};
+        this.state = {searchTerm: '', expanded: 0};
     }
     checkItem(status, value) {
         this.props.onCheck(status, value, this.props.spec.propertyURI);
-        let pos = this.state.selected.indexOf(value);
-        if(pos === -1){
-            this.state.selected.push(value);
-        }else{
-            this.state.selected.splice(pos, 1);
-        }
+    }
+    handleToggleExpand() {
+        this.setState({expanded: !this.state.expanded});
+        this.props.toggleExpandFacet(this.props.spec.propertyURI);
     }
     //used for custom sorting
     compare(a, b) {
@@ -60,7 +58,7 @@ class Facet extends React.Component {
                     </div>
                     <div className="description">
                         <div className="ui form" style={descStyle}>
-                            <ObjectBrowser shortenURI={true} spec={newSpec} config={this.props.config} onSelect={this.checkItem.bind(this)} datasetURI={this.props.datasetURI}/>
+                            <ObjectBrowser expanded={this.state.expanded} selection={this.props.selection} shortenURI={true} spec={newSpec} config={this.props.config} onSelect={this.checkItem.bind(this)} datasetURI={this.props.datasetURI}/>
                         </div>
                     </div>
                   </div>
@@ -69,7 +67,7 @@ class Facet extends React.Component {
                       <div className="ui tag horizontal labels">
                           <SearchInput className="ui mini search icon input" ref="search" onChange={this.searchUpdated.bind(this)} throttle={500}/>
                           {this.props.spec.property ?
-                              <a className='ui icon mini basic button right floated' onClick={this.props.toggleExpandFacet.bind(this, this.props.spec.propertyURI)}>
+                              <a className='ui icon mini basic button right floated' onClick={this.handleToggleExpand.bind(this)}>
                                   <i className='ui icon expand'></i>
                               </a>
                           : ''

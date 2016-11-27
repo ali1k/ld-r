@@ -4,23 +4,33 @@ import URIUtil from '../../utils/URIUtil';
 class TagListBrowser extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {selected: []};
+    }
+    doesExist(value){
+        let selected=[];
+        if(this.props.selection[this.props.propertyURI]){
+            this.props.selection[this.props.propertyURI].forEach((node)=>{
+                selected.push(node.value);
+            });
+        }
+        let pos = selected.indexOf(value);
+        if(pos === -1){
+            return false;
+        }else{
+            return true;
+        }
     }
     selectTag(value) {
-        let pos = this.state.selected.indexOf(value);
-        if(pos === -1){
-            this.props.onCheck(1, value);
-            this.state.selected.push(value);
-        }else{
+        if(this.doesExist(value)){
             this.props.onCheck(0, value);
-            this.state.selected.splice(pos, 1);
+        }else{
+            this.props.onCheck(1, value);
         }
     }
     render() {
         let self = this;
         let title, cls, selected = 0;
         let tagsDIV = self.props.instances.map((node)=>{
-            if(self.state.selected.indexOf(node.value) !== -1){
+            if(self.doesExist(node.value)){
                 selected = 1;
                 cls = 'ui label blue';
             }else{

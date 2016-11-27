@@ -93,8 +93,14 @@ class BasicAggregateMapView extends React.Component {
         }
         let mapHeight, mapWidth;
         if(this.props.config){
+            if(this.props.mapHeight){
+                mapHeight = this.props.mapHeight;
+            }
             if(this.props.config.mapHeight){
                 mapHeight = this.props.config.mapHeight;
+            }
+            if(this.props.mapWidth){
+                mapWidth = this.props.mapWidth;
             }
             if(this.props.config.mapWidth){
                 mapWidth = this.props.config.mapWidth;

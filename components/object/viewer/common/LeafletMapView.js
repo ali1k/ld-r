@@ -32,7 +32,7 @@ class LeafletMapView extends React.Component {
                 self.props.geometry.forEach((geo, index)=> {
                     style = self.props.styles;
                     if(!style){
-                        style={fill:true, fillOpacity: weights[index] ? weights[index] : 0.25 , opacity: 1, weight: weights[index] ? (1 + weights[index]) : 3, fillColor:colors[index % colors.length], color: colors[index % colors.length]};
+                        style={fill:true, fillOpacity: weights[index] ? weights[index] : 0.25 , opacity: 1, weight: weights[index] ? (2 + weights[index]) : 3, fillColor:colors[index % colors.length], color: colors[index % colors.length]};
                     }
                     features.push({'type': 'Feature', 'id': index, 'style': style, 'properties': {'name': index, }, 'geometry': geo});
                 })

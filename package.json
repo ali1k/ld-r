@@ -60,6 +60,7 @@
     "react-dom": "^15.4.1",
     "react-leaflet": "^1.0.0",
     "react-search-input": "^0.10.3",
+    "recharts": "^0.19.0",
     "request-promise": "^4.1.1",
     "semantic-ui-css": "^2.2.4",
     "semantic-ui-react": "^0.61.4",
