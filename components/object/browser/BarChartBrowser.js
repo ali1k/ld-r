@@ -1,5 +1,5 @@
 import React from 'react';
-import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+import {BarChart, Bar, XAxis, YAxis, Tooltip, Legend, Cell} from 'recharts';
 
 class BarChartBrowser extends React.Component {
     constructor(props) {
@@ -25,18 +25,18 @@ class BarChartBrowser extends React.Component {
             return true;
         }
     }
-    selectItem(value) {
-        if(this.doesExist(value)){
-            this.props.onCheck(0, value);
+    selectItem(data, index) {
+        if(this.doesExist(data.title)){
+            this.props.onCheck(0, data.title);
         }else{
-            this.props.onCheck(1, value);
+            this.props.onCheck(1, data.title);
         }
     }
     render() {
         let self = this;
         let data=[];
         self.props.instances.forEach((node)=> {
-            data.push({title: node.value, total: parseFloat(node.total)});
+            data.push({title: node.value, total: parseFloat(node.total), isSelected: self.doesExist(node.value)});
         })
         //todo: change width/height on expansion
         let width = 230;
@@ -47,13 +47,18 @@ class BarChartBrowser extends React.Component {
         }
         return (
             <BarChart width={width} height={height} data={data}
-                        margin={{top: 2, right: 5, left: 0, bottom: 2}}>
-                   <XAxis dataKey="title"/>
-                   <YAxis/>
-                   <CartesianGrid strokeDasharray="3 3"/>
-                   <Tooltip/>
-                   <Bar dataKey="total" fill="#1a75ff" />
-                  </BarChart>
+                        margin={{top: 0, right: 0, left: 0, bottom: 0}}>
+                <XAxis dataKey="title"/>
+                <YAxis/>
+                <Tooltip/>
+                <Bar dataKey="total" fill="#1a75ff" onClick={this.selectItem.bind(this)}>
+                    {
+                        data.map((entry, index) => (
+                            <Cell cursor="pointer" fill={entry.isSelected ? '#82ca9d' : '#1a75ff' } key={`cell-${index}`}/>
+                        ))
+                    }
+                </Bar>
+            </BarChart>
         );
     }
 }
