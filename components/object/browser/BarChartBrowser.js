@@ -50,7 +50,7 @@ class BarChartBrowser extends React.Component {
         let width = 230;
         let height = 180;
         if(this.props.expanded){
-            width = 430;
+            width = 470;
             height = 400;
         }
         return (
