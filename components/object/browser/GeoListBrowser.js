@@ -58,8 +58,8 @@ class GeoListBrowser extends React.Component {
         let mapWidth = 180;
         let mapHeight = 180;
         if(this.props.expanded){
-            mapWidth = 430;
-            mapHeight = 400;
+            mapWidth = 470;
+            mapHeight = 540;
         }
         return (
             <div className="ui" ref="geoListBrowser">
