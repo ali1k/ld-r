@@ -221,9 +221,9 @@ class FacetedBrowser extends React.Component {
             let resourceDIV;
             let dcnf = this.props.FacetedBrowserStore.datasetConfig;
             let cnf = this.props.FacetedBrowserStore.config;
-            let datasetTitle = <a target="_blank" href={'/dataset/1/'+encodeURIComponent(this.props.FacetedBrowserStore.datasetURI)}> {this.props.FacetedBrowserStore.datasetURI} </a>;
+            let datasetTitle = <a target="_blank" href={this.props.FacetedBrowserStore.datasetURI}> {this.props.FacetedBrowserStore.datasetURI} </a>;
             if(dcnf.datasetLabel){
-                datasetTitle = <a target="_blank" href={'/dataset/1/'+encodeURIComponent(this.props.FacetedBrowserStore.datasetURI)}> {dcnf.datasetLabel} </a>;
+                datasetTitle = <a target="_blank" href={this.props.FacetedBrowserStore.datasetURI}> {dcnf.datasetLabel} </a>;
             }
             if(dcnf.allowInlineConfig){
                 configDiv = <a onClick={this.createFConfig.bind(this, this.props.FacetedBrowserStore.datasetURI)} className="ui icon mini black circular button"><i className="ui settings icon"></i> </a>;
