@@ -315,9 +315,9 @@ class DynamicConfigurator {
                                 ldr:list ?list ;
                                 ldr:config ?facetPConfig .
                                 OPTIONAL { ?config rdfs:label ?resource . }
-                                ?facetPConfig ldr:property ?configProperty ;
-                                              a ldr:FacetsPropertyConfig ;
-                                              ?setting ?settingValue .
+                                OPTIONAL { ?facetPConfig a ldr:FacetsPropertyConfig ;
+                                              ldr:property ?configProperty ;
+                                              ?setting ?settingValue .}
                                 FILTER (?setting !=rdf:type && ?setting !=ldr:property)
                     }
                     UNION
@@ -327,9 +327,9 @@ class DynamicConfigurator {
                                 ldr:list ?list ;
                                 ldr:config ?facetPConfig .
                                 OPTIONAL { ?config rdfs:label ?resource . }
-                                ?facetPConfig ldr:property ?configProperty ;
-                                              a ldr:FacetsPropertyConfig ;
-                                              ?setting ?settingValue .
+                                OPTIONAL {?facetPConfig a ldr:FacetsPropertyConfig ;
+                                              ldr:property ?configProperty ;
+                                              ?setting ?settingValue .}
                                 FILTER (?setting !=rdf:type && ?setting !=ldr:property)
                                 filter not exists {
                                     ?config ldr:createdBy ?user.
@@ -347,9 +347,9 @@ class DynamicConfigurator {
                                 ldr:list ?list ;
                                 ldr:config ?facetPConfig .
                                 OPTIONAL { ?config rdfs:label ?resource . }
-                                ?facetPConfig ldr:property ?configProperty ;
-                                              a ldr:FacetsPropertyConfig ;
-                                              ?setting ?settingValue .
+                                OPTIONAL { ?facetPConfig a ldr:FacetsPropertyConfig ;
+                                              ldr:property ?configProperty ;
+                                              ?setting ?settingValue . }
                                 FILTER (?setting !=rdf:type && ?setting !=ldr:property)
                     ${graphEnd}
                 }
@@ -359,7 +359,6 @@ class DynamicConfigurator {
             //console.log(prefixes + query);
             let self = this;
             rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
-                //console.log(res);
                 config = self.parseFacetsConfigs(config, datasetURI, res);
                 callback(config);
             }).catch(function (err) {
@@ -1114,20 +1113,25 @@ class DynamicConfigurator {
             if(!output.facets[datasetURI].config){
                 output.facets[datasetURI].config = {};
             }
-            if(!output.facets[datasetURI].config[el.configProperty.value]){
-                output.facets[datasetURI].config[el.configProperty.value] = {};
-            }
-            //assume that all values will be stored in an array expect numbers: Not-a-Number
-            settingProp = el.setting.value.replace(ldr_prefix, '').trim();
-            if(!isNaN(el.settingValue.value)){
-                output.facets[datasetURI].config[el.configProperty.value][settingProp]= parseInt(el.settingValue.value);
-            }else{
-                if(!output.facets[datasetURI].config[el.configProperty.value][settingProp]){
-                    output.facets[datasetURI].config[el.configProperty.value][settingProp] = []
+            if(el.configProperty){
+                if(!output.facets[datasetURI].config[el.configProperty.value]){
+                    output.facets[datasetURI].config[el.configProperty.value] = {};
                 }
-                //do not allow duplicate labels
-                if(output.facets[datasetURI].config[el.configProperty.value][settingProp].indexOf(el.settingValue.value) === -1){
-                    output.facets[datasetURI].config[el.configProperty.value][settingProp].push(el.settingValue.value);
+            }
+
+            //assume that all values will be stored in an array expect numbers: Not-a-Number
+            if(el.setting){
+                settingProp = el.setting.value.replace(ldr_prefix, '').trim();
+                if(!isNaN(el.settingValue.value)){
+                    output.facets[datasetURI].config[el.configProperty.value][settingProp]= parseInt(el.settingValue.value);
+                }else{
+                    if(!output.facets[datasetURI].config[el.configProperty.value][settingProp]){
+                        output.facets[datasetURI].config[el.configProperty.value][settingProp] = []
+                    }
+                    //do not allow duplicate labels
+                    if(output.facets[datasetURI].config[el.configProperty.value][settingProp].indexOf(el.settingValue.value) === -1){
+                        output.facets[datasetURI].config[el.configProperty.value][settingProp].push(el.settingValue.value);
+                    }
                 }
             }
 
