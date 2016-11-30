@@ -25,13 +25,27 @@ class LeafletMapView extends React.Component {
     	}
         return rgb;
     }
+    reversePolygonCoords(coords){
+        let newP = [];
+        coords.forEach((coord)=>{
+            newP.push([coord[1], coord[0]]);
+        })
+        return newP;
+    }
+    reverseMultiPolygonCoords(coords){
+        let newP = [];
+        coords.forEach((coord)=>{
+            newP.push(this.reversePolygonCoords(coord));
+        })
+        return newP;
+    }
     render() {
         let self = this;
         if (process.env.BROWSER) {
-            let outputDIV, outputDIV1,outputDIV2;
-            let {Map, Marker, Popup, TileLayer, GeoJSON} = require('react-leaflet');
+            let markersDIV, geoJSONDIV, polygonsDIV, multipolygonsDIV;
+            let {Map, Marker, Popup, TileLayer, GeoJSON, Polygon} = require('react-leaflet');
             if(self.props.markers && self.props.markers.length){
-                outputDIV1 = self.props.markers.map((marker, index)=> {
+                markersDIV = self.props.markers.map((marker, index)=> {
                     return (
                         <Marker key={index} position={[marker.position.lat, marker.position.lng]}>
                             <Popup>
@@ -46,29 +60,49 @@ class LeafletMapView extends React.Component {
                 if(self.props.multiColor){
                     colors = ['#1a75ff', '#0bc4a7', '#1a48eb', '#ecdc0b', '#ed1ec6', '#d9990b', '#0c0d17', '#e3104f', '#6d8ecf'];
                 }
-                let style, features = [], weights=[];
+                let style, features = [], weights=[], polygons=[], multipolygons=[], hints=[];
                 if(self.props.weights){
                     weights = self.props.weights;
+                }
+                if(self.props.hints){
+                    hints = self.props.hints;
                 }
                 self.props.geometry.forEach((geo, index)=> {
                     style = self.props.styles;
                     if(!style){
                         style={fill:true, fillOpacity: 0.25 , opacity: 1, weight: 3, fillColor:self.colorLuminance(colors[index % colors.length], (weights[index] ? (1-weights[index]) : 0.25)), color: self.colorLuminance(colors[index % colors.length], (weights[index] ? (1-weights[index]) : 0.25))};
                     }
-                    features.push({'type': 'Feature', 'id': index, 'style': style, 'properties': {'name': index, }, 'geometry': geo});
+                    //separate polygons from geojson
+                    if(geo.type === 'Polygon'){
+                        polygons.push({style: style, coords: geo.coordinates[0], weight: weights.length ? weights[index] : 0, hint: hints.length ? hints[index] : 0})
+                    }else{
+                        if(geo.type === 'MultiPolygon'){
+                            multipolygons.push({style: style, coords: geo.coordinates[0], weight: weights.length ? weights[index] : 0, hint: hints.length ? hints[index] : 0})
+                        }else{
+                            features.push({'type': 'Feature', 'id': index, 'style': style, 'properties': {'name': index}, 'geometry': geo});
+                        }
+
+                    }
                 })
-                let geojson= {'type':'FeatureCollection','features': features};
-                //console.log(JSON.stringify(geojson));
-                outputDIV2 = <GeoJSON data={geojson} style={self.styleGeoJSON} />;
-            }
-            if(outputDIV1){
-                outputDIV = outputDIV1;
-            }
-            if(outputDIV2){
-                outputDIV = outputDIV2;
-            }
-            if(outputDIV1 && outputDIV2){
-                outputDIV = outputDIV1+outputDIV2;
+                polygonsDIV = polygons.map((polygon, index)=>{
+                    return (
+                        <Polygon color={polygon.style.color} key={index} positions={self.reversePolygonCoords(polygon.coords)}>
+                            {polygon.hint ? <Popup><span dangerouslySetInnerHTML={{__html: polygon.hint}} /></Popup>: ''}
+                        </Polygon>
+                    );
+                })
+                multipolygonsDIV = multipolygons.map((mpolygon, index)=>{
+                    return (
+                        <Polygon color={mpolygon.style.color} key={index} positions={self.reverseMultiPolygonCoords(mpolygon.coords)}>
+                            {mpolygon.hint ? <Popup><span dangerouslySetInnerHTML={{__html: mpolygon.hint}} /></Popup>: ''}
+                        </Polygon>
+                    );
+                })
+                if(features.length){
+                    let geojson= {'type':'FeatureCollection','features': features};
+                    //console.log(JSON.stringify(geojson));
+                    geoJSONDIV = <GeoJSON data={geojson} style={self.styleGeoJSON} />;
+                }
             }
             let minHeight= 210;
             let minWidth = 200;
@@ -84,7 +118,7 @@ class LeafletMapView extends React.Component {
                      url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
                      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                    />
-                    {outputDIV}
+               {markersDIV}{polygonsDIV}{multipolygonsDIV}{geoJSONDIV}
                 </Map>
             );
         }else {

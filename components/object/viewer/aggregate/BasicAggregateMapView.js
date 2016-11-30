@@ -22,7 +22,7 @@ class BasicAggregateMapView extends React.Component {
     }
     render() {
         let self = this;
-        let val, outputDIV, coordinates, long, lat, data, coordinatesArr=[], weightArr=[], shapesArr=[], focusPoint;
+        let val, outputDIV, coordinates, long, lat, data, coordinatesArr=[], weightArr=[], hintArr=[], shapesArr=[], focusPoint;
         let zoomLevel = 9;
         if(this.props.config && this.props.config.zoomLevel){
             zoomLevel = this.props.config.zoomLevel;
@@ -48,14 +48,25 @@ class BasicAggregateMapView extends React.Component {
                         if(node.weight){
                             weightArr.push(node.weight);
                         }
+                        if(node.hint){
+                            hintArr.push(node.hint);
+                        }
                     }
                     catch(err) {
                         console.log(err.message);
                     }
                 }
             }else{
-                val = node.value.replace('POINT(', '').replace(')', '');
-                coordinates = val.split(' ');
+                //default is a POINT
+                if(node.value.indexOf('POINT') ===  -1){
+                    //WKN point
+                    coordinates = node.value.split(' ');
+                    coordinates = [coordinates[1], coordinates[0]];
+                }else{
+                    //non-WKN point
+                    val = node.value.replace('POINT(', '').replace(')', '');
+                    coordinates = val.split(' ');
+                }
                 try {
                     long = parseFloat(coordinates[0]);
                     lat = parseFloat(coordinates[1]);
@@ -114,7 +125,7 @@ class BasicAggregateMapView extends React.Component {
         }
         return (
             <div className="ui" ref="basicAggregateMapView">
-                <LeafletMapView key="bamv" multiColor={multiColor} markers={coordinatesArr} geometry={shapesArr} weights={weightArr} zoomLevel={zoomLevel} center={center} mapWidth={mapWidth} mapHeight={mapHeight}/>
+                <LeafletMapView key="bamv" multiColor={multiColor} markers={coordinatesArr} geometry={shapesArr} hints={hintArr} weights={weightArr} zoomLevel={zoomLevel} center={center} mapWidth={mapWidth} mapHeight={mapHeight}/>
             </div>
         );
     }

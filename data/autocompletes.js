@@ -107,6 +107,7 @@ module.exports = {
         {title: 'ToggleEdit'},
         {title: 'TagListBrowser'},
         {title: 'GeoListBrowser'},
-        {title: 'CheckListBrowser'}
+        {title: 'CheckListBrowser'},
+        {title: 'BarChartBrowser'}
     ]
 }

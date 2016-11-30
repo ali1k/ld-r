@@ -68,8 +68,15 @@ class BasicMapView extends React.Component {
                 zoomLevel = this.props.zoomLevel;
             }
             //default is a POINT
-            val = val.replace('POINT(', '').replace(')', '');
-            coordinates = val.split(' ');
+            if(val.indexOf('POINT') ===  -1){
+                //WKN point
+                coordinates = val.split(' ');
+                coordinates = [coordinates[1], coordinates[0]];
+            }else{
+                //non-WKN point
+                val = val.replace('POINT(', '').replace(')', '');
+                coordinates = val.split(' ');
+            }
             try {
                 long = parseFloat(coordinates[0]);
                 lat = parseFloat(coordinates[1]);
