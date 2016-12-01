@@ -11,7 +11,7 @@ class DBpediaMapView extends React.Component {
     }
     componentDidMount() {
         //initialize map
-        this.context.executeAction(getCoordinates, {uris: this.prepareURIs(this.props.spec.instances)});
+        this.context.executeAction(getCoordinates, {property: this.props.property, uris: this.prepareURIs(this.props.spec.instances)});
     }
     prepareURIs(instances) {
         let uris = [];
@@ -26,13 +26,13 @@ class DBpediaMapView extends React.Component {
         let newProps = this.props;
         let uris = this.prepareURIs(newProps.spec.instances);
         if (prevProps.spec.instances.length !== newProps.spec.instances.length) {
-            this.context.executeAction(getCoordinates, {uris: uris});
+            this.context.executeAction(getCoordinates, {property: this.props.property, uris: uris});
         }
     }
     render () {
         return (
             <div ref="DBpediaMapView">
-                    {this.props.DBpediaGMapStore.coordinates.length? <LeafletMapView key={this.props.DBpediaGMapStore.coordinates.length} markers={this.props.DBpediaGMapStore.coordinates} zoomLevel={3} center={{lat: 48.2000, lng: 16.3500}}/> :''}
+                    {this.props.DBpediaGMapStore.coordinates[this.props.property] && this.props.DBpediaGMapStore.coordinates[this.props.property].length? <LeafletMapView key={this.props.DBpediaGMapStore.coordinates[this.props.property].length} markers={this.props.DBpediaGMapStore.coordinates[this.props.property]} zoomLevel={3} center={{lat: 48.2000, lng: 16.3500}}/> :''}
                    <BasicAggregateView spec={this.props.spec} config={this.props.config} />
             </div>
     	);

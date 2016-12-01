@@ -3,10 +3,12 @@ import {BaseStore} from 'fluxible/addons';
 class DBpediaGMapStore extends BaseStore {
     constructor(dispatcher) {
         super(dispatcher);
-        this.coordinates = [];
+        this.coordinates = {};
     }
     handleCoordinates(payload) {
-        this.coordinates = payload.coordinates;
+        if(payload.property){
+            this.coordinates[payload.property] = payload.coordinates;
+        }
         this.emitChange();
     }
     cleanMap() {

@@ -17,10 +17,10 @@ class ObjectAViewer extends React.Component {
                 viewer = <BasicAggregateView property={this.props.property} spec={this.props.spec} config={this.props.config}/>;
             break;
             case 'DBpediaMapView':
-                viewer = <DBpediaMapView spec={this.props.spec} config={this.props.config}/>;
+                viewer = <DBpediaMapView property={this.props.property} spec={this.props.spec} config={this.props.config}/>;
             break;
             case 'BasicAggregateMapView':
-                viewer = <BasicAggregateMapView spec={this.props.spec} config={this.props.config}/>;
+                viewer = <BasicAggregateMapView property={this.props.property} spec={this.props.spec} config={this.props.config}/>;
             break;
             default:
                 viewer = <BasicAggregateView property={this.props.property} spec={this.props.spec} config={this.props.config}/>;

@@ -503,6 +503,8 @@ class DynamicConfigurator {
                     ldr:dataset <${datasetURI}> ;
                     ldr:datasetLabel "${datasetLabel}" ;
                     ldr:readOnly "0" ;
+                    ldr:allowNewValue "1" ;
+                    ldr:allowInlineConfig "0" ;
                     ldr:allowResourceClone "1" ;
                     ldr:allowPropertyDelete "1" ;
                     ldr:allowResourceNew "1" ;

@@ -34,15 +34,15 @@ export default {
             // console.log(query);
             rpPath = DBpediaLiveEndpoint + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
             rp.get({uri: rpPath}).then(function(res){
-                callback(null, {coordinates: utilObject.parseDBpediaCoordinates(res)});
+                callback(null, {coordinates: utilObject.parseDBpediaCoordinates(res), property: params.property});
             }).catch(function () {
                 //last chance: try DBpedia live endpoint!
                 rpPath = DBpediaEndpoint + '?query=' + encodeURIComponent(query) + '&format=' + encodeURIComponent(outputFormat);
                 rp.get({uri: rpPath}).then(function(res){
-                    callback(null, {coordinates: utilObject.parseDBpediaCoordinates(res)});
+                    callback(null, {coordinates: utilObject.parseDBpediaCoordinates(res), property: params.property});
                 }).catch(function (err) {
                     console.log(err);
-                    callback(null, {coordinates: []});
+                    callback(null, {coordinates: [], property: ''});
                 });
             });
           /////////////////////////////////////////////
