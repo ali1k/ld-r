@@ -1,5 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
+import chroma from 'chroma-js';
+
 class LeafletMapView extends React.Component {
     constructor(...args) {
         super(...args);
@@ -7,23 +9,17 @@ class LeafletMapView extends React.Component {
     styleGeoJSON(feature){
         return {color: feature.style.color, fill:feature.style.fill, fillColor:feature.style.fillColor, fillOpacity:feature.style.fillOpacity, opacity: feature.style.opacity, weight: feature.style.weight};
     }
-    //hex — a hex color value such as “#abc” or “#123456” (the hash is optional)
-    //lum — the luminosity factor, i.e. -0.1 is 10% darker, 0.2 is 20% lighter, etc.
-    colorLuminance(hex, lum) {
-        // validate hex string
-    	hex = String(hex).replace(/[^0-9a-f]/gi, '');
-    	if (hex.length < 6) {
-    		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-    	}
-    	lum = lum || 0;
-    	// convert to decimal and change luminosity
-    	let rgb = '#', c, i;
-    	for (i = 0; i < 3; i++) {
-    		c = parseInt(hex.substr(i*2,2), 16);
-    		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-    		rgb += ('00'+c).substr(c.length);
-    	}
-        return rgb;
+    //maps values to colors
+    colorMapping(weights){
+        let arr1= weights;
+        arr1 = arr1.filter((v, i, a) => a.indexOf(v) === i);
+        arr1.sort();
+        let colors = chroma.scale(['grey', 'red']).colors(arr1.length);
+        let mapping = {};
+        arr1.forEach((v,i)=>{
+            mapping[v] = colors[i];
+        })
+        return mapping;
     }
     reversePolygonCoords(coords){
         let newP = [];
@@ -42,7 +38,7 @@ class LeafletMapView extends React.Component {
     render() {
         let self = this;
         if (process.env.BROWSER) {
-            let markersDIV, geoJSONDIV, polygonsDIV, multipolygonsDIV;
+            let markersDIV, geoJSONDIV, polygonsDIV, multipolygonsDIV, colorMap = {};
             let {Map, Marker, Popup, TileLayer, GeoJSON, Polygon} = require('react-leaflet');
             if(self.props.markers && self.props.markers.length){
                 markersDIV = self.props.markers.map((marker, index)=> {
@@ -56,13 +52,14 @@ class LeafletMapView extends React.Component {
                 })
             }
             if(self.props.geometry && self.props.geometry.length){
-                let colors = ['#1a48eb'];
+                let colors = ['#0c0d17'];
                 if(self.props.multiColor){
-                    colors = ['#1a75ff', '#0bc4a7', '#1a48eb', '#ecdc0b', '#ed1ec6', '#d9990b', '#0c0d17', '#e3104f', '#6d8ecf'];
+                    colors = ['#0c0d17', '#0bc4a7', '#1a48eb', '#ecdc0b', '#ed1ec6', '#d9990b', '#1a75ff', '#e3104f', '#3f83a3'];
                 }
                 let style, features = [], weights=[], polygons=[], multipolygons=[], hints=[];
                 if(self.props.weights){
                     weights = self.props.weights;
+                    colorMap = self.colorMapping(weights);
                 }
                 if(self.props.hints){
                     hints = self.props.hints;
@@ -70,7 +67,7 @@ class LeafletMapView extends React.Component {
                 self.props.geometry.forEach((geo, index)=> {
                     style = self.props.styles;
                     if(!style){
-                        style={fill:true, fillOpacity: weights[index] ? weights[index] : 0.25 , opacity: 1, weight: 3, fillColor:self.colorLuminance(colors[index % colors.length], (weights[index] ? (1-weights[index]) : 0.25)), color: self.colorLuminance(colors[index % colors.length], (weights[index] ? (1-weights[index]) : 0.25))};
+                        style={fill:true, fillOpacity: 0.50 , opacity: 1, weight: 1.5, fillColor: weights[index] ? colorMap[weights[index]] : colors[index % colors.length], color: colors[index % colors.length]};
                     }
                     //separate polygons from geojson
                     if(geo.type === 'Polygon'){

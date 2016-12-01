@@ -29,6 +29,7 @@
     "animate.css": "^3.5.2",
     "async": "^2.1.4",
     "body-parser": "^1.15.2",
+    "chroma-js": "^1.2.1",
     "compression": "^1.6.2",
     "continuation-local-storage": "^3.2.0",
     "cookie-parser": "^1.4.3",
