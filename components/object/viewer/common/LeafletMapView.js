@@ -70,7 +70,7 @@ class LeafletMapView extends React.Component {
                 self.props.geometry.forEach((geo, index)=> {
                     style = self.props.styles;
                     if(!style){
-                        style={fill:true, fillOpacity: 0.25 , opacity: 1, weight: 3, fillColor:self.colorLuminance(colors[index % colors.length], (weights[index] ? (1-weights[index]) : 0.25)), color: self.colorLuminance(colors[index % colors.length], (weights[index] ? (1-weights[index]) : 0.25))};
+                        style={fill:true, fillOpacity: weights[index] ? weights[index] : 0.25 , opacity: 1, weight: 3, fillColor:self.colorLuminance(colors[index % colors.length], (weights[index] ? (1-weights[index]) : 0.25)), color: self.colorLuminance(colors[index % colors.length], (weights[index] ? (1-weights[index]) : 0.25))};
                     }
                     //separate polygons from geojson
                     if(geo.type === 'Polygon'){
@@ -86,14 +86,14 @@ class LeafletMapView extends React.Component {
                 })
                 polygonsDIV = polygons.map((polygon, index)=>{
                     return (
-                        <Polygon color={polygon.style.color} key={index} positions={self.reversePolygonCoords(polygon.coords)}>
+                        <Polygon color={polygon.style.color} fill={polygon.style.fill} fillOpacity={polygon.style.fillOpacity} weight={polygon.style.weight} fillColor={polygon.style.fillColor} key={index} positions={self.reversePolygonCoords(polygon.coords)}>
                             {polygon.hint ? <Popup><span dangerouslySetInnerHTML={{__html: polygon.hint}} /></Popup>: ''}
                         </Polygon>
                     );
                 })
                 multipolygonsDIV = multipolygons.map((mpolygon, index)=>{
                     return (
-                        <Polygon color={mpolygon.style.color} key={index} positions={self.reverseMultiPolygonCoords(mpolygon.coords)}>
+                        <Polygon color={mpolygon.style.color} fill={mpolygon.style.fill} fillOpacity={mpolygon.style.fillOpacity} weight={mpolygon.style.weight} fillColor={mpolygon.style.fillColor} key={index} positions={self.reverseMultiPolygonCoords(mpolygon.coords)}>
                             {mpolygon.hint ? <Popup><span dangerouslySetInnerHTML={{__html: mpolygon.hint}} /></Popup>: ''}
                         </Polygon>
                     );
