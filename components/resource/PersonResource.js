@@ -29,7 +29,7 @@ class PersonResource extends React.Component {
         this.setState({showDetails: ! this.state.showDetails});
     }
     render() {
-        let picture, keywords, birthDate, birthPlace, deathDate, deathPlace, knownFor, aboutP, pName, firstName, lastName, children, spouse;
+        let picture, keywords, pbirthDate, obirthDate, pbirthPlace, obirthPlace, pdeathDate, odeathDate, pdeathPlace, odeathPlace, knownFor, aboutP, pName, firstName, lastName, children, spouse;
         let readOnly = 1;
         let user = this.context.getUser();
         let self = this;
@@ -72,16 +72,28 @@ class PersonResource extends React.Component {
                     pName = node.instances[0].value;
                 }
                 if(node.propertyURI === 'http://dbpedia.org/ontology/birthDate'){
-                    birthDate = node.instances[0].value;
+                    obirthDate = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://dbpedia.org/property/birthDate'){
+                    pbirthDate = node.instances[0].value;
                 }
                 if(node.propertyURI === 'http://dbpedia.org/ontology/birthPlace'){
-                    birthPlace = node.instances[0].value;
+                    obirthPlace = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://dbpedia.org/property/birthPlace'){
+                    pbirthPlace = node.instances[0].value;
                 }
                 if(node.propertyURI === 'http://dbpedia.org/ontology/deathDate'){
-                    deathDate = node.instances[0].value;
+                    odeathDate = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://dbpedia.org/property/deathDate'){
+                    pdeathDate = node.instances[0].value;
                 }
                 if(node.propertyURI === 'http://dbpedia.org/ontology/deathPlace'){
-                    deathPlace = node.instances[0].value;
+                    odeathPlace = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://dbpedia.org/property/deathPlace'){
+                    pdeathPlace = node.instances[0].value;
                 }
                 if(node.propertyURI === 'http://www.w3.org/2000/01/rdf-schema#comment'){
                     aboutP = node.instances[0].value;
@@ -104,7 +116,27 @@ class PersonResource extends React.Component {
 
             }
         });
-        let knownForDIV, keywordsDIV, spouseDIV, childrenDIV;
+        let knownForDIV, keywordsDIV, spouseDIV, childrenDIV, deathPlace, birthPlace, birthDate, deathDate;
+        if(obirthPlace){
+            birthPlace = obirthPlace;
+        }else if(pbirthPlace){
+            birthPlace = pbirthPlace;
+        }
+        if(obirthDate){
+            birthDate = obirthDate;
+        }else if(pbirthPlace){
+            birthDate = pbirthDate;
+        }
+        if(odeathPlace){
+            deathPlace = odeathPlace;
+        }else if(pdeathPlace){
+            deathPlace = pdeathPlace;
+        }
+        if(odeathDate){
+            deathDate = odeathDate;
+        }else if(pdeathPlace){
+            deathDate = pdeathDate;
+        }
         if(spouse){
             spouseDIV = spouse.map((node, index)=>{
                 return (
@@ -133,46 +165,13 @@ class PersonResource extends React.Component {
                 );
             });
         }
-        let currentCategory, mainDIV, tabsDIV, tabsContentDIV;
-        //categorize properties in different tabs
-        if(this.props.config.usePropertyCategories){
-            currentCategory = this.props.currentCategory;
-            if(!currentCategory){
-                currentCategory = this.props.config.propertyCategories[0];
-            }
-            tabsDIV = this.props.config.propertyCategories.map(function(node, index) {
-                return (
-                    <NavLink className={(node === currentCategory ? 'item link active' : 'item link')} key={index} routeName="resource" href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(self.props.resource) + '/' + node + '/' + encodeURIComponent(self.props.propertyPath)}>
-                      {node}
-                    </NavLink>
-                );
-            });
-            tabsContentDIV = this.props.config.propertyCategories.map(function(node, index) {
-                return (
-                    <div key={index} className={(node === currentCategory ? 'ui bottom attached tab segment active' : 'ui bottom attached tab segment')}>
+        let mainDIV = <div className="ui segment">
                         <div className="ui grid">
                             <div className="column ui list">
-                                {(node === currentCategory ? list : '')}
+                                {list}
                             </div>
                         </div>
-                    </div>
-                );
-            });
-            mainDIV = <div>
-                        <div className="ui top attached tabular menu">
-                            {tabsDIV}
-                        </div>
-                        {tabsContentDIV}
-                      </div>;
-        }else{
-            mainDIV = <div className="ui segment">
-                            <div className="ui grid">
-                                <div className="column ui list">
-                                    {list}
-                                </div>
-                            </div>
-                      </div>;
-        }
+                  </div>;
         let datasetTitle = this.props.datasetURI;
         if(this.props.config && this.props.config.datasetLabel){
             datasetTitle = this.props.config.datasetLabel;
@@ -227,13 +226,14 @@ class PersonResource extends React.Component {
                       </div>
                       <div className="twelve wide column">
                           <div className='ui huge divided list'>
-                              {birthDate ? <div className='item'><i className='ui icon circle thin'></i> {birthDate} {birthPlace ? '('+URIUtil.getURILabel(birthPlace)+')' : ''}</div> : ''}
-                              {deathDate ? <div className='item'><i className='ui icon circle'></i> {deathDate} {deathPlace ? '('+URIUtil.getURILabel(deathPlace)+')' : ''}</div> : ''}
+                              {birthDate ? <div className='item'><i className="icons"><i className='ui icon circle thin'></i></i> {birthDate} {birthPlace ? <a href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(birthPlace)}>({URIUtil.getURILabel(birthPlace)})</a> : ''}</div> : ''}
+                              {deathDate ? <div className='item'><i className="icons"><i className='ui icon circle'></i></i> {deathDate} {deathPlace ? <a href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(deathPlace)}>({URIUtil.getURILabel(deathPlace)})</a> : ''}</div> : ''}
                               {spouse ? <div className='item ui'><i className="icons"> <i className='ui icon  blue male'></i></i><i className="icons"> <i className='ui icon pink female'></i></i> {spouseDIV}</div>: ''}
                               {children ? <div className='item ui'><i className="icons"><i className='ui icon green child'></i></i> {childrenDIV}</div>: ''}
+                              {aboutP ? <div className='item'> {aboutP}</div>: ''}
                               {knownFor ? <div className='item ui labels'> {knownForDIV}</div>: ''}
                               {!knownFor && keywords ? <div className='item ui labels'> {keywordsDIV}</div>: ''}
-                              {aboutP ? <div className='item'> {aboutP}</div>: ''}
+
                               <div className='item'></div>
                           </div>
                       </div>
