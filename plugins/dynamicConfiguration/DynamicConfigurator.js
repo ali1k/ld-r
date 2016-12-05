@@ -708,6 +708,35 @@ class DynamicConfigurator {
                                 OPTIONAL { ?config ldr:treatAsResourceType ?treatAsResourceType . }
                                 FILTER (?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
                         }
+                        UNION
+                        {
+                        ?config a ldr:ReactorConfig ;
+                                ldr:resource ?resource ;
+                                ldr:treatAsResourceType "1" ;
+                                ldr:treatAsResourceType ?treatAsResourceType ;
+                                ldr:scope ?scope ;
+                                ?setting ?settingValue .
+                                OPTIONAL { ?config rdfs:label ?resource . }
+                                OPTIONAL { ?config ldr:dataset ?dataset . }
+                                FILTER (${typeFilterStr}  ?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
+                                filter not exists {
+                                    ?config ldr:createdBy ?user.
+                                }
+                        }
+                        UNION
+                        {
+                        ?config a ldr:ReactorConfig ;
+                                ldr:resource <${resourceURI}> ;
+                                ldr:scope ?scope ;
+                                ?setting ?settingValue .
+                                OPTIONAL { ?config ldr:dataset ?dataset . }
+                                OPTIONAL { ?config rdfs:label ?resource . }
+                                OPTIONAL { ?config ldr:treatAsResourceType ?treatAsResourceType . }
+                                FILTER (?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
+                                filter not exists {
+                                    ?config ldr:createdBy ?user.
+                                }
+                        }
                 ${graphEnd}   } ORDER BY DESC(?treatAsResourceType)
                 `;
             }else{
@@ -734,35 +763,6 @@ class DynamicConfigurator {
                                 OPTIONAL { ?config rdfs:label ?resource . }
                                 OPTIONAL { ?config ldr:treatAsResourceType ?treatAsResourceType . }
                                 FILTER (?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
-                        }
-                        UNION
-                        {
-                        ?config a ldr:ReactorConfig ;
-                                ldr:resource ?resource ;
-                                ldr:treatAsResourceType "1" ;
-                                ldr:treatAsResourceType ?treatAsResourceType ;
-                                ldr:scope ?scope ;
-                                ?setting ?settingValue .
-                                OPTIONAL { ?config rdfs:label ?resource . }
-                                OPTIONAL { ?config ldr:dataset ?dataset . }
-                                FILTER (${typeFilterStr}  ?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
-                                filter not exists {
-                                    ?config ldr:createdBy ?user.
-                                }
-                        }
-                        UNION
-                        {
-                        ?config a ldr:ReactorConfig ;
-                                ldr:resource <${resourceURI}> ;
-                                ldr:scope ?scope ;
-                                ?setting ?settingValue .
-                                OPTIONAL { ?config ldr:dataset ?dataset . }
-                                OPTIONAL { ?config rdfs:label ?resource . }
-                                OPTIONAL { ?config ldr:treatAsResourceType ?treatAsResourceType . }
-                                FILTER (?setting!=rdf:type && ?setting!=ldr:scope && ?setting!=rdfs:label && ?setting!=ldr:dataset && ?setting!=ldr:resource && ?setting!=ldr:treatAsResourceType)
-                                filter not exists {
-                                    ?config ldr:createdBy ?user.
-                                }
                         }
                 ${graphEnd}   } ORDER BY DESC(?treatAsResourceType)
                 `;
