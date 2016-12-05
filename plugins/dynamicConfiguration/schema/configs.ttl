@@ -15,7 +15,6 @@
 @prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 @prefix geovocab: <http://geovocab.org/geometry#> .
 @prefix gsp: <http://www.opengis.net/ont/geosparql#> .
-
 #Resource URI config
 <https://ld-r.org/config/r14a> a ldr:ReactorConfig;
       ldr:scope "R" ;
@@ -59,7 +58,7 @@
 #Server config
 <https://ld-r.org/config/s1> a ldr:ServerConfig;
         rdfs:label """DBpedia SPARQL Endpoint""" ;
-        ldr:dataset <http://dbpedia.org/sparql> ;
+        ldr:dataset <http://live.dbpedia.org/sparql> ;
         ldr:host "dbpedia.org" ;
         ldr:port "80" ;
         ldr:path "/sparql" ;
@@ -77,11 +76,11 @@
         ldr:useReasoning "0" .
 #Facets property config
 <https://ld-r.org/config/fp1> a ldr:ReactorConfig, ldr:FacetsPropertyConfig;
-        ldr:property dbp:established ;
-        ldr:label """Established Year""" .
+        ldr:property swrc:year ;
+        ldr:label """Year""" .
 #Facets config
 <https://ld-r.org/config/f1> a ldr:FacetsConfig;
-        rdfs:label """Browse DBpedia""" ;
-        ldr:dataset <http://dbpedia.org/sparql> ;
-        ldr:list rdf:type, dbo:country, dbp:established ;
+        rdfs:label """Browse Semantic Web Dog Food""" ;
+        ldr:dataset <http://data.semanticweb.org/sparql> ;
+        ldr:list rdf:type, swrc:author, swrc:year ;
         ldr:config <https://ld-r.org/config/fp1> .
