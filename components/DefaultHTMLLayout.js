@@ -18,6 +18,7 @@ class DefaultHTMLLayout extends React.Component {
                     this.props.addAssets ? <link href="/public/css/vendor.bundle.css" rel="stylesheet" type="text/css" />: <style></style>
                 }
                 <link href="/leaflet/dist/leaflet.css" rel="stylesheet" type="text/css" />
+                <link href="/assets/css/custom1.css" rel="stylesheet" type="text/css" />
             </head>
             <body>
                 <div id="app" dangerouslySetInnerHTML={{__html: this.props.markup}}></div>

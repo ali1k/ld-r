@@ -1,12 +1,14 @@
 import React from 'react';
 import PropertyReactor from '../reactors/PropertyReactor';
 import {NavLink} from 'fluxible-router';
+import classNames from 'classnames/bind';
 import URIUtil from '../utils/URIUtil';
 import cloneResource from '../../actions/cloneResource';
 
 class PersonResource extends React.Component {
     constructor(props) {
         super(props);
+        this.state={showDetails: 0};
     }
     componentDidMount() {
         //scroll to top of the page
@@ -23,7 +25,11 @@ class PersonResource extends React.Component {
         });
         e.stopPropagation();
     }
+    toggleShowMore(){
+        this.setState({showDetails: ! this.state.showDetails});
+    }
     render() {
+        let picture, birthDate, birthPlace, deathDate, deathPlace, knownFor, aboutP;
         let readOnly = 1;
         let user = this.context.getUser();
         let self = this;
@@ -53,11 +59,40 @@ class PersonResource extends React.Component {
                         }
                     }
                 }
+                if(node.propertyURI === 'http://xmlns.com/foaf/0.1/depiction'){
+                    picture = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://dbpedia.org/ontology/birthDate'){
+                    birthDate = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://dbpedia.org/ontology/birthPlace'){
+                    birthPlace = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://dbpedia.org/ontology/deathDate'){
+                    deathDate = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://dbpedia.org/ontology/deathPlace'){
+                    deathPlace = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://www.w3.org/2000/01/rdf-schema#comment'){
+                    aboutP = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://dbpedia.org/ontology/knownFor'){
+                    knownFor = node.instances;
+                }
                 return (
                     <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
                 );
+
             }
         });
+        if(knownFor){
+            let knownForDIV = knownFor.map((node, index)=>{
+                return (
+                    <a key={index} target="_blank" className="ui tag label" href={node.value}>{URIUtil.getURILabel(node.value)}></a>
+                );
+            });
+        }
         let currentCategory, mainDIV, tabsDIV, tabsContentDIV;
         //categorize properties in different tabs
         if(this.props.config.usePropertyCategories){
@@ -121,6 +156,9 @@ class PersonResource extends React.Component {
         if (self.props.config && !this.props.readOnly && typeof self.props.config.allowResourceClone !== 'undefined' && parseInt(self.props.config.allowResourceClone)) {
             cloneable = 1;
         }
+        let detailClasses = classNames({
+            'hide-element': !this.state.showDetails
+        });
         return (
             <div className="ui page grid" ref="resource" itemScope itemType={this.props.resourceType} itemID={this.props.resource}>
                 <div className="ui column">
@@ -131,7 +169,29 @@ class PersonResource extends React.Component {
                             <a className="medium ui circular basic icon button" onClick={this.handleCloneResource.bind(this, this.props.datasetURI, decodeURIComponent(this.props.resource))} title="clone this resource"><i className="icon teal superscript"></i></a>
                         : ''}
                     </h2>
-                    {mainDIV}
+                    <div className="ui grid">
+                      <div className="four wide column">
+                          <a className="olive card">
+                            <div className="image">
+                              {picture ? <img className="ui medium rounded image" src={picture}/> : <img className="ui medium rounded image" src="/assets/img/person.png"/>}
+                            </div>
+                          </a>
+
+                      </div>
+                      <div className="twelve wide column">
+                          <div className='ui huge divided list'>
+                              {birthDate ? <div className='item'><i className='ui icon circle thin'></i> {birthDate} {birthPlace ? '('+URIUtil.getURILabel(birthPlace)+')' : ''}</div> : ''}
+                              {deathDate ? <div className='item'><i className='ui icon circle'></i> {deathDate} {deathPlace ? '('+URIUtil.getURILabel(deathPlace)+')' : ''}</div> : ''}
+                              {knownFor ? <div className='item ui labels'> {knownForDIV}</div>: ''}
+                              {aboutP ? <div className='item'> {aboutP}</div>: ''}
+                              <div className='item'></div>
+                          </div>
+                      </div>
+                    </div>
+                    <div className='ui bottom attached button fluid' onClick={this.toggleShowMore.bind(this)}>{!this.state.showDetails ? <span><i className="ui toggle down icon"></i>show details...</span> : <span><i className="ui toggle up icon"></i>hide details...</span>}</div>
+                    <div className={detailClasses}>
+                        {mainDIV}
+                    </div>
                 </div>
             </div>
         );

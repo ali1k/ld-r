@@ -62,12 +62,16 @@ class IndividualProperty extends React.Component {
         }
         return (
             <div ref='individualProperty'>
-                <div className="ui horizontal list">
-                    <div className="item">
-                        <PropertyHeader spec={this.props.spec} config={this.props.config} size="3" datasetURI={this.props.datasetURI} resourceURI={this.props.resource} propertyURI={this.props.property}/>
+                {(this.props.hidePropertyName || (this.props.config && this.props.config.hidePropertyName)) ? '' :
+                    <div className="property-title">
+                        <div className="ui horizontal list">
+                            <div className="item">
+                                <PropertyHeader spec={this.props.spec} config={this.props.config} size="3" datasetURI={this.props.datasetURI} resourceURI={this.props.resource} propertyURI={this.props.property}/>
+                            </div>
+                        </div>
+                        <div className="ui dividing header"></div>
                     </div>
-                </div>
-                <div className="ui dividing header"></div>
+                }
                 <div className="property-objects">
                     <ObjectReactor enableAuthentication={this.props.enableAuthentication} readOnly={this.props.readOnly} inEditMode={this.props.inEditMode} datasetURI={this.props.datasetURI} resource={this.props.resource} property={this.props.property} propertyPath={this.props.propertyPath} spec={this.props.spec} config={this.props.config} onCreateIndividualObject={this.props.onCreateIndividualObject.bind(this)} onDeleteIndividualObject={this.props.onDeleteIndividualObject.bind(this)} onUpdateIndividualObject={this.props.onUpdateIndividualObject.bind(this)} onDetailCreateIndividualObject={this.props.onDetailCreateIndividualObject.bind(this)} onDetailUpdateIndividualObject={this.props.onDetailUpdateIndividualObject.bind(this)} onUpdateAggObject={this.props.onUpdateAggObject.bind(this)} onDeleteAggObject={this.props.onDeleteAggObject.bind(this)} onControlNewInsert={this.controlNewInsert.bind(this)}/>
                 </div>

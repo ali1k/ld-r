@@ -1,3 +1,15 @@
-.ld-r-custom-css {
-    color: orange;
+.hide-element {
+    display: none;
+}
+
+.inline-div{
+	display: inline-block;
+}
+
+.padding15{
+	padding: 15px;
+}
+
+.bold{
+	font-weight: bold;
 }
