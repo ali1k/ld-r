@@ -29,7 +29,7 @@ class PersonResource extends React.Component {
         this.setState({showDetails: ! this.state.showDetails});
     }
     render() {
-        let picture, keywords, birthDate, birthPlace, deathDate, deathPlace, knownFor, aboutP, pName, firstName, lastName;
+        let picture, keywords, birthDate, birthPlace, deathDate, deathPlace, knownFor, aboutP, pName, firstName, lastName, children, spouse;
         let readOnly = 1;
         let user = this.context.getUser();
         let self = this;
@@ -86,6 +86,12 @@ class PersonResource extends React.Component {
                 if(node.propertyURI === 'http://www.w3.org/2000/01/rdf-schema#comment'){
                     aboutP = node.instances[0].value;
                 }
+                if(node.propertyURI === 'http://dbpedia.org/property/children'){
+                    children = node.instances;
+                }
+                if(node.propertyURI === 'http://dbpedia.org/ontology/spouse'){
+                    spouse = node.instances;
+                }
                 if(node.propertyURI === 'http://dbpedia.org/ontology/knownFor'){
                     knownFor = node.instances;
                 }
@@ -98,18 +104,32 @@ class PersonResource extends React.Component {
 
             }
         });
-        let knownForDIV, keywordsDIV;
+        let knownForDIV, keywordsDIV, spouseDIV, childrenDIV;
+        if(spouse){
+            spouseDIV = spouse.map((node, index)=>{
+                return (
+                    <a key={index} className="ui basic label" href={'/dataset/' + encodeURIComponent(self.props.datasetURI) + '/resource/' + encodeURIComponent(node.value) }>{URIUtil.getURILabel(node.value)}</a>
+                );
+            });
+        }
+        if(children){
+            childrenDIV = children.map((node, index)=>{
+                return (
+                    <a key={index} className="ui basic label" href={'/dataset/' + encodeURIComponent(self.props.datasetURI) + '/resource/' + encodeURIComponent(node.value) }>{URIUtil.getURILabel(node.value)}</a>
+                );
+            });
+        }
         if(knownFor){
             knownForDIV = knownFor.map((node, index)=>{
                 return (
-                    <a key={index} target="_blank" className="ui tag label" href={node.value}>{URIUtil.getURILabel(node.value)}</a>
+                    <a key={index} className="ui tag label" href={'/dataset/' + encodeURIComponent(self.props.datasetURI) + '/resource/' + encodeURIComponent(node.value) }>{URIUtil.getURILabel(node.value)}</a>
                 );
             });
         }
         if(keywords){
             keywordsDIV = keywords.map((node, index)=>{
                 return (
-                    <a key={index} target="_blank" className="ui tag label" href={node.value}>{URIUtil.getURILabel(node.value)}</a>
+                    <a key={index} className="ui tag label" href={'/dataset/' + encodeURIComponent(self.props.datasetURI) + '/resource/' + encodeURIComponent(node.value) }>{URIUtil.getURILabel(node.value)}</a>
                 );
             });
         }
@@ -209,6 +229,8 @@ class PersonResource extends React.Component {
                           <div className='ui huge divided list'>
                               {birthDate ? <div className='item'><i className='ui icon circle thin'></i> {birthDate} {birthPlace ? '('+URIUtil.getURILabel(birthPlace)+')' : ''}</div> : ''}
                               {deathDate ? <div className='item'><i className='ui icon circle'></i> {deathDate} {deathPlace ? '('+URIUtil.getURILabel(deathPlace)+')' : ''}</div> : ''}
+                              {spouse ? <div className='item ui'><i className="icons"> <i className='ui icon  blue male'></i></i><i className="icons"> <i className='ui icon pink female'></i></i> {spouseDIV}</div>: ''}
+                              {children ? <div className='item ui'><i className="icons"><i className='ui icon green child'></i></i> {childrenDIV}</div>: ''}
                               {knownFor ? <div className='item ui labels'> {knownForDIV}</div>: ''}
                               {!knownFor && keywords ? <div className='item ui labels'> {keywordsDIV}</div>: ''}
                               {aboutP ? <div className='item'> {aboutP}</div>: ''}
