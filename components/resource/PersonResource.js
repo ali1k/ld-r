@@ -29,7 +29,7 @@ class PersonResource extends React.Component {
         this.setState({showDetails: ! this.state.showDetails});
     }
     render() {
-        let picture, birthDate, birthPlace, deathDate, deathPlace, knownFor, aboutP;
+        let picture, keywords, birthDate, birthPlace, deathDate, deathPlace, knownFor, aboutP, pName, firstName, lastName;
         let readOnly = 1;
         let user = this.context.getUser();
         let self = this;
@@ -62,6 +62,15 @@ class PersonResource extends React.Component {
                 if(node.propertyURI === 'http://xmlns.com/foaf/0.1/depiction'){
                     picture = node.instances[0].value;
                 }
+                if(node.propertyURI === 'http://xmlns.com/foaf/0.1/firstName'){
+                    firstName = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://xmlns.com/foaf/0.1/lastName'){
+                    lastName = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://xmlns.com/foaf/0.1/name'){
+                    pName = node.instances[0].value;
+                }
                 if(node.propertyURI === 'http://dbpedia.org/ontology/birthDate'){
                     birthDate = node.instances[0].value;
                 }
@@ -80,15 +89,25 @@ class PersonResource extends React.Component {
                 if(node.propertyURI === 'http://dbpedia.org/ontology/knownFor'){
                     knownFor = node.instances;
                 }
+                if(node.propertyURI === 'http://purl.org/dc/terms/subject'){
+                    keywords = node.instances;
+                }
                 return (
                     <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
                 );
 
             }
         });
-        let knownForDIV;
+        let knownForDIV, keywordsDIV;
         if(knownFor){
             knownForDIV = knownFor.map((node, index)=>{
+                return (
+                    <a key={index} target="_blank" className="ui tag label" href={node.value}>{URIUtil.getURILabel(node.value)}</a>
+                );
+            });
+        }
+        if(keywords){
+            keywordsDIV = keywords.map((node, index)=>{
                 return (
                     <a key={index} target="_blank" className="ui tag label" href={node.value}>{URIUtil.getURILabel(node.value)}</a>
                 );
@@ -160,12 +179,19 @@ class PersonResource extends React.Component {
         let detailClasses = classNames({
             'hide-element': !this.state.showDetails
         });
+        let personTitle = this.props.title;
+        if(pName){
+            personTitle = pName;
+        }
+        if(firstName && lastName){
+            personTitle = firstName + ' ' + lastName;
+        }
         return (
             <div className="ui page grid" ref="resource" itemScope itemType={this.props.resourceType} itemID={this.props.resource}>
                 <div className="ui column">
                     {breadcrumb}
                     <h2>
-                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon user"></i></a> <a href={this.props.resource} target="_blank">{this.props.title}</a>&nbsp;&nbsp;
+                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon user"></i></a> <a href={this.props.resource} target="_blank">{personTitle}</a>&nbsp;&nbsp;
                         {cloneable ?
                             <a className="medium ui circular basic icon button" onClick={this.handleCloneResource.bind(this, this.props.datasetURI, decodeURIComponent(this.props.resource))} title="clone this resource"><i className="icon teal superscript"></i></a>
                         : ''}
@@ -184,6 +210,7 @@ class PersonResource extends React.Component {
                               {birthDate ? <div className='item'><i className='ui icon circle thin'></i> {birthDate} {birthPlace ? '('+URIUtil.getURILabel(birthPlace)+')' : ''}</div> : ''}
                               {deathDate ? <div className='item'><i className='ui icon circle'></i> {deathDate} {deathPlace ? '('+URIUtil.getURILabel(deathPlace)+')' : ''}</div> : ''}
                               {knownFor ? <div className='item ui labels'> {knownForDIV}</div>: ''}
+                              {!knownFor && keywords ? <div className='item ui labels'> {keywordsDIV}</div>: ''}
                               {aboutP ? <div className='item'> {aboutP}</div>: ''}
                               <div className='item'></div>
                           </div>

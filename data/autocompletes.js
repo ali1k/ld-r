@@ -29,6 +29,7 @@ module.exports = {
         {title: 'dbo:birthPlace'},
         {title: 'dbo:deathPlace'},
         {title: 'dbo:birthDate'},
+        {title: 'dbo:knownFor'},
         {title: 'dbo:deathDate'},
         {title: 'bibo:Book'},
         {title: 'void:Dataset'},
