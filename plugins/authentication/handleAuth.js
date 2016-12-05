@@ -168,6 +168,7 @@ let addUserQueries = (req, res, recaptchaSiteKey) => {
                                              foaf:lastName """${req.body.lastname}""";
                                              foaf:organization """${req.body.organization}""";
                                              foaf:accountName """${req.body.username}""";
+                                             foaf:member ldr:NormalUser ;
                                              foaf:mbox <mailto:${req.body.email}>;
                                              dcterms:created "${currentDate}"^^xsd:dateTime;
                                              ldr:password """${passwordHash.generate(req.body.password)}""";

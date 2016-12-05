@@ -17,9 +17,11 @@
       foaf:mbox <mailto:a.khalili@vu.nl> ;
       foaf:homepage <http://ali1k.com> ;
       foaf:accountName "admin" ;
+      foaf:member ldr:NormalUser ;
       #password: demo1234
       ldr:password "sha1$8b1159fb$1$c933edf77baaa6f6b7558b6b80178bfcb5a6c917";
       ldr:isActive "1"^^xsd:Integer;
+      #this hsould be set only for the admin user who has access to all features
       ldr:isSuperUser "1"^^xsd:Integer .
 
 #non-super users will have the following access level properties:

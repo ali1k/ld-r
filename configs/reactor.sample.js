@@ -237,6 +237,16 @@ export default {
                     label: ['Username'],
                     readOnly: 1
                 },
+                'http://xmlns.com/foaf/0.1/member': {
+                    label: ['Member of'],
+                    objectIEditor: ['BasicOptionInput'],
+                    objectIViewer: ['BasicOptionView'],
+                    options: [
+                        {label: 'Normal User', value: 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#NormalUser'},
+                        {label: 'Special User', value: 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#SpecialUser'}
+                    ],
+                    allowNewValue: 1
+                },
                 'http://xmlns.com/foaf/0.1/firstName': {
                     label: ['First Name']
                 },
