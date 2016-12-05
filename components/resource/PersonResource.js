@@ -86,10 +86,11 @@ class PersonResource extends React.Component {
 
             }
         });
+        let knownForDIV;
         if(knownFor){
-            let knownForDIV = knownFor.map((node, index)=>{
+            knownForDIV = knownFor.map((node, index)=>{
                 return (
-                    <a key={index} target="_blank" className="ui tag label" href={node.value}>{URIUtil.getURILabel(node.value)}></a>
+                    <a key={index} target="_blank" className="ui tag label" href={node.value}>{URIUtil.getURILabel(node.value)}</a>
                 );
             });
         }
