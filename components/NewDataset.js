@@ -48,7 +48,7 @@ class NewDataset extends React.Component {
             });
         }else{
             endpointURI = this.state.endpointURI;
-            if(endpointURI.indexOf('http://') === -1){
+            if(endpointURI.indexOf('http://') === -1 && endpointURI.indexOf('https://') === -1){
                 endpointURI = 'http://' + endpointURI;
             }
             let parsed = url.parse(endpointURI);
