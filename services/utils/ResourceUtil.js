@@ -213,6 +213,7 @@ class ResourceUtil {
                     value: el.o.value,
                     valueType: el.o.type,
                     dataType: (el.o.type === 'typed-literal' ? el.o.datatype : ''),
+                    lang: el.o['xml:lang'] ? el.o['xml:lang'] : '',
                     extended: parseInt(el.hasExtendedValue.value)
                 });
             } else {
@@ -220,6 +221,7 @@ class ResourceUtil {
                     value: el.o.value,
                     valueType: el.o.type,
                     dataType: (el.o.type === 'typed-literal' ? el.o.datatype : ''),
+                    lang: el.o['xml:lang'] ? el.o['xml:lang'] : '',
                     extended: parseInt(el.hasExtendedValue.value)
                 }];
             }
@@ -287,6 +289,7 @@ class ResourceUtil {
                                     value: el.o.value,
                                     valueType: el.o.type,
                                     dataType: (el.o.type === 'typed-literal' ? el.o.datatype : ''),
+                                    lang: el.o['xml:lang'] ? el.o['xml:lang'] : '',
                                     extended: parseInt(el.hasExtendedValue.value)
                                 });
                             } else {
@@ -294,6 +297,7 @@ class ResourceUtil {
                                     value: el.o.value,
                                     valueType: el.o.type,
                                     dataType: (el.o.type === 'typed-literal' ? el.o.datatype : ''),
+                                    lang: el.o['xml:lang'] ? el.o['xml:lang'] : '',
                                     extended: parseInt(el.hasExtendedValue.value)
                                 }];
                             }

@@ -113,10 +113,10 @@ class OrgResource extends React.Component {
         if(comments){
             aboutP = comments[0].value;
             comments.forEach((comment)=>{
-                if(comment['xml:lang'] && comment['xml:lang'] === 'en'){
+                if(comment.lang && comment.lang === 'en'){
                     aboutP = comment.value;
                 }
-            })
+            });
         }
         let keywordsDIV;
         if(depiction){
