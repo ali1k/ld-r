@@ -29,7 +29,7 @@ class PersonResource extends React.Component {
         this.setState({showDetails: ! this.state.showDetails});
     }
     render() {
-        let picture, keywords, pbirthDate, obirthDate, pbirthPlace, obirthPlace, pdeathDate, odeathDate, pdeathPlace, odeathPlace, knownFor, aboutP, pName, firstName, lastName, children, spouse, depiction, thumbnail;
+        let picture, keywords, pbirthDate, obirthDate, pbirthPlace, obirthPlace, pdeathDate, odeathDate, pdeathPlace, odeathPlace, knownFor, aboutP, pName, firstName, lastName, children, spouse, depiction, thumbnail, homepage, email;
         let readOnly = 1;
         let user = this.context.getUser();
         let self = this;
@@ -64,6 +64,12 @@ class PersonResource extends React.Component {
                 }
                 if(node.propertyURI === 'http://xmlns.com/foaf/0.1/thumbnail'){
                     thumbnail = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://xmlns.com/foaf/0.1/homepage'){
+                    homepage = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://www.w3.org/2006/vcard/ns#email'){
+                    email = node.instances[0].value;
                 }
                 if(node.propertyURI === 'http://xmlns.com/foaf/0.1/firstName'){
                     firstName = node.instances[0].value;
@@ -239,6 +245,8 @@ class PersonResource extends React.Component {
                               {spouse ? <div className='item ui'><i className="icons"> <i className='ui icon  blue male'></i></i><i className="icons"> <i className='ui icon pink female'></i></i> {spouseDIV}</div>: ''}
                               {children ? <div className='item ui'><i className="icons"><i className='ui icon green child'></i></i> {childrenDIV}</div>: ''}
                               {aboutP ? <div className='item'> {aboutP}</div>: ''}
+                              {homepage ? <a className='item' href={homepage}> <i className="icons"><i className='ui icon violet home'></i></i> {homepage}</a>: ''}
+                              {email ? <a className='item' href={'mailto:'+email}> <i className="icons"><i className='ui icon blue mail outline'></i></i> {email}</a>: ''}
                               {knownFor ? <div className='item ui labels'> {knownForDIV}</div>: ''}
                               {!knownFor && keywords ? <div className='item ui labels'> {keywordsDIV}</div>: ''}
 

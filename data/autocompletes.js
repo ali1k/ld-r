@@ -16,6 +16,7 @@ module.exports = {
         {title: 'foaf:lastName'},
         {title: 'foaf:name'},
         {title: 'foaf:Person'},
+        {title: 'vcard:email'},
         {title: 'dcterms:title'},
         {title: 'dcterms:subject'},
         {title: 'dcterms:creator'},
