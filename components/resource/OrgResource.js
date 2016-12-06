@@ -178,7 +178,7 @@ class OrgResource extends React.Component {
         }
         let geoConfig;
         if(geometry){
-            geoConfig = geometry.config;
+            geoConfig = JSON.parse(JSON.stringify(geometry.config));
             geoConfig.mapWidth = 345;
             geoConfig.hidePropertyName = 1;
         }
