@@ -230,7 +230,7 @@ class Configurator{
                 }
                 let finalOutput = {};
                 //remove irrelevant attributes from config
-                let irrels = ['resourceFocusType', 'maxNumberOfResourcesOnPage', 'datasetReactor', 'usePropertyCategories', 'propertyCategories', 'resourceReactor', 'treatAsResourceType', 'datasetLabel', 'resourceLabelProperty'];
+                let irrels = ['resourceFocusType', 'maxNumberOfResourcesOnPage', 'datasetReactor', 'usePropertyCategories', 'propertyCategories', 'resourceReactor', 'treatAsResourceType', 'datasetLabel', 'resourceLabelProperty', 'resourceImageProperty'];
                 for(let prop in output) {
                     if(irrels.indexOf(prop) == -1) {
                         finalOutput[prop] = output[prop];
@@ -244,7 +244,7 @@ class Configurator{
 
     }
     getResourceFocusType(cnf, datasetURI){
-        let out = {'type':[], 'labelProperty': []};
+        let out = {'type':[], 'labelProperty': [], 'imageProperty': []};
         if(cnf && cnf.resourceFocusType){
             out['type'] = cnf.resourceFocusType;
             if(cnf.resourceLabelProperty && cnf.resourceLabelProperty.length){
@@ -253,6 +253,13 @@ class Configurator{
                 out['type'] = config.dataset[datasetURI].resourceFocusType;
                 if(config.dataset[datasetURI].resourceLabelProperty && config.dataset[datasetURI].resourceLabelProperty.length){
                     out['labelProperty'] = config.dataset[datasetURI].resourceLabelProperty;
+                }
+            }
+            if(cnf.resourceImageProperty && cnf.resourceImageProperty.length){
+                out['imageProperty'] = cnf.resourceImageProperty;
+            } else if(config.dataset[datasetURI] && config.dataset[datasetURI].resourceImageProperty){
+                if(config.dataset[datasetURI].resourceImageProperty && config.dataset[datasetURI].resourceImageProperty.length){
+                    out['imageProperty'] = config.dataset[datasetURI].resourceImageProperty;
                 }
             }
         }

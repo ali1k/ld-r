@@ -163,7 +163,7 @@ class FacetQuery{
     getSideEffects(endpointParameters, graphName, type, propertyURI, prevSelection) {
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
-        st = st + '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.';
+        st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.' + st;
         this.query = `
         SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
             ${gStart}
@@ -189,8 +189,10 @@ class FacetQuery{
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let type = rtconfig.type;
         let labelProperty = rtconfig.labelProperty;
+        let imageProperty = rtconfig.imageProperty;
         let selectStr = '';
         let titleStr = '';
+        let imageStr = '';
         let bindPhase = '';
         let noffset = (offset-1)*limit;
         //add labels for entities
@@ -208,13 +210,25 @@ class FacetQuery{
                 bindPhase = ' BIND(CONCAT('+tmpA.join(',"-",')+') AS ?title) '
             }
         }
+        if(imageProperty && imageProperty.length){
+            selectStr = selectStr + ' ?image ';
+            imageStr = 'OPTIONAL { ?s <' + imageProperty[0] + '> ?image .} ';
+        }
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
         this.query = `
         SELECT DISTINCT ?s ${selectStr} WHERE {
             ${gStart}
-                ${st} ${titleStr} ${bindPhase}
+                {
+                    SELECT DISTINCT ?s WHERE {
+                        ${gStart}
+                            ${st}
+                        ${gEnd}
+                    }
+                    LIMIT ${limit} OFFSET ${noffset}
+                }
+                ${titleStr} ${imageStr} ${bindPhase}
             ${gEnd}
-        } LIMIT ${limit} OFFSET ${noffset}
+        }
         `;
         return this.prefixes + this.query;
     }

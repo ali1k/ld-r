@@ -51,9 +51,12 @@ class DatasetQuery{
     getResourcesByType(endpointParameters, graphName, rconfig, limit, offset) {
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let type = rconfig.resourceFocusType;
-        let resourceLabelProperty;
+        let resourceLabelProperty, resourceImageProperty;
         if(rconfig.resourceLabelProperty){
             resourceLabelProperty = rconfig.resourceLabelProperty;
+        }
+        if(rconfig.resourceImageProperty){
+            resourceImageProperty = rconfig.resourceImageProperty;
         }
         //specify the right label for resources
         let optPhase = 'OPTIONAL { ?resource dcterms:title ?title .} ';
@@ -71,6 +74,9 @@ class DatasetQuery{
                 bindPhase = ' BIND(CONCAT('+tmpA.join(',"-",')+') AS ?title) '
             }
         }
+        if(resourceImageProperty && resourceImageProperty.length){
+            optPhase = optPhase + ' OPTIONAL { ?resource <' + resourceImageProperty[0] + '> ?image .} ';
+        }
         let st = '?resource a <'+ type + '> .';
         //will get all the types
         if(!type.length || (type.length && !type[0]) ){
@@ -85,13 +91,22 @@ class DatasetQuery{
             st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
         }
         this.query = `
-        SELECT DISTINCT ?resource ?title ?label WHERE {
+        SELECT DISTINCT ?resource ?title ?label ?image WHERE {
             ${gStart}
-                ${st}
-                OPTIONAL { ?resource rdfs:label ?label .} ${optPhase} ${bindPhase}
+                {
+                    SELECT DISTINCT ?resource  WHERE {
+                        ${gStart}
+                            ${st}
+                        ${gEnd}
+                    }
+                    LIMIT ${limit} OFFSET ${offset}
+                }
+                OPTIONAL { ?resource rdfs:label ?label .}
+                ${optPhase}
+                ${bindPhase}
             ${gEnd}
 
-        } LIMIT ${limit} OFFSET ${offset}
+        }
         `;
         return this.prefixes + this.query;
     }

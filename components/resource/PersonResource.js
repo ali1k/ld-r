@@ -29,7 +29,7 @@ class PersonResource extends React.Component {
         this.setState({showDetails: ! this.state.showDetails});
     }
     render() {
-        let picture, keywords, pbirthDate, obirthDate, pbirthPlace, obirthPlace, pdeathDate, odeathDate, pdeathPlace, odeathPlace, knownFor, aboutP, pName, firstName, lastName, children, spouse;
+        let picture, keywords, pbirthDate, obirthDate, pbirthPlace, obirthPlace, pdeathDate, odeathDate, pdeathPlace, odeathPlace, knownFor, aboutP, pName, firstName, lastName, children, spouse, depiction, thumbnail;
         let readOnly = 1;
         let user = this.context.getUser();
         let self = this;
@@ -60,7 +60,10 @@ class PersonResource extends React.Component {
                     }
                 }
                 if(node.propertyURI === 'http://xmlns.com/foaf/0.1/depiction'){
-                    picture = node.instances[0].value;
+                    depiction = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://xmlns.com/foaf/0.1/thumbnail'){
+                    thumbnail = node.instances[0].value;
                 }
                 if(node.propertyURI === 'http://xmlns.com/foaf/0.1/firstName'){
                     firstName = node.instances[0].value;
@@ -117,6 +120,11 @@ class PersonResource extends React.Component {
             }
         });
         let knownForDIV, keywordsDIV, spouseDIV, childrenDIV, deathPlace, birthPlace, birthDate, deathDate;
+        if(depiction){
+            picture = depiction;
+        }else if(thumbnail){
+            picture = thumbnail;
+        }
         if(obirthPlace){
             birthPlace = obirthPlace;
         }else if(pbirthPlace){

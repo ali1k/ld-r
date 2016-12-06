@@ -1,40 +1,65 @@
 import React from 'react';
 import {NavLink} from 'fluxible-router';
 import URIUtil from '../utils/URIUtil';
+import classNames from 'classnames/bind';
 
 class ResourceList extends React.Component {
     componentDidMount() {}
-    buildLink(v, g, title, icon, cloneable) {
+    buildLink(v, g, title, image, icon, cloneable) {
         let self = this;
         let cloneDIV = '';
         if (cloneable) {
-            cloneDIV = <a className="mini ui circular basic icon button" onClick={self.handleCloneResource.bind(self, decodeURIComponent(g), decodeURIComponent(v))} title="clone this resource"><i className="icon teal superscript"></i></a>;
+            cloneDIV = <span className="mini ui circular basic icon button" onClick={self.handleCloneResource.bind(self, decodeURIComponent(g), decodeURIComponent(v))} title="clone this resource"><i className="icon teal superscript"></i></span>;
         }
         //in the faceted browser
         if (this.props.OpenInNewTab) {
-            return (
-                <div>
-                    <div className="content">
-                        <a href={'/dataset/' + g + '/resource/' + v} target="_blank" className="ui">
-                            <i className={icon}></i>
-                            {title}
-                        </a>
+            let titleDIV = <div className="content">
+                                <a href={'/dataset/' + g + '/resource/' + v} target="_blank" className="ui"> <i className={icon}></i>{title} </a>
+                            </div>;
+            if(this.props.config && this.props.config.resourceImageProperty){
+                return (
+                    <div>
+                        <div className="content">
+                                <div className="ui fluid card" style={{maxWidth: 150, maxHeight: 235, minHeight: 235}}>
+                                    <div className="image">
+                                        <a href={'/dataset/' + g + '/resource/' + v} target="_blank" className="ui"> <img className="ui small image" src={image ? image : '/assets/img/image.png'} style={{maxHeight: 150, minHeight: 150}} /></a>
+                                    </div>
+                                    {titleDIV}
+                                </div>
+                        </div>
                     </div>
-                </div>
-            );
+                );
+            }else{
+                return (
+                    <div>
+                        {titleDIV}
+                    </div>
+                );
+            }
         } else {
-            return (
-                <div>
-                    <div className="content">
-                        <NavLink routeName="resource" className="ui" href={'/dataset/' + g + '/resource/' + v}>
-                            <i className={icon}></i>
-                            {title}
-                        </NavLink>
-                         &nbsp;{cloneDIV}
+            let titleDIV = <div className="content">
+                                <NavLink routeName="resource" className="ui" href={'/dataset/' + g + '/resource/' + v}> <i className={icon}></i>{title}&nbsp;{cloneDIV}</NavLink>
+                            </div>;
+            if(this.props.config && this.props.config.resourceImageProperty){
+                return (
+                    <div>
+                        <div className="content">
+                                <div className="ui fluid card" style={{maxWidth: 150, maxHeight: 235, minHeight: 235}}>
+                                    <div className="image">
+                                        <NavLink routeName="resource" className="ui" href={'/dataset/' + g + '/resource/' + v}> <img className="ui small image" src={image ? image : '/assets/img/image.png'} style={{maxHeight: 150, minHeight: 150}}/></NavLink>
+                                    </div>
+                                    {titleDIV}
+                                </div>
+                        </div>
                     </div>
-                </div>
-
-            );
+                );
+            }else{
+                return (
+                    <div>
+                        {titleDIV}
+                    </div>
+                );
+            }
         }
     }
     handleCloneResource(datasetURI, resourceURI, e) {
@@ -45,16 +70,15 @@ class ResourceList extends React.Component {
         let self = this;
         let user = this.context.getUser();
         let datasetURI = this.props.datasetURI;
-        let userAccess,
+        let userAccess, itemClass,
             title,
+            image,
             list,
             dbClass = 'black cube icon';
         let cloneable = 0;
         if (self.props.config && typeof self.props.config.allowResourceClone !== 'undefined' && parseInt(self.props.config.allowResourceClone)) {
             cloneable = 1;
         }
-        let listClass = cloneable ? '' : ' animated';
-
         if (!this.props.resources.length) {
             list = <div className="ui warning message">
                 <div className="header">
@@ -68,6 +92,12 @@ class ResourceList extends React.Component {
                     : (node.label
                         ? node.label
                         : URIUtil.getURILabel(node.v));
+                image = node.image ? node.image : '';
+                itemClass = classNames({
+                    'ui': true,
+                    'item fadeIn': true,
+                    'animated': !cloneable
+                });
                 if (!self.props.enableAuthentication) {
                     dbClass = 'black cube icon';
                     if (self.props.config && typeof self.props.config.readOnly !== 'undefined' && !self.props.config.readOnly) {
@@ -86,16 +116,21 @@ class ResourceList extends React.Component {
                     }
                 }
                 return (
-                    <div className={'item fadeIn' + listClass} key={index}>
-                        {self.buildLink(encodeURIComponent(node.v), encodeURIComponent(node.d), title, dbClass, cloneable)}
+                    <div className={itemClass} key={index}>
+                        {self.buildLink(encodeURIComponent(node.v), encodeURIComponent(node.d), title, image, dbClass, cloneable)}
                     </div>
                 );
             });
         }
+        let listClasses = classNames({
+            'ui': true,
+            'big': this.props.isBig,
+            'animated': !cloneable,
+            'divided list': this.props.config && !this.props.config.resourceImageProperty,
+            'cards': this.props.config && this.props.config.resourceImageProperty
+        });
         return (
-            <div className={'ui ' + (this.props.isBig
-                ? 'big'
-                : '') + ' divided list ' + listClass} ref="resourceList">
+            <div className={listClasses} ref="resourceList">
                 {list}
             </div>
         );
