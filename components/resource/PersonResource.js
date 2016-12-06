@@ -29,7 +29,7 @@ class PersonResource extends React.Component {
         this.setState({showDetails: ! this.state.showDetails});
     }
     render() {
-        let picture, keywords, pbirthDate, obirthDate, pbirthPlace, obirthPlace, pdeathDate, odeathDate, pdeathPlace, odeathPlace, knownFor, aboutP, pName, firstName, lastName, children, spouse, depiction, thumbnail, homepage, email;
+        let picture, keywords, pbirthDate, obirthDate, pbirthPlace, obirthPlace, pdeathDate, odeathDate, pdeathPlace, odeathPlace, knownFor, aboutP, pName, firstName, lastName, children, spouse, depiction, thumbnail, homepage, email, comments;
         let readOnly = 1;
         let user = this.context.getUser();
         let self = this;
@@ -105,7 +105,7 @@ class PersonResource extends React.Component {
                     pdeathPlace = node.instances[0].value;
                 }
                 if(node.propertyURI === 'http://www.w3.org/2000/01/rdf-schema#comment'){
-                    aboutP = node.instances[0].value;
+                    comments = node.instances;
                 }
                 if(node.propertyURI === 'http://dbpedia.org/property/children'){
                     children = node.instances;
@@ -125,6 +125,14 @@ class PersonResource extends React.Component {
 
             }
         });
+        if(comments){
+            aboutP = comments[0].value;
+            comments.forEach((comment)=>{
+                if(comment['xml:lang'] && comment['xml:lang'] === 'en'){
+                    aboutP = comment.value;
+                }
+            })
+        }
         let knownForDIV, keywordsDIV, spouseDIV, childrenDIV, deathPlace, birthPlace, birthDate, deathDate;
         if(depiction){
             picture = depiction;
