@@ -229,7 +229,7 @@ class FacetedBrowser extends React.Component {
                 configDiv = <a onClick={this.createFConfig.bind(this, this.props.FacetedBrowserStore.datasetURI)} className="ui icon mini black circular button"><i className="ui settings icon"></i> </a>;
             }
             if(this.props.FacetedBrowserStore.total){
-                resourceDIV = <div className="ui segment">
+                resourceDIV = <div className="ui">
                                 <h3 className="ui header">
                                     {this.props.FacetedBrowserStore.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.FacetedBrowserStore.datasetURI)}><span className="ui black circular label">{this.addCommas(this.props.FacetedBrowserStore.total)}</span></a> : ''} Resources from {datasetTitle}
                                  </h3>
