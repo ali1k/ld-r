@@ -1,4 +1,5 @@
 import React from 'react';
+import classNames from 'classnames/bind';
 import BasicIndividualView from './viewer/individual/BasicIndividualView';
 import BasicImageView from './viewer/individual/BasicImageView';
 import BasicIndividualDetailView from './viewer/individual/BasicIndividualDetailView';
@@ -97,6 +98,10 @@ class ObjectIViewer extends React.Component {
         if (this.props.config && this.props.config.hasBlankNode && extendedViewer) {
             hideObject = 1;
         }
+        let viewerClasses = classNames({
+            'ui': true,
+            'attached message': this.props.config && !this.props.config.hidePropertyName
+        });
         return (
             <div className="ui" ref="objectIViewer" onClick={this.props.onObjectClick} style={{
                 'wordBreak': 'break-all',
@@ -104,7 +109,7 @@ class ObjectIViewer extends React.Component {
             }}>
                 {hideObject
                     ? <span itemProp={this.props.property}></span>
-                    : <div itemProp={this.props.property} className="ui attached message">
+                : <div itemProp={this.props.property} className={viewerClasses}>
                         {viewer}
                     </div>}
                 {extendedViewer}

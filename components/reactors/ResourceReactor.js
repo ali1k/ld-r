@@ -5,6 +5,7 @@ import {connectToStores} from 'fluxible-addons-react';
 import Resource from '../resource/Resource';
 import UserResource from '../resource/UserResource';
 import PersonResource from '../resource/PersonResource';
+import OrgResource from '../resource/OrgResource';
 import createProperty from '../../actions/createProperty';
 import ReactDOM from 'react-dom';
 import PrefixBasedInput from '../object/editor/individual/PrefixBasedInput';
@@ -64,6 +65,9 @@ class ResourceReactor extends React.Component {
                     break;
                 case 'PersonResource':
                     resourceReactor = <PersonResource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
+                    break;
+                case 'OrgResource':
+                    resourceReactor = <OrgResource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;
                     break;
                 default:
                     resourceReactor = <Resource enableAuthentication={enableAuthentication} datasetURI={datasetURI} properties={properties} resource={resourceURI} resourceType={resourceType} title={title} currentCategory={currentCategory} propertyPath={propertyPath} config={this.configMinus(config, ['resourceReactor'])}/>;

@@ -5,7 +5,7 @@ import classNames from 'classnames/bind';
 import URIUtil from '../utils/URIUtil';
 import cloneResource from '../../actions/cloneResource';
 
-class PersonResource extends React.Component {
+class OrgResource extends React.Component {
     constructor(props) {
         super(props);
         this.state={showDetails: 0};
@@ -29,7 +29,7 @@ class PersonResource extends React.Component {
         this.setState({showDetails: ! this.state.showDetails});
     }
     render() {
-        let picture, keywords, pbirthDate, obirthDate, pbirthPlace, obirthPlace, pdeathDate, odeathDate, pdeathPlace, odeathPlace, knownFor, aboutP, pName, firstName, lastName, children, spouse, depiction, thumbnail, homepage, email;
+        let picture, keywords, aboutP, pName, depiction, thumbnail, homepage, email, geometry, ocity,pcity, country, established, city, pcountry, ocountry, pmotto, omotto, motto;
         let readOnly = 1;
         let user = this.context.getUser();
         let self = this;
@@ -68,56 +68,41 @@ class PersonResource extends React.Component {
                 if(node.propertyURI === 'http://xmlns.com/foaf/0.1/homepage'){
                     homepage = node.instances[0].value;
                 }
+                if(node.propertyURI === 'http://dbpedia.org/ontology/city'){
+                    ocity = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://dbpedia.org/property/city'){
+                    pcity = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://dbpedia.org/ontology/country'){
+                    ocountry = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://dbpedia.org/property/country'){
+                    pcountry = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://dbpedia.org/property/motto'){
+                    pmotto = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://dbpedia.org/ontology/motto'){
+                    omotto = node.instances[0].value;
+                }
+                if(node.propertyURI === 'http://dbpedia.org/property/established'){
+                    established = node.instances[0].value;
+                }
                 if(node.propertyURI === 'http://www.w3.org/2006/vcard/ns#email'){
                     email = node.instances[0].value;
-                }
-                if(node.propertyURI === 'http://xmlns.com/foaf/0.1/firstName'){
-                    firstName = node.instances[0].value;
-                }
-                if(node.propertyURI === 'http://xmlns.com/foaf/0.1/lastName'){
-                    lastName = node.instances[0].value;
                 }
                 if(node.propertyURI === 'http://xmlns.com/foaf/0.1/name'){
                     pName = node.instances[0].value;
                 }
-                if(node.propertyURI === 'http://dbpedia.org/ontology/birthDate'){
-                    obirthDate = node.instances[0].value;
-                }
-                if(node.propertyURI === 'http://dbpedia.org/property/birthDate'){
-                    pbirthDate = node.instances[0].value;
-                }
-                if(node.propertyURI === 'http://dbpedia.org/ontology/birthPlace'){
-                    obirthPlace = node.instances[0].value;
-                }
-                if(node.propertyURI === 'http://dbpedia.org/property/birthPlace'){
-                    pbirthPlace = node.instances[0].value;
-                }
-                if(node.propertyURI === 'http://dbpedia.org/ontology/deathDate'){
-                    odeathDate = node.instances[0].value;
-                }
-                if(node.propertyURI === 'http://dbpedia.org/property/deathDate'){
-                    pdeathDate = node.instances[0].value;
-                }
-                if(node.propertyURI === 'http://dbpedia.org/ontology/deathPlace'){
-                    odeathPlace = node.instances[0].value;
-                }
-                if(node.propertyURI === 'http://dbpedia.org/property/deathPlace'){
-                    pdeathPlace = node.instances[0].value;
-                }
                 if(node.propertyURI === 'http://www.w3.org/2000/01/rdf-schema#comment'){
                     aboutP = node.instances[0].value;
                 }
-                if(node.propertyURI === 'http://dbpedia.org/property/children'){
-                    children = node.instances;
-                }
-                if(node.propertyURI === 'http://dbpedia.org/ontology/spouse'){
-                    spouse = node.instances;
-                }
-                if(node.propertyURI === 'http://dbpedia.org/ontology/knownFor'){
-                    knownFor = node.instances;
-                }
                 if(node.propertyURI === 'http://purl.org/dc/terms/subject'){
                     keywords = node.instances;
+                }
+                if(node.propertyURI === 'http://www.w3.org/2003/01/geo/wgs84_pos#geometry'){
+                    geometry = node;
                 }
                 return (
                     <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
@@ -125,53 +110,28 @@ class PersonResource extends React.Component {
 
             }
         });
-        let knownForDIV, keywordsDIV, spouseDIV, childrenDIV, deathPlace, birthPlace, birthDate, deathDate;
+        let keywordsDIV;
         if(depiction){
             picture = depiction;
         }else if(thumbnail){
             picture = thumbnail;
         }
-        if(obirthPlace){
-            birthPlace = obirthPlace;
-        }else if(pbirthPlace){
-            birthPlace = pbirthPlace;
+        if(ocity){
+            city = ocity;
+        }else if(pcity){
+            city = pcity;
         }
-        if(obirthDate){
-            birthDate = obirthDate;
-        }else if(pbirthPlace){
-            birthDate = pbirthDate;
+        if(ocountry){
+            country = ocountry;
+        }else if(pcountry){
+            country = pcountry;
         }
-        if(odeathPlace){
-            deathPlace = odeathPlace;
-        }else if(pdeathPlace){
-            deathPlace = pdeathPlace;
+        if(omotto){
+            motto = omotto;
+        }else if(pmotto){
+            motto = pmotto;
         }
-        if(odeathDate){
-            deathDate = odeathDate;
-        }else if(pdeathPlace){
-            deathDate = pdeathDate;
-        }
-        if(spouse){
-            spouseDIV = spouse.map((node, index)=>{
-                return (
-                    <a key={index} className="ui basic label" href={'/dataset/' + encodeURIComponent(self.props.datasetURI) + '/resource/' + encodeURIComponent(node.value) }>{URIUtil.getURILabel(node.value)}</a>
-                );
-            });
-        }
-        if(children){
-            childrenDIV = children.map((node, index)=>{
-                return (
-                    <a key={index} className="ui basic label" href={'/dataset/' + encodeURIComponent(self.props.datasetURI) + '/resource/' + encodeURIComponent(node.value) }>{URIUtil.getURILabel(node.value)}</a>
-                );
-            });
-        }
-        if(knownFor){
-            knownForDIV = knownFor.map((node, index)=>{
-                return (
-                    <a key={index} className="ui tag label" href={'/dataset/' + encodeURIComponent(self.props.datasetURI) + '/resource/' + encodeURIComponent(node.value) }>{URIUtil.getURILabel(node.value)}</a>
-                );
-            });
-        }
+
         if(keywords){
             keywordsDIV = keywords.map((node, index)=>{
                 return (
@@ -212,44 +172,41 @@ class PersonResource extends React.Component {
         let detailClasses = classNames({
             'hide-element': !this.state.showDetails
         });
-        let personTitle = this.props.title;
+        let orgTitle = this.props.title;
         if(pName){
-            personTitle = pName;
+            orgTitle = pName;
         }
-        if(firstName && lastName){
-            personTitle = firstName + ' ' + lastName;
+        let geoConfig;
+        if(geometry){
+            geoConfig = geometry.config;
+            geoConfig.mapWidth = 345;
+            geoConfig.hidePropertyName = 1;
         }
         return (
-            <div className="ui page grid" ref="personResource" itemScope itemType={this.props.resourceType} itemID={this.props.resource}>
+            <div className="ui page grid" ref="orgResource" itemScope itemType={this.props.resourceType} itemID={this.props.resource}>
                 <div className="ui column">
                     {breadcrumb}
                     <h2>
-                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon user"></i></a> <a href={this.props.resource} target="_blank">{personTitle}</a>&nbsp;&nbsp;
+                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI) + '/' + encodeURIComponent(this.props.resource)} className="ui image icon link">{picture ? <img className="ui tiny rounded image" src={picture}/> : <i className="blue icon building"></i>}</a> <a href={this.props.resource} target="_blank">{orgTitle}</a>&nbsp;&nbsp;
                         {cloneable ?
                             <a className="medium ui circular basic icon button" onClick={this.handleCloneResource.bind(this, this.props.datasetURI, decodeURIComponent(this.props.resource))} title="clone this resource"><i className="icon teal superscript"></i></a>
                         : ''}
                     </h2>
                     <div className="ui grid">
-                      <div className="four wide column">
-                          <a className="olive card">
-                            <div className="image">
-                              {picture ? <img className="ui medium rounded image" src={picture}/> : <img className="ui medium rounded image" src="/assets/img/person.png"/>}
-                            </div>
-                          </a>
-
+                      <div className="six wide column">
+                          {geometry ?
+                              <PropertyReactor spec={geometry} readOnly={1} config={geoConfig} datasetURI ={this.props.datasetURI } resource={this.props.resource} property={geometry.propertyURI} />
+                          : ''}
                       </div>
-                      <div className="twelve wide column">
+                      <div className="ten wide column">
                           <div className='ui huge divided list'>
-                              {birthDate ? <div className='item'><i className="icons"><i className='ui icon circle thin'></i></i> {birthDate} {birthPlace ? <a href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(birthPlace)}>({URIUtil.getURILabel(birthPlace)})</a> : ''}</div> : ''}
-                              {deathDate ? <div className='item'><i className="icons"><i className='ui icon circle'></i></i> {deathDate} {deathPlace ? <a href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(deathPlace)}>({URIUtil.getURILabel(deathPlace)})</a> : ''}</div> : ''}
-                              {spouse ? <div className='item ui'><i className="icons"> <i className='ui icon  blue male'></i></i><i className="icons"> <i className='ui icon pink female'></i></i> {spouseDIV}</div>: ''}
-                              {children ? <div className='item ui'><i className="icons"><i className='ui icon green child'></i></i> {childrenDIV}</div>: ''}
+                              {motto ? <div className='item'> <div className="ui top black attached fluid compact segment"><i className='ui icon quote left'></i>{motto}<i className='ui icon quote right'></i></div></div>: ''}
+                              {established ? <div className='item'><i className="icons"><i className='ui icon circle thin'></i></i> Established: <b>{established}</b> </div> : ''}
+                              {city ? <div className='item'><i className="icons"><i className='ui icon circle'></i></i> <a href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(city)}>{URIUtil.getURILabel(city)}</a> | {country ? <a href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(country)}>{URIUtil.getURILabel(country)}</a> : ''}</div> : ''}
                               {aboutP ? <div className='item'> {aboutP}</div>: ''}
                               {homepage ? <a className='item' href={homepage}> <i className="icons"><i className='ui icon violet home'></i></i> {homepage}</a>: ''}
                               {email ? <a className='item' href={'mailto:'+email}> <i className="icons"><i className='ui icon blue mail outline'></i></i> {email}</a>: ''}
-                              {knownFor ? <div className='item ui labels'> {knownForDIV}</div>: ''}
-                              {!knownFor && keywords ? <div className='item ui labels'> {keywordsDIV}</div>: ''}
-
+                              {keywords ? <div className='item ui labels'> {keywordsDIV}</div>: ''}
                               <div className='item'></div>
                           </div>
                       </div>
@@ -263,8 +220,8 @@ class PersonResource extends React.Component {
         );
     }
 }
-PersonResource.contextTypes = {
+OrgResource.contextTypes = {
     executeAction: React.PropTypes.func.isRequired,
     getUser: React.PropTypes.func
 };
-export default PersonResource;
+export default OrgResource;

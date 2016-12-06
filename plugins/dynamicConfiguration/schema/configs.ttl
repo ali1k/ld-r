@@ -11,10 +11,12 @@
 @prefix dbp: <http://dbpedia.org/property/> .
 @prefix dbr: <http://dbpedia.org/resource/> .
 @prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix schema: <http://dbpedia.org/ontology/> .
 @prefix swrc: <http://swrc.ontoware.org/ontology#> .
 @prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 @prefix geovocab: <http://geovocab.org/geometry#> .
 @prefix gsp: <http://www.opengis.net/ont/geosparql#> .
+
 #Resource URI config
 <https://ld-r.org/config/r14a> a ldr:ReactorConfig;
       ldr:scope "R" ;
@@ -28,6 +30,12 @@
       ldr:resource foaf:Person ;
       ldr:treatAsResourceType "1" ;
       ldr:resourceReactor "PersonResource" .
+<https://ld-r.org/config/r14c> a ldr:ReactorConfig;
+      ldr:scope "R" ;
+      rdfs:label """foaf/schema/dbo:Organisation types to OrgResource""" ;
+      ldr:resource foaf:Organization, dbo:Organisation, schema:Organization ;
+      ldr:treatAsResourceType "1" ;
+      ldr:resourceReactor "OrgResource" .
 #Property config
 <https://ld-r.org/config/r12a> a ldr:ReactorConfig;
       ldr:scope "P" ;
