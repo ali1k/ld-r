@@ -1,6 +1,6 @@
 {
   "name": "linked-data-reactor",
-  "version": "0.9.1",
+  "version": "0.9.36",
   "description": "Linked Data Reactor helps to create adaptive Semantic Web UIs.",
   "private": false,
   "repository": {
