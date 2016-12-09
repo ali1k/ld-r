@@ -27,9 +27,18 @@ class BasicAggregateMapView extends React.Component {
         if(this.props.config && this.props.config.zoomLevel){
             zoomLevel = this.props.config.zoomLevel;
         }
+        if(this.props.zoomLevel){
+            zoomLevel = this.props.zoomLevel;
+        }
         this.props.spec.instances.forEach((node, index)=> {
             if(!node){
                 return undefined; // stop processing this iteration
+            }
+            if(node.weight){
+                weightArr.push(node.weight);
+            }
+            if(node.hint){
+                hintArr.push(node.hint);
             }
             if (node.value.indexOf('POLYGON') !== -1 || node.value.indexOf('Polygon') !== -1 || node.value.indexOf('MULTIPOLYGON') !== -1 || node.value.indexOf('MultiPolygon') !== -1 || node.value.indexOf('LineString') !== -1 || node.value.indexOf('MultiLineString') !== -1) {
                 let wkt = new Wkt.Wkt();
@@ -45,12 +54,6 @@ class BasicAggregateMapView extends React.Component {
                             focusPoint = self.getFocusPoint(node.value, wkt.components);
                         }
                         shapesArr.push(wkt.toJson());
-                        if(node.weight){
-                            weightArr.push(node.weight);
-                        }
-                        if(node.hint){
-                            hintArr.push(node.hint);
-                        }
                     }
                     catch(err) {
                         console.log(err.message);

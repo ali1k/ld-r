@@ -70,6 +70,7 @@ module.exports = {
         {title: 'ldr:useReasoning'},
         {title: 'ldr:datasetReactor'},
         {title: 'ldr:resourceFocusType'},
+        {title: 'ldr:resourceGeoProperty'},
         {title: 'ldr:resourceImageProperty'},
         {title: 'ldr:resourceLabelProperty'},
         {title: 'ldr:maxNumberOfResourcesOnPage'},

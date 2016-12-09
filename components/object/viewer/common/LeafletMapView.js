@@ -38,14 +38,21 @@ class LeafletMapView extends React.Component {
     render() {
         let self = this;
         if (process.env.BROWSER) {
-            let markersDIV, geoJSONDIV, polygonsDIV, multipolygonsDIV, colorMap = {};
+            let markersDIV, geoJSONDIV, polygonsDIV, multipolygonsDIV, colorMap = {}, weights=[], hints=[];
             let {Map, Marker, Popup, TileLayer, GeoJSON, Polygon} = require('react-leaflet');
+            if(self.props.hints){
+                hints = self.props.hints;
+            }
+            if(self.props.weights){
+                weights = self.props.weights;
+                colorMap = self.colorMapping(weights);
+            }
             if(self.props.markers && self.props.markers.length){
                 markersDIV = self.props.markers.map((marker, index)=> {
                     return (
                         <Marker key={index} position={[marker.position.lat, marker.position.lng]}>
                             <Popup>
-                                <span>{marker.position.lat}, {marker.position.lng}</span>
+                                {hints && hints[index] ? <div dangerouslySetInnerHTML={{__html: hints[index]}} />: <span>{marker.position.lat}, {marker.position.lng}</span>}
                             </Popup>
                         </Marker>
                     );
@@ -56,14 +63,7 @@ class LeafletMapView extends React.Component {
                 if(self.props.multiColor){
                     colors = ['#0c0d17', '#0bc4a7', '#1a48eb', '#ecdc0b', '#ed1ec6', '#d9990b', '#1a75ff', '#e3104f', '#3f83a3'];
                 }
-                let style, features = [], weights=[], polygons=[], multipolygons=[], hints=[];
-                if(self.props.weights){
-                    weights = self.props.weights;
-                    colorMap = self.colorMapping(weights);
-                }
-                if(self.props.hints){
-                    hints = self.props.hints;
-                }
+                let style, features = [], polygons=[], multipolygons=[];
                 self.props.geometry.forEach((geo, index)=> {
                     style = self.props.styles;
                     if(!style){

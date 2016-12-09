@@ -51,13 +51,17 @@ class DatasetQuery{
     getResourcesByType(endpointParameters, graphName, rconfig, limit, offset) {
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let type = rconfig.resourceFocusType;
-        let resourceLabelProperty, resourceImageProperty;
+        let resourceLabelProperty, resourceImageProperty, resourceGeoProperty;
         if(rconfig.resourceLabelProperty){
             resourceLabelProperty = rconfig.resourceLabelProperty;
         }
         if(rconfig.resourceImageProperty){
             resourceImageProperty = rconfig.resourceImageProperty;
         }
+        if(rconfig.resourceGeoProperty){
+            resourceGeoProperty = rconfig.resourceGeoProperty;
+        }
+        let selectSt = '';
         //specify the right label for resources
         let optPhase = 'OPTIONAL { ?resource dcterms:title ?title .} ';
         let bindPhase = '';
@@ -76,6 +80,11 @@ class DatasetQuery{
         }
         if(resourceImageProperty && resourceImageProperty.length){
             optPhase = optPhase + ' OPTIONAL { ?resource <' + resourceImageProperty[0] + '> ?image .} ';
+            selectSt = selectSt + ' ?image';
+        }
+        if(resourceGeoProperty && resourceGeoProperty.length){
+            optPhase = optPhase + ' OPTIONAL { ?resource <' + resourceGeoProperty[0] + '> ?geo .} ';
+            selectSt = selectSt + ' ?geo';
         }
         let st = '?resource a <'+ type + '> .';
         //will get all the types
@@ -91,7 +100,7 @@ class DatasetQuery{
             st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
         }
         this.query = `
-        SELECT DISTINCT ?resource ?title ?label ?image WHERE {
+        SELECT DISTINCT ?resource ?title ?label ${selectSt} WHERE {
             ${gStart}
                 {
                     SELECT DISTINCT ?resource  WHERE {

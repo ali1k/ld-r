@@ -230,7 +230,7 @@ class Configurator{
                 }
                 let finalOutput = {};
                 //remove irrelevant attributes from config
-                let irrels = ['resourceFocusType', 'maxNumberOfResourcesOnPage', 'datasetReactor', 'usePropertyCategories', 'propertyCategories', 'resourceReactor', 'treatAsResourceType', 'datasetLabel', 'resourceLabelProperty', 'resourceImageProperty'];
+                let irrels = ['resourceFocusType', 'maxNumberOfResourcesOnPage', 'datasetReactor', 'usePropertyCategories', 'propertyCategories', 'resourceReactor', 'treatAsResourceType', 'datasetLabel', 'resourceLabelProperty', 'resourceImageProperty', 'resourceGeoProperty'];
                 for(let prop in output) {
                     if(irrels.indexOf(prop) == -1) {
                         finalOutput[prop] = output[prop];
@@ -260,6 +260,13 @@ class Configurator{
             } else if(config.dataset[datasetURI] && config.dataset[datasetURI].resourceImageProperty){
                 if(config.dataset[datasetURI].resourceImageProperty && config.dataset[datasetURI].resourceImageProperty.length){
                     out['imageProperty'] = config.dataset[datasetURI].resourceImageProperty;
+                }
+            }
+            if(cnf.resourceGeoProperty && cnf.resourceGeoProperty.length){
+                out['geoProperty'] = cnf.resourceGeoProperty;
+            } else if(config.dataset[datasetURI] && config.dataset[datasetURI].resourceGeoProperty){
+                if(config.dataset[datasetURI].resourceGeoProperty && config.dataset[datasetURI].resourceGeoProperty.length){
+                    out['geoProperty'] = config.dataset[datasetURI].resourceGeoProperty;
                 }
             }
         }

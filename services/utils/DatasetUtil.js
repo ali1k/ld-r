@@ -38,6 +38,7 @@ class DatasetUtil {
                         d: datasetURI,
                         title: el.title ? el.title.value : '',
                         image: el.image ? el.image.value : '',
+                        geo: el.geo ? el.geo.value : '',
                         label: el.label ? el.label.value : '',
                         accessLevel: accessLevel
                     });

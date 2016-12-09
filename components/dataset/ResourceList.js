@@ -1,15 +1,41 @@
 import React from 'react';
 import {NavLink} from 'fluxible-router';
 import URIUtil from '../utils/URIUtil';
+import BasicAggregateMapView from '../object/viewer/aggregate/BasicAggregateMapView';
 import classNames from 'classnames/bind';
 
 class ResourceList extends React.Component {
     componentDidMount() {}
-    buildLink(v, g, title, image, icon, cloneable) {
+    buildLink(useA, v, g, title, image, icon, cloneable) {
         let self = this;
         let cloneDIV = '';
         if (cloneable) {
             cloneDIV = <span className="mini ui circular basic icon button" onClick={self.handleCloneResource.bind(self, decodeURIComponent(g), decodeURIComponent(v))} title="clone this resource"><i className="icon teal superscript"></i></span>;
+        }
+        //on the map: todo:handle it with React DOM
+        if(useA){
+            let titleHTML = `
+                <div class="content">
+                    <a href="/dataset/${g}/resource/${v}" target="_blank" class="ui"> <i class="${icon}"></i>${title}</a>
+                </div>
+            `;
+            if(this.props.config && this.props.config.resourceImageProperty){
+                return `
+                <div>
+                    <div class="content">
+                        <div class="ui fluid card" style="max-width: 150px; max-height: 235px; min-height: 235px;">
+                            <div class="image">
+                                <a href="/dataset/${g}/resource/${v}" target="_blank" class="ui"> <img class="ui small image" src="${(image ? image : '/assets/img/image.png')}"  style="max-height: 150px; min-height: 150px;" /></a>
+                            </div>
+                            ${titleHTML}
+                        </div>
+                    </div>
+                </div>
+                `;
+            }else{
+                return titleHTML;
+            }
+
         }
         //in the faceted browser
         if (this.props.OpenInNewTab) {
@@ -73,6 +99,9 @@ class ResourceList extends React.Component {
         let userAccess, itemClass,
             title,
             image,
+            resourceDIV,
+            geo,
+            instances =[],
             list,
             dbClass = 'black cube icon';
         let cloneable = 0;
@@ -93,6 +122,7 @@ class ResourceList extends React.Component {
                         ? node.label
                         : URIUtil.getURILabel(node.v));
                 image = node.image ? node.image : '';
+                geo = node.geo ? node.geo : '';
                 itemClass = classNames({
                     'ui': true,
                     'item fadeIn': true,
@@ -115,11 +145,15 @@ class ResourceList extends React.Component {
                         dbClass = 'black cube icon';
                     }
                 }
-                return (
+                resourceDIV =
                     <div className={itemClass} key={index}>
-                        {self.buildLink(encodeURIComponent(node.v), encodeURIComponent(node.d), title, image, dbClass, cloneable)}
-                    </div>
-                );
+                        {self.buildLink(0, encodeURIComponent(node.v), encodeURIComponent(node.d), title, image, dbClass, cloneable)}
+                    </div>;
+                if(self.props.config && self.props.config.resourceGeoProperty) {
+                    instances.push({value: geo, hint: self.buildLink(1, encodeURIComponent(node.v), encodeURIComponent(node.d), title, image, dbClass, cloneable)});
+                }
+
+                return resourceDIV;
             });
         }
         let listClasses = classNames({
@@ -130,8 +164,10 @@ class ResourceList extends React.Component {
             'cards': this.props.config && this.props.config.resourceImageProperty
         });
         return (
-            <div className={listClasses} ref="resourceList">
-                {list}
+            <div className={listClasses} ref="resourceList" style={{overflow: 'scroll'}}>
+                {this.props.config && this.props.config.resourceGeoProperty ?
+                    <BasicAggregateMapView  mapWidth={900} mapHeight={620} zoomLevel={2} spec={{instances: instances}} config={this.props.config}/>
+                : list}
             </div>
         );
     }

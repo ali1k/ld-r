@@ -50,7 +50,7 @@ class FacetUtil{
                     }*/
                     accessLevel=checkAccess(user, datasetURI, el.s.value, 0);
                 }
-                output.push( {v: el.s.value, label: self.getPropertyLabel(el.s.value), title: (el.title && el.title.value ? el.title.value : ''), image: el.image ? el.image.value : '', d: datasetURI, accessLevel: accessLevel});
+                output.push( {v: el.s.value, label: self.getPropertyLabel(el.s.value), title: (el.title && el.title.value ? el.title.value : ''), image: el.image ? el.image.value : '', geo: el.geo ? el.geo.value : '', d: datasetURI, accessLevel: accessLevel});
             }
         });
         return output;

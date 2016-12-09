@@ -190,9 +190,11 @@ class FacetQuery{
         let type = rtconfig.type;
         let labelProperty = rtconfig.labelProperty;
         let imageProperty = rtconfig.imageProperty;
+        let geoProperty = rtconfig.geoProperty;
         let selectStr = '';
         let titleStr = '';
         let imageStr = '';
+        let geoStr = '';
         let bindPhase = '';
         let noffset = (offset-1)*limit;
         //add labels for entities
@@ -214,6 +216,10 @@ class FacetQuery{
             selectStr = selectStr + ' ?image ';
             imageStr = 'OPTIONAL { ?s <' + imageProperty[0] + '> ?image .} ';
         }
+        if(geoProperty && geoProperty.length){
+            selectStr = selectStr + ' ?geo ';
+            geoStr = 'OPTIONAL { ?s <' + geoProperty[0] + '> ?geo .} ';
+        }
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
         this.query = `
         SELECT DISTINCT ?s ${selectStr} WHERE {
@@ -226,7 +232,7 @@ class FacetQuery{
                     }
                     LIMIT ${limit} OFFSET ${noffset}
                 }
-                ${titleStr} ${imageStr} ${bindPhase}
+                ${titleStr} ${imageStr} ${geoStr} ${bindPhase}
             ${gEnd}
         }
         `;
