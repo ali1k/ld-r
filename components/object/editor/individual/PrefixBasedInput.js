@@ -167,7 +167,7 @@ class PrefixBasedInput extends React.Component {
         let { value, results, isLoading } = this.state;
         return (
             <div className="sixteen wide column field">
-                <Search showNoResults={false} icon="cube" ref="prefixBasedInput" type="text" loading={isLoading} value={this.preparePrefix(value)} placeholder={placeholder} onChange={this.handleChange.bind(this)} onKeyDown={this.handleKeyDown.bind(this)} onSearchChange={this.handleSearchChange.bind(this)} results={results}/>
+                <Search showNoResults={false} icon="cube" ref="prefixBasedInput" type="text" loading={isLoading} value={this.preparePrefix(value)} placeholder={placeholder} onResultSelect={this.handleChange.bind(this)} onKeyDown={this.handleKeyDown.bind(this)} onSearchChange={this.handleSearchChange.bind(this)} results={results}/>
             </div>
         );
     }
