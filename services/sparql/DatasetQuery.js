@@ -23,6 +23,17 @@ class DatasetQuery{
         }
         return {gStart: gStart, gEnd: gEnd}
     }
+    filterPropertyPath(propertyURI){
+        if(propertyURI.indexOf('->')!== -1){
+            let tmp2 =[], tmp = propertyURI.split('->');
+            tmp.forEach((el)=> {
+                tmp2.push('<'+el.trim()+'>');
+            });
+            return tmp2.join('/');
+        }else{
+            return '<'+ propertyURI + '>';
+        }
+    }
     countResourcesByType(endpointParameters, graphName, type) {
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = '?resource a <'+ type + '> .';
@@ -49,6 +60,7 @@ class DatasetQuery{
         return this.prefixes + this.query;
     }
     getResourcesByType(endpointParameters, graphName, rconfig, limit, offset) {
+        let self = this;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let type = rconfig.resourceFocusType;
         let resourceLabelProperty, resourceImageProperty, resourceGeoProperty;
@@ -67,23 +79,23 @@ class DatasetQuery{
         let bindPhase = '';
         if(resourceLabelProperty && resourceLabelProperty.length){
             if(resourceLabelProperty.length === 1){
-                optPhase = 'OPTIONAL { ?resource <' + resourceLabelProperty[0] + '> ?title .} ';
+                optPhase = 'OPTIONAL { ?resource ' + self.filterPropertyPath(resourceLabelProperty[0]) + ' ?title .} ';
             }else {
                 optPhase = '';
                 let tmpA = [];
                 resourceLabelProperty.forEach(function(prop, index) {
-                    optPhase = optPhase + 'OPTIONAL { ?resource <' + prop + '> ?vp'+index+' .} ';
+                    optPhase = optPhase + 'OPTIONAL { ?resource ' + self.filterPropertyPath(prop) + ' ?vp'+index+' .} ';
                     tmpA.push('?vp' + index);
                 });
                 bindPhase = ' BIND(CONCAT('+tmpA.join(',"-",')+') AS ?title) '
             }
         }
         if(resourceImageProperty && resourceImageProperty.length){
-            optPhase = optPhase + ' OPTIONAL { ?resource <' + resourceImageProperty[0] + '> ?image .} ';
+            optPhase = optPhase + ' OPTIONAL { ?resource ' + self.filterPropertyPath(resourceImageProperty[0]) + ' ?image .} ';
             selectSt = selectSt + ' ?image';
         }
         if(resourceGeoProperty && resourceGeoProperty.length){
-            optPhase = optPhase + ' OPTIONAL { ?resource <' + resourceGeoProperty[0] + '> ?geo .} ';
+            optPhase = optPhase + ' OPTIONAL { ?resource ' + self.filterPropertyPath(resourceGeoProperty[0]) + ' ?geo .} ';
             selectSt = selectSt + ' ?geo';
         }
         let st = '?resource a <'+ type + '> .';

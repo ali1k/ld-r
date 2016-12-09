@@ -186,6 +186,7 @@ class FacetQuery{
         return this.prefixes + this.query;
     }
     getSecondLevelPropertyValues(endpointParameters, graphName, rtconfig, propertyURI, prevSelection, limit, offset) {
+        let self = this;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let type = rtconfig.type;
         let labelProperty = rtconfig.labelProperty;
@@ -201,12 +202,12 @@ class FacetQuery{
         if(labelProperty && labelProperty.length){
             selectStr = ' ?title ';
             if(labelProperty.length === 1){
-                titleStr = 'OPTIONAL { ?s <' + labelProperty[0] + '> ?title .} ';
+                titleStr = 'OPTIONAL { ?s ' + self.filterPropertyPath(labelProperty[0]) + ' ?title .} ';
             }else {
                 titleStr = '';
                 let tmpA = [];
                 labelProperty.forEach(function(prop, index) {
-                    titleStr = titleStr + 'OPTIONAL { ?s <' + prop + '> ?vp'+index+' .} ';
+                    titleStr = titleStr + 'OPTIONAL { ?s ' + self.filterPropertyPath(prop) + ' ?vp'+index+' .} ';
                     tmpA.push('?vp' + index);
                 });
                 bindPhase = ' BIND(CONCAT('+tmpA.join(',"-",')+') AS ?title) '
@@ -214,11 +215,11 @@ class FacetQuery{
         }
         if(imageProperty && imageProperty.length){
             selectStr = selectStr + ' ?image ';
-            imageStr = 'OPTIONAL { ?s <' + imageProperty[0] + '> ?image .} ';
+            imageStr = 'OPTIONAL { ?s ' + self.filterPropertyPath(imageProperty[0]) + ' ?image .} ';
         }
         if(geoProperty && geoProperty.length){
             selectStr = selectStr + ' ?geo ';
-            geoStr = 'OPTIONAL { ?s <' + geoProperty[0] + '> ?geo .} ';
+            geoStr = 'OPTIONAL { ?s ' + self.filterPropertyPath(geoProperty[0]) + ' ?geo .} ';
         }
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
         this.query = `
