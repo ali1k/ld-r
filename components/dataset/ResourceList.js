@@ -149,7 +149,7 @@ class ResourceList extends React.Component {
                     <div className={itemClass} key={index}>
                         {self.buildLink(0, encodeURIComponent(node.v), encodeURIComponent(node.d), title, image, dbClass, cloneable)}
                     </div>;
-                if(self.props.config && self.props.config.resourceGeoProperty) {
+                if(self.props.config && self.props.config.resourceGeoProperty && geo) {
                     instances.push({value: geo, hint: self.buildLink(1, encodeURIComponent(node.v), encodeURIComponent(node.d), title, image, dbClass, cloneable)});
                 }
 
