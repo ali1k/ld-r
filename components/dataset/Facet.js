@@ -30,7 +30,7 @@ class Facet extends React.Component {
             minHeight: this.props.minHeight ? this.props.minHeight : 80,
             maxHeight: this.props.maxHeight ? this.props.maxHeight : 200,
             position: 'relative',
-            overflow: 'scroll'
+            overflow: 'auto'
         };
         //order by total count: for performance is done on client-side
         if(self.props.spec.propertyURI){
