@@ -4,6 +4,9 @@ import {list} from '../../../../data/prefixes';
 import {autocompletelist} from '../../../../data/autocompletes';
 import {Search, Grid, Header} from 'semantic-ui-react';
 import _ from 'lodash';
+let alist = [];
+//default autocomplete list
+alist = alist.concat(autocompletelist.ldrVocab, autocompletelist.ldrLiterals, autocompletelist.properties, autocompletelist.classes);
 
 class PrefixBasedInput extends React.Component {
     constructor(props) {
@@ -150,11 +153,27 @@ class PrefixBasedInput extends React.Component {
             const isMatch = (result) => re.test(result.title)
             this.setState({
                 isLoading: false,
-                results: _.filter(autocompletelist, isMatch),
+                results: _.filter(alist, isMatch),
             })
         }, 500)
     }
     render() {
+        //customize the autocompelte list
+        if(this.props.autocompletelist){
+            alist = this.props.autocompletelist;
+        }else if(this.props.config && this.props.config.autocompletelist){
+            alist = this.props.config.autocompletelist;
+        }else if(this.props.onlyClasses || (this.props.config && this.props.config.onlyClasses)){
+            alist = autocompletelist.classes;
+        }else if(this.props.onlyProperties || (this.props.config && this.props.config.onlyProperties)){
+            alist = autocompletelist.properties;
+        }else if(this.props.onlyLDR || (this.props.config && this.props.config.onlyLDR)){
+            alist = [].concat(autocompletelist.ldrVocab, autocompletelist.ldrLiterals);
+        }else if(this.props.onlyLDRVocab || (this.props.config && this.props.config.onlyLDRVocab)){
+            alist = autocompletelist.ldrVocab;
+        }else if(this.props.onlyLDRLiterals || (this.props.config && this.props.config.onlyLDRLiterals)){
+            alist = autocompletelist.ldrLiterals;
+        }
         let placeholder = '';
         //placeholder can come from config or direct property
         if (this.props.config && this.props.config.placeholder) {

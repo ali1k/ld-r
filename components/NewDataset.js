@@ -105,7 +105,7 @@ class NewDataset extends React.Component {
                 {this.state.resourceFocusType || this.state.endpointURI ?
                     <div>
                         <b>Resource Focus Type</b>
-                        <PrefixBasedInput noFocus={true} spec={{value:''}} onDataEdit={this.handleResourceFocusTypeChange.bind(this)} placeholder="Resource Focus Type / or leave it empty for all resource types" onEnterPress={this.handleCreateDataset.bind(this)} allowActionByKey={true}/>
+                        <PrefixBasedInput onlyClasses={1} noFocus={true} spec={{value:''}} onDataEdit={this.handleResourceFocusTypeChange.bind(this)} placeholder="Resource Focus Type / or leave it empty for all resource types" onEnterPress={this.handleCreateDataset.bind(this)} allowActionByKey={true}/>
                     </div>
                 : ''}
                 <Divider hidden />
