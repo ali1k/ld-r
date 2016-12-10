@@ -4,9 +4,6 @@ import {list} from '../../../../data/prefixes';
 import {autocompletelist} from '../../../../data/autocompletes';
 import {Search, Grid, Header} from 'semantic-ui-react';
 import _ from 'lodash';
-let alist = [];
-//default autocomplete list
-alist = alist.concat(autocompletelist.ldrVocab, autocompletelist.ldrLiterals, autocompletelist.properties, autocompletelist.classes);
 
 class PrefixBasedInput extends React.Component {
     constructor(props) {
@@ -143,7 +140,7 @@ class PrefixBasedInput extends React.Component {
         this.setState({value: result.title});
         this.props.onDataEdit(this.applyPrefix(result.title.trim()));
     }
-    handleSearchChange(event, value) {
+    handleSearchChange(alist, event, value) {
         this.props.onDataEdit(this.applyPrefix(event.target.value.trim()));
         this.setState({ isLoading: true, value: event.target.value });
         setTimeout(() => {
@@ -158,21 +155,27 @@ class PrefixBasedInput extends React.Component {
         }, 500)
     }
     render() {
+        let alist = [];
         //customize the autocompelte list
-        if(this.props.autocompletelist){
+        if(this.props.autocompletelist && this.props.autocompletelist.length){
             alist = this.props.autocompletelist;
-        }else if(this.props.config && this.props.config.autocompletelist){
+        }else if(this.props.config && this.props.config.autocompletelist && this.props.config.autocompletelist.length){
             alist = this.props.config.autocompletelist;
-        }else if(this.props.onlyClasses || (this.props.config && this.props.config.onlyClasses)){
-            alist = autocompletelist.classes;
-        }else if(this.props.onlyProperties || (this.props.config && this.props.config.onlyProperties)){
-            alist = autocompletelist.properties;
-        }else if(this.props.onlyLDR || (this.props.config && this.props.config.onlyLDR)){
-            alist = [].concat(autocompletelist.ldrVocab, autocompletelist.ldrLiterals);
-        }else if(this.props.onlyLDRVocab || (this.props.config && this.props.config.onlyLDRVocab)){
-            alist = autocompletelist.ldrVocab;
-        }else if(this.props.onlyLDRLiterals || (this.props.config && this.props.config.onlyLDRLiterals)){
-            alist = autocompletelist.ldrLiterals;
+        }else if(this.props.includeOnly && this.props.includeOnly.length){
+            let tmp = [];
+            this.props.includeOnly.forEach((item)=>{
+                tmp = tmp.concat(autocompletelist[item]);
+            });
+            alist = tmp;
+        }else if(this.props.config && this.props.config.includeOnly && this.props.config.includeOnly.length){
+            let tmp = [];
+            this.props.config.includeOnly.forEach((item)=>{
+                tmp = tmp.concat(autocompletelist[item]);
+            });
+            alist = tmp;
+        }else{
+            //default autocomplete list
+            alist = [].concat(autocompletelist.ldrClasses, autocompletelist.ldrProperties, autocompletelist.ldrLiterals, autocompletelist.properties, autocompletelist.classes);
         }
         let placeholder = '';
         //placeholder can come from config or direct property
@@ -186,7 +189,7 @@ class PrefixBasedInput extends React.Component {
         let { value, results, isLoading } = this.state;
         return (
             <div className="sixteen wide column field">
-                <Search showNoResults={false} icon="cube" ref="prefixBasedInput" type="text" loading={isLoading} value={this.preparePrefix(value)} placeholder={placeholder} onResultSelect={this.handleChange.bind(this)} onKeyDown={this.handleKeyDown.bind(this)} onSearchChange={this.handleSearchChange.bind(this)} results={results}/>
+                <Search showNoResults={false} icon="cube" ref="prefixBasedInput" type="text" loading={isLoading} value={this.preparePrefix(value)} placeholder={placeholder} onResultSelect={this.handleChange.bind(this)} onKeyDown={this.handleKeyDown.bind(this)} onSearchChange={this.handleSearchChange.bind(this, alist)} results={results}/>
             </div>
         );
     }

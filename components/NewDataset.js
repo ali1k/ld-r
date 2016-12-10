@@ -17,19 +17,17 @@ class NewDataset extends React.Component {
 
     }
     handleChange(element, e){
-
         if(element=== 'datasetLabel'){
             this.setState({datasetLabel: e.target.value.trim()});
-        }else if(element=== 'endpointURI'){
-            this.setState({endpointURI: e.target.value.trim()});
-        }else if(element=== 'resourceFocusType'){
-            this.setState({resourceFocusType: e.target.value.trim()});
         }else if(element=== 'graphName'){
             this.setState({graphName: e.target.value.trim()});
         }
     }
     handleResourceFocusTypeChange(val){
         this.setState({resourceFocusType: val.trim()});
+    }
+    handleEndpointURIChange(val){
+        this.setState({endpointURI: val.trim()});
     }
     handleCreateDataset() {
         let datasetURI, datasetLabel, endpointURI, graphName, resourceFocusType, host, port, path, endpointType;
@@ -93,19 +91,26 @@ class NewDataset extends React.Component {
                 errorDIV = <div className="ui warning message"><div className="header"> It is not possible to add new datasets in this application!</div></div>;
             }
         }
+        const commonEndpoints = [
+            {'title': 'http://dbpedia.org/sparql'},
+            {'title': 'http://live.dbpedia.org/sparql'}
+        ]
         if(!errorDIV){
             formDIV =
             <Form size='big'>
                 <Form.Field label='Dataset Label' control='input' placeholder='Dataset Label / or leave empty for a random name!' onChange={this.handleChange.bind(this, 'datasetLabel')}/>
-
-                <Form.Field label='URL of the SPARQL Endpoint' control='input' placeholder='URL of the SPARQL Endpoint / or leave it empty to use generic one in your local config!' onChange={this.handleChange.bind(this, 'endpointURI')}/>
+                <div>
+                    <b>URL of the SPARQL Endpoint</b>
+                    <PrefixBasedInput autocompletelist={commonEndpoints} noFocus={true} spec={{value:''}} onDataEdit={this.handleEndpointURIChange.bind(this)} placeholder="URL of the SPARQL Endpoint / or leave it empty to use generic one in your local config" allowActionByKey={false}/>
+                </div>
+                <Divider hidden />
                 {this.state.graphName || this.state.endpointURI ?
                     <Form.Field label='Graph Name' control='input' placeholder='Graph Name / or leave it empty for all graphs' onChange={this.handleChange.bind(this, 'graphName')}/>
                 : ''}
                 {this.state.resourceFocusType || this.state.endpointURI ?
                     <div>
                         <b>Resource Focus Type</b>
-                        <PrefixBasedInput onlyClasses={1} noFocus={true} spec={{value:''}} onDataEdit={this.handleResourceFocusTypeChange.bind(this)} placeholder="Resource Focus Type / or leave it empty for all resource types" onEnterPress={this.handleCreateDataset.bind(this)} allowActionByKey={true}/>
+                        <PrefixBasedInput includeOnly={['classes']} noFocus={true} spec={{value:''}} onDataEdit={this.handleResourceFocusTypeChange.bind(this)} placeholder="Resource Focus Type / or leave it empty for all resource types" onEnterPress={this.handleCreateDataset.bind(this)} allowActionByKey={true}/>
                     </div>
                 : ''}
                 <Divider hidden />

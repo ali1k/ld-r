@@ -1,12 +1,14 @@
 module.exports = {
     autocompletelist:
     {
-        ldrVocab: [
-            {title: 'ldr:config'},
+        ldrClasses: [
             {title: 'ldr:FacetsConfig'},
             {title: 'ldr:ReactorConfig'},
             {title: 'ldr:ServerConfig'},
-            {title: 'ldr:FacetsPropertyConfig'},
+            {title: 'ldr:FacetsPropertyConfig'}
+        ],
+        ldrProperties: [
+            {title: 'ldr:config'},
             {title: 'ldr:dataset'},
             {title: 'ldr:resource'},
             {title: 'ldr:property'},
