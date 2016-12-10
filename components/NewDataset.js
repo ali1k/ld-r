@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import {navigateAction} from 'fluxible-router';
 import {enableAuthentication, enableAddingNewDatasets, baseResourceDomain} from '../configs/general';
 import { Button, Divider, Form } from 'semantic-ui-react';
+import PrefixBasedInput from './object/editor/individual/PrefixBasedInput';
 import url from 'url';
 import createEmptyDataset from '../actions/createEmptyDataset';
 import createFromExistingDataset from '../actions/createFromExistingDataset';
@@ -10,7 +11,7 @@ import createFromExistingDataset from '../actions/createFromExistingDataset';
 class NewDataset extends React.Component {
     constructor(props){
         super(props);
-        this.state = {datasetLabel: '', endpointURI: '', graphName: ''};
+        this.state = {datasetLabel: '', endpointURI: '', graphName: '', resourceFocusType: ''};
     }
     componentDidMount() {
 
@@ -21,12 +22,17 @@ class NewDataset extends React.Component {
             this.setState({datasetLabel: e.target.value.trim()});
         }else if(element=== 'endpointURI'){
             this.setState({endpointURI: e.target.value.trim()});
+        }else if(element=== 'resourceFocusType'){
+            this.setState({resourceFocusType: e.target.value.trim()});
         }else if(element=== 'graphName'){
             this.setState({graphName: e.target.value.trim()});
         }
     }
+    handleResourceFocusTypeChange(val){
+        this.setState({resourceFocusType: val.trim()});
+    }
     handleCreateDataset() {
-        let datasetURI, datasetLabel, endpointURI, graphName, host, port, path, endpointType;
+        let datasetURI, datasetLabel, endpointURI, graphName, resourceFocusType, host, port, path, endpointType;
         graphName= 'default';
         datasetLabel= 'd' + Math.round(+new Date() / 1000);
         datasetURI= baseResourceDomain[0] + '/' + datasetLabel;
@@ -40,6 +46,9 @@ class NewDataset extends React.Component {
         }
         if(this.state.graphName){
             graphName = this.state.graphName;
+        }
+        if(this.state.resourceFocusType){
+            resourceFocusType = this.state.resourceFocusType;
         }
         if(!this.state.endpointURI){
             this.context.executeAction(createEmptyDataset, {
@@ -64,6 +73,7 @@ class NewDataset extends React.Component {
                 datasetLabel: datasetLabel,
                 datasetURI: datasetURI,
                 graphName: graphName,
+                resourceFocusType: resourceFocusType,
                 host: host,
                 port: port,
                 path: path,
@@ -88,9 +98,16 @@ class NewDataset extends React.Component {
             <Form size='big'>
                 <Form.Field label='Dataset Label' control='input' placeholder='Dataset Label / or leave empty for a random name!' onChange={this.handleChange.bind(this, 'datasetLabel')}/>
 
-                <Form.Field label='URL of the SPARQL Endpoint' control='input' placeholder='URL of the SPARQL Endpoint / or leave it empty for generic one!' onChange={this.handleChange.bind(this, 'endpointURI')}/>
-
-                <Form.Field label='Graph Name' control='input' placeholder='Graph Name / or leave it empty for all graphs' onChange={this.handleChange.bind(this, 'graphName')}/>
+                <Form.Field label='URL of the SPARQL Endpoint' control='input' placeholder='URL of the SPARQL Endpoint / or leave it empty to use generic one in your local config!' onChange={this.handleChange.bind(this, 'endpointURI')}/>
+                {this.state.graphName || this.state.endpointURI ?
+                    <Form.Field label='Graph Name' control='input' placeholder='Graph Name / or leave it empty for all graphs' onChange={this.handleChange.bind(this, 'graphName')}/>
+                : ''}
+                {this.state.resourceFocusType || this.state.endpointURI ?
+                    <div>
+                        <b>Resource Focus Type</b>
+                        <PrefixBasedInput noFocus={true} spec={{value:''}} onDataEdit={this.handleResourceFocusTypeChange.bind(this)} placeholder="Resource Focus Type / or leave it empty for all resource types" onEnterPress={this.handleCreateDataset.bind(this)} allowActionByKey={true}/>
+                    </div>
+                : ''}
                 <Divider hidden />
                 <div className='ui big blue button' onClick={this.handleCreateDataset.bind(this)}>Add Dataset</div>
                 <Divider hidden />

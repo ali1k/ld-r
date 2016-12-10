@@ -493,6 +493,10 @@ class DynamicConfigurator {
             if(options && options.datasetLabel){
                 datasetLabel = options.datasetLabel;
             }
+            let resourceFocusTypeSt='';
+            if(options && options.resourceFocusType){
+                resourceFocusTypeSt = ` ldr:resourceFocusType <${options.resourceFocusType}> ;`;
+            }
             let date = new Date();
             let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
             let st = '';
@@ -515,6 +519,7 @@ class DynamicConfigurator {
                     st= `
                     rdfs:label """${datasetLabel} Reactor Config""" ;
                     ldr:dataset <${datasetURI}> ;
+                    ${resourceFocusTypeSt}
                     ldr:datasetLabel "${datasetLabel}" ;
                     ldr:maxNumberOfResourcesOnPage "20" ;
                     `;
