@@ -6,7 +6,7 @@ import SearchInput from 'react-search-input';
 class Facet extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchTerm: '', expanded: 0};
+        this.state = {searchTerm: '', expanded: 0, verticalResized: 0};
     }
     checkItem(status, value) {
         this.props.onCheck(status, value, this.props.spec.propertyURI);
@@ -14,6 +14,9 @@ class Facet extends React.Component {
     handleToggleExpand() {
         this.setState({expanded: !this.state.expanded});
         this.props.toggleExpandFacet(this.props.spec.propertyURI);
+    }
+    handleToggleVerticalResize() {
+        this.setState({verticalResized: !this.state.verticalResized});
     }
     //used for custom sorting
     compare(a, b) {
@@ -25,7 +28,11 @@ class Facet extends React.Component {
     }
     render() {
         let self = this;
-        let cardClasses = 'ui segment ' + (this.props.color ? this.props.color : 'blue');
+        let contentClasses = 'content', extraContentClasses='extra content', cardClasses = 'ui segment ' + (this.props.color ? this.props.color : 'blue');
+        if(this.state.verticalResized){
+            contentClasses = contentClasses + ' hide-element';
+            extraContentClasses = extraContentClasses + ' hide-element';
+        }
         let descStyle = {
             minHeight: this.props.minHeight ? this.props.minHeight : 80,
             maxHeight: this.props.maxHeight ? this.props.maxHeight : 200,
@@ -47,7 +54,20 @@ class Facet extends React.Component {
         newSpec.instances = cloneInstances;
         return (
             <div className={cardClasses} ref="facet">
-                <div className="content">
+                {this.state.verticalResized ?
+                    <div className="ui horizontal list">
+                        <div className="item">
+                            <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.props.config} size="3" />
+                        </div>
+                        <div className="item">
+                            <a className='ui icon mini basic button right floated' onClick={this.handleToggleVerticalResize.bind(this)}>
+                                <i className='ui icon resize vertical'></i>
+                            </a>
+                        </div>
+                    </div>
+                : ''
+                }
+                <div className={contentClasses}>
                     <div className="ui horizontal list">
                         <div className="item">
                             <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.props.config} size="3" />
@@ -63,12 +83,18 @@ class Facet extends React.Component {
                     </div>
                   </div>
                   <br/>
-                  <div className="extra content">
+                  <div className={extraContentClasses}>
                       <div className="ui tag horizontal labels">
                           <SearchInput className="ui mini search icon input" ref="search" onChange={this.searchUpdated.bind(this)} throttle={500}/>
                           {this.props.spec.property ?
                               <a className='ui icon mini basic button right floated' onClick={this.handleToggleExpand.bind(this)}>
                                   <i className='ui icon expand'></i>
+                              </a>
+                          : ''
+                          }
+                          {this.props.spec.property ?
+                              <a className='ui icon mini basic button right floated' onClick={this.handleToggleVerticalResize.bind(this)}>
+                                  <i className='ui icon resize vertical'></i>
                               </a>
                           : ''
                           }
