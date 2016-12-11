@@ -11,10 +11,13 @@ import ResourceListPager from './ResourceListPager';
 class FacetedBrowser extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {selection: {}, expandedFacet: 0, hideFirstCol: false};
+        this.state = {selection: {}, expandedFacet: 0, expandedResources: 0, hideFirstCol: false};
     }
     toggleFirstCol(){
         this.setState({hideFirstCol: !this.state.hideFirstCol})
+    }
+    toggleResourceCol(){
+        this.setState({hideFirstCol: !this.state.hideFirstCol, expandedResources: !this.state.expandedResources})
     }
     toggleExpandFacet(propertyURI){
         this.toggleFirstCol();
@@ -212,11 +215,15 @@ class FacetedBrowser extends React.Component {
             });
             let pagerSize = showFactes ? 5 : 10;
             let resSize = showFactes ? 'seven' : 'eleven';
-            let facetsDIV
+            resSize = this.state.expandedResources ? 16 : resSize;
+            let facetsDIV;
             if(this.state.hideFirstCol){
                 facetsDIV = showFactes ? <div className="ui stackable nine wide column">{list}</div> : '';
             }else{
                 facetsDIV = showFactes ? <div className="ui stackable five wide column">{list}</div> : '';
+            }
+            if(this.state.expandedResources){
+                facetsDIV = '';
             }
             let resourceDIV;
             let dcnf = this.props.FacetedBrowserStore.datasetConfig;
@@ -237,7 +244,7 @@ class FacetedBrowser extends React.Component {
                                     <ResourceList resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} OpenInNewTab={true} isBig={!showFactes} config={dcnf}/>
                                 </div>
                                  <div className= "ui secondary segment bottom attached">
-                                     <ResourceListPager handleClick={this.gotoPage.bind(this)} datasetURI={this.props.FacetedBrowserStore.datasetURI} total={this.props.FacetedBrowserStore.total} threshold={pagerSize} currentPage={this.props.FacetedBrowserStore.page} maxNumberOfResourcesOnPage={dcnf.maxNumberOfResourcesOnPage}/>
+                                     <ResourceListPager onExpandCollapse={this.toggleResourceCol.bind(this)} handleClick={this.gotoPage.bind(this)} datasetURI={this.props.FacetedBrowserStore.datasetURI} total={this.props.FacetedBrowserStore.total} threshold={pagerSize} currentPage={this.props.FacetedBrowserStore.page} maxNumberOfResourcesOnPage={dcnf.maxNumberOfResourcesOnPage}/>
                                 </div>
                               </div>;
             }

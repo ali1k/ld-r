@@ -57,6 +57,11 @@ class ResourceListPager extends React.Component {
         return (
             <div className="ui" ref="resourceListPager">
                 {totalPages} Page(s): <span>{pageList}</span>
+                {this.props.onExpandCollapse ?
+                    <a className='ui icon mini basic button right floated' onClick={this.props.onExpandCollapse.bind(this)}>
+                        <i className='ui icon expand'></i>
+                    </a>
+                : ''}
             </div>
         );
     }

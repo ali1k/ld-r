@@ -166,7 +166,7 @@ class ResourceList extends React.Component {
         return (
             <div className={listClasses} ref="resourceList" style={{overflow: 'auto'}}>
                 {this.props.config && this.props.config.resourceGeoProperty ?
-                    <BasicAggregateMapView  mapWidth={900} mapHeight={620} zoomLevel={2} spec={{instances: instances}} config={this.props.config}/>
+                    <BasicAggregateMapView  mapWidth={950} mapHeight={620} zoomLevel={2} spec={{instances: instances}} config={this.props.config}/>
                 : list}
             </div>
         );
