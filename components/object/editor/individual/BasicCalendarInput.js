@@ -38,14 +38,14 @@ class BasicCalendarInput extends React.Component {
         return moment();
     }
     handleChange(event) {
-        let v = moment(event).utc().format(this.getFormat());
+        let v = moment(event).format(this.getFormat());
         this.props.onDataEdit(v);
-        this.setState({value: moment(event).utc()});
+        this.setState({value: moment(event)});
     }
     render() {
         return (
             <div className="ui" ref="basicCalendarInput">
-                <Calendar value={moment(this.state.value).utc()} format={this.getFormat()} onChange={this.handleChange.bind(this)} />
+                <Calendar value={moment(this.state.value)} format={this.getFormat()} onChange={this.handleChange.bind(this)} />
             </div>
         );
     }
