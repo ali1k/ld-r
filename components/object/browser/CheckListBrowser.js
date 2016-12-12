@@ -1,5 +1,4 @@
 import React from 'react';
-import URIUtil from '../../utils/URIUtil';
 import CheckboxItem from './CheckboxItem';
 
 class CheckListBrowser extends React.Component {

@@ -2,6 +2,7 @@ import React from 'react';
 import PropertyHeader from '../property/PropertyHeader';
 import ObjectBrowser from '../object/ObjectBrowser';
 import SearchInput from 'react-search-input';
+import URIUtil from '../utils/URIUtil';
 
 class Facet extends React.Component {
     constructor(props){
@@ -25,6 +26,19 @@ class Facet extends React.Component {
     //filter content
     searchUpdated(term) {
         this.setState({searchTerm: term}); // needed to force re-render
+    }
+    createSelecedList(){
+        let out = '';
+        let selected = [];
+        if(this.props.selection && this.props.selection[this.props.spec.propertyURI] && this.props.selection[this.props.spec.propertyURI].length){
+            this.props.selection[this.props.spec.propertyURI].forEach((item)=>{
+                selected.push(URIUtil.getURILabel(item.value));
+            });
+            out = selected.join(',');
+            return out;
+        }else{
+            return out;
+        }
     }
     render() {
         let self = this;
@@ -60,6 +74,7 @@ class Facet extends React.Component {
                             <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.props.config} size="3" />
                         </div>
                         <div className="item">
+                            {this.createSelecedList()}
                             <a className='ui icon mini basic button right floated' onClick={this.handleToggleVerticalResize.bind(this)}>
                                 <i className='ui icon resize vertical'></i>
                             </a>
@@ -72,9 +87,11 @@ class Facet extends React.Component {
                         <div className="item">
                             <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.props.config} size="3" />
                         </div>
+                        <div className="item">
+                            {this.createSelecedList()}
+                        </div>
                     </div>
                     <div className="meta">
-
                     </div>
                     <div className="description">
                         <div className="ui form" style={descStyle}>
