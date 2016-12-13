@@ -3,6 +3,17 @@ class DBpediaUtil{
     constructor() {
 
     }
+    parseDBpediaSpotlight(body) {
+      let output=[];
+      let desc='',parsed = JSON.parse(body);
+      if(!parsed){
+        return output;
+      }
+      parsed.Resources.forEach(function(el) {
+        output.push({uri: el['@URI'], types: el['@types'].split(','), surfaceForm: el['@surfaceForm'], offset: el['@offset'], similarityScore: el['@similarityScore'], percentageOfSecondRank: el['@percentageOfSecondRank']});
+      });
+      return output;
+    }
     parseDBpediaLookup(body) {
       let output=[];
       let desc='',parsed = JSON.parse(body);

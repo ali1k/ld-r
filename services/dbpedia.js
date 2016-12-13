@@ -1,5 +1,5 @@
 'use strict';
-import {dbpediaLookupService} from '../configs/server';
+import {dbpediaLookupService, dbpediaSpotlightService} from '../configs/server';
 import rp from 'request-promise';
 import DBpediaUtil from './utils/DBpediaUtil';
 import DBpediaQuery from './sparql/DBpediaQuery';
@@ -46,6 +46,18 @@ export default {
                 });
             });
           /////////////////////////////////////////////
+        } else if (resource === 'dbpedia.spotlight') {
+            query = params.query;
+            //send request
+            rp.post({headers: {'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'}, accept: 'application/json', uri: 'http://' + dbpediaSpotlightService[0].host + ':' + dbpediaSpotlightService[0].port + dbpediaSpotlightService[0].path, form: {'text': query}}).then(function(res){
+                console.log(utilObject.parseDBpediaSpotlight(res));
+                callback(null, {
+                    tags: utilObject.parseDBpediaSpotlight(res)
+                });
+            }).catch(function (err) {
+                console.log('\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                callback(null, {tags: []});
+            });
         }
     }
     // other methods

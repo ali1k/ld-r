@@ -23,6 +23,9 @@ export default {
     dbpediaLookupService: [
         { host: 'lookup.dbpedia.org' }
     ],
+    dbpediaSpotlightService: [
+        { host: 'www.dbpedia-spotlight.com', port: 80, path: '/en/annotate' }
+    ],
     //it is used only if you enabled recaptcha feature for user authentication
     //get keys from https://www.google.com/recaptcha
     googleRecaptchaService: {
