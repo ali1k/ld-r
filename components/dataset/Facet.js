@@ -93,7 +93,7 @@ class Facet extends React.Component {
                 }
                 <div className={contentClasses}>
                      {!this.props.spec.propertyURI ? '' :
-                         <a className="ui teal ribbon label">{this.addCommas(this.props.spec.instances.length)}</a>
+                         <a className="ui teal ribbon label">{this.addCommas(cloneInstances.length)}</a>
                      }
                     <div className="ui horizontal list">
                         <div className="item">
