@@ -40,6 +40,15 @@ class Facet extends React.Component {
             return out;
         }
     }
+    addCommas(n){
+        let rx = /(\d+)(\d{3})/;
+        return String(n).replace(/^\d+/, function(w){
+            while(rx.test(w)){
+                w = w.replace(rx, '$1,$2');
+            }
+            return w;
+        });
+    }
     render() {
         let self = this;
         let contentClasses = 'content', extraContentClasses='extra content', cardClasses = 'ui segment ' + (this.props.color ? this.props.color : 'blue');
@@ -83,6 +92,9 @@ class Facet extends React.Component {
                 : ''
                 }
                 <div className={contentClasses}>
+                     {!this.props.spec.propertyURI ? '' :
+                         <a className="ui teal ribbon label">{this.addCommas(this.props.spec.instances.length)}</a>
+                     }
                     <div className="ui horizontal list">
                         <div className="item">
                             <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.props.config} size="3" />
