@@ -14,7 +14,7 @@ Config: Reactors
 <p>
     Configs are defined per <b>scope</b>. A scope is one of the 15 combinations of 'dataset', 'resource', 'property' and 'object' hierarchies. The configuration is shaped from traversing the less-specific scope to the more-specific scope.<br/>
     The 'generic'  config for each scope will be used if no specific config is defined for a graph.
-    For each scope, you need to change the following <span class="ui label">parameters</span> in <a class="ui label" href="https://github.com/ali1k/ld-r/blob/master/configs/reactor.config.js">configs/reactor.js</a>:
+    For each scope, you need to change the following <span class="ui label">parameters</span> in <a class="ui label" href="https://github.com/ali1k/ld-r/blob/master/configs/reactor.sample.js">configs/reactor.js</a>:
 </p>
 <h2>Dataset Level</h2>
 <table class="ui celled table">
@@ -25,7 +25,7 @@ Config: Reactors
       <th>Example value</th>
     </tr>
   </thead>
-  <tbody>    
+  <tbody>
     <tr >
         <td class="warning">datasetReactor</td>
         <td>Selects the right component for handling a dataset.</td>
@@ -40,12 +40,12 @@ Config: Reactors
         <td class="positive">resourceLabelProperty</td>
         <td>Use this, if you want to use the value of a specific property as label for your resources.</td>
         <td>['http://purl.org/dc/terms/title']</td>
-    </tr>      
+    </tr>
     <tr >
         <td class="positive">datasetLabel</td>
         <td>specifies a title for the dataset to be shown instead of the graph URI.</td>
         <td>['My Dataset Title']</td>
-    </tr>        
+    </tr>
     <tr >
         <td class="positive">maxNumberOfResourcesOnPage</td>
         <td>Indicates the maximum number of resources per dataset to be shown on page.</td>
