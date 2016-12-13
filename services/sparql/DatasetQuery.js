@@ -131,5 +131,32 @@ class DatasetQuery{
         `;
         return this.prefixes + this.query;
     }
+    getResourcePropForAnnotation(endpointParameters, graphName, type, propertyURI, limit, offset) {
+        let self = this;
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
+        let st = '?resource a <'+ type + '> .';
+        //will get all the types
+        if(!type.length || (type.length && !type[0]) ){
+            st = '?resource a ?type .';
+        }
+        //if we have multiple type, get all of them
+        let typeURIs = [];
+        if(type.length > 1){
+            type.forEach(function(uri) {
+                typeURIs.push('<' + uri + '>');
+            });
+            st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
+        }
+        this.query = `
+        SELECT DISTINCT ?resource ?objectValue WHERE {
+            ${gStart}
+                ${st}
+                ?resource <${propertyURI}> ?objectValue .
+            ${gEnd}
+        }
+        LIMIT ${limit} OFFSET ${offset}
+        `;
+        return this.prefixes + this.query;
+    }
 }
 export default DatasetQuery;

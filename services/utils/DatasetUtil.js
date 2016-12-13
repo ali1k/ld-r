@@ -47,6 +47,19 @@ class DatasetUtil {
         }
         return output;
     }
+    parseResourcePropForAnnotation(body) {
+        let output = [];
+        let parsed = JSON.parse(body);
+        if (parsed.results.bindings.length) {
+            parsed.results.bindings.forEach(function(el) {
+                output.push({
+                    r: el.resource.value,
+                    ov: el.objectValue ? el.objectValue.value : '',
+                });
+            });
+        }
+        return output;
+    }
     parseCountResourcesByType(body) {
         let total = 0;
         let parsed = JSON.parse(body);

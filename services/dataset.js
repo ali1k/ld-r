@@ -43,7 +43,8 @@ export default {
                     if(!maxOnPage){
                         maxOnPage = 20;
                     }
-                    let offset = (params.page - 1) * maxOnPage;
+                    let page = params.page ? params.page : 1;
+                    let offset = (page - 1) * maxOnPage;
                     query = queryObject.getResourcesByType(endpointParameters, graphName, rconfig, maxOnPage, offset);
                     //build http uri
                     //send request
@@ -97,7 +98,51 @@ export default {
                     });
                 });
             });
-
+        } else if (resource === 'dataset.resourceProp') {
+            datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
+            let resourceType = (params.resourceType ? decodeURIComponent(params.resourceType) : 0);
+            let propertyURI= (params.propertyURI ? decodeURIComponent(params.propertyURI) : 0);
+            if(!datasetURI || !propertyURI){
+                callback(null, {datasetURI: datasetURI, graphName: graphName, resources: []});
+                return 0;
+            }
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI, graphName: graphName, resources: []});
+                    return 0;
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+                //config handler
+                configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
+                    let maxOnPage = rconfig.maxNumberOfResourcesOnPage ? parseInt(rconfig.maxNumberOfResourcesOnPage) : 20;
+                    maxOnPage = params.maxOnPage ? parseInt(params.maxOnPage) : maxOnPage;
+                    let page = params.page ? params.page : 1;
+                    let offset = (page - 1) * maxOnPage;
+                    query = queryObject.getResourcePropForAnnotation(endpointParameters, graphName, resourceType ? [resourceType] : rconfig.resourceFocusType, propertyURI, maxOnPage, offset);
+                    //console.log(query);
+                    //build http uri
+                    //send request
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                        callback(null, {
+                            datasetURI: datasetURI,
+                            resourceType : resourceType ? [resourceType] : rconfig.resourceFocusType,
+                            propertyURI: propertyURI,
+                            graphName: graphName,
+                            resources: utilObject.parseResourcePropForAnnotation(res)
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {datasetURI: datasetURI, resourceType : resourceType ? [resourceType] : rconfig.resourceFocusType, graphName: graphName, propertyURI: propertyURI, resources: []});
+                    });
+                });
+            });
         } else if (resource === 'dataset.datasetsList') {
             let staticReactorDS = {dataset: {}};
             let staticFacetsDS = {facets: {}};
