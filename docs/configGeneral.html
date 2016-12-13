@@ -59,7 +59,7 @@ Config: General
       <td class="positive">enableEmailNotifications</td>
       <td>If set to '1', will enable email notifications on new user registration, user account activation, etc.</td>
       <td>0</td>
-    </tr>      
+    </tr>
     <tr >
       <td class="positive">useGoogleRecaptcha</td>
       <td>If you want to enable Google recaptcha for user registration. Tracking code for the Google recaptcha service should be added to server config.</td>
@@ -69,6 +69,36 @@ Config: General
       <td class="positive">enableLogs</td>
       <td>If set to '1', will log all update actions of users in the 'log' directory.</td>
       <td>0</td>
+    </tr>
+    <tr >
+      <td class="positive">googleAnalyticsID</td>
+      <td>When provided, will track the users on your LD-R instance using Google Analytics.</td>
+      <td>0</td>
+    </tr>
+    <tr >
+      <td class="positive">enableDynamicServerConfiguration</td>
+      <td>if set to '1', will use the server configs stored in a triple store.</td>
+      <td>0</td>
+    </tr>
+    <tr >
+      <td class="positive">enableDynamicReactorConfiguration</td>
+      <td>if set to '1', will use the reactor configs stored in a triple store.</td>
+      <td>0</td>
+    </tr>
+    <tr >
+      <td class="positive">enableDynamicFacetsConfiguration</td>
+      <td>if set to '1', will use the facets configs stored in a triple store.</td>
+      <td>0</td>
+    </tr>
+    <tr >
+      <td class="positive">enableAddingNewDatasets</td>
+      <td>if set to '1', wil allow users to create new datasets.</td>
+      <td>0</td>
+    </tr>
+    <tr >
+      <td class="positive">configDatasetURI</td>
+      <td>dataset/graphName that stores your dynamic configurations</td>
+      <td>['http://ld-r.org/configurations']</td>
     </tr>
   </tbody>
 </table>
