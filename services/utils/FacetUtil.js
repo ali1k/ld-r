@@ -29,8 +29,13 @@ class FacetUtil{
         let self = this;
         let output=[];
         let parsed = JSON.parse(body);
+        if(!parsed.results.bindings || !parsed.results.bindings.length){
+            return output;
+        }
         parsed.results.bindings.forEach(function(el) {
-            output.push( {dataType: el.v.datatype ? el.v.datatype : '', valueType: el.v.type, value: el.v.value, total: el.total.value});
+            if(el.v){
+                output.push( {dataType: el.v.datatype ? el.v.datatype : '', valueType: el.v.type, value: el.v.value, total: el.total.value});
+            }
         });
         return output;
     }
@@ -40,6 +45,9 @@ class FacetUtil{
         let resources = [];
         let accessLevel = {access: false};
         let parsed = JSON.parse(body);
+        if(!parsed.results.bindings || !parsed.results.bindings.length){
+            return output;
+        }
         parsed.results.bindings.forEach(function(el) {
             if(resources.indexOf(el.s.value) === -1){
                 resources.push(el.s.value);
