@@ -12,6 +12,7 @@ module.exports = {
             {title: 'ldr:dataset'},
             {title: 'ldr:resource'},
             {title: 'ldr:property'},
+            {title: 'ldr:scope'},
             {title: 'ldr:list'},
             {title: 'ldr:label'},
             {title: 'ldr:datasetLabel'},
