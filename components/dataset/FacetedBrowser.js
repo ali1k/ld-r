@@ -244,7 +244,7 @@ class FacetedBrowser extends React.Component {
                                     <ResourceList resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} OpenInNewTab={true} isBig={!showFactes} config={dcnf}/>
                                 </div>
                                  <div className= "ui secondary segment bottom attached">
-                                     <ResourceListPager onExpandCollapse={this.toggleResourceCol.bind(this)} handleClick={this.gotoPage.bind(this)} datasetURI={this.props.FacetedBrowserStore.datasetURI} total={this.props.FacetedBrowserStore.total} threshold={pagerSize} currentPage={this.props.FacetedBrowserStore.page} maxNumberOfResourcesOnPage={dcnf.maxNumberOfResourcesOnPage}/>
+                                     <ResourceListPager selection={{prevSelection: this.state.selection}} onExpandCollapse={this.toggleResourceCol.bind(this)} handleClick={this.gotoPage.bind(this)} datasetURI={this.props.FacetedBrowserStore.datasetURI} total={this.props.FacetedBrowserStore.total} threshold={pagerSize} currentPage={this.props.FacetedBrowserStore.page} maxNumberOfResourcesOnPage={dcnf.maxNumberOfResourcesOnPage}/>
                                 </div>
                               </div>;
             }

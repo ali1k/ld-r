@@ -121,7 +121,7 @@ export default {
                 configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
                     //resource focus type
                     let rftconfig = configurator.getResourceFocusType(rconfig, graphName);
-
+                    let page = params.page ? params.page : 1;
                     let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
                     if(!maxOnPage){
                         maxOnPage = 20;
@@ -137,14 +137,14 @@ export default {
                     //build http uri
                     //send request
                     rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
-                        let query2 = queryObject.getSecondLevelPropertyValues(endpointParameters, graphName, searchTerm, rftconfig, params.selection.prevSelection, maxOnPage, params.page);
+                        let query2 = queryObject.getSecondLevelPropertyValues(endpointParameters, graphName, searchTerm, rftconfig, params.selection.prevSelection, maxOnPage, page);
                          //console.log(query2);
                         rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query2, endpointParameters, outputFormat)), headers: headers}).then(function(res2){
                             callback(null, {
                                 datasetURI: datasetURI,
                                 graphName: graphName,
                                 resourceFocusType: rftconfig.type,
-                                page: params.page,
+                                page: page,
                                 facets: {items: utilObject.parseSecondLevelPropertyValues(user, datasetURI, res2)},
                                 total: utilObject.parseCountResourcesByType(res)
                             });

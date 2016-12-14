@@ -1,6 +1,7 @@
 import React from 'react';
-import {NavLink} from 'fluxible-router';
 //import ReactDOM from 'react-dom';
+import {NavLink} from 'fluxible-router';
+import searchInDataset from '../../actions/searchInDataset';
 
 class ResourceListPager extends React.Component {
     constructor(props){
@@ -25,12 +26,23 @@ class ResourceListPager extends React.Component {
     }
     handleSearchChange(evt) {
         this.setState({searchTerm: evt.target.value});
+        if(!evt.target.value){
+            //in case of empty, restore results
+            this.searchOnDataset('');
+        }
+    }
+    searchOnDataset(term) {
+        this.context.executeAction(searchInDataset, {
+            id: this.props.datasetURI,
+            selection: this.props.selection,
+            searchTerm: term
+        });
     }
     handleSearchKeyDown(evt) {
         switch (evt.keyCode) {
             //case 9: // Tab
             case 13: // Enter
-
+                this.searchOnDataset(this.state.searchTerm);
                 break;
         }
     }
@@ -96,4 +108,7 @@ class ResourceListPager extends React.Component {
         );
     }
 }
+ResourceListPager.contextTypes = {
+    executeAction: React.PropTypes.func.isRequired
+};
 export default ResourceListPager;

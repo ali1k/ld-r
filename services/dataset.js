@@ -54,12 +54,12 @@ export default {
                             datasetURI: datasetURI,
                             graphName: graphName,
                             resources: utilObject.parseResourcesByType(user, res, datasetURI),
-                            page: params.page,
+                            page: page,
                             config: rconfig
                         });
                     }).catch(function (err) {
                         console.log(err);
-                        callback(null, {datasetURI: datasetURI, graphName: graphName, resources: [], page: params.page, config: rconfig});
+                        callback(null, {datasetURI: datasetURI, graphName: graphName, resources: [], page: page, config: rconfig});
                     });
                 });
             });
