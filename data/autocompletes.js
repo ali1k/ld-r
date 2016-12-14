@@ -28,6 +28,7 @@ module.exports = {
             {title: 'ldr:resourceLabelProperty'},
             {title: 'ldr:maxNumberOfResourcesOnPage'},
             {title: 'ldr:readOnly'},
+            {title: 'ldr:openInNewWindows'},
             {title: 'ldr:resourceReactor'},
             {title: 'ldr:usePropertyCategories'},
             {title: 'ldr:propertyCategories'},
