@@ -173,7 +173,7 @@ class FacetQuery{
         `;
         return this.prefixes + this.query;
     }
-    countSecondLevelPropertyValues(endpointParameters, graphName, type, propertyURI, prevSelection) {
+    countSecondLevelPropertyValues(endpointParameters, graphName, type, prevSelection) {
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
         this.query = `
@@ -185,7 +185,7 @@ class FacetQuery{
         `;
         return this.prefixes + this.query;
     }
-    getSecondLevelPropertyValues(endpointParameters, graphName, rtconfig, propertyURI, prevSelection, limit, offset) {
+    getSecondLevelPropertyValues(endpointParameters, graphName, searchTerm, rtconfig, prevSelection, limit, offset) {
         let self = this;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let type = rtconfig.type;
@@ -198,6 +198,10 @@ class FacetQuery{
         let geoStr = '';
         let bindPhase = '';
         let noffset = (offset-1)*limit;
+        let searchPhase='';
+        if(searchTerm){
+            searchPhase = 'FILTER( regex(?title, "'+searchTerm+'", "i") || regex(STR(?s), "'+searchTerm+'", "i"))';
+        }
         //add labels for entities
         if(labelProperty && labelProperty.length){
             selectStr = ' ?title ';
@@ -212,6 +216,9 @@ class FacetQuery{
                 });
                 bindPhase = ' BIND(CONCAT('+tmpA.join(',"-",')+') AS ?title) '
             }
+        }else{
+            selectStr = ' ?title ';
+            titleStr = 'OPTIONAL { ?s rdfs:label ?title .} ';
         }
         if(imageProperty && imageProperty.length){
             selectStr = selectStr + ' ?image ';
@@ -222,6 +229,10 @@ class FacetQuery{
             geoStr = 'OPTIONAL { ?s ' + self.filterPropertyPath(geoProperty[0]) + ' ?geo .} ';
         }
         let st = this.getMultipleFilters(endpointParameters, prevSelection, type);
+        let limitOffsetPharse =`LIMIT ${limit} OFFSET ${noffset}`;
+        if(searchPhase){
+            limitOffsetPharse ='';
+        }
         this.query = `
         SELECT DISTINCT ?s ${selectStr} WHERE {
             ${gStart}
@@ -231,9 +242,9 @@ class FacetQuery{
                             ${st}
                         ${gEnd}
                     }
-                    LIMIT ${limit} OFFSET ${noffset}
+                    ${limitOffsetPharse}
                 }
-                ${titleStr} ${imageStr} ${geoStr} ${bindPhase}
+                ${titleStr} ${imageStr} ${geoStr} ${bindPhase} ${searchPhase}
             ${gEnd}
         }
         `;

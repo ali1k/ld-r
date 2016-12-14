@@ -45,7 +45,8 @@ export default {
                     }
                     let page = params.page ? params.page : 1;
                     let offset = (page - 1) * maxOnPage;
-                    query = queryObject.getResourcesByType(endpointParameters, graphName, rconfig, maxOnPage, offset);
+                    let searchTerm = params.searchTerm ? params.searchTerm : '';
+                    query = queryObject.getResourcesByType(endpointParameters, graphName, searchTerm,rconfig, maxOnPage, offset);
                     //build http uri
                     //send request
                     rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
@@ -62,7 +63,6 @@ export default {
                     });
                 });
             });
-
 
         } else if (resource === 'dataset.countResourcesByType') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);

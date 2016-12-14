@@ -23,6 +23,17 @@ class ResourceListPager extends React.Component {
     onSearchClick(){
         this.setState({searchMode: !this.state.searchMode});
     }
+    handleSearchChange(evt) {
+        this.setState({searchTerm: evt.target.value});
+    }
+    handleSearchKeyDown(evt) {
+        switch (evt.keyCode) {
+            //case 9: // Tab
+            case 13: // Enter
+
+                break;
+        }
+    }
     render() {
         let self = this;
         let maxOnPage = this.props.maxNumberOfResourcesOnPage;
@@ -76,7 +87,7 @@ class ResourceListPager extends React.Component {
                 {!this.state.searchMode ? '' :
                     <div className="ui secondary segment animated slideInDown">
                         <div className="ui icon input fluid">
-                            <input ref="searchInput" type="text" placeholder="Search in resources..." />
+                            <input ref="searchInput" type="text" placeholder="Search in resources..." value={this.state.searchTerm} onChange={this.handleSearchChange.bind(this)} onKeyDown={this.handleSearchKeyDown.bind(this)}/>
                             <i className="search icon"></i>
                         </div>
                     </div>

@@ -59,7 +59,7 @@ class DatasetQuery{
         `;
         return this.prefixes + this.query;
     }
-    getResourcesByType(endpointParameters, graphName, rconfig, limit, offset) {
+    getResourcesByType(endpointParameters, graphName, searchTerm, rconfig, limit, offset) {
         let self = this;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let type = rconfig.resourceFocusType;
@@ -76,6 +76,10 @@ class DatasetQuery{
         let selectSt = '';
         //specify the right label for resources
         let optPhase = 'OPTIONAL { ?resource dcterms:title ?title .} ';
+        let searchPhase='';
+        if(searchTerm){
+            searchPhase = 'FILTER( regex(?title, "'+searchTerm+'", "i") || regex(?label, "'+searchTerm+'", "i") || regex(STR(?resource), "'+searchTerm+'", "i"))';
+        }
         let bindPhase = '';
         if(resourceLabelProperty && resourceLabelProperty.length){
             if(resourceLabelProperty.length === 1){
@@ -111,6 +115,10 @@ class DatasetQuery{
             });
             st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
         }
+        let limitOffsetPharse =`LIMIT ${limit} OFFSET ${offset}`;
+        if(searchPhase){
+            limitOffsetPharse = '';
+        }
         this.query = `
         SELECT DISTINCT ?resource ?title ?label ${selectSt} WHERE {
             ${gStart}
@@ -120,11 +128,12 @@ class DatasetQuery{
                             ${st}
                         ${gEnd}
                     }
-                    LIMIT ${limit} OFFSET ${offset}
+                    ${limitOffsetPharse}
                 }
                 OPTIONAL { ?resource rdfs:label ?label .}
                 ${optPhase}
                 ${bindPhase}
+                ${searchPhase}
             ${gEnd}
 
         }
