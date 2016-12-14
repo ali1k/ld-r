@@ -214,7 +214,9 @@ class ResourceUtil {
                     valueType: el.o.type,
                     dataType: (el.o.type === 'typed-literal' ? el.o.datatype : ''),
                     lang: el.o['xml:lang'] ? el.o['xml:lang'] : '',
-                    extended: parseInt(el.hasExtendedValue.value)
+                    extended: parseInt(el.hasExtendedValue.value),
+                    valueLabel: el.oLabel ? el.oLabel.value : '',
+                    valueTitle: el.oTitle ? el.oTitle.value : ''
                 });
             } else {
                 propIndex[el.p.value] = [{
@@ -222,7 +224,9 @@ class ResourceUtil {
                     valueType: el.o.type,
                     dataType: (el.o.type === 'typed-literal' ? el.o.datatype : ''),
                     lang: el.o['xml:lang'] ? el.o['xml:lang'] : '',
-                    extended: parseInt(el.hasExtendedValue.value)
+                    extended: parseInt(el.hasExtendedValue.value),
+                    valueLabel: el.oLabel ? el.oLabel.value : '',
+                    valueTitle: el.oTitle ? el.oTitle.value : ''
                 }];
             }
             output.propIndex = propIndex;
@@ -290,7 +294,9 @@ class ResourceUtil {
                                     valueType: el.o.type,
                                     dataType: (el.o.type === 'typed-literal' ? el.o.datatype : ''),
                                     lang: el.o['xml:lang'] ? el.o['xml:lang'] : '',
-                                    extended: parseInt(el.hasExtendedValue.value)
+                                    extended: parseInt(el.hasExtendedValue.value),
+                                    valueLabel: el.oLabel ? el.oLabel.value : '',
+                                    valueTitle: el.oTitle ? el.oTitle.value : ''
                                 });
                             } else {
                                 propIndex[el.p.value] = [{
@@ -298,7 +304,9 @@ class ResourceUtil {
                                     valueType: el.o.type,
                                     dataType: (el.o.type === 'typed-literal' ? el.o.datatype : ''),
                                     lang: el.o['xml:lang'] ? el.o['xml:lang'] : '',
-                                    extended: parseInt(el.hasExtendedValue.value)
+                                    extended: parseInt(el.hasExtendedValue.value),
+                                    valueLabel: el.oLabel ? el.oLabel.value : '',
+                                    valueTitle: el.oTitle ? el.oTitle.value : ''
                                 }];
                             }
                             output.push({

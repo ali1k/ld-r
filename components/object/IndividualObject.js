@@ -3,6 +3,7 @@ import {provideContext} from 'fluxible-addons-react';
 import ObjectIViewer from './ObjectIViewer';
 import ObjectIEditor from './ObjectIEditor';
 import {navigateAction} from 'fluxible-router';
+import {Popup} from 'semantic-ui-react'
 
 class IndividualObject extends React.Component {
     constructor(props) {
@@ -194,13 +195,9 @@ class IndividualObject extends React.Component {
         }
         if(this.props.spec.extended){
             if(this.state.isExtendedView){
-                detailDIV = <div ref="hideDetails" title="hide details" onClick={this.handleHideDetails.bind(this)} className="medium ui circular basic icon button">
-                                <i className="hide large blue icon link "> </i>
-                            </div>;
+                detailDIV = <Popup trigger={<div ref="hideDetails" title="hide details" onClick={this.handleHideDetails.bind(this)} className="medium ui circular basic icon button"><i className="hide large blue icon link "> </i></div>} content={'hide details'} wide positioning='right center' />;
             }else{
-                detailDIV = <div ref="showDetails" title="show details" onClick={this.handleShowDetails.bind(this)} className="medium ui circular basic icon button">
-                                <i className="unhide large blue icon link "> </i>
-                            </div>;
+                detailDIV = <Popup trigger={<div ref="showDetails" title={'show '+this.props.spec.extended+' remaining details'} onClick={this.handleShowDetails.bind(this)} className="medium ui circular basic icon button"><i className="unhide large blue icon link "> </i></div>} content={'show '+this.props.spec.extended+' remaining details'} wide positioning='right center' />;
             }
         }else{
             //show add detail icon if enabled
