@@ -1,7 +1,12 @@
 import React from 'react';
 import {NavLink} from 'fluxible-router';
+//import ReactDOM from 'react-dom';
 
 class ResourceListPager extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {searchTerm: '', searchMode: 0};
+    }
     componentDidMount() {
     }
     buildLink(page, color, icon) {
@@ -14,6 +19,9 @@ class ResourceListPager extends React.Component {
                 <NavLink key={(icon ? ('i' + page) : page)} routeName="dataset" className={'ui ' + color + ' label'} href={'/dataset/' + page + '/' + encodeURIComponent(this.props.datasetURI)}> {icon ? <i className={icon}></i> : <span>{page}</span>} </NavLink>
             );
         }
+    }
+    onSearchClick(){
+        this.setState({searchMode: !this.state.searchMode});
     }
     render() {
         let self = this;
@@ -62,6 +70,17 @@ class ResourceListPager extends React.Component {
                         <i className='ui icon expand'></i>
                     </a>
                 : ''}
+                <a className='ui icon mini basic button right floated' onClick={this.onSearchClick.bind(this)}>
+                    <i className='ui icon orange search'></i>
+                </a>
+                {!this.state.searchMode ? '' :
+                    <div className="ui secondary segment animated slideInDown">
+                        <div className="ui icon input fluid">
+                            <input ref="searchInput" type="text" placeholder="Search in resources..." />
+                            <i className="search icon"></i>
+                        </div>
+                    </div>
+                }
             </div>
         );
     }
