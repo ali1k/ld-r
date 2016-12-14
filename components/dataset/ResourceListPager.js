@@ -22,6 +22,7 @@ class ResourceListPager extends React.Component {
         }
     }
     onSearchClick(){
+        this.props.onSearchMode(!this.state.searchMode);
         this.setState({searchMode: !this.state.searchMode});
     }
     handleSearchChange(evt) {
@@ -58,6 +59,9 @@ class ResourceListPager extends React.Component {
             currentPage = parseInt(this.props.currentPage);
             //total number of pages
             totalPages = Math.ceil(this.props.total / maxOnPage);
+            if(this.state.searchMode){
+                totalPages = Math.ceil(this.props.visibleResourcesTotal / maxOnPage);
+            }
             if(totalPages > threshold){
                 //first page
                 pageList.push(self.buildLink(1, 'grey', 'step backward icon'));

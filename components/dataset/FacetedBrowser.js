@@ -11,7 +11,10 @@ import ResourceListPager from './ResourceListPager';
 class FacetedBrowser extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {selection: {}, expandedFacet: 0, expandedResources: 0, hideFirstCol: false};
+        this.state = {searchMode: 0, selection: {}, expandedFacet: 0, expandedResources: 0, hideFirstCol: false};
+    }
+    handleSearchMode(searchMode) {
+        this.setState({searchMode: searchMode});
     }
     toggleFirstCol(){
         this.setState({hideFirstCol: !this.state.hideFirstCol})
@@ -238,13 +241,13 @@ class FacetedBrowser extends React.Component {
             if(this.props.FacetedBrowserStore.total){
                 resourceDIV = <div className="ui">
                                 <h3 className="ui header">
-                                    {this.props.FacetedBrowserStore.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.FacetedBrowserStore.datasetURI)}><span className="ui blue circular label">{this.addCommas(this.props.FacetedBrowserStore.total)}</span></a> : ''} Resources from {datasetTitle}
+                                    {this.props.FacetedBrowserStore.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.FacetedBrowserStore.datasetURI)}><span className="ui blue circular label">{this.state.searchMode ? this.addCommas(this.props.FacetedBrowserStore.resources.length) + '/' :''}{this.addCommas(this.props.FacetedBrowserStore.total)}</span></a> : ''} Resources from {datasetTitle}
                                  </h3>
                                 <div className="ui segment top attached">
                                     <ResourceList resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} OpenInNewTab={true} isBig={!showFactes} config={dcnf}/>
                                 </div>
                                  <div className= "ui secondary segment bottom attached">
-                                     <ResourceListPager selection={{prevSelection: this.state.selection}} onExpandCollapse={this.toggleResourceCol.bind(this)} handleClick={this.gotoPage.bind(this)} datasetURI={this.props.FacetedBrowserStore.datasetURI} total={this.props.FacetedBrowserStore.total} threshold={pagerSize} currentPage={this.props.FacetedBrowserStore.page} maxNumberOfResourcesOnPage={dcnf.maxNumberOfResourcesOnPage}/>
+                                     <ResourceListPager onSearchMode={this.handleSearchMode.bind(this)} visibleResourcesTotal={this.props.FacetedBrowserStore.resources.length} selection={{prevSelection: this.state.selection}} onExpandCollapse={this.toggleResourceCol.bind(this)} handleClick={this.gotoPage.bind(this)} datasetURI={this.props.FacetedBrowserStore.datasetURI} total={this.props.FacetedBrowserStore.total} threshold={pagerSize} currentPage={this.props.FacetedBrowserStore.page} maxNumberOfResourcesOnPage={dcnf.maxNumberOfResourcesOnPage}/>
                                 </div>
                               </div>;
             }
