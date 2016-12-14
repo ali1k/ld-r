@@ -65,7 +65,9 @@ module.exports = {
             {title: 'ldr:height'},
             {title: 'ldr:width'},
             {title: 'ldr:allowUserDefinedValue'},
-            {title: 'ldr:calendarFormat'}
+            {title: 'ldr:calendarFormat'},
+            {title: 'ldr:containerDatasetURI'},
+            {title: 'ldr:hasLinkedValue'}
         ],
         ldrLiterals: [
             {title: 'OrgResource'},
