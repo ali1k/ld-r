@@ -216,7 +216,7 @@ class FacetedBrowser extends React.Component {
                     return undefined;
                 }
             });
-            let pagerSize = showFactes ? 5 : 10;
+            let pagerSize = showFactes ? 4 : 10;
             let resSize = showFactes ? 'seven' : 'eleven';
             resSize = this.state.expandedResources ? 16 : resSize;
             let facetsDIV;
