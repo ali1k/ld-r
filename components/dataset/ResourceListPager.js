@@ -60,7 +60,9 @@ class ResourceListPager extends React.Component {
             //total number of pages
             totalPages = Math.ceil(this.props.total / maxOnPage);
             if(this.state.searchMode){
-                totalPages = Math.ceil(this.props.visibleResourcesTotal / maxOnPage);
+                //totalPages = Math.ceil(this.props.visibleResourcesTotal / maxOnPage);
+                //todo: support paging for search, I disable it for now!
+                totalPages = 1;
             }
             if(totalPages > threshold){
                 //first page
