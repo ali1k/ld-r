@@ -77,7 +77,7 @@ class DatasetQuery{
         //specify the right label for resources
         let optPhase = 'OPTIONAL { ?resource dcterms:title ?title .} ';
         let searchPhase='';
-        if(searchTerm){
+        if(searchTerm && searchTerm.length>2){
             searchPhase = 'FILTER( regex(?title, "'+searchTerm+'", "i") || regex(?label, "'+searchTerm+'", "i") || regex(STR(?resource), "'+searchTerm+'", "i"))';
         }
         let bindPhase = '';

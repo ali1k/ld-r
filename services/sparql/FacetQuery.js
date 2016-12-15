@@ -199,7 +199,7 @@ class FacetQuery{
         let bindPhase = '';
         let noffset = (offset-1)*limit;
         let searchPhase='';
-        if(searchTerm){
+        if(searchTerm && searchTerm.length>2){
             searchPhase = 'FILTER( regex(?title, "'+searchTerm+'", "i") || regex(STR(?s), "'+searchTerm+'", "i"))';
         }
         //add labels for entities
