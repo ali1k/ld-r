@@ -4,7 +4,9 @@ import LeafletMapView from '../common/LeafletMapView';
 import BasicAggregateView from './BasicAggregateView';
 import DBpediaGMapStore from '../../../../stores/DBpediaGMapStore';
 import getCoordinates from '../../../../actions/getCoordinates';
-
+/**
+Displays DBpedia resources which have coordinates on a map
+*/
 class DBpediaMapView extends React.Component {
     constructor(props) {
         super(props);
@@ -37,11 +39,19 @@ class DBpediaMapView extends React.Component {
             </div>
     	);
     }
-
-
 }
 DBpediaMapView.contextTypes = {
     executeAction: React.PropTypes.func.isRequired
+};
+DBpediaMapView.propTypes = {
+    /**
+    LD-R Configurations object
+    */
+    config: React.PropTypes.object,
+    /**
+    LD-R spec
+    */
+    spec: React.PropTypes.object
 };
 DBpediaMapView = connectToStores(DBpediaMapView, [DBpediaGMapStore], function (context, props) {
     return {

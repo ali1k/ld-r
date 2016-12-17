@@ -2,7 +2,7 @@ import React from 'react';
 import Wkt from 'wicket/wicket';
 import LeafletMapView from '../common/LeafletMapView';
 /**
-display geo coordinates (POINT) on Google Map
+display geo coordinates (POINT or Polygons) on Map
 */
 class BasicMapView extends React.Component {
     getFocusPoint(val, components) {

@@ -1,7 +1,9 @@
 import React from 'react';
 import Wkt from 'wicket/wicket';
 import LeafletMapView from '../common/LeafletMapView';
-
+/**
+display a list of geo coordinates (POINT or Polygons) on Map
+*/
 class BasicAggregateMapView extends React.Component {
     getFocusPoint(val, components) {
         let focusPoint = {lat: 52.379189, lng: 4.899431};
@@ -133,5 +135,34 @@ class BasicAggregateMapView extends React.Component {
         );
     }
 }
-
+BasicAggregateMapView.propTypes = {
+    /**
+    Height of the Map
+    */
+    mapHeight: React.PropTypes.number,
+    /**
+    Width of the Map
+    */
+    mapWidth: React.PropTypes.number,
+    /**
+    If set, will use multiple colors when displaying polygons
+    */
+    multiColor: React.PropTypes.bool,
+    /**
+    Swap longitude and latitudes: default is POINT(long lat)
+    */
+    swapLongLat: React.PropTypes.bool,
+    /**
+    Default level of zoom on the map
+    */
+    zoomLevel: React.PropTypes.number,
+    /**
+    LD-R Configurations object
+    */
+    config: React.PropTypes.object,
+    /**
+    LD-R spec
+    */
+    spec: React.PropTypes.object
+};
 export default BasicAggregateMapView;

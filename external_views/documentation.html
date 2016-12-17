@@ -22,10 +22,18 @@
 		<div class="ui page grid">
 			<div class="row">
 				<div class="ui cards column">
-						{{#errorMsg}}<br/><div class="ui warning message"><div class="header"> {{errorMsg}} </div></div>{{/errorMsg}}
 						<br/>
-						<h2 class="ui header">{{title}} Components</h2>
-  						<div class="ui clearing divider"></div>
+						<h2 class="ui header">List of {{title}} Components</h2>
+						{{#indexPage}}
+						<div class="ui big divided list">
+							{{#titles}}
+							<div class="item">
+								<a href="/documentation/{{path}}">{{title}}</a>
+							</div>
+							{{/titles}}
+					 	</div>
+						{{/indexPage}}
+						{{#errorMsg}}<br/><div class="ui warning message"><div class="header"> {{errorMsg}} </div></div>{{/errorMsg}}
 						<div class="ui big divided list">
 							{{#items}}
 								<div class="item">
