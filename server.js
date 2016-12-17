@@ -21,6 +21,8 @@ import favicon from 'serve-favicon';
 import handleAuthentication from './plugins/authentication/handleAuth';
 //required for export resources
 import handleExport from './plugins/export/handleExport';
+//required for generating docs
+import handleDocumentation from './plugins/documentation/handleDocumentation';
 import {enableAuthentication} from './configs/general';
 import cookieSession from 'cookie-session';
 import hogan from 'hogan-express';
@@ -58,6 +60,8 @@ if(enableAuthentication){
 }
 //handling content export
 handleExport(server);
+//handling docs
+handleDocumentation(server);
 server.set('state namespace', 'App');
 server.use(favicon(path.join(__dirname, '/favicon.ico')));
 //--------used for views external to fluxible

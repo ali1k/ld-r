@@ -22,7 +22,7 @@
     "lint": "eslint ./*.js ./**/*.js",
     "start": "node start.js",
     "validate": "npm ls",
-    "generate:docs": "react-docgen components/object/viewer/individual/ > documentation/object-viewer-individual.json"
+    "generate:docs": "react-docgen components/object/viewer/individual/ > documentation/object_viewer_individual.json"
   },
   "license": "Apache-2.0",
   "dependencies": {
