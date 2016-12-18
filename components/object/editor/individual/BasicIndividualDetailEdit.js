@@ -2,7 +2,9 @@ import React from 'react';
 import PropertyHeader from '../../../property/PropertyHeader';
 import ObjectIEditor from '../../ObjectIEditor';
 import BasicIndividualInput from './BasicIndividualInput';
-
+/**
+A component to edit object properties
+*/
 class BasicIndividualDetailEdit extends React.Component {
     constructor(props) {
         super(props);

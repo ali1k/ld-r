@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+/**
+A simple textarea component to edit large text
+*/
 class BasicTextareaInput extends React.Component {
     constructor(props) {
         super(props);

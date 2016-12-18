@@ -4,7 +4,9 @@ import {list} from '../../../../data/prefixes';
 import {autocompletelist} from '../../../../data/autocompletes';
 import {Search, Grid, Header} from 'semantic-ui-react';
 import _ from 'lodash';
-
+/**
+A component to add CURIs based on common prefixes
+*/
 class PrefixBasedInput extends React.Component {
     constructor(props) {
         super(props);

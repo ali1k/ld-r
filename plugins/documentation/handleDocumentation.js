@@ -4,6 +4,7 @@ let appShortTitle = generalConfig.appShortTitle;
 let appFullTitle = generalConfig.appFullTitle;
 let object_viewer_individual = require('../../documentation/object_viewer_individual');
 let object_viewer_aggregate = require('../../documentation/object_viewer_aggregate');
+let object_editor_individual = require('../../documentation/object_editor_individual');
 
 let getName = function(uri){
     let tmp = uri.split('/');
@@ -16,9 +17,9 @@ let objToArr = function(obj){
     for(let prop in obj){
         tmp = obj[prop];
         tmp.id = prop;
+        tmp.name = getName(tmp.id);
+        tmp.uri = 'https://github.com/ali1k/ld-r/blob/master/' + tmp.id;
         if(tmp.props){
-            tmp.name = getName(tmp.id);
-            tmp.uri = 'https://github.com/ali1k/ld-r/blob/master/' + tmp.id;
             tmp.properties = objToArr(tmp.props);
             delete tmp.props;
         }
@@ -31,7 +32,8 @@ module.exports = function handleDocumentation(server) {
         let errorMsg, title, indexPage= 0, titles= [], items = [];
         titles= [
             {title: 'Object->Viewer->Individual', path: 'object_viewer_individual'},
-            {title: 'Object->Viewer->Aggregate', path: 'object_viewer_aggregate'}
+            {title: 'Object->Viewer->Aggregate', path: 'object_viewer_aggregate'},
+            {title: 'Object->Editor->Individual', path: 'object_editor_individual'}
         ];
         let subject = req.params.subject;
         if(subject){
@@ -42,6 +44,9 @@ module.exports = function handleDocumentation(server) {
             }else if(subject === 'object_viewer_aggregate'){
                 items = objToArr(object_viewer_aggregate);
                 title = titles[1].title;
+            }else if(subject === 'object_editor_individual'){
+                items = objToArr(object_editor_individual);
+                title = titles[2].title;
             }else{
                 errorMsg = 'Please specify the type of components.';
             }

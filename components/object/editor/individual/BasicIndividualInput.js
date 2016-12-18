@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+/**
+Default component to edit object values
+*/
 class BasicIndividualInput extends React.Component {
     constructor(props) {
         super(props);
@@ -68,5 +70,43 @@ class BasicIndividualInput extends React.Component {
         );
     }
 }
-
+BasicIndividualInput.propTypes = {
+    /**
+    will disable auto-focus on the input box
+    */
+    noFocus: React.PropTypes.bool,
+    /**
+    will allow action by pressing enter or other keys
+    */
+    allowActionByKey: React.PropTypes.bool,
+    /**
+    the function which will be called when the content of input box changes
+    */
+    onDataEdit: React.PropTypes.func,
+    /**
+    the function to handle user enter key press
+    */
+    onEnterPress: React.PropTypes.func,
+    /**
+    placeholder for the inout box
+    */
+    placeholder: React.PropTypes.string,
+    /**
+    /**
+    will be used as domain name when creating random URIs
+    */
+    dynamicResourceDomain: React.PropTypes.string,
+    /**
+    default value for the input box
+    */
+    defaultValue: React.PropTypes.string,
+    /**
+    LD-R Configurations object
+    */
+    config: React.PropTypes.object,
+    /**
+    LD-R spec
+    */
+    spec: React.PropTypes.object
+};
 export default BasicIndividualInput;

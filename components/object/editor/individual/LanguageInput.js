@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {list} from '../../../../data/languages';
-
+/**
+A component to add standard language values
+*/
 class LanguageInput extends React.Component {
     constructor(props) {
         super(props);

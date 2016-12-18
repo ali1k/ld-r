@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import passwordHash from 'password-hash';
-
+/**
+A component to edit password/hidden values
+*/
 class PasswordInput extends React.Component {
     constructor(props) {
         super(props);

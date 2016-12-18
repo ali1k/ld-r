@@ -1,5 +1,7 @@
 import React from 'react';
-
+/**
+A simple checkbox component
+*/
 class BasicCheckbox extends React.Component {
     constructor(props) {
         super(props);

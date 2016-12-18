@@ -8,6 +8,9 @@ if (process.env.BROWSER) {
 /*----config
     calendarFormat
 ------------*/
+/**
+A calendar to choose date/time values from
+*/
 class BasicCalendarInput extends React.Component {
     constructor(props) {
         super(props);

@@ -1,7 +1,8 @@
-
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+/**
+A simple toggle/checkbox component
+*/
 class ToggleEdit extends React.Component {
     constructor(props) {
         super(props);

@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom';
 import {provideContext, connectToStores} from 'fluxible-addons-react';
 import lookupDBpedia from '../../../../actions/lookupDBpedia';
 import DBpediaStore from '../../../../stores/DBpediaStore';
-
+/**
+A component to search and add resources from DBpedia
+*/
 class DBpediaInput extends React.Component {
     constructor(props) {
         super(props);

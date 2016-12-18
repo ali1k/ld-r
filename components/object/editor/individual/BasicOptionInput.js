@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import BasicIndividualInput from './BasicIndividualInput';
-
+/**
+a dropdown list of items as input
+*/
 class BasicOptionInput extends React.Component {
     constructor(props) {
         super(props);
