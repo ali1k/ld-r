@@ -11,6 +11,7 @@ class DatasetQuery{
         PREFIX void: <http://rdfs.org/ns/void#>
         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
         `;
         this.query='';
     }
@@ -140,6 +141,7 @@ class DatasetQuery{
         `;
         return this.prefixes + this.query;
     }
+    //only gives us unannotated ones
     getResourcePropForAnnotation(endpointParameters, graphName, type, propertyURI, limit, offset) {
         let self = this;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
@@ -161,9 +163,51 @@ class DatasetQuery{
             ${gStart}
                 ${st}
                 ?resource <${propertyURI}> ?objectValue .
+                filter not exists {
+                    ?objectValue ldr:annotations ?annotations.
+                }
             ${gEnd}
         }
         LIMIT ${limit} OFFSET ${offset}
+        `;
+        return this.prefixes + this.query;
+    }
+    //for now it doesn take propertyURI into account for annotation, all falls under generic annotations
+    countResourcePropForAnnotation(endpointParameters, graphName, type, propertyURI) {
+        let self = this;
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
+        let st = '?resource a <'+ type + '> .';
+        //will get all the types
+        if(!type.length || (type.length && !type[0]) ){
+            st = '?resource a ?type .';
+        }
+        //if we have multiple type, get all of them
+        let typeURIs = [];
+        if(type.length > 1){
+            type.forEach(function(uri) {
+                typeURIs.push('<' + uri + '>');
+            });
+            st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
+        }
+        this.query = `
+        SELECT DISTINCT ?atotal ?total WHERE {
+            {
+                SELECT DISTINCT (count(?resource) AS ?atotal) WHERE {
+                    ${gStart}
+                        ${st}
+                        ?resource ldr:annotations ?annotations .
+                    ${gEnd}
+                }
+            }
+            {
+                SELECT DISTINCT (count(?resource) AS ?total) WHERE {
+                    ${gStart}
+                        ${st}
+                        ?resource <${propertyURI}> ?objectValue .
+                    ${gEnd}
+                }
+            }
+        }
         `;
         return this.prefixes + this.query;
     }

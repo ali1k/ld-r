@@ -68,5 +68,15 @@ class DatasetUtil {
         }
         return total;
     }
+    countResourcePropForAnnotation(body) {
+        let annotated = 0;
+        let total = 0;
+        let parsed = JSON.parse(body);
+        if (parsed.results.bindings.length) {
+            annotated = parsed.results.bindings[0].atotal.value;
+            total = parsed.results.bindings[0].total.value;
+        }
+        return {annotated: annotated, total: total};
+    }
 }
 export default DatasetUtil;

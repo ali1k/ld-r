@@ -143,6 +143,49 @@ export default {
                     });
                 });
             });
+        } else if (resource === 'dataset.countResourcePropAnnotation') {
+            datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
+            let resourceType = (params.resourceType ? decodeURIComponent(params.resourceType) : 0);
+            let propertyURI= (params.propertyURI ? decodeURIComponent(params.propertyURI) : 0);
+            if(!datasetURI || !propertyURI){
+                callback(null, {datasetURI: datasetURI, propertyURI: propertyURI, annotated: 0, total: 0});
+                return 0;
+            }
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI, propertyURI: propertyURI, annotated: 0, total: 0});
+                    return 0;
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+                //config handler
+                configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
+                    query = queryObject.countResourcePropForAnnotation(endpointParameters, graphName, resourceType ? [resourceType] : rconfig.resourceFocusType, propertyURI);
+                    //console.log(query);
+                    //build http uri
+                    //send request
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                        let ctmp = utilObject.countResourcePropForAnnotation(res);
+                        callback(null, {
+                            datasetURI: datasetURI,
+                            resourceType : resourceType ? [resourceType] : rconfig.resourceFocusType,
+                            propertyURI: propertyURI,
+                            graphName: graphName,
+                            annotated: ctmp.annotated,
+                            total: ctmp.total
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {datasetURI: datasetURI, propertyURI: propertyURI, annotated: 0, total: 0});
+                    });
+                });
+            });
         } else if (resource === 'dataset.datasetsList') {
             let staticReactorDS = {dataset: {}};
             let staticFacetsDS = {facets: {}};
