@@ -12,6 +12,8 @@ class ResourceQuery{
         PREFIX void: <http://rdfs.org/ns/void#>
         PREFIX foaf: <http://xmlns.com/foaf/0.1/>
         PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        PREFIX DBpedia: <http://dbpedia.org/ontology/>
+        PREFIX Schema: <http://schema.org/>
         `;
         this.query='';
     }
@@ -26,6 +28,14 @@ class ResourceQuery{
             gEnd = ' ';
         }
         return {gStart: gStart, gEnd: gEnd}
+    }
+    createDynamicURI(datasetURI, prefix){
+        let newResourceURI = datasetURI + '/' + prefix + Math.round(+new Date() / 1000);
+        //do not add two slashes
+        if(datasetURI.slice(-1) === '/'){
+            newResourceURI = datasetURI + prefix + Math.round(+new Date() / 1000);
+        }
+        return newResourceURI;
     }
     getProperties(endpointParameters, graphName, resourceURI) {
         let {gStart, gEnd} = this.prepareGraphName(graphName);
@@ -83,6 +93,58 @@ class ResourceQuery{
                 ldr:createdOn "${currentDate}"^^xsd:dateTime;
                 ${userSt}
                 rdfs:label "New Resource" .
+            ${gEnd}
+        }
+        `;
+        return this.query;
+    }
+    annotateResource(endpointParameters, user, datasetURI, graphName, resourceURI, annotations) {
+        //todo: consider different value types
+        let self = this;
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
+        let userSt = '', atypeSt ='';
+        if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
+            userSt=` ldr:createdBy <${user.id}> ;`;
+        }
+        let date = new Date();
+        let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
+        let aresources = [];
+        let eresource;
+        let annotationsSTR = '';
+        annotations.forEach((annotation, index)=>{
+            eresource = '<'+self.createDynamicURI(datasetURI, 'annotation'+index)+'>';
+            aresources.push(eresource);
+            let atypes = [];
+            if(annotation.types){
+                annotation.types.forEach((t, i)=>{
+                    //only supports following vocabs
+                    if(t.indexOf('DBpedia') !== -1 || t.indexOf('Schema') !== -1){
+                        atypes.push(t);
+                    }
+                });
+            }
+            atypeSt ='';
+            if(atypes.length){
+                atypeSt = `<${annotation.uri}> a ${atypes.join(',')} .`;
+            }
+            annotationsSTR = annotationsSTR + `
+                ${eresource} a ldr:Annotation;
+                             ${userSt}
+                             ldr:createdOn "${currentDate}"^^xsd:dateTime;
+                             ldr:surfaceForm """${annotation.surfaceForm}""";
+                             ldr:offset "${annotation.offset}"^^xsd:integer;
+                             ldr:similarityScore "${annotation.similarityScore}"^^xsd:float;
+                             ldr:percentageOfSecondRank "${annotation.percentageOfSecondRank}"^^xsd:float;
+                             rdfs:label """${annotation.surfaceForm}""" ;
+                             ldr:resource <${annotation.uri}> .
+                             ${atypeSt}
+             `;
+        });
+        this.query = `
+        INSERT DATA {
+            ${gStart}
+                <${resourceURI}> ldr:annotations ${aresources.join(',')} .
+                ${annotationsSTR}
             ${gEnd}
         }
         `;

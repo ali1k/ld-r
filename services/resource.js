@@ -369,6 +369,43 @@ export default {
                     callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
                 });
             });
+        //adds ld-r annotations to a resource
+        } else if (resource === 'resource.annotate') {
+            datasetURI = params.dataset;
+            resourceURI = params.resource;
+            let annotations = params.annotations; //array returned from dbpedia.annotate service
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI});
+                    return 0;
+                }else{
+                    user = req.user;
+                    //todo: think about the access level in the case of clone
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+                query = queryObject.getPrefixes() + queryObject.annotateResource(endpointParameters, user, datasetURI, graphName, resourceURI, annotations);
+                //console.log(query);
+                //build http uri
+                //send request
+                HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
+                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                    if(enableLogs){
+                        log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                    }
+                    callback(null, {datasetURI: datasetURI, resourceURI: resourceURI, annotations: annotations});
+                }).catch(function (err) {
+                    console.log(err);
+                    if(enableLogs){
+                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                    }
+                    callback(null, {datasetURI: datasetURI, resourceURI: resourceURI, annotations: annotations});
+                });
+            });
 
         } else if (resource === 'resource.newReactorConfig') {
             datasetURI = params.dataset;
