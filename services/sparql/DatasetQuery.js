@@ -195,7 +195,8 @@ class DatasetQuery{
                 SELECT DISTINCT (count(?resource) AS ?atotal) WHERE {
                     ${gStart}
                         ${st}
-                        ?resource ldr:annotations ?annotations .
+                        ?resource ldr:annotations ?annotation .
+                        ?annotation ldr:property <${propertyURI}> .
                     ${gEnd}
                 }
             }

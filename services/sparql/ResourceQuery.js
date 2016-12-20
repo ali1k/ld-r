@@ -98,7 +98,7 @@ class ResourceQuery{
         `;
         return this.query;
     }
-    annotateResource(endpointParameters, user, datasetURI, graphName, resourceURI, annotations) {
+    annotateResource(endpointParameters, user, datasetURI, graphName, resourceURI, propertyURI, annotations) {
         //todo: consider different value types
         let self = this;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
@@ -111,6 +111,10 @@ class ResourceQuery{
         let aresources = [];
         let eresource;
         let annotationsSTR = '';
+        let propSTR = '';
+        if(propertyURI){
+            propSTR = `ldr:property <${propertyURI}> ;`;
+        }
         annotations.forEach((annotation, index)=>{
             eresource = '<'+self.createDynamicURI(datasetURI, 'annotation'+index)+'>';
             aresources.push(eresource);
@@ -131,12 +135,13 @@ class ResourceQuery{
                 ${eresource} a ldr:Annotation;
                              ${userSt}
                              ldr:createdOn "${currentDate}"^^xsd:dateTime;
+                             ${propSTR}
                              ldr:surfaceForm """${annotation.surfaceForm}""";
                              ldr:offset "${annotation.offset}"^^xsd:integer;
                              ldr:similarityScore "${annotation.similarityScore}"^^xsd:float;
                              ldr:percentageOfSecondRank "${annotation.percentageOfSecondRank}"^^xsd:float;
                              rdfs:label """${annotation.surfaceForm}""" ;
-                             ldr:resource <${annotation.uri}> .
+                             ldr:uri <${annotation.uri}> .
                              ${atypeSt}
              `;
         });

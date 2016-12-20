@@ -369,10 +369,11 @@ export default {
                     callback(null, {datasetURI: datasetURI, resourceURI: newResourceURI});
                 });
             });
-        //adds ld-r annotations to a resource
+        //adds ld-r annotations to a resource for a certain property if set
         } else if (resource === 'resource.annotate') {
             datasetURI = params.dataset;
             resourceURI = params.resource;
+            propertyURI = params.property;
             let annotations = params.annotations; //array returned from dbpedia.annotate service
             //control access on authentication
             if(enableAuthentication){
@@ -388,7 +389,7 @@ export default {
             }
             getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.annotateResource(endpointParameters, user, datasetURI, graphName, resourceURI, annotations);
+                query = queryObject.getPrefixes() + queryObject.annotateResource(endpointParameters, user, datasetURI, graphName, resourceURI, propertyURI, annotations);
                 //console.log(query);
                 //build http uri
                 //send request
@@ -409,7 +410,7 @@ export default {
 
         } else if (resource === 'resource.newReactorConfig') {
             datasetURI = params.dataset;
-            createASampleReactorConfig(req.user, params.scope, datasetURI, params.resourceURI, params.propertyURI, params.options, (res)=>{
+            createASampleReactorConfig(req.user, params.scope, datasetURI, params.resourceURI, params.I, params.options, (res)=>{
                 callback(null, {datasetURI: configDatasetURI[0], resourceURI: res, redirect: params.redirect});
             });
         }else if (resource === 'resource.newServerConfig') {
