@@ -172,7 +172,6 @@ class DatasetQuery{
         `;
         return this.prefixes + this.query;
     }
-    //for now it doesn take propertyURI into account for annotation, all falls under generic annotations
     countResourcePropForAnnotation(endpointParameters, graphName, type, propertyURI) {
         let self = this;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
@@ -192,7 +191,7 @@ class DatasetQuery{
         this.query = `
         SELECT DISTINCT ?atotal ?total WHERE {
             {
-                SELECT DISTINCT (count(?resource) AS ?atotal) WHERE {
+                SELECT (count(DISTINCT ?resource) AS ?atotal) WHERE {
                     ${gStart}
                         ${st}
                         ?resource ldr:annotations ?annotation .
@@ -201,7 +200,7 @@ class DatasetQuery{
                 }
             }
             {
-                SELECT DISTINCT (count(?resource) AS ?total) WHERE {
+                SELECT (count(DISTINCT ?resource) AS ?total) WHERE {
                     ${gStart}
                         ${st}
                         ?resource <${propertyURI}> ?objectValue .
