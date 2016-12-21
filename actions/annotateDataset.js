@@ -5,7 +5,7 @@ import getAnnotatedResourcesCount from './getAnnotatedResourcesCount';
 import annotateText from './annotateText';
 import createResourceAnnotation from './createResourceAnnotation';
 
-let maxPerPage = 1;
+let maxPerPage = 10;
 export default function annotateDataset(context, payload, done) {
     context.dispatch('LOADING_DATA', {});
     if(payload.params && payload.params.maxPerPage){
@@ -22,7 +22,7 @@ export default function annotateDataset(context, payload, done) {
             done();
             return 0;
         }
-        console.log('totalPages ', totalPages);
+        //console.log('totalPages ', totalPages);
         //get all the resource/text values to annotate
         for (let page = 1; page <= totalPages; page++) {
             context.executeAction(getDatasetResourcePropValues, {
@@ -32,14 +32,14 @@ export default function annotateDataset(context, payload, done) {
                 maxOnPage: maxPerPage,
                 page: page
             }, (res2)=>{
-                console.log('getDatasetResourcePropValues', page, res2);
+                //console.log('getDatasetResourcePropValues', page, res2);
                 res2.resources.forEach((resource)=>{
                     asyncTasks = [];
                     asyncTasks.push((acallback)=>{
                         context.executeAction(annotateText, {
                             query: resource.ov
                         }, (res4)=>{
-                            console.log('annotateText', resource.ov, res4);
+                            //console.log('annotateText', resource.ov, res4);
                             context.executeAction(createResourceAnnotation, {
                                 dataset: res2.datasetURI,
                                 resource: resource.r,
