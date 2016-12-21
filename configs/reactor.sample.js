@@ -73,6 +73,8 @@ export default {
                 allowNewValue: 0,
                 allowPropertyDelete: 0,
                 readOnly: 1,
+                objectIViewer: ['BasicLinkedIndividualView'],
+                containerDatasetURI: ['http://ld-r.org/users']
             },
             'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdOn' : {
                 isHidden: 0,

@@ -22,9 +22,9 @@ export default function annotateDataset(context, payload, done) {
             done();
             return 0;
         }
+        console.log('totalPages ', totalPages);
         //get all the resource/text values to annotate
-        for (let page = 0; page <= totalPages; page++) {
-            asyncTasks = [];
+        for (let page = 1; page <= totalPages; page++) {
             context.executeAction(getDatasetResourcePropValues, {
                 id: payload.id,
                 resourceType: payload.resourceType,
@@ -32,11 +32,14 @@ export default function annotateDataset(context, payload, done) {
                 maxOnPage: maxPerPage,
                 page: page
             }, (res2)=>{
+                console.log('getDatasetResourcePropValues', page, res2);
                 res2.resources.forEach((resource)=>{
+                    asyncTasks = [];
                     asyncTasks.push((acallback)=>{
                         context.executeAction(annotateText, {
                             query: resource.ov
                         }, (res4)=>{
+                            console.log('annotateText', resource.ov, res4);
                             context.executeAction(createResourceAnnotation, {
                                 dataset: res2.datasetURI,
                                 resource: resource.r,

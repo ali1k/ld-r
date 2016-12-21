@@ -116,7 +116,7 @@ class ResourceQuery{
             propSTR = `ldr:property <${propertyURI}> ;`;
         }
         annotations.forEach((annotation, index)=>{
-            eresource = '<'+self.createDynamicURI(datasetURI, 'annotation'+index)+'>';
+            eresource = '<'+self.createDynamicURI(datasetURI, 'annotation_'+index+'_')+'>';
             aresources.push(eresource);
             let atypes = [];
             if(annotation.types){
