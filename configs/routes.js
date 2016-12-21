@@ -3,7 +3,6 @@ import loadDataset from '../actions/loadDataset';
 import loadResource from '../actions/loadResource';
 import loadUsersList from '../actions/loadUsersList';
 import loadFacets from '../actions/loadFacets';
-import annotateDataset from '../actions/annotateDataset';
 import {appFullTitle, appShortTitle, authDatasetURI, baseResourceDomain} from '../configs/general';
 
 export default {
@@ -23,10 +22,8 @@ export default {
         handler: require('../components/About'),
         label: 'About',
         action: (context, payload, done) => {
-            context.executeAction(annotateDataset, {
-                id: 'http://ld-r.org/d1482287572',
-                propertyURI: 'http://www.w3.org/2000/01/rdf-schema#label'
-            }, done);
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | About'});
+            done();
         }
     },
     newDataset: {
