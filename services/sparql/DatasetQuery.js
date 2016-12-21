@@ -164,7 +164,8 @@ class DatasetQuery{
                 ${st}
                 ?resource <${propertyURI}> ?objectValue .
                 filter not exists {
-                    ?objectValue ldr:annotations ?annotations.
+                    ?objectValue ldr:annotations ?annotation .
+                    ?annotation ldr:property <${propertyURI}> .
                 }
             ${gEnd}
         }

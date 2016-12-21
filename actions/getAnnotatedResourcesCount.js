@@ -5,6 +5,6 @@ export default function getAnnotatedResourcesCount(context, payload, done) {
         } else {
             context.dispatch('UPDATE_ANNOTATED_RESOURCE_COUNT_SUCCESS', res);
         }
-        done();
+        done(res);
     });
 }

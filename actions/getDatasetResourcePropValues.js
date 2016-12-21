@@ -5,6 +5,6 @@ export default function getDatasetResourcePropValues(context, payload, done) {
         } else {
             context.dispatch('UPDATE_DATASET_RPV_SUCCESS', res);
         }
-        done();
+        done(res);
     });
 }
