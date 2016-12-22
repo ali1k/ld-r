@@ -13,7 +13,7 @@ import getAnnotatedResourcesCount from '../actions/getAnnotatedResourcesCount';
 class DatasetAnnotation extends React.Component {
     constructor(props){
         super(props);
-        this.state = {datasetURI: '', resourceType: '', propertyURI: ''};
+        this.state = {datasetURI: '', resourceType: '', propertyURI: '', annotationMode: 0};
     }
     componentDidMount() {
     }
@@ -46,8 +46,9 @@ class DatasetAnnotation extends React.Component {
     }
     handleAnnotateDataset() {
         let self=this;
-        this.startInterval();
         if(self.state.datasetURI && self.state.propertyURI){
+            self.startInterval();
+            self.setState({annotationMode: 1});
             self.context.executeAction(annotateDataset, {
                 id: self.state.datasetURI,
                 resourceType: self.state.resourceType,
@@ -55,7 +56,6 @@ class DatasetAnnotation extends React.Component {
                 withProgressInterval: 2500
             });
         }
-        this.startInterval();
     }
     render() {
         let self = this, errorDIV='', formDIV='';
@@ -78,25 +78,32 @@ class DatasetAnnotation extends React.Component {
                 <Divider hidden />
             </Form>;
         }
+        let progressDIV = '';
+        if(this.state.annotationMode){
+            formDIV = '';
+            progressDIV = <div>
+                { (this.props.DatasetAnnotationStore.stats.annotated && this.props.DatasetAnnotationStore.stats.annotated===this.props.DatasetAnnotationStore.stats.total) ?
+                    <Progress percent={100} progress success>
+                    </Progress>
+                    :
+                    <div>
+                        <Progress percent={this.props.DatasetAnnotationStore.stats.annotated ? Math.floor((this.props.DatasetAnnotationStore.stats.annotated / this.props.DatasetAnnotationStore.stats.total) * 100) : 0} progress active color='blue'>
+                            Annotating {this.props.DatasetAnnotationStore.stats.annotated}/{this.props.DatasetAnnotationStore.stats.total} items
+                        </Progress>
+                        <div className='ui segment'>
+                            {this.props.DatasetAnnotationStore.currentText}
+                        </div>
+                    </div>
+                }
+            </div>
+        }
         return (
             <div className="ui page grid" ref="datasets">
                 <div className="ui column">
                     <h2>Annotate dataset</h2>
                     {errorDIV}
                     {formDIV}
-                    { (this.props.DatasetAnnotationStore.stats.annotated && this.props.DatasetAnnotationStore.stats.annotated===this.props.DatasetAnnotationStore.stats.total) ?
-                        <Progress percent={100} progress success>
-                        </Progress>
-                        :
-                        <div>
-                            <Progress percent={this.props.DatasetAnnotationStore.stats.annotated ? Math.floor((this.props.DatasetAnnotationStore.stats.annotated / this.props.DatasetAnnotationStore.stats.total) * 100) : 0} progress active color='blue'>
-                                Annotating {this.props.DatasetAnnotationStore.stats.annotated}/{this.props.DatasetAnnotationStore.stats.total} items
-                            </Progress>
-                            <div className='ui segment'>
-                                {this.props.DatasetAnnotationStore.currentText}
-                            </div>
-                        </div>
-                    }
+                    {progressDIV}
                 </div>
             </div>
         );
