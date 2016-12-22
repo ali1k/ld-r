@@ -5,7 +5,7 @@ import getAnnotatedResourcesCount from './getAnnotatedResourcesCount';
 import annotateText from './annotateText';
 import createResourceAnnotation from './createResourceAnnotation';
 
-let maxPerPage = 10;
+let maxPerPage = 2;
 export default function annotateDataset(context, payload, done) {
     context.dispatch('LOADING_DATA', {});
     if(payload.params && payload.params.maxPerPage){
@@ -13,9 +13,12 @@ export default function annotateDataset(context, payload, done) {
     }
     //get the number of annotated/all resource
     let totalPages = 0;
-    let asyncTasks = [];
+    let asyncTasks = {};
+    let totalToBeAnnotated = 0;
+    let progressCounter = 0;
     context.executeAction(getAnnotatedResourcesCount, payload, (res1)=>{
-        totalPages = Math.ceil((parseInt(res1.total) - parseInt(res1.annotated)) / maxPerPage);
+        totalToBeAnnotated = parseInt(res1.total) - parseInt(res1.annotated);
+        totalPages = Math.ceil(totalToBeAnnotated / maxPerPage);
         //stop if all are annotated
         if(!totalPages){
             context.dispatch('LOADED_DATA', {});
@@ -33,28 +36,37 @@ export default function annotateDataset(context, payload, done) {
                 page: page
             }, (res2)=>{
                 //console.log('getDatasetResourcePropValues', page, res2);
+                asyncTasks [page] = [];
                 res2.resources.forEach((resource)=>{
-                    asyncTasks = [];
-                    asyncTasks.push((acallback)=>{
+                    asyncTasks [page].push((acallback)=>{
                         context.executeAction(annotateText, {
                             query: resource.ov
                         }, (res4)=>{
                             //console.log('annotateText', resource.ov, res4);
-                            context.executeAction(createResourceAnnotation, {
-                                dataset: res2.datasetURI,
-                                resource: resource.r,
-                                property: res2.propertyURI,
-                                annotations: res4.tags,
-                            }, (res5)=>{
-                                //annotation is added
-                                acallback(); //callback
-                            });
+                            //todo: handle case where no annotation found to not count it again
+                            if(res4.tags && res4.tags.length){
+                                context.executeAction(createResourceAnnotation, {
+                                    dataset: res2.datasetURI,
+                                    resource: resource.r,
+                                    property: res2.propertyURI,
+                                    annotations: res4.tags,
+                                }, (res5)=>{
+                                    //console.log(res5, resource.r, progressCounter);
+                                    //annotation is added
+                                    progressCounter++;
+                                    acallback(resource.r); //callback
+                                });
+                            }else{
+                                progressCounter++;
+                                acallback(resource.r); //callback
+                            }
                         });
                     });
                 });
                 //run tasks async
-                async.parallelLimit(asyncTasks, 20, (res5)=>{
-                    if(page === totalPages){
+                async.parallelLimit(asyncTasks [page], 20, (res6)=>{
+                    //tricky: sometimes it doesn't reach the total but one before!
+                    if(progressCounter == totalToBeAnnotated || progressCounter == totalToBeAnnotated-1){
                         //end of annotation for this loop
                         context.dispatch('LOADED_DATA', {});
                         done();

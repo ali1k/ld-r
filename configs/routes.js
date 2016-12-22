@@ -36,6 +36,16 @@ export default {
             done();
         }
     },
+    annotateDataset: {
+        path: '/annotateDataset',
+        method: 'get',
+        handler: require('../components/DatasetAnnotation'),
+        label: 'DatasetAnnotation',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Annotate a dataset'});
+            done();
+        }
+    },
     facets: {
         path: '/browse/:id?',
         method: 'get',
