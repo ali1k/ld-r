@@ -8,7 +8,7 @@ import createResourceAnnotation from './createResourceAnnotation';
 let maxPerPage = 20;
 export default function annotateDataset(context, payload, done) {
     context.dispatch('LOADING_DATA', {});
-    if(payload.params && payload.params.maxPerPage){
+    if(payload.maxPerPage){
         maxPerPage = payload.params.maxPerPage;
     }
     //get the number of annotated/all resource

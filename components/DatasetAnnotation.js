@@ -14,10 +14,8 @@ class DatasetAnnotation extends React.Component {
     constructor(props){
         super(props);
         this.state = {datasetURI: '', resourceType: '', propertyURI: ''};
-
     }
     componentDidMount() {
-
     }
     componentDidUpdate() {
 
@@ -31,15 +29,33 @@ class DatasetAnnotation extends React.Component {
             this.setState({propertyURI: e.target.value.trim()});
         }
     }
+    startInterval(){
+        let self=this;
+        //set an interval for progress bar
+        let intervalId = setInterval(()=>{
+            self.context.executeAction(getAnnotatedResourcesCount, {
+                id: self.state.datasetURI,
+                resourceType: self.state.resourceType,
+                propertyURI: self.state.propertyURI
+            });
+            if(self.props.DatasetAnnotationStore.stats.annotated && self.props.DatasetAnnotationStore.stats.annotated===self.props.DatasetAnnotationStore.stats.total){
+                clearInterval(intervalId);
+            }
+        }, 2000);
+        this.setState({intervalId: intervalId});
+    }
     handleAnnotateDataset() {
         let self=this;
-        if(this.state.datasetURI && this.state.propertyURI){
-            this.context.executeAction(annotateDataset, {
-                id: this.state.datasetURI,
-                resourceType: this.state.resourceType,
-                propertyURI: this.state.propertyURI
+        this.startInterval();
+        if(self.state.datasetURI && self.state.propertyURI){
+            self.context.executeAction(annotateDataset, {
+                id: self.state.datasetURI,
+                resourceType: self.state.resourceType,
+                propertyURI: self.state.propertyURI,
+                withProgressInterval: 2500
             });
         }
+        this.startInterval();
     }
     render() {
         let self = this, errorDIV='', formDIV='';
@@ -68,9 +84,14 @@ class DatasetAnnotation extends React.Component {
                     <h2>Annotate dataset</h2>
                     {errorDIV}
                     {formDIV}
-                    <Progress percent={Math.floor((this.props.DatasetAnnotationStore.stats.annotated / this.props.DatasetAnnotationStore.stats.total) * 100)} progress success active>
-                        Annotating {this.props.DatasetAnnotationStore.stats.annotated}/{this.props.DatasetAnnotationStore.stats.total} items
-                    </Progress>
+                    { (this.props.DatasetAnnotationStore.stats.annotated && this.props.DatasetAnnotationStore.stats.annotated===this.props.DatasetAnnotationStore.stats.total) ?
+                        <Progress percent={100} progress success>
+                        </Progress>
+                        :
+                        <Progress percent={this.props.DatasetAnnotationStore.stats.annotated ? Math.floor((this.props.DatasetAnnotationStore.stats.annotated / this.props.DatasetAnnotationStore.stats.total) * 100) : 0} progress active color='blue'>
+                            Annotating {this.props.DatasetAnnotationStore.stats.annotated}/{this.props.DatasetAnnotationStore.stats.total} items
+                        </Progress>
+                    }
                 </div>
             </div>
         );
