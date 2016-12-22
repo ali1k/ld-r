@@ -5,7 +5,7 @@ import getAnnotatedResourcesCount from './getAnnotatedResourcesCount';
 import annotateText from './annotateText';
 import createResourceAnnotation from './createResourceAnnotation';
 
-let maxPerPage = 2;
+let maxPerPage = 20;
 export default function annotateDataset(context, payload, done) {
     context.dispatch('LOADING_DATA', {});
     if(payload.params && payload.params.maxPerPage){
@@ -65,8 +65,7 @@ export default function annotateDataset(context, payload, done) {
                 });
                 //run tasks async
                 async.parallelLimit(asyncTasks [page], 20, (res6)=>{
-                    //tricky: sometimes it doesn't reach the total but one before!
-                    if(progressCounter == totalToBeAnnotated || progressCounter == totalToBeAnnotated-1){
+                    if(progressCounter == totalPages){
                         //end of annotation for this loop
                         context.dispatch('LOADED_DATA', {});
                         done();
