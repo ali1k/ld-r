@@ -82,6 +82,11 @@ class DatasetAnnotation extends React.Component {
         if(this.state.annotationMode){
             formDIV = '';
             progressDIV = <div>
+                <div className='ui list'>
+                    <div className='item'>Dataset: <b><a href={'/dataset/1/'+encodeURIComponent(this.state.datasetURI)}>{this.state.datasetURI}</a></b></div>
+                    {!this.state.resourceType ? '' : <div className='item'>Resource Type: <b>{this.state.resourceType}</b></div>}
+                    <div className='item'>Property used: <b>{this.state.propertyURI}</b></div>
+                </div>
                 { (this.props.DatasetAnnotationStore.stats.annotated && this.props.DatasetAnnotationStore.stats.annotated===this.props.DatasetAnnotationStore.stats.total) ?
                     <Progress percent={100} progress success>
                     </Progress>
