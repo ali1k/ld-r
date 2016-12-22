@@ -20,6 +20,21 @@ class DatasetAnnotation extends React.Component {
     componentDidUpdate() {
 
     }
+    compareObjProps(a,b) {
+        if (a.count < b.count)
+            return 1;
+        if (a.count > b.count)
+            return -1;
+        return 0;
+    }
+    generateTagArray(obj){
+        let tags = [];
+        for(let prop in obj){
+            tags.push({uri: prop, count: obj[prop].count, text: obj[prop].text});
+        }
+        tags.sort(this.compareObjProps);
+        return tags;
+    }
     handleChange(element, e){
         if(element=== 'datasetURI'){
             this.setState({datasetURI: e.target.value.trim()});
@@ -81,6 +96,9 @@ class DatasetAnnotation extends React.Component {
                 errorDIV = <div className="ui warning message"><div className="header"> It is not possible to annotate datasets in this application!</div></div>;
             }
         }
+        let tagsDIV = self.generateTagArray(this.props.DatasetAnnotationStore.tags).map((node, index)=>{
+            return (<div className='item' key={index}><a href={node.uri} target="_blank">{node.text}</a> ({node.count})</div>);
+        });
         if(!errorDIV){
             formDIV =
             <Form size='big'>
@@ -119,6 +137,9 @@ class DatasetAnnotation extends React.Component {
                         </div>
                     </div>
                 }
+                <div className='ui list'>
+                    {tagsDIV}
+                </div>
             </div>
         }
         return (

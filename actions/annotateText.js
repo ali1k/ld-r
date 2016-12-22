@@ -4,7 +4,7 @@ export default function annotateText(context, payload, done) {
         if (err) {
             context.dispatch('UPDATE_TEXT_ANNOTATION__FAILURE', err);
         } else {
-            context.dispatch('UPDATE_TEXT_ANNOTATION_SUCCESS', res);
+            context.dispatch('UPDATE_ANNOTATION_TAGS', res);
         }
         done(res);
     });
