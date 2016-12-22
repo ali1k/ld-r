@@ -173,7 +173,30 @@ class DatasetQuery{
         `;
         return this.prefixes + this.query;
     }
-    countResourcePropForAnnotation(endpointParameters, graphName, type, propertyURI) {
+    /* just for the record: to get both stats at the same time
+    this.query = `
+    SELECT DISTINCT ?atotal ?total WHERE {
+        {
+            SELECT (count(DISTINCT ?resource) AS ?atotal) WHERE {
+                ${gStart}
+                    ${st}
+                    ?resource ldr:annotations ?annotation .
+                    ?annotation ldr:property <${propertyURI}> .
+                ${gEnd}
+            }
+        }
+        {
+            SELECT (count(DISTINCT ?resource) AS ?total) WHERE {
+                ${gStart}
+                    ${st}
+                    ?resource <${propertyURI}> ?objectValue .
+                ${gEnd}
+            }
+        }
+    }
+    `;
+    */
+    countTotalResourcesWithProp(endpointParameters, graphName, type, propertyURI, inNewDataset) {
         let self = this;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = '?resource a <'+ type + '> .';
@@ -189,25 +212,47 @@ class DatasetQuery{
             });
             st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
         }
+        //in case of storing a new dataset, ignore the type
+        if(inNewDataset){
+            st = '';
+        }
         this.query = `
-        SELECT DISTINCT ?atotal ?total WHERE {
-            {
-                SELECT (count(DISTINCT ?resource) AS ?atotal) WHERE {
-                    ${gStart}
-                        ${st}
-                        ?resource ldr:annotations ?annotation .
-                        ?annotation ldr:property <${propertyURI}> .
-                    ${gEnd}
-                }
-            }
-            {
-                SELECT (count(DISTINCT ?resource) AS ?total) WHERE {
-                    ${gStart}
-                        ${st}
-                        ?resource <${propertyURI}> ?objectValue .
-                    ${gEnd}
-                }
-            }
+        SELECT (count(DISTINCT ?resource) AS ?total) WHERE {
+            ${gStart}
+                ${st}
+                ?resource <${propertyURI}> ?objectValue .
+            ${gEnd}
+        }
+        `;
+        return this.prefixes + this.query;
+    }
+    countAnnotatedResourcesWithProp(endpointParameters, graphName, type, propertyURI, inNewDataset) {
+        let self = this;
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
+        let st = '?resource a <'+ type + '> .';
+        //will get all the types
+        if(!type.length || (type.length && !type[0]) ){
+            st = '?resource a ?type .';
+        }
+        //if we have multiple type, get all of them
+        let typeURIs = [];
+        if(type.length > 1){
+            type.forEach(function(uri) {
+                typeURIs.push('<' + uri + '>');
+            });
+            st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
+        }
+        //in case of storing a new dataset, ignore the type
+        if(inNewDataset){
+            st = '';
+        }
+        this.query = `
+        SELECT (count(DISTINCT ?resource) AS ?atotal) WHERE {
+            ${gStart}
+                ${st}
+                ?resource ldr:annotations ?annotation .
+                ?annotation ldr:property <${propertyURI}> .
+            ${gEnd}
         }
         `;
         return this.prefixes + this.query;

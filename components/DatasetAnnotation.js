@@ -8,12 +8,12 @@ import { Button, Divider, Form, Progress } from 'semantic-ui-react';
 import PrefixBasedInput from './object/editor/individual/PrefixBasedInput';
 import url from 'url';
 import annotateDataset from '../actions/annotateDataset';
-import getAnnotatedResourcesCount from '../actions/getAnnotatedResourcesCount';
+import countAnnotatedResourcesWithProp from '../actions/countAnnotatedResourcesWithProp';
 
 class DatasetAnnotation extends React.Component {
     constructor(props){
         super(props);
-        this.state = {datasetURI: '', resourceType: '', propertyURI: '', annotationMode: 0};
+        this.state = {storingDataset: '', datasetURI: '', resourceType: '', propertyURI: '', annotationMode: 0, storeInNewDataset : false};
     }
     componentDidMount() {
     }
@@ -29,14 +29,28 @@ class DatasetAnnotation extends React.Component {
             this.setState({propertyURI: e.target.value.trim()});
         }
     }
+    handleStoringCheckBox(e, t){
+        if(t.value === '1'){
+            //create a new random dataset URI
+            let newDatasetURI = baseResourceDomain[0] + '/astore' + Math.round(+new Date() / 1000);
+            //do not add two slashes
+            if(baseResourceDomain[0].slice(-1) === '/'){
+                newDatasetURI = baseResourceDomain[0] + 'astore' + Math.round(+new Date() / 1000);
+            }
+            this.setState({storeInNewDataset: true, storingDataset: newDatasetURI});
+        }else{
+            this.setState({storeInNewDataset: false, storingDataset: ''});
+        }
+    }
     startInterval(){
         let self=this;
         //set an interval for progress bar
         let intervalId = setInterval(()=>{
-            self.context.executeAction(getAnnotatedResourcesCount, {
-                id: self.state.datasetURI,
+            self.context.executeAction(countAnnotatedResourcesWithProp, {
+                id: self.state.storeInNewDataset ? self.state.storingDataset : self.state.datasetURI,
                 resourceType: self.state.resourceType,
-                propertyURI: self.state.propertyURI
+                propertyURI: self.state.propertyURI,
+                inANewDataset: self.state.storeInNewDataset
             });
             if(self.props.DatasetAnnotationStore.stats.annotated && self.props.DatasetAnnotationStore.stats.annotated===self.props.DatasetAnnotationStore.stats.total){
                 clearInterval(intervalId);
@@ -53,7 +67,7 @@ class DatasetAnnotation extends React.Component {
                 id: self.state.datasetURI,
                 resourceType: self.state.resourceType,
                 propertyURI: self.state.propertyURI,
-                withProgressInterval: 2500
+                storingDataset: self.state.storingDataset
             });
         }
     }
@@ -73,6 +87,11 @@ class DatasetAnnotation extends React.Component {
                 <Form.Field label='Dataset URI' control='input' placeholder='URI of the dataset to be annotated' onChange={this.handleChange.bind(this, 'datasetURI')}/>
                 <Form.Field label='Resource Type' control='input' placeholder='URI of the resource types to be annotate / leave empty for all resources' onChange={this.handleChange.bind(this, 'resourceType')}/>
                 <Form.Field label='Property URI' control='input' placeholder='URI of the property for which the values are annotated' onChange={this.handleChange.bind(this, 'propertyURI')}/>
+                <Form.Group>
+                    <label>Store annotations in a new dataset?</label>
+                    <Form.Radio label='No, just enrich the original dataset' name='storeAnn' value='0' checked={!this.state.storeInNewDataset} onChange={this.handleStoringCheckBox.bind(this)} />
+                    <Form.Radio label='Yes, create a new dataset for annotations' name='storeAnn' value='1' checked={this.state.storeInNewDataset} onChange={this.handleStoringCheckBox.bind(this)} />
+                </Form.Group>
                 <Divider hidden />
                 <div className='ui big blue button' onClick={this.handleAnnotateDataset.bind(this)}>Annotate  Dataset</div>
                 <Divider hidden />
@@ -83,7 +102,7 @@ class DatasetAnnotation extends React.Component {
             formDIV = '';
             progressDIV = <div>
                 <div className='ui list'>
-                    <div className='item'>Dataset: <b><a href={'/dataset/1/'+encodeURIComponent(this.state.datasetURI)}>{this.state.datasetURI}</a></b></div>
+                    <div className='item'>Dataset: <b><a href={'/dataset/1/'+encodeURIComponent(this.state.datasetURI)}>{this.state.datasetURI}</a></b> {!this.state.storingDataset ? '' : <span>-><a href={'/dataset/1/'+encodeURIComponent(this.state.storingDataset)}>{this.state.storingDataset}</a></span>} </div>
                     {!this.state.resourceType ? '' : <div className='item'>Resource Type: <b>{this.state.resourceType}</b></div>}
                     <div className='item'>Property used: <b>{this.state.propertyURI}</b></div>
                 </div>

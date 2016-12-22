@@ -6,8 +6,12 @@ class DatasetAnnotationStore extends BaseStore {
         this.stats = {annotated: 0, total: 0};
         this.currentText = '';
     }
-    updateStats(payload) {
-        this.stats = {annotated: payload.annotated, total: payload.total};
+    updateStatsAnnotated(payload) {
+        this.stats.annotated = payload.annotated;
+        this.emitChange();
+    }
+    updateStatsTotal(payload) {
+        this.stats.total = payload.total;
         this.emitChange();
     }
     updateText(payload) {
@@ -31,7 +35,8 @@ class DatasetAnnotationStore extends BaseStore {
 
 DatasetAnnotationStore.storeName = 'DatasetAnnotationStore'; // PR open in dispatchr to remove this need
 DatasetAnnotationStore.handlers = {
-    'UPDATE_ANNOTATION_STAT': 'updateStats',
+    'UPDATE_ANNOTATION_STAT_ANNOTATED': 'updateStatsAnnotated',
+    'UPDATE_ANNOTATION_STAT_TOTAL': 'updateStatsTotal',
     'UPDATE_ANNOTATION_TEXT': 'updateText'
 };
 
