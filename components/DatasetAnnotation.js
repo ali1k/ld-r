@@ -88,9 +88,14 @@ class DatasetAnnotation extends React.Component {
                         <Progress percent={100} progress success>
                         </Progress>
                         :
-                        <Progress percent={this.props.DatasetAnnotationStore.stats.annotated ? Math.floor((this.props.DatasetAnnotationStore.stats.annotated / this.props.DatasetAnnotationStore.stats.total) * 100) : 0} progress active color='blue'>
-                            Annotating {this.props.DatasetAnnotationStore.stats.annotated}/{this.props.DatasetAnnotationStore.stats.total} items
-                        </Progress>
+                        <div>
+                            <Progress percent={this.props.DatasetAnnotationStore.stats.annotated ? Math.floor((this.props.DatasetAnnotationStore.stats.annotated / this.props.DatasetAnnotationStore.stats.total) * 100) : 0} progress active color='blue'>
+                                Annotating {this.props.DatasetAnnotationStore.stats.annotated}/{this.props.DatasetAnnotationStore.stats.total} items
+                            </Progress>
+                            <div className='ui segment'>
+                                {this.props.DatasetAnnotationStore.currentText}
+                            </div>
+                        </div>
                     }
                 </div>
             </div>
