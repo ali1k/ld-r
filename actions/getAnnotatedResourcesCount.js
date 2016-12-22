@@ -3,7 +3,7 @@ export default function getAnnotatedResourcesCount(context, payload, done) {
         if (err) {
             context.dispatch('UPDATE_ANNOTATED_RESOURCE_COUNT__FAILURE', err);
         } else {
-            context.dispatch('UPDATE_ANNOTATED_RESOURCE_COUNT_SUCCESS', res);
+            context.dispatch('UPDATE_ANNOTATION_STAT', res);
         }
         done(res);
     });

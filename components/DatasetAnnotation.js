@@ -1,11 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import {connectToStores} from 'fluxible-addons-react';
+import DatasetAnnotationStore from '../stores/DatasetAnnotationStore';
 import {navigateAction} from 'fluxible-router';
 import {enableAuthentication, enableDatasetAnnotation, baseResourceDomain} from '../configs/general';
-import { Button, Divider, Form } from 'semantic-ui-react';
+import { Button, Divider, Form, Progress } from 'semantic-ui-react';
 import PrefixBasedInput from './object/editor/individual/PrefixBasedInput';
 import url from 'url';
 import annotateDataset from '../actions/annotateDataset';
+import getAnnotatedResourcesCount from '../actions/getAnnotatedResourcesCount';
 
 class DatasetAnnotation extends React.Component {
     constructor(props){
@@ -14,6 +17,9 @@ class DatasetAnnotation extends React.Component {
 
     }
     componentDidMount() {
+
+    }
+    componentDidUpdate() {
 
     }
     handleChange(element, e){
@@ -26,6 +32,7 @@ class DatasetAnnotation extends React.Component {
         }
     }
     handleAnnotateDataset() {
+        let self=this;
         if(this.state.datasetURI && this.state.propertyURI){
             this.context.executeAction(annotateDataset, {
                 id: this.state.datasetURI,
@@ -61,6 +68,9 @@ class DatasetAnnotation extends React.Component {
                     <h2>Annotate dataset</h2>
                     {errorDIV}
                     {formDIV}
+                    <Progress percent={Math.floor((this.props.DatasetAnnotationStore.stats.annotated / this.props.DatasetAnnotationStore.stats.total) * 100)} progress success active>
+                        Annotating {this.props.DatasetAnnotationStore.stats.annotated}/{this.props.DatasetAnnotationStore.stats.total} items
+                    </Progress>
                 </div>
             </div>
         );
@@ -70,4 +80,9 @@ DatasetAnnotation.contextTypes = {
     executeAction: React.PropTypes.func.isRequired,
     getUser: React.PropTypes.func
 };
+DatasetAnnotation = connectToStores(DatasetAnnotation, [DatasetAnnotationStore], function (context, props) {
+    return {
+        DatasetAnnotationStore: context.getStore(DatasetAnnotationStore).getState()
+    };
+});
 export default DatasetAnnotation;
