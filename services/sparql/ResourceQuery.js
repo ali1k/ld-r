@@ -146,10 +146,17 @@ class ResourceQuery{
              `;
         });
         this.query = `
-        INSERT DATA {
+        INSERT {
             ${gStart}
                 <${resourceURI}> ldr:annotations ${aresources.join(',')} .
                 ${annotationsSTR}
+            ${gEnd}
+        } WHERE {
+            ${gStart}
+                filter not exists {
+                    <${resourceURI}> ldr:annotations ?annotation .
+                    ?annotation ldr:property <${propertyURI}> .
+                }
             ${gEnd}
         }
         `;
