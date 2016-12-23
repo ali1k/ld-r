@@ -33,6 +33,10 @@ class DatasetAnnotation extends React.Component {
             tags.push({uri: prop, count: obj[prop].count, text: obj[prop].text});
         }
         tags.sort(this.compareObjProps);
+        //limit it to 500
+        if(tags.length>500){
+            tags = tags.slice(0, 500);
+        }
         return tags;
     }
     handleChange(element, e){
