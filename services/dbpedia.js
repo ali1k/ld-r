@@ -24,7 +24,7 @@ export default {
                     suggestions: utilObject.parseDBpediaLookup(res)
                 });
             }).catch(function (err) {
-                console.log('\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                console.log('\n dbpedia.lookup \n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 callback(null, {suggestions: []});
             });
         /////////////////////////////////////////////
@@ -54,7 +54,7 @@ export default {
                     tags: utilObject.parseDBpediaSpotlight(res)
                 });
             }).catch(function (err) {
-                console.log('\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                console.log('\n dbpedia.spotlight \n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                 callback(null, {tags: []});
             });
         }

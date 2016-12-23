@@ -66,8 +66,8 @@ export default function annotateDataset(context, payload, done) {
                             });
                         });
                     });
-                    //run tasks async
-                    async.parallelLimit(asyncTasks [page], 20, (res6)=>{
+                    //run tasks async: todo: increase parallel requests to dbpedia sptlight
+                    async.parallelLimit(asyncTasks [page], 2, (res6)=>{
                         if(progressCounter == totalPages){
                             //end of annotation for this loop
                             context.dispatch('LOADED_DATA', {});
