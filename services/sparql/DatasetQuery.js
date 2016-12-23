@@ -164,8 +164,8 @@ class DatasetQuery{
                 ${st}
                 ?resource <${propertyURI}> ?objectValue .
                 filter not exists {
-                    ?objectValue ldr:annotations ?annotation .
-                    ?annotation ldr:property <${propertyURI}> .
+                    ?objectValue ldr:annotatedBy ?annotationD .
+                    ?annotationD ldr:property <${propertyURI}> .
                 }
             ${gEnd}
         }
@@ -250,8 +250,8 @@ class DatasetQuery{
         SELECT (count(DISTINCT ?resource) AS ?atotal) WHERE {
             ${gStart}
                 ${st}
-                ?resource ldr:annotations ?annotation .
-                ?annotation ldr:property <${propertyURI}> .
+                ?resource ldr:annotatedBy ?annotationD .
+                ?annotationD ldr:property <${propertyURI}> .
             ${gEnd}
         }
         `;
