@@ -7,6 +7,6 @@ export default function annotateText(context, payload, done) {
         } else {
             context.dispatch('UPDATE_ANNOTATION_TAGS', res);
         }
-        done(res);
+        done(null, res);
     });
 }

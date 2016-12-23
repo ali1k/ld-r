@@ -5,6 +5,6 @@ export default function countAnnotatedResourcesWithProp(context, payload, done) 
         } else {
             context.dispatch('UPDATE_ANNOTATION_STAT_ANNOTATED', res);
         }
-        done(res);
+        done(null, res);
     });
 }

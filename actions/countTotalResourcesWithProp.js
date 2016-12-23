@@ -5,6 +5,6 @@ export default function countTotalResourcesWithProp(context, payload, done) {
         } else {
             context.dispatch('UPDATE_ANNOTATION_STAT_TOTAL', res);
         }
-        done(res);
+        done(null, res);
     });
 }
