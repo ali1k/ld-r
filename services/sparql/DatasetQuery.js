@@ -142,7 +142,7 @@ class DatasetQuery{
         return this.prefixes + this.query;
     }
     //only gives us unannotated ones
-    getResourcePropForAnnotation(endpointParameters, graphName, type, propertyURI, limit, offset) {
+    getResourcePropForAnnotation(endpointParameters, graphName, type, propertyURI, limit, offset, inNewDataset) {
         let self = this;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = '?resource a <'+ type + '> .';
@@ -158,15 +158,22 @@ class DatasetQuery{
             });
             st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
         }
+        let filterSt = `
+            filter not exists {
+                ?resource ldr:annotatedBy ?annotationD .
+                ?annotationD ldr:property <${propertyURI}> .
+            }
+        `;
+        //do not care about already annotated ones if annotations are stored in a new dataset
+        if(inNewDataset){
+            filterSt = '';
+        }
         this.query = `
         SELECT DISTINCT ?resource ?objectValue WHERE {
             ${gStart}
                 ${st}
                 ?resource <${propertyURI}> ?objectValue .
-                filter not exists {
-                    ?resource ldr:annotatedBy ?annotationD .
-                    ?annotationD ldr:property <${propertyURI}> .
-                }
+                ${filterSt}
             ${gEnd}
         }
         LIMIT ${limit} OFFSET ${offset}

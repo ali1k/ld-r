@@ -18,7 +18,12 @@ export default function annotateDataset(context, payload, done) {
     let totalToBeAnnotated = 0;
     let progressCounter = 0;
     context.executeAction(countTotalResourcesWithProp, payload, (err0, res0)=>{
-        context.executeAction(countAnnotatedResourcesWithProp, payload, (err1, res1)=>{
+        context.executeAction(countAnnotatedResourcesWithProp, {
+            id: payload.id,
+            resourceType: payload.resourceType,
+            propertyURI: payload.propertyURI,
+            inNewDataset: payload.storingDataset ? 1 : 0
+        }, (err1, res1)=>{
             if(payload.storingDataset){
                 //create a new config if set
                 context.executeAction(createNewReactorConfig, {
@@ -46,7 +51,8 @@ export default function annotateDataset(context, payload, done) {
                     resourceType: payload.resourceType,
                     propertyURI: payload.propertyURI,
                     maxOnPage: maxPerPage,
-                    page: page
+                    page: page,
+                    inNewDataset: payload.storingDataset ? 1 : 0
                 }, (err2, res2)=>{
                     //console.log('getDatasetResourcePropValues', page, res2);
                     asyncTasks [page] = [];
