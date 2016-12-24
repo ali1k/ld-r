@@ -374,7 +374,6 @@ export default {
             datasetURI = params.dataset;
             resourceURI = params.resource;
             propertyURI = params.property;
-            let annotations = params.annotations; //array returned from dbpedia.annotate service
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
@@ -389,8 +388,8 @@ export default {
             }
             getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.annotateResource(endpointParameters, user, datasetURI, graphName, resourceURI, propertyURI, annotations);
-                //console.log(query);
+                query = queryObject.getPrefixes() + queryObject.annotateResource(endpointParameters, user, datasetURI, graphName, params.resource, propertyURI, params.annotations);
+                console.log(query);
                 //build http uri
                 //send request
                 HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
@@ -398,13 +397,13 @@ export default {
                     if(enableLogs){
                         log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                     }
-                    callback(null, {datasetURI: datasetURI, resourceURI: resourceURI, annotations: annotations});
+                    callback(null, {datasetURI: datasetURI, resourceURI: params.resource, annotations: params.annotations});
                 }).catch(function (err) {
                     console.log(err);
                     if(enableLogs){
                         log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
-                    callback(null, {datasetURI: datasetURI, resourceURI: resourceURI, annotations: annotations});
+                    callback(null, {datasetURI: datasetURI, resourceURI: params.resource, annotations: params.annotations});
                 });
             });
 

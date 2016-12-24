@@ -51,11 +51,12 @@ export default {
             //send request
             rp.post({headers: {'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'}, accept: 'application/json', uri: 'http://' + dbpediaSpotlightService[0].host + ':' + dbpediaSpotlightService[0].port + dbpediaSpotlightService[0].path, form: {'text': query}}).then(function(res){
                 callback(null, {
-                    tags: utilObject.parseDBpediaSpotlight(res)
+                    tags: utilObject.parseDBpediaSpotlight(res),
+                    id: params.id
                 });
             }).catch(function (err) {
                 console.log('\n dbpedia.spotlight \n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
-                callback(null, {tags: []});
+                callback(null, {tags: [], id: params.id});
             });
         }
     }

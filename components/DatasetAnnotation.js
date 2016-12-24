@@ -74,7 +74,7 @@ class DatasetAnnotation extends React.Component {
             if(self.props.DatasetAnnotationStore.stats.annotated && self.props.DatasetAnnotationStore.stats.annotated===self.props.DatasetAnnotationStore.stats.total){
                 clearInterval(intervalId);
             }
-        }, 2000);
+        }, 2200);
         this.setState({intervalId: intervalId});
     }
     handleAnnotateDataset() {
@@ -130,6 +130,7 @@ class DatasetAnnotation extends React.Component {
                 </div>
                 { (this.props.DatasetAnnotationStore.stats.annotated && this.props.DatasetAnnotationStore.stats.annotated===this.props.DatasetAnnotationStore.stats.total) ?
                     <Progress percent={100} progress success>
+                        Annotated {this.props.DatasetAnnotationStore.stats.annotated}/{this.props.DatasetAnnotationStore.stats.total} items
                     </Progress>
                     :
                     <div>
