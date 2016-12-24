@@ -42,8 +42,7 @@ export default {
         handler: require('../components/DatasetAnnotation'),
         label: 'DatasetAnnotation',
         action: (context, payload, done) => {
-            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Annotate a dataset'});
-            done();
+            context.executeAction(loadDatasets, {pageTitle: 'Annotate a dataset'}, done);
         }
     },
     facets: {

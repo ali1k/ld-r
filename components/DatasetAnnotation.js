@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {connectToStores} from 'fluxible-addons-react';
+import DatasetsStore from '../stores/DatasetsStore';
 import DatasetAnnotationStore from '../stores/DatasetAnnotationStore';
 import {navigateAction} from 'fluxible-router';
 import {enableAuthentication, enableDatasetAnnotation, baseResourceDomain} from '../configs/general';
@@ -41,12 +42,22 @@ class DatasetAnnotation extends React.Component {
     }
     handleChange(element, e){
         if(element=== 'datasetURI'){
-            this.setState({datasetURI: e.target.value.trim()});
+            if(e.target.value){
+                this.setState({datasetURI: e.target.value.trim()});
+            }else{
+                this.setState({datasetURI: ''});
+            }
         }else if(element=== 'resourceType'){
             this.setState({resourceType: e.target.value.trim()});
         }else if(element=== 'propertyURI'){
             this.setState({propertyURI: e.target.value.trim()});
         }
+    }
+    handleResourceURIChange(val){
+        this.setState({resourceType: val.trim()});
+    }
+    handlePropertyURIChange(val){
+        this.setState({propertyURI: val.trim()});
     }
     handleStoringCheckBox(e, t){
         if(t.value === '1'){
@@ -91,6 +102,7 @@ class DatasetAnnotation extends React.Component {
         }
     }
     render() {
+        let optionsList, dss = this.props.DatasetsStore.datasetsList;
         let self = this, errorDIV='', formDIV='';
         let user = this.context.getUser();
         if(enableAuthentication && !user){
@@ -98,17 +110,30 @@ class DatasetAnnotation extends React.Component {
         }else{
             if(!enableDatasetAnnotation){
                 errorDIV = <div className="ui warning message"><div className="header"> It is not possible to annotate datasets in this application!</div></div>;
+            }else if (!dss.length){
+                errorDIV = <div className="ui warning message"><div className="header"> No dataset found for annotations!</div></div>;
             }
         }
+        optionsList = dss.map(function(option, index) {
+            return <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
+        });
         let tagsDIV = self.generateTagArray(this.props.DatasetAnnotationStore.tags).map((node, index)=>{
             return (<div className='item' key={index}><a href={node.uri} target="_blank">{node.text}</a> ({node.count})</div>);
         });
         if(!errorDIV){
             formDIV =
             <Form size='big'>
-                <Form.Field label='Dataset URI' control='input' placeholder='URI of the dataset to be annotated' onChange={this.handleChange.bind(this, 'datasetURI')}/>
-                <Form.Field label='Resource Type' control='input' placeholder='URI of the resource types to be annotate / leave empty for all resources' onChange={this.handleChange.bind(this, 'resourceType')}/>
-                <Form.Field label='Property URI' control='input' placeholder='URI of the property for which the values are annotated' onChange={this.handleChange.bind(this, 'propertyURI')}/>
+                <b>* Dataset</b>
+                <select ref="datasetURI" className="ui search dropdown" onChange={this.handleChange.bind(this, 'datasetURI')}>
+                    <option value={''}> Select a Dataset </option>
+                    {optionsList}
+                </select>
+                <Divider hidden />
+                <b>URI of the resource types</b>
+                <PrefixBasedInput includeOnly={['ldrClasses', 'classes']} noFocus={true} spec={{value:''}} onDataEdit={this.handleResourceURIChange.bind(this)} placeholder="URI of the resource types to be annotated / leave empty for all resources" allowActionByKey={false}/>
+                <Divider hidden />
+                <b>* URI of the property used for annotation</b>
+                <PrefixBasedInput includeOnly={['ldrProperties', 'properties']} noFocus={true} spec={{value:''}} onDataEdit={this.handlePropertyURIChange.bind(this)} placeholder="URI of the property for which the values are annotated" allowActionByKey={false}/>
                 <Form.Group>
                     <label>Store annotations in a new dataset?</label>
                     <Form.Radio label='No, just enrich the original dataset' name='storeAnn' value='0' checked={!this.state.storeInNewDataset} onChange={this.handleStoringCheckBox.bind(this)} />
@@ -163,8 +188,9 @@ DatasetAnnotation.contextTypes = {
     executeAction: React.PropTypes.func.isRequired,
     getUser: React.PropTypes.func
 };
-DatasetAnnotation = connectToStores(DatasetAnnotation, [DatasetAnnotationStore], function (context, props) {
+DatasetAnnotation = connectToStores(DatasetAnnotation, [DatasetsStore, DatasetAnnotationStore], function (context, props) {
     return {
+        DatasetsStore: context.getStore(DatasetsStore).getState(),
         DatasetAnnotationStore: context.getStore(DatasetAnnotationStore).getState()
     };
 });
