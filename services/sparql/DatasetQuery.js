@@ -168,13 +168,13 @@ class DatasetQuery{
                             SELECT DISTINCT ?resource ?objectValue WHERE {
                                     ${gStart}
                                         ${st}
-                                        ?resource <${propertyURI}> ?objectValue .
+                                        ?resource ${self.filterPropertyPath(propertyURI)} ?objectValue .
                                     ${gEnd}
                             } LIMIT ${limit} OFFSET ${offset}
                         }
                         filter not exists {
                             ?resource ldr:annotatedBy ?annotationD .
-                            ?annotationD ldr:property <${propertyURI}> .
+                            ?annotationD ldr:property "${propertyURI}" .
                         }
                     }
                 }
@@ -185,10 +185,10 @@ class DatasetQuery{
             SELECT DISTINCT ?resource ?objectValue WHERE {
                 ${gStart}
                     ${st}
-                    ?resource <${propertyURI}> ?objectValue .
+                    ?resource ${self.filterPropertyPath(propertyURI)} ?objectValue .
                     filter not exists {
                         ?resource ldr:annotatedBy ?annotationD .
-                        ?annotationD ldr:property <${propertyURI}> .
+                        ?annotationD ldr:property "${propertyURI}" .
                     }
                 ${gEnd}
             }
@@ -245,7 +245,7 @@ class DatasetQuery{
         SELECT (count(DISTINCT ?resource) AS ?total) WHERE {
             ${gStart}
                 ${st}
-                ?resource <${propertyURI}> ?objectValue .
+                ?resource ${self.filterPropertyPath(propertyURI)} ?objectValue .
             ${gEnd}
         }
         `;
@@ -276,7 +276,7 @@ class DatasetQuery{
             ${gStart}
                 ${st}
                 ?resource ldr:annotatedBy ?annotationD .
-                ?annotationD ldr:property <${propertyURI}> .
+                ?annotationD ldr:property "${propertyURI}" .
             ${gEnd}
         }
         `;

@@ -111,10 +111,6 @@ class ResourceQuery{
         let aresources = [];
         let eresource;
         let annotationsSTR = '';
-        let propSTR = '';
-        if(propertyURI){
-            propSTR = `ldr:property <${propertyURI}> ;`;
-        }
         let newDSt = '';
         //add more data if it is stored in a different dataset than the original one
         if(inNewDataset){
@@ -140,7 +136,6 @@ class ResourceQuery{
             annotationsSTR = annotationsSTR + `
                 ${eresource} a ldr:Annotation;
                              ldr:annotationDetail <${annotatedByURI}> ;
-                             ${propSTR}
                              ldr:surfaceForm """${annotation.surfaceForm}""";
                              ldr:offset "${annotation.offset}"^^xsd:integer;
                              ldr:similarityScore "${annotation.similarityScore}"^^xsd:float;
@@ -159,7 +154,7 @@ class ResourceQuery{
             ${gStart}
                 <${resourceURI}> ldr:annotatedBy  <${annotatedByURI}> .
                 ${newDSt}
-                <${annotatedByURI}> ${userSt} ldr:createdOn "${currentDate}"^^xsd:dateTime ; ldr:property <${propertyURI}> ; ldr:API "DBpedia Spotlight" .
+                <${annotatedByURI}> ${userSt} ldr:createdOn "${currentDate}"^^xsd:dateTime ; ldr:property "${propertyURI}" ; ldr:API "DBpedia Spotlight" .
                 ${mainAnnSt}
                 ${annotationsSTR}
             ${gEnd}
@@ -167,7 +162,7 @@ class ResourceQuery{
             ${gStart}
                 filter not exists {
                     <${resourceURI}> ldr:annotatedBy ?annotationInfo .
-                    ?annotationInfo ldr:property <${propertyURI}> .
+                    ?annotationInfo ldr:property "${propertyURI}" .
                 }
             ${gEnd}
         }

@@ -32,17 +32,21 @@ let processData = (page, maxPerPage, totalPages, payload, done)=> {
                         //console.log('annotateText', resource.ov, res3);
                         //create a queue for enrichment
                         asyncEnrichmentTasks [page].push((ecallback)=>{
-                            context.executeAction(createResourceAnnotation, {
-                                //it can store annotations in a different dataset if set
-                                dataset: payload.storingDataset ? payload.storingDataset : res2.datasetURI,
-                                resource: res3.id,
-                                property: res2.propertyURI,
-                                annotations: res3.tags,
-                                inNewDataset: payload.storingDataset ? payload.storingDataset : 0
-                            }, (err4, res4)=>{
-                                //console.log('createResourceAnnotation', res4, resource.ov, progressCounter+1);
-                                ecallback(null, res4);
-                            });
+                            if(res3 && res3.id){
+                                context.executeAction(createResourceAnnotation, {
+                                    //it can store annotations in a different dataset if set
+                                    dataset: payload.storingDataset ? payload.storingDataset : res2.datasetURI,
+                                    resource: res3.id,
+                                    property: res2.propertyURI,
+                                    annotations: res3.tags,
+                                    inNewDataset: payload.storingDataset ? payload.storingDataset : 0
+                                }, (err4, res4)=>{
+                                    //console.log('createResourceAnnotation', res4, resource.ov, progressCounter+1);
+                                    ecallback(null, null);
+                                });
+                            }else{
+                                ecallback(null, null);
+                            }
                         });
                         acallback(null, resource.r); //callback
                     });
@@ -54,8 +58,8 @@ let processData = (page, maxPerPage, totalPages, payload, done)=> {
             async.series(asyncAnnotationTasks [page], (err5, res5)=>{
             //async.parallel(asyncAnnotationTasks [page], (err5, res5)=>{
                 //console.log(asyncEnrichmentTasks);
-                async.series(asyncEnrichmentTasks [page], (err6, res6)=>{
-                //async.parallel(asyncEnrichmentTasks [page], (err6, res6)=>{
+                //async.series(asyncEnrichmentTasks [page], (err6, res6)=>{
+                async.parallel(asyncEnrichmentTasks [page], (err6, res6)=>{
                     //console.log('parallel' + page, progressCounter, totalToBeAnnotated);
                     if(progressCounter === totalToBeAnnotated){
                         //end of annotation for this loop
