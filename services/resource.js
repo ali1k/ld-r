@@ -388,7 +388,7 @@ export default {
             }
             getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.annotateResource(endpointParameters, user, datasetURI, graphName, params.resource, propertyURI, params.annotations);
+                query = queryObject.getPrefixes() + queryObject.annotateResource(endpointParameters, user, datasetURI, graphName, params.resource, propertyURI, params.annotations, params.inNewDataset);
                 //console.log(query);
                 //build http uri
                 //send request
@@ -409,7 +409,7 @@ export default {
 
         } else if (resource === 'resource.newReactorConfig') {
             datasetURI = params.dataset;
-            createASampleReactorConfig(req.user, params.scope, datasetURI, params.resourceURI, params.I, params.options, (res)=>{
+            createASampleReactorConfig(req.user, params.scope, datasetURI, params.resourceURI, params.propertyURI, params.options, (res)=>{
                 callback(null, {datasetURI: configDatasetURI[0], resourceURI: res, redirect: params.redirect});
             });
         }else if (resource === 'resource.newServerConfig') {

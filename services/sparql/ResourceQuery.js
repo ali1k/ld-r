@@ -98,7 +98,7 @@ class ResourceQuery{
         `;
         return this.query;
     }
-    annotateResource(endpointParameters, user, datasetURI, graphName, resourceURI, propertyURI, annotations) {
+    annotateResource(endpointParameters, user, datasetURI, graphName, resourceURI, propertyURI, annotations, inNewDataset) {
         //todo: consider different value types
         let self = this;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
@@ -114,6 +114,11 @@ class ResourceQuery{
         let propSTR = '';
         if(propertyURI){
             propSTR = `ldr:property <${propertyURI}> ;`;
+        }
+        let newDSt = '';
+        //add more data if it is stored in a different dataset than the original one
+        if(inNewDataset){
+            newDSt = `<${resourceURI}> a  ldr:AnnotatedResource .`;
         }
         let annotatedByURI = self.createDynamicURI(datasetURI, 'dbspotlight'+'_'+Math.floor((Math.random() * 1000) + 1)+'_');
         annotations.forEach((annotation, index)=>{
@@ -153,6 +158,7 @@ class ResourceQuery{
         INSERT {
             ${gStart}
                 <${resourceURI}> ldr:annotatedBy  <${annotatedByURI}> .
+                ${newDSt}
                 <${annotatedByURI}> ${userSt} ldr:createdOn "${currentDate}"^^xsd:dateTime ; ldr:property <${propertyURI}> ; ldr:API "DBpedia Spotlight" .
                 ${mainAnnSt}
                 ${annotationsSTR}
