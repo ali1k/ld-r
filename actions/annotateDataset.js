@@ -19,10 +19,10 @@ export default function annotateDataset(context, payload, done) {
     let progressCounter = 0;
     context.executeAction(countTotalResourcesWithProp, payload, (err0, res0)=>{
         context.executeAction(countAnnotatedResourcesWithProp, {
-            id: payload.id,
+            id: payload.storingDataset ? payload.storingDataset : payload.id,
             resourceType: payload.resourceType,
             propertyURI: payload.propertyURI,
-            inNewDataset: payload.storingDataset ? 1 : 0
+            inNewDataset: payload.storingDataset ? payload.storingDataset : 0
         }, (err1, res1)=>{
             if(payload.storingDataset){
                 //create a new config if set
@@ -38,7 +38,7 @@ export default function annotateDataset(context, payload, done) {
             }
             totalToBeAnnotated = parseInt(res0.total) - parseInt(res1.annotated);
             totalPages = Math.ceil(totalToBeAnnotated / maxPerPage);
-            //console.log(res1.annotated,res0.total, totalPages);
+            //console.log(res1.annotated, res0.total, totalPages);
             //stop if all are annotated
             if(!totalPages){
                 done();
@@ -52,7 +52,7 @@ export default function annotateDataset(context, payload, done) {
                     propertyURI: payload.propertyURI,
                     maxOnPage: maxPerPage,
                     page: page,
-                    inNewDataset: payload.storingDataset ? 1 : 0
+                    inNewDataset: payload.storingDataset ? payload.storingDataset : 0
                 }, (err2, res2)=>{
                     //console.log('getDatasetResourcePropValues', page, res2);
                     asyncTasks [page] = [];
@@ -71,7 +71,7 @@ export default function annotateDataset(context, payload, done) {
                                     resource: res3.id,
                                     property: res2.propertyURI,
                                     annotations: res3.tags,
-                                    inNewDataset: payload.storingDataset ? 1 : 0
+                                    inNewDataset: payload.storingDataset ? payload.storingDataset : 0
                                 }, (err4, res4)=>{
                                     //console.log('createResourceAnnotation', res4, resource.ov, progressCounter+1);
                                     acallback(resource.r); //callback

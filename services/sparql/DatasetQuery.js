@@ -164,9 +164,19 @@ class DatasetQuery{
                 ?annotationD ldr:property <${propertyURI}> .
             }
         `;
+        let filterStNew = '';
         //do not care about already annotated ones if annotations are stored in a new dataset
         if(inNewDataset){
             filterSt = '';
+            //we assume new dataset is the same as its graph
+            filterStNew = `
+                GRAPH <${inNewDataset}> {
+                    filter not exists {
+                        ?resource ldr:annotatedBy ?annotationD .
+                        ?annotationD ldr:property <${propertyURI}> .
+                    }
+                }
+            `;
         }
         this.query = `
         SELECT DISTINCT ?resource ?objectValue WHERE {
@@ -175,6 +185,7 @@ class DatasetQuery{
                 ?resource <${propertyURI}> ?objectValue .
                 ${filterSt}
             ${gEnd}
+            ${filterStNew}
         }
         LIMIT ${limit} OFFSET ${offset}
         `;
