@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {navigateAction} from 'fluxible-router';
 import {connectToStores} from 'fluxible-addons-react';
-import {enableAuthentication, defaultDatasetURI, enableAddingNewDatasets} from '../configs/general';
+import {enableAuthentication, defaultDatasetURI, enableAddingNewDatasets, enableDatasetAnnotation} from '../configs/general';
 import DatasetsStore from '../stores/DatasetsStore';
 import URIUtil from './utils/URIUtil';
 
@@ -38,6 +38,8 @@ class Datasets extends React.Component {
         let color = 'black';
         let user = this.context.getUser();
         let createDatasetDIV = '';
+        let annotateDatasetDIV = '';
+        let datasetActionsDIV = '';
         let info = <div className="ui blue message">
                         The list contains only the datasets for which at least one <b>config scope</b> is found!
                    </div>;
@@ -46,15 +48,23 @@ class Datasets extends React.Component {
             output = <div className="ui warning message"><div className="header"> Please <a href="/register">Register</a> or <a href="/login">Login</a> to see the datasets.</div></div>;
         }else{
             if(enableAddingNewDatasets){
-                createDatasetDIV = <div className="ui list">
-                    <div className="item">
+                createDatasetDIV = <div className="item">
                         <div  className="medium ui basic icon labeled button" onClick={this.handleCreateDataset.bind(this)}>
                             <i className="cubes square large blue icon "></i> <i className="add black icon"></i>Add a New Dataset
-                            </div>
                         </div>
-                    <br/>
                  </div>;
             }
+            if(enableDatasetAnnotation){
+                annotateDatasetDIV = <div className="item">
+                        <a  className="medium ui basic icon labeled button" href="/annotateDataset">
+                            <i className="cubes square large blue icon "></i> <i className="hashtag black icon"></i>Annotate a Dataset
+                        </a>
+                </div>;
+            }
+            datasetActionsDIV = <div className="ui horizontal divided list">
+                {createDatasetDIV} {annotateDatasetDIV}
+                <br/>
+            </div>;
             if(!dss.length){
                 if(defaultDatasetURI[0]){
                     output = <div className="ui item" key={defaultDatasetURI[0]}> <div className="content"> <i className="ui blue icon cubes"></i> <a href={'/dataset/1/' + encodeURIComponent(defaultDatasetURI[0])} title="go to resource list">{defaultDatasetURI[0]}</a> <i className="ui green flag icon" title="default dataset"></i> </div> </div>;
@@ -98,7 +108,7 @@ class Datasets extends React.Component {
                         </div>
                     </div>
                     <div className= "ui bottom attached">
-                        {createDatasetDIV}
+                        {datasetActionsDIV}
                     </div>
                     {dss.length ?
                     <div className="ui grey message form">
