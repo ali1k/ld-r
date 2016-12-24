@@ -389,7 +389,7 @@ export default {
             getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 query = queryObject.getPrefixes() + queryObject.annotateResource(endpointParameters, user, datasetURI, graphName, params.resource, propertyURI, params.annotations);
-                console.log(query);
+                //console.log(query);
                 //build http uri
                 //send request
                 HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
