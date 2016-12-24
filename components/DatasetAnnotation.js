@@ -35,8 +35,8 @@ class DatasetAnnotation extends React.Component {
         }
         tags.sort(this.compareObjProps);
         //limit it to 500
-        if(tags.length>500){
-            tags = tags.slice(0, 500);
+        if(tags.length>2000){
+            tags = tags.slice(0, 2000);
         }
         return tags;
     }
@@ -155,12 +155,12 @@ class DatasetAnnotation extends React.Component {
                 </div>
                 { (this.props.DatasetAnnotationStore.stats.annotated && this.props.DatasetAnnotationStore.stats.annotated===this.props.DatasetAnnotationStore.stats.total) ?
                     <Progress percent={100} progress success>
-                        Annotated {this.props.DatasetAnnotationStore.stats.annotated}/{this.props.DatasetAnnotationStore.stats.total} items
+                        Enriched {this.props.DatasetAnnotationStore.stats.annotated} out of {this.props.DatasetAnnotationStore.stats.total} items
                     </Progress>
                     :
                     <div>
                         <Progress percent={this.props.DatasetAnnotationStore.stats.annotated ? Math.floor((this.props.DatasetAnnotationStore.stats.annotated / this.props.DatasetAnnotationStore.stats.total) * 100) : 0} progress active color='blue'>
-                            Annotating {this.props.DatasetAnnotationStore.stats.annotated}/{this.props.DatasetAnnotationStore.stats.total} items <a className="ui button mini circular" onClick={this.handleAnnotateDataset.bind(this)}><i className="ui icon blue refresh"></i> refresh</a>
+                            Enriched {this.props.DatasetAnnotationStore.stats.annotated} out of {this.props.DatasetAnnotationStore.stats.total} items <a className="ui button mini circular" onClick={this.handleAnnotateDataset.bind(this)}><i className="ui icon blue refresh"></i> refresh</a>
                         </Progress>
                         <div className='ui segment'>
                             {this.props.DatasetAnnotationStore.currentText}

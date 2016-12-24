@@ -8,6 +8,7 @@ import createResourceAnnotation from './createResourceAnnotation';
 import createNewReactorConfig from './createNewReactorConfig';
 
 let processData = (page, maxPerPage, totalPages, payload, done)=> {
+    //console.log('processing', page, maxPerPage, totalPages, payload);
     context.executeAction(getDatasetResourcePropValues, {
         id: payload.id,
         resourceType: payload.resourceType,
@@ -17,45 +18,70 @@ let processData = (page, maxPerPage, totalPages, payload, done)=> {
         inNewDataset: payload.storingDataset ? payload.storingDataset : 0
     }, (err2, res2)=>{
         //console.log('getDatasetResourcePropValues', page, res2);
-        asyncTasks [page] = [];
-        res2.resources.forEach((resource)=>{
-            asyncTasks [page].push((acallback)=>{
-                //annotation progress
-                progressCounter++;
-                context.executeAction(annotateText, {
-                    query: resource.ov,
-                    id: resource.r
-                }, (err3, res3)=>{
-                    //console.log('annotateText', resource.ov, res3);
-                    context.executeAction(createResourceAnnotation, {
-                        //it can store annotations in a different dataset if set
-                        dataset: payload.storingDataset ? payload.storingDataset : res2.datasetURI,
-                        resource: res3.id,
-                        property: res2.propertyURI,
-                        annotations: res3.tags,
-                        inNewDataset: payload.storingDataset ? payload.storingDataset : 0
-                    }, (err4, res4)=>{
-                        //console.log('createResourceAnnotation', res4, resource.ov, progressCounter+1);
-                        acallback(resource.r); //callback
+        asyncAnnotationTasks [page] = [];
+        asyncEnrichmentTasks [page] = [];
+        if(res2.resources && res2.resources.length){
+            res2.resources.forEach((resource)=>{
+                asyncAnnotationTasks [page].push((acallback)=>{
+                    //annotation progress
+                    progressCounter++;
+                    context.executeAction(annotateText, {
+                        query: resource.ov,
+                        id: resource.r
+                    }, (err3, res3)=>{
+                        //console.log('annotateText', resource.ov, res3);
+                        //create a queue for enrichment
+                        asyncEnrichmentTasks [page].push((ecallback)=>{
+                            context.executeAction(createResourceAnnotation, {
+                                //it can store annotations in a different dataset if set
+                                dataset: payload.storingDataset ? payload.storingDataset : res2.datasetURI,
+                                resource: res3.id,
+                                property: res2.propertyURI,
+                                annotations: res3.tags,
+                                inNewDataset: payload.storingDataset ? payload.storingDataset : 0
+                            }, (err4, res4)=>{
+                                //console.log('createResourceAnnotation', res4, resource.ov, progressCounter+1);
+                                ecallback(null, res4);
+                            });
+                        });
+                        acallback(null, resource.r); //callback
                     });
                 });
             });
-        });
-        //run tasks async: todo: increase parallel requests to dbpedia sptlight
-        async.parallel(asyncTasks [page], (res5)=>{
-            //console.log('parallel' + page, progressCounter, totalToBeAnnotated);
+        }
+        if(asyncAnnotationTasks [page].length){
+            //run tasks async: todo: increase parallel requests to dbpedia sptlight?
+            async.series(asyncAnnotationTasks [page], (err5, res5)=>{
+            //async.parallel(asyncAnnotationTasks [page], (err5, res5)=>{
+                //console.log(asyncEnrichmentTasks);
+                async.series(asyncEnrichmentTasks [page], (err6, res6)=>{
+                //async.parallel(asyncEnrichmentTasks [page], (err6, res6)=>{
+                    //console.log('parallel' + page, progressCounter, totalToBeAnnotated);
+                    if(progressCounter === totalToBeAnnotated){
+                        //end of annotation for this loop
+                        done();
+                    }
+                    //console.log('next loop?', page , totalPages);
+                    if(page < totalPages){
+                        processData(page+1, maxPerPage, totalPages, payload, done);
+                    }
+                });
+            });
+        }else{
             if(progressCounter === totalToBeAnnotated){
                 //end of annotation for this loop
                 done();
             }
+            //console.log('next loop?', page , totalPages);
             if(page < totalPages){
                 processData(page+1, maxPerPage, totalPages, payload, done);
             }
-        });
+        }
     });
 }
 let totalPages = 0;
-let asyncTasks = {};
+let asyncAnnotationTasks = {};
+let asyncEnrichmentTasks = {};
 let totalToBeAnnotated = 0;
 let progressCounter = 0;
 let maxPerPage = 10;
