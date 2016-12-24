@@ -5,7 +5,8 @@ module.exports = {
             {title: 'ldr:FacetsConfig'},
             {title: 'ldr:ReactorConfig'},
             {title: 'ldr:ServerConfig'},
-            {title: 'ldr:FacetsPropertyConfig'}
+            {title: 'ldr:FacetsPropertyConfig'},
+            {title: 'ldr:AnnotatedResource'}
         ],
         ldrProperties: [
             {title: 'ldr:config'},
@@ -19,6 +20,11 @@ module.exports = {
             {title: 'ldr:host'},
             {title: 'ldr:port'},
             {title: 'ldr:path'},
+            {title: 'ldr:annotatedBy'},
+            {title: 'ldr:annotations'},
+            {title: 'ldr:surfaceForm'},
+            {title: 'ldr:offser'},
+            {title: 'ldr:uri'},
             {title: 'ldr:graphName'},
             {title: 'ldr:useReasoning'},
             {title: 'ldr:datasetReactor'},
