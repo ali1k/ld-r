@@ -7,16 +7,63 @@ import annotateText from './annotateText';
 import createResourceAnnotation from './createResourceAnnotation';
 import createNewReactorConfig from './createNewReactorConfig';
 
+let processData = (page, maxPerPage, totalPages, payload, done)=> {
+    context.executeAction(getDatasetResourcePropValues, {
+        id: payload.id,
+        resourceType: payload.resourceType,
+        propertyURI: payload.propertyURI,
+        maxOnPage: maxPerPage,
+        page: page,
+        inNewDataset: payload.storingDataset ? payload.storingDataset : 0
+    }, (err2, res2)=>{
+        //console.log('getDatasetResourcePropValues', page, res2);
+        asyncTasks [page] = [];
+        res2.resources.forEach((resource)=>{
+            asyncTasks [page].push((acallback)=>{
+                //annotation progress
+                progressCounter++;
+                context.executeAction(annotateText, {
+                    query: resource.ov,
+                    id: resource.r
+                }, (err3, res3)=>{
+                    //console.log('annotateText', resource.ov, res3);
+                    context.executeAction(createResourceAnnotation, {
+                        //it can store annotations in a different dataset if set
+                        dataset: payload.storingDataset ? payload.storingDataset : res2.datasetURI,
+                        resource: res3.id,
+                        property: res2.propertyURI,
+                        annotations: res3.tags,
+                        inNewDataset: payload.storingDataset ? payload.storingDataset : 0
+                    }, (err4, res4)=>{
+                        //console.log('createResourceAnnotation', res4, resource.ov, progressCounter+1);
+                        acallback(resource.r); //callback
+                    });
+                });
+            });
+        });
+        //run tasks async: todo: increase parallel requests to dbpedia sptlight
+        async.parallel(asyncTasks [page], (res5)=>{
+            //console.log('parallel' + page, progressCounter, totalToBeAnnotated);
+            if(progressCounter === totalToBeAnnotated){
+                //end of annotation for this loop
+                done();
+            }
+            if(page < totalPages){
+                processData(page+1, maxPerPage, totalPages, payload, done);
+            }
+        });
+    });
+}
+let totalPages = 0;
+let asyncTasks = {};
+let totalToBeAnnotated = 0;
+let progressCounter = 0;
 let maxPerPage = 10;
 export default function annotateDataset(context, payload, done) {
     if(payload.maxPerPage){
         maxPerPage = payload.maxPerPage;
     }
     //get the number of annotated/all resource
-    let totalPages = 0;
-    let asyncTasks = {};
-    let totalToBeAnnotated = 0;
-    let progressCounter = 0;
     context.executeAction(countTotalResourcesWithProp, payload, (err0, res0)=>{
         context.executeAction(countAnnotatedResourcesWithProp, {
             id: payload.storingDataset ? payload.storingDataset : payload.id,
@@ -44,52 +91,8 @@ export default function annotateDataset(context, payload, done) {
                 done();
                 return 0;
             }
-            //get all the resource/text values to annotate
-            for (let page = 1; page <= totalPages; page++) {
-                context.executeAction(getDatasetResourcePropValues, {
-                    id: payload.id,
-                    resourceType: payload.resourceType,
-                    propertyURI: payload.propertyURI,
-                    maxOnPage: maxPerPage,
-                    page: page,
-                    inNewDataset: payload.storingDataset ? payload.storingDataset : 0
-                }, (err2, res2)=>{
-                    //console.log('getDatasetResourcePropValues', page, res2);
-                    asyncTasks [page] = [];
-                    res2.resources.forEach((resource)=>{
-                        asyncTasks [page].push((acallback)=>{
-                            context.executeAction(annotateText, {
-                                query: resource.ov,
-                                id: resource.r
-                            }, (err3, res3)=>{
-                                //console.log('annotateText', resource.ov, res3);
-                                //annotation progress
-                                progressCounter++;
-                                context.executeAction(createResourceAnnotation, {
-                                    //it can store annotations in a different dataset if set
-                                    dataset: payload.storingDataset ? payload.storingDataset : res2.datasetURI,
-                                    resource: res3.id,
-                                    property: res2.propertyURI,
-                                    annotations: res3.tags,
-                                    inNewDataset: payload.storingDataset ? payload.storingDataset : 0
-                                }, (err4, res4)=>{
-                                    //console.log('createResourceAnnotation', res4, resource.ov, progressCounter+1);
-                                    acallback(resource.r); //callback
-                                });
-                            });
-                        });
-                    });
-                    //run tasks async: todo: increase parallel requests to dbpedia sptlight
-                    async.parallel(asyncTasks [page], (res5)=>{
-                        //console.log('parallel' + page, progressCounter, totalToBeAnnotated);
-                        if(progressCounter === totalToBeAnnotated){
-                            //end of annotation for this loop
-                            done();
-                        }
-
-                    });
-                });
-            }
+            progressCounter = 0;
+            processData(1, maxPerPage, totalPages, payload, done);
         });
     });
 }
