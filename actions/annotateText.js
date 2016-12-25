@@ -1,7 +1,6 @@
 export default function annotateText(context, payload, done) {
     context.dispatch('LOADING_DATA', {});
     context.service.read('dbpedia.spotlight', payload, {timeout: 20 * 1000}, function (err, res) {
-        context.dispatch('UPDATE_ANNOTATION_TEXT', {currentText: payload.query, id: payload.id});
         if (err) {
             let error_res = {tags: [], id: payload.id, msg: err};
             context.dispatch('UPDATE_TEXT_ANNOTATION__FAILURE', error_res);

@@ -167,7 +167,7 @@ class DatasetAnnotation extends React.Component {
                             <a href={'/dataset/' + encodeURIComponent(this.state.datasetURI) + '/resource/'+encodeURIComponent(this.props.DatasetAnnotationStore.currentID)} target="_blank">{this.props.DatasetAnnotationStore.currentID}</a>
                           </div>
                           <div className="ui compact segment">
-                            <div dangerouslySetInnerHTML={{__html: this.props.DatasetAnnotationStore.currentText}} />
+                            <div dangerouslySetInnerHTML={{__html: this.props.DatasetAnnotationStore.annotatedText}} />
                           </div>
                         </div>
                     </div>
