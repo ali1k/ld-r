@@ -118,7 +118,7 @@ class DatasetAnnotation extends React.Component {
             return <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
         });
         let tagsDIV = self.generateTagArray(this.props.DatasetAnnotationStore.tags).map((node, index)=>{
-            return (<div className='item' key={index}><a href={node.uri} target="_blank">{node.text}</a> ({node.count})</div>);
+            return (<div className='ui basic label' key={index}><a href={node.uri} target="_blank">{node.text}</a> ({node.count})</div>);
         });
         if(!errorDIV){
             formDIV =
@@ -172,7 +172,7 @@ class DatasetAnnotation extends React.Component {
                         </div>
                     </div>
                 }
-                <div className='ui list'>
+                <div className='ui segment'>
                     {tagsDIV}
                 </div>
             </div>
