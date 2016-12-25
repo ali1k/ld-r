@@ -314,11 +314,12 @@ class DynamicConfigurator {
                                 ${userSt}
                                 ldr:list ?list ;
                                 ldr:config ?facetPConfig .
-                                OPTIONAL { ?config rdfs:label ?resource . }
+                                OPTIONAL { ?config rdfs:label ?label . }
                                 OPTIONAL { ?facetPConfig a ldr:FacetsPropertyConfig ;
                                               ldr:property ?configProperty ;
-                                              ?setting ?settingValue .}
-                                FILTER (?setting !=rdf:type && ?setting !=ldr:property)
+                                              ?setting ?settingValue .
+                                              FILTER (?setting !=rdf:type && ?setting !=ldr:property)
+                                }
                     }
                     UNION
                     {
@@ -326,11 +327,12 @@ class DynamicConfigurator {
                                 ldr:dataset <${datasetURI}> ;
                                 ldr:list ?list ;
                                 ldr:config ?facetPConfig .
-                                OPTIONAL { ?config rdfs:label ?resource . }
+                                OPTIONAL { ?config rdfs:label ?label . }
                                 OPTIONAL {?facetPConfig a ldr:FacetsPropertyConfig ;
                                               ldr:property ?configProperty ;
-                                              ?setting ?settingValue .}
-                                FILTER (?setting !=rdf:type && ?setting !=ldr:property)
+                                              ?setting ?settingValue .
+                                              FILTER (?setting !=rdf:type && ?setting !=ldr:property)
+                                }
                                 filter not exists {
                                     ?config ldr:createdBy ?user.
                                 }
@@ -346,17 +348,18 @@ class DynamicConfigurator {
                                 ldr:dataset <${datasetURI}> ;
                                 ldr:list ?list ;
                                 ldr:config ?facetPConfig .
-                                OPTIONAL { ?config rdfs:label ?resource . }
+                                OPTIONAL { ?config rdfs:label ?label . }
                                 OPTIONAL { ?facetPConfig a ldr:FacetsPropertyConfig ;
                                               ldr:property ?configProperty ;
-                                              ?setting ?settingValue . }
-                                FILTER (?setting !=rdf:type && ?setting !=ldr:property)
+                                              ?setting ?settingValue .
+                                          FILTER (?setting !=rdf:type && ?setting !=ldr:property)
+                                }
                     ${graphEnd}
                 }
                 `;
             }
             //send request
-            //console.log(prefixes + query);
+            console.log(prefixes + query);
             let self = this;
             rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                 config = self.parseFacetsConfigs(config, datasetURI, res);
