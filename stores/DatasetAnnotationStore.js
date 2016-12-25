@@ -5,6 +5,7 @@ class DatasetAnnotationStore extends BaseStore {
         super(dispatcher);
         this.stats = {annotated: 0, total: 0};
         this.currentText = '';
+        this.currentID = '';
         this.tags = {};
     }
     updateStatsAnnotated(payload) {
@@ -17,6 +18,7 @@ class DatasetAnnotationStore extends BaseStore {
     }
     updateText(payload) {
         this.currentText = payload.currentText;
+        this.currentID = payload.id;
         this.emitChange();
     }
     updateTags(payload) {
@@ -35,6 +37,7 @@ class DatasetAnnotationStore extends BaseStore {
         return {
             stats: this.stats,
             currentText: this.currentText,
+            currentID: this.currentID,
             tags: this.tags
         };
     }
@@ -44,6 +47,7 @@ class DatasetAnnotationStore extends BaseStore {
     rehydrate(state) {
         this.stats = state.stats;
         this.currentText = state.currentText;
+        this.currentID = state.currentID;
         this.tags = state.tags;
     }
 }
