@@ -1,6 +1,6 @@
 import React from 'react';
-import ObjectIViewer from '../ObjectIViewer';
-import URIUtil from '../../utils/URIUtil';
+import ObjectIViewer from '../../ObjectIViewer';
+import URIUtil from '../../../utils/URIUtil';
 import { Checkbox, Segment } from 'semantic-ui-react';
 
 class CheckboxItem extends React.Component {

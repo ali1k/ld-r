@@ -1,5 +1,6 @@
 import React from 'react';
 import URIUtil from '../../utils/URIUtil';
+import Tree from './common/Tree';
 import {child_parent} from '../../../data/dbpedia_en_taxonomy';
 
 class TaxonomyBrowser extends React.Component {
@@ -7,28 +8,25 @@ class TaxonomyBrowser extends React.Component {
         super(props);
     }
     buildTree(instances){
+        let self = this;
         let parent, label, tree = {};
         let found = 0;
         instances.forEach((instance)=>{
             //only considers dbpedia types
             if(instance.value.indexOf('dbpedia') !== -1){
                 label = URIUtil.getURILabel(instance.value);
-                tree[label]= {id: label, count: instance.total};
+                tree[label]= {selected: self.doesExist(instance.value), value: instance.value, id: label, count: instance.total, derived: 0};
             }
         });
-        let continueFlag = 1;
-        while(continueFlag){
+        let continueFlag = 0;
+        while(continueFlag !== 1){
+            continueFlag = 0;
             //find immediate parents first
             for(let prop in tree){
+                continueFlag++;
                 parent = child_parent[prop];
                 if(!parent){
                     parent = 'Thing';
-                }
-                //finish when only Thing can be returned
-                if(parent!== 'Thing'){
-                    continueFlag = 1;
-                }else{
-                    continueFlag = 0;
                 }
                 if(prop==='Thing' && parent==='Thing'){
                     //do nothing when child and parent are the same
@@ -39,13 +37,12 @@ class TaxonomyBrowser extends React.Component {
                         }else{
                             tree[parent].children = [tree[prop]];
                         }
-
                     }else{
-                        tree[parent]={active: 1, id: parent, count: 0, children:[tree[prop]]};
+                        tree[parent]={selected: false, value: '', active: 1, derived: 1, id: parent, count: 0, children:[tree[prop]]};
                     }
                 }
             }
-            if(!continueFlag){
+            if(continueFlag === 1){
                 break;
             }
             //merge duplicates
@@ -56,7 +53,7 @@ class TaxonomyBrowser extends React.Component {
                             tree[prop2].children.forEach((child, index)=>{
                                 if(child.id === prop){
                                     //found a match
-                                    tree[prop].count = tree[prop].count + child.count;
+                                    tree[prop].count = parseInt(tree[prop].count) + parseInt(child.count);
                                     tree[prop2].children[index] = tree[prop];
                                     tree[prop].active = 0;
                                 }
@@ -72,7 +69,7 @@ class TaxonomyBrowser extends React.Component {
                 }
             }
         }
-        console.log(tree);
+        return tree;
     }
     doesExist(value){
         let selected=[];
@@ -96,24 +93,10 @@ class TaxonomyBrowser extends React.Component {
         }
     }
     render() {
-        this.buildTree(this.props.instances);
-        let self = this;
-        let title, cls, selected = 0;
-        let tagsDIV = self.props.instances.map((node)=>{
-            if(self.doesExist(node.value)){
-                selected = 1;
-                cls = 'ui label blue';
-            }else{
-                selected = 0;
-                cls = 'ui label basic';
-            }
-            title = node.value;
-            title = URIUtil.getURILabel(title);
-            return (<a style={{marginTop: 1}} key={node.value} className={cls} onClick={self.selectTag.bind(this, node.value)}>{title} <span className="ui small blue circular label">{node.total}</span></a>);
-        });
+        let tree = this.buildTree(this.props.instances);
         return (
-            <div className="ui" ref="taxonomyBrowser">
-                {tagsDIV}
+            <div className="ui list" ref="taxonomyBrowser">
+                <Tree tree={tree.Thing} onNodeClick={this.selectTag.bind(this)}/>
             </div>
         );
     }

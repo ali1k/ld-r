@@ -1,5 +1,5 @@
 import React from 'react';
-import CheckboxItem from './CheckboxItem';
+import CheckboxItem from './common/CheckboxItem';
 
 class CheckListBrowser extends React.Component {
     constructor(props) {
