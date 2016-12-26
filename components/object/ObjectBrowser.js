@@ -3,6 +3,7 @@ import TagListBrowser from './browser/TagListBrowser';
 import CheckListBrowser from './browser/CheckListBrowser';
 import GeoListBrowser from './browser/GeoListBrowser';
 import BarChartBrowser from './browser/BarChartBrowser';
+import TaxonomyBrowser from './browser/TaxonomyBrowser';
 
 class ObjectBrowser extends React.Component {
     handleSelect(status, value) {
@@ -28,6 +29,9 @@ class ObjectBrowser extends React.Component {
             break;
             case 'BarChartBrowser':
                 browser = <BarChartBrowser selection={self.props.selection} expanded={self.props.expanded} datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;
+            break;
+            case 'TaxonomyBrowser':
+                browser = <TaxonomyBrowser selection={self.props.selection} expanded={self.props.expanded} datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;
             break;
             default:
                 browser = <CheckListBrowser selection={self.props.selection} expanded={self.props.expanded} datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;

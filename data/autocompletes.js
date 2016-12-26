@@ -103,6 +103,7 @@ module.exports = {
             {title: 'TagListBrowser'},
             {title: 'GeoListBrowser'},
             {title: 'CheckListBrowser'},
+            {title: 'TaxonomyBrowser'},
             {title: 'BarChartBrowser'}
         ],
         classes: [
