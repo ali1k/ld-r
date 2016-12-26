@@ -359,7 +359,7 @@ class DynamicConfigurator {
                 `;
             }
             //send request
-            console.log(prefixes + query);
+            //console.log(prefixes + query);
             let self = this;
             rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                 config = self.parseFacetsConfigs(config, datasetURI, res);
