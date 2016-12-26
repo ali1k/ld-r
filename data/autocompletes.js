@@ -48,6 +48,7 @@ module.exports = {
             {title: 'ldr:mapHeight'},
             {title: 'ldr:multiColor'},
             {title: 'ldr:isHidden'},
+            {title: 'ldr:hasNumericValues'},
             {title: 'ldr:defaultValue'},
             {title: 'ldr:allowResourceClone'},
             {title: 'ldr:allowResourceNew'},

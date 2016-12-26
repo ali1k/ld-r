@@ -32,7 +32,14 @@ class BarChartBrowser extends React.Component {
             this.props.onCheck(1, data.title);
         }
     }
-    compareProps(a,b) {
+    comparePropsFloat(a,b) {
+        if (parseFloat(a.title) < parseFloat(b.title))
+            return -1;
+        if (parseFloat(a.title) > parseFloat(b.title))
+            return 1;
+        return 0;
+    }
+    comparePropsString(a,b) {
         if (a.title < b.title)
             return -1;
         if (a.title > b.title)
@@ -45,7 +52,11 @@ class BarChartBrowser extends React.Component {
         self.props.instances.forEach((node)=> {
             data.push({title: node.value, total: parseFloat(node.total), isSelected: self.doesExist(node.value)});
         })
-        data.sort(this.compareProps);
+        if(self.props.config && self.props.config.hasNumericValues){
+            data.sort(this.comparePropsFloat);
+        }else{
+            data.sort(this.comparePropsString);
+        }
         //todo: change width/height on expansion
         let width = 230;
         let height = 180;
