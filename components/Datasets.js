@@ -32,6 +32,13 @@ class Datasets extends React.Component {
             });
         }
     }
+    comparePropsFloat(a,b) {
+        if (parseFloat(a.position) < parseFloat(b.position))
+            return -1;
+        if (parseFloat(a.position) > parseFloat(b.position))
+            return 1;
+        return 0;
+    }
     render() {
         let self = this;
         let optionsList, output ='', outputDSS;
@@ -44,6 +51,8 @@ class Datasets extends React.Component {
                         The list contains only the datasets for which at least one <b>config scope</b> is found!
                    </div>;
         let dss = this.props.DatasetsStore.datasetsList;
+        //sort by position
+        dss.sort(self.comparePropsFloat);
         if(enableAuthentication && !user){
             output = <div className="ui warning message"><div className="header"> Please <a href="/register">Register</a> or <a href="/login">Login</a> to see the datasets.</div></div>;
         }else{
