@@ -25,6 +25,7 @@ module.exports = {
             {title: 'ldr:surfaceForm'},
             {title: 'ldr:offser'},
             {title: 'ldr:uri'},
+            {title: 'ldr:position'},
             {title: 'ldr:graphName'},
             {title: 'ldr:useReasoning'},
             {title: 'ldr:datasetReactor'},

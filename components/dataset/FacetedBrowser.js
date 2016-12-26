@@ -46,6 +46,13 @@ class FacetedBrowser extends React.Component {
             return w;
         });
     }
+    comparePropsFloat(a,b) {
+        if (parseFloat(a.position) < parseFloat(b.position))
+            return -1;
+        if (parseFloat(a.position) > parseFloat(b.position))
+            return 1;
+        return 0;
+    }
     getPropertyConfig(datasetURI, propertyURI){
         let cnf = this.props.FacetedBrowserStore.config;
         return cnf.config[propertyURI];
@@ -58,7 +65,9 @@ class FacetedBrowser extends React.Component {
         if(cnf.list){
             cnf.list.forEach(function(el) {
                 propConfig = self.getPropertyConfig(datasetURI, el);
-                properties.push({label: (propConfig ? (propConfig.label ? propConfig.label : self.getPropertyLabel(el)) : self.getPropertyLabel(el)), value: el, valueType: 'uri'});
+                properties.push({label: (propConfig ? (propConfig.label ? propConfig.label : self.getPropertyLabel(el)) : self.getPropertyLabel(el)), value: el, valueType: 'uri', position: (propConfig && propConfig.position) ? propConfig.position : 0});
+                //apply ordering if in config
+                properties.sort(self.comparePropsFloat);
             });
         }
         return properties;
