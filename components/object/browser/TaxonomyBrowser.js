@@ -53,7 +53,7 @@ class TaxonomyBrowser extends React.Component {
                             tree[prop2].children.forEach((child, index)=>{
                                 if(child.id === prop){
                                     //found a match
-                                    tree[prop].count = parseInt(tree[prop].count) + parseInt(child.count);
+                                    //tree[prop].count = parseInt(tree[prop].count) + parseInt(child.count);
                                     tree[prop2].children[index] = tree[prop];
                                     tree[prop].active = 0;
                                 }
