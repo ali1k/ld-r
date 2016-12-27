@@ -113,9 +113,21 @@ class DatasetAnnotation extends React.Component {
                 id: self.state.datasetURI,
                 resourceType: self.state.resourceType,
                 propertyURI: self.state.propertyURI,
-                storingDataset: self.state.storingDataset
+                storingDataset: self.state.storingDataset,
+                datasetLabel: self.findDatasetLabel(self.state.datasetURI)
             });
         }
+    }
+    findDatasetLabel(datasetURI) {
+        let dss = this.props.DatasetsStore.datasetsList;
+        let label = datasetURI;
+        dss.forEach((node)=>{
+            if(node.features && node.features.datasetLabel){
+                label = node.features.datasetLabel;
+                return label;
+            }
+        });
+        return label;
     }
     render() {
         let optionsList, dss = this.props.DatasetsStore.datasetsList;
@@ -132,7 +144,7 @@ class DatasetAnnotation extends React.Component {
             }
         }
         optionsList = dss.map(function(option, index) {
-            return <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
+            return <option key={index} value={(option.d)}> {(option.features && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
         });
         let tagsDIV = self.generateTagArray(this.props.DatasetAnnotationStore.tags).map((node, index)=>{
             return (<div className='ui basic label' key={index}><a href={node.uri} target="_blank">{node.text}</a> ({node.count})</div>);
@@ -166,7 +178,7 @@ class DatasetAnnotation extends React.Component {
             formDIV = '';
             progressDIV = <div>
                 <div className='ui list'>
-                    <div className='item'>Dataset: <b><a href={'/dataset/1/'+encodeURIComponent(this.state.datasetURI)} target="_blank">{this.state.datasetURI}</a></b> {!this.state.storingDataset ? '' : <span> -> <b><a href={'/dataset/1/'+encodeURIComponent(this.state.storingDataset)} target="_blank">{this.state.storingDataset}</a></b></span>} </div>
+                    <div className='item'>Dataset: <b><a href={'/dataset/1/'+encodeURIComponent(this.state.datasetURI)} target="_blank">{this.findDatasetLabel(this.state.datasetURI)}</a></b> {!this.state.storingDataset ? '' : <span> -> <b><a href={'/browse/'+encodeURIComponent(this.state.storingDataset)} target="_blank">[Annotated] {this.findDatasetLabel(this.state.datasetURI)}</a></b></span>} </div>
                     {!this.state.resourceType ? '' : <div className='item'>Resource Type: <b>{this.state.resourceType}</b></div>}
                     <div className='item'>Property used: <b>{this.state.propertyURI}</b></div>
                 </div>

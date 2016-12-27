@@ -6,6 +6,7 @@ import countTotalResourcesWithProp from './countTotalResourcesWithProp';
 import annotateText from './annotateText';
 import createResourceAnnotation from './createResourceAnnotation';
 import createNewReactorConfig from './createNewReactorConfig';
+import createASampleFacetsConfig from './createASampleFacetsConfig';
 
 let processData = (page, maxPerPage, totalPages, payload, done)=> {
     //console.log('processing', page, maxPerPage, totalPages, payload);
@@ -102,15 +103,24 @@ export default function annotateDataset(context, payload, done) {
             inNewDataset: payload.storingDataset ? payload.storingDataset : 0
         }, (err1, res1)=>{
             if(payload.storingDataset){
-                //create a new config if set
+                //create a new reactor config if set
                 context.executeAction(createNewReactorConfig, {
                     dataset: payload.storingDataset,
                     scope: 'D',
                     options: {
                         resourceFocusType: 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#AnnotatedResource',
-                        datasetLabel: 'Annotated ' + payload.id
+                        datasetLabel: '[Annotated] ' + payload.datasetLabel
                     }
                 }, (err11, res11)=>{
+                });
+                //create a new facets config if set
+                context.executeAction(createASampleFacetsConfig, {
+                    dataset: payload.storingDataset,
+                    options: {
+                        annotationFacets: 1,
+                        datasetLabel: '[Annotated] ' + payload.datasetLabel
+                    }
+                }, (err12, res12)=>{
                 });
             }
             totalToBeAnnotated = parseInt(res0.total) - parseInt(res1.annotated);
