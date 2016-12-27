@@ -28,6 +28,22 @@ class DatasetAnnotation extends React.Component {
             return -1;
         return 0;
     }
+    compareProps(a,b) {
+        if (parseFloat(a.position) < parseFloat(b.position))
+            return -1;
+        if (parseFloat(a.position) > parseFloat(b.position))
+            return 1;
+        //sort by alphabets
+        if(a.features && b.features && a.features.datasetLabel && b.features.datasetLabel){
+            if(a.features.datasetLabel < b.features.datasetLabel){
+                return -1;
+            }
+            if(a.features.datasetLabel > b.features.datasetLabel){
+                return 1;
+            }
+        }
+        return 0;
+    }
     generateTagArray(obj){
         let tags = [];
         for(let prop in obj){
@@ -103,6 +119,7 @@ class DatasetAnnotation extends React.Component {
     }
     render() {
         let optionsList, dss = this.props.DatasetsStore.datasetsList;
+        dss.sort(this.compareProps);
         let self = this, errorDIV='', formDIV='';
         let user = this.context.getUser();
         if(enableAuthentication && !user){
