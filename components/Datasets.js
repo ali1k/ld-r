@@ -32,11 +32,20 @@ class Datasets extends React.Component {
             });
         }
     }
-    comparePropsFloat(a,b) {
+    compareProps(a,b) {
         if (parseFloat(a.position) < parseFloat(b.position))
             return -1;
         if (parseFloat(a.position) > parseFloat(b.position))
             return 1;
+        //sort by alphabets    
+        if(a.datasetLabel && b.datasetLabel){
+            if(a.datasetLabel < b.datasetLabel){
+                return -1;
+            }
+            if(a.datasetLabel > b.datasetLabel){
+                return 1;
+            }
+        }
         return 0;
     }
     render() {
@@ -52,7 +61,7 @@ class Datasets extends React.Component {
                    </div>;
         let dss = this.props.DatasetsStore.datasetsList;
         //sort by position
-        dss.sort(self.comparePropsFloat);
+        dss.sort(self.compareProps);
         if(enableAuthentication && !user){
             output = <div className="ui warning message"><div className="header"> Please <a href="/register">Register</a> or <a href="/login">Login</a> to see the datasets.</div></div>;
         }else{
