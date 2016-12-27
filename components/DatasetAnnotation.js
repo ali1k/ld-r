@@ -122,7 +122,7 @@ class DatasetAnnotation extends React.Component {
         let dss = this.props.DatasetsStore.datasetsList;
         let label = datasetURI;
         dss.forEach((node)=>{
-            if(node.features && node.features.datasetLabel){
+            if(node.features && node.features.datasetLabel && node.d === datasetURI){
                 label = node.features.datasetLabel;
                 return label;
             }
