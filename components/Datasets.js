@@ -137,13 +137,6 @@ class Datasets extends React.Component {
                         <button className="fluid ui primary button" onClick={this.displayResource.bind(this)}>Display resource in the selected dataset</button>
                     </div>
                      : ''}
-                     <div className="ui center aligned teal message form">
-
-                         <a className="ui big fluid image basic" href="/lotus">
-                           <img className="ui right spaced avatar image" style={{width: 50}} src="http://lotus.lodlaundromat.org/teal-lotus.svg" />
-                           Search on Linked Open Data
-                         </a>
-                     </div>
                 </div>
             </div>
         );
