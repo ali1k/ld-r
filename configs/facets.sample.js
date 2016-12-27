@@ -18,18 +18,22 @@ export default {
             ],
             config: {
                 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
-                    objectBrowser: ['TagListBrowser']
+                    objectBrowser: ['TagListBrowser'],
+                    position: 1
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#dataset': {
-                    shortenURI: 0
+                    shortenURI: 0,
+                    position: 3
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resource': {
                     shortenURI: 0,
-                    objectIViewer: ['PrefixBasedView']
+                    objectIViewer: ['PrefixBasedView'],
+                    position: 4
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#property': {
                     shortenURI: 0,
-                    objectIViewer: ['PrefixBasedView']
+                    objectIViewer: ['PrefixBasedView'],
+                    position: 5
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#scope': {
                     objectIViewer: ['BasicOptionView'],
@@ -41,7 +45,14 @@ export default {
                         {label: 'Dataset-Property', value: 'DP'},
                         {label: 'Resource-Property', value: 'RP'},
                         {label: 'Dataset-Resource-Property', value: 'DRP'},
-                    ]
+                    ],
+                    position: 2
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#endpointType': {
+                    position: 6
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy': {
+                    position: 7
                 }
             }
         },
