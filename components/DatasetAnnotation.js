@@ -29,12 +29,12 @@ class DatasetAnnotation extends React.Component {
         return 0;
     }
     compareProps(a,b) {
-        if (parseFloat(a.position) < parseFloat(b.position))
-            return -1;
-        if (parseFloat(a.position) > parseFloat(b.position))
-            return 1;
-        //sort by alphabets
-        if(a.features && b.features && a.features.datasetLabel && b.features.datasetLabel){
+        if(a.features && b.features){
+            if (parseFloat(a.features.position) < parseFloat(b.features.position))
+                return -1;
+            if (parseFloat(a.features.position) > parseFloat(b.features.position))
+                return 1;
+            //sort by alphabets
             if(a.features.datasetLabel < b.features.datasetLabel){
                 return -1;
             }
