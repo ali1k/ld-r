@@ -37,12 +37,12 @@ class Datasets extends React.Component {
             return -1;
         if (parseFloat(a.position) > parseFloat(b.position))
             return 1;
-        //sort by alphabets    
-        if(a.datasetLabel && b.datasetLabel){
-            if(a.datasetLabel < b.datasetLabel){
+        //sort by alphabets
+        if(a.features && b.features && a.features.datasetLabel && b.features.datasetLabel){
+            if(a.features.datasetLabel < b.features.datasetLabel){
                 return -1;
             }
-            if(a.datasetLabel > b.datasetLabel){
+            if(a.features.datasetLabel > b.features.datasetLabel){
                 return 1;
             }
         }
@@ -137,6 +137,13 @@ class Datasets extends React.Component {
                         <button className="fluid ui primary button" onClick={this.displayResource.bind(this)}>Display resource in the selected dataset</button>
                     </div>
                      : ''}
+                     <div className="ui center aligned teal message form">
+
+                         <a className="ui big fluid image basic" href="/lotus">
+                           <img className="ui right spaced avatar image" style={{width: 50}} src="http://lotus.lodlaundromat.org/teal-lotus.svg" />
+                           Search on Linked Open Data
+                         </a>
+                     </div>
                 </div>
             </div>
         );
