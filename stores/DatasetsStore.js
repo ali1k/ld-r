@@ -63,6 +63,9 @@ class DatasetsStore extends BaseStore {
 
         }
         for(let ds in tmp){
+            if(!tmp[ds].position){
+                tmp[ds].position = 0;
+            }
             out.push({d: ds, features: tmp[ds]});
         }
         return out;

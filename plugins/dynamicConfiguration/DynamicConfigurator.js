@@ -1239,8 +1239,6 @@ class DynamicConfigurator {
                 }
                 if(el.position && el.position.value){
                     dynamicReactorDS.dataset[el.dataset.value].position = parseInt(el.position.value);
-                }else{
-                    dynamicReactorDS.dataset[el.dataset.value].position = 0;
                 }
             }
 
