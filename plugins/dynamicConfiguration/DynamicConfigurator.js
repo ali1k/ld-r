@@ -35,7 +35,7 @@ class DynamicConfigurator {
             if(enableDynamicReactorConfiguration){
                 if(userSt){
                     query = `
-                    SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?position ?resourceFocusType WHERE {
+                    SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?position ?isHidden ?resourceFocusType WHERE {
                         ${graph}
                             {
                             ?config1 a ldr:ReactorConfig ;
@@ -44,6 +44,7 @@ class DynamicConfigurator {
                                     OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
                                     OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
                                     OPTIONAL { ?config1 ldr:position ?position . }
+                                    OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
                             }
                             UNION
@@ -53,6 +54,7 @@ class DynamicConfigurator {
                                     OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
                                     OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
                                     OPTIONAL { ?config1 ldr:position ?position . }
+                                    OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
                                     filter not exists {
                                         ?config1 ldr:createdBy ?user.
@@ -63,13 +65,14 @@ class DynamicConfigurator {
                     `;
                 }else{
                     query = `
-                    SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?position ?resourceFocusType WHERE {
+                    SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?position ?isHidden ?resourceFocusType WHERE {
                         ${graph}
                             ?config1 a ldr:ReactorConfig ;
                                     ldr:dataset ?dataset .
                                     OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
                                     OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
                                     OPTIONAL { ?config1 ldr:position ?position . }
+                                    OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
                         ${graphEnd}
                     }
@@ -111,7 +114,7 @@ class DynamicConfigurator {
             if(enableDynamicReactorConfiguration && enableDynamicFacetsConfiguration){
                 if(userSt){
                     query = `
-                    SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?position ?resourceFocusType WHERE { ${graph}
+                    SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?position ?isHidden ?resourceFocusType WHERE { ${graph}
                             {
                             ?config1 a ldr:ReactorConfig ;
                                     ${userSt}
@@ -119,6 +122,7 @@ class DynamicConfigurator {
                                     OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
                                     OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
                                     OPTIONAL { ?config1 ldr:position ?position . }
+                                    OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
                             }
                             UNION
@@ -134,6 +138,7 @@ class DynamicConfigurator {
                                     OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
                                     OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
                                     OPTIONAL { ?config1 ldr:position ?position . }
+                                    OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
                                     filter not exists {
                                         ?config1 ldr:createdBy ?user.
@@ -152,13 +157,14 @@ class DynamicConfigurator {
                     `;
                 }else{
                     query = `
-                    SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?position ?resourceFocusType WHERE { ${graph}
+                    SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?position ?isHidden ?resourceFocusType WHERE { ${graph}
                             {
                             ?config1 a ldr:ReactorConfig ;
                                     ldr:dataset ?dataset .
                                     OPTIONAL { ?config1 ldr:datasetLabel ?datasetLabel . }
                                     OPTIONAL { ?config1 ldr:readOnly ?readOnly . }
                                     OPTIONAL { ?config1 ldr:position ?position . }
+                                    OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
                             }
                             UNION
@@ -1239,6 +1245,9 @@ class DynamicConfigurator {
                 }
                 if(el.position && el.position.value){
                     dynamicReactorDS.dataset[el.dataset.value].position = parseInt(el.position.value);
+                }
+                if(el.isHidden && el.isHidden.value){
+                    dynamicReactorDS.dataset[el.dataset.value].isHidden = parseInt(el.isHidden.value);
                 }
             }
 
