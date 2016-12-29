@@ -66,7 +66,9 @@ class DatasetsStore extends BaseStore {
             if(!tmp[ds].position){
                 tmp[ds].position = 0;
             }
-            out.push({d: ds, features: tmp[ds]});
+            if(!tmp[ds].isHidden){
+                out.push({d: ds, features: tmp[ds]});
+            }
         }
         return out;
     }
