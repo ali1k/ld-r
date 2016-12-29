@@ -938,7 +938,7 @@ class DynamicConfigurator {
             if(options && options.annotationFacets){
                 annotationSt = ` ${graph} <${configURI}> ldr:list "https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#annotations->https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#uri->http://www.w3.org/1999/02/22-rdf-syntax-ns#type" , "https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#annotations->https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#surfaceForm" ; ldr:config  <http://ld-r.org/fpct${rnc}> , <http://ld-r.org/fpcs${rnc}>.
                 <http://ld-r.org/fpct${rnc}> a ldr:FacetsPropertyConfig ; ldr:label "Entity Types" ; rdfs:label "Entity Type Config" ; ldr:objectBrowser "TaxonomyBrowser" ; ldr:property "https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#annotations->https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#uri->http://www.w3.org/1999/02/22-rdf-syntax-ns#type" .
-                <http://ld-r.org/fpcs${rnc}> a ldr:FacetsPropertyConfig ; ldr:label "Tags" ; rdfs:label "Tags Config" ; ldr:property "https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#annotations->https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#surfaceForm" . ${graphEnd}
+                <http://ld-r.org/fpcs${rnc}> a ldr:FacetsPropertyConfig ; ldr:label "Tags" ; rdfs:label "Tags Config" ; ldr:objectBrowser "TagListBrowser" ; ldr:property "https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#annotations->https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#surfaceForm" . ${graphEnd}
                 `;
             }
             const query = `
