@@ -64,7 +64,7 @@ class ResourceList extends React.Component {
             }
         } else {
             let titleDIV = <div className="content">
-                                <NavLink routeName="resource" className="ui" href={'/dataset/' + g + '/resource/' + v}> <i className={icon}></i>{title}&nbsp;{cloneDIV}</NavLink>
+                                <NavLink routeName="resource" className="ui" href={'/dataset/' + g + '/resource/' + v}> <i className={icon}></i>{title}</NavLink>&nbsp;{cloneDIV}
                             </div>;
             if(this.props.config && this.props.config.resourceImageProperty){
                 return (
