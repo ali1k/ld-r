@@ -72,7 +72,11 @@ class FacetedBrowser extends React.Component {
         if(cnf.list){
             cnf.list.forEach(function(el) {
                 propConfig = self.getPropertyConfig(datasetURI, el);
-                if(propConfig && !propConfig.isHidden){
+                if(propConfig){
+                    if(!propConfig.isHidden){
+                        properties.push({label: (propConfig ? (propConfig.label ? propConfig.label : self.getPropertyLabel(el)) : self.getPropertyLabel(el)), value: el, valueType: 'uri', position: (propConfig && propConfig.position) ? propConfig.position : 0});
+                    }
+                }else{
                     properties.push({label: (propConfig ? (propConfig.label ? propConfig.label : self.getPropertyLabel(el)) : self.getPropertyLabel(el)), value: el, valueType: 'uri', position: (propConfig && propConfig.position) ? propConfig.position : 0});
                 }
             });

@@ -66,7 +66,6 @@ class FacetedBrowserStore extends BaseStore {
 
             }
         }
-
     }
     updateFacetResources(payload) {
         //for second level properties
