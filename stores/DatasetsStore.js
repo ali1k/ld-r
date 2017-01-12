@@ -12,6 +12,22 @@ class DatasetsStore extends BaseStore {
         this.datasetsList = this.mergeDatasets(payload.dynamicReactorDS, payload.dynamicFacetsDS, payload.staticReactorDS, payload.staticFacetsDS);
         this.emitChange();
     }
+    compareProps(a,b) {
+        if(a.features && b.features){
+            if (parseFloat(a.features.position) < parseFloat(b.features.position))
+                return -1;
+            if (parseFloat(a.features.position) > parseFloat(b.features.position))
+                return 1;
+            //sort by alphabets
+            if(a.features.datasetLabel < b.features.datasetLabel){
+                return -1;
+            }
+            if(a.features.datasetLabel > b.features.datasetLabel){
+                return 1;
+            }
+        }
+        return 0;
+    }
     mergeDatasets(dynamicReactorDS, dynamicFacetsDS, staticReactorDS, staticFacetsDS) {
         let out = [];
         let tmp = {};
@@ -70,6 +86,8 @@ class DatasetsStore extends BaseStore {
                 out.push({d: ds, features: tmp[ds]});
             }
         }
+        //sort by position and labels
+        out.sort(this.compareProps);
         return out;
     }
 
