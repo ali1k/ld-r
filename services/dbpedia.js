@@ -57,7 +57,7 @@ export default {
                 });
             }).catch(function (err) {
                 console.log('\n dbpedia.spotlight \n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
-                callback(null, {tags: [], id: params.id, query: params.query});
+                callback(null, {tags: [], id: params.id, query: params.query, error: 'spotlight service'});
             });
         }
     }
