@@ -94,7 +94,7 @@ class PrefixBasedInput extends React.Component {
         let tmp = uri.split('->');
         if(tmp.length > 1){
             tmp.forEach((v)=>{
-                if(v.split(':')[0]!=='http'){
+                if(v.split(':')[0]!=='http' && v.split(':')[0]!=='[http'){
                     out.push(v.replace(v.split(':')[0] + ':', list[v.split(':')[0]]));
                 }else{
                     out.push(v);
