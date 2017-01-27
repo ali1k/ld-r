@@ -167,7 +167,7 @@ class FacetQuery{
                 //---------
                 if(this.isMultiGraphFacet(key)){
                     //to support browsing mutiple graphs
-                    st = this.prepareMultiGraphQuery(endpointParameters, graphName, type, key, i, '');
+                    st = st + this.prepareMultiGraphQuery(endpointParameters, graphName, type, key, i, '');
                 }else{
                     st = st + '?s '+ this.filterPropertyPath(key) + ' ?v' + i + '. ';
                 }
@@ -256,6 +256,7 @@ class FacetQuery{
             ${gEnd}
         }
         `;
+        //console.log(this.query);
         return this.prefixes + this.query;
     }
     getSecondLevelPropertyValues(endpointParameters, graphName, searchTerm, rtconfig, prevSelection, limit, offset) {
