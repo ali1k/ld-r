@@ -44,7 +44,7 @@ class FacetQuery{
                 //todo: use dataset instead of graph: needs loading dunamic config
                 qs = qs + `
                 GRAPH <${tmp1[0]}> {
-                    ?vg${counter-1} ${self.filterPropertyPath(tmp1[1])} ?v${(counter === tmp0.length ? tindex : 'g' + counter)} .
+                    ?vg${tindex}${counter-1} ${self.filterPropertyPath(tmp1[1])} ?v${(counter === tmp0.length ? tindex : 'g' + tindex + counter)} .
                     ${(counter !== tmp0.length ? '' : gStart + filterSt + gEnd)}
                 }
                 ` ;
@@ -56,14 +56,14 @@ class FacetQuery{
                     qs = `
                     ${gStart}
                         ${self.makeExtraTypeFilters(endpointParameters, type)}
-                        ?s ${self.filterPropertyPath(part)} ?v${(counter === tmp0.length ? tindex : 'g'+counter)} .
+                        ?s ${self.filterPropertyPath(part)} ?v${(counter === tmp0.length ? tindex : 'g'+tindex+counter)} .
                         ${(counter !== tmp0.length ? '' : gStart + filterSt + gEnd)}
                     ${gEnd}
                     ` ;
                 }else{
                     qs = qs + `
                     ${gStart}
-                        ?vg${counter-1} ${self.filterPropertyPath(part)} ?v${(counter === tmp0.length ? tindex : 'g'+counter)} .
+                        ?vg${tindex}${counter-1} ${self.filterPropertyPath(part)} ?v${(counter === tmp0.length ? tindex : 'g'+tindex+counter)} .
                     ${gEnd}
                     ` ;
                 }
