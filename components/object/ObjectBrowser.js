@@ -1,4 +1,5 @@
 import React from 'react';
+import MasterBrowser from './browser/MasterBrowser';
 import TagListBrowser from './browser/TagListBrowser';
 import CheckListBrowser from './browser/CheckListBrowser';
 import GeoListBrowser from './browser/GeoListBrowser';
@@ -35,6 +36,10 @@ class ObjectBrowser extends React.Component {
             break;
             default:
                 browser = <CheckListBrowser selection={self.props.selection} expanded={self.props.expanded} datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;
+        }
+        //treat master facet different than normal ones
+        if(!self.props.spec.propertyURI){
+            browser = <MasterBrowser selection={self.props.selection} expanded={self.props.expanded} datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;
         }
         output = browser;
         return (
