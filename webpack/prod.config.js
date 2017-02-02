@@ -6,7 +6,7 @@ let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 let webpackConfig = {
     resolve: {
-        extensions: ['', '.js']
+        extensions: ['.js']
     },
     entry: {
         main: [
@@ -22,16 +22,25 @@ let webpackConfig = {
         filename: '[name].js'
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
-                loaders: [
-                    require.resolve('babel-loader')
-                ]
+                loader: 'babel-loader',
+                options: {
+                    presets: [
+                        ['es2015', { modules: false }]
+                    ]
+                }
             },
-            { test: /\.json$/, loader: 'json-loader'},
-            { test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css') }
+            {
+                test: /\.css$/,
+                loader: ExtractTextPlugin.extract({
+                    fallbackLoader: 'style-loader',
+                    loader: 'css-loader',
+                    publicPath: '/public/css/'
+                })
+            }
         ]
     },
     node: {
@@ -39,16 +48,19 @@ let webpackConfig = {
     },
     plugins: [
         // css files from the extract-text-plugin loader
-        new ExtractTextPlugin('../css/vendor.bundle.css'),
-
+        new ExtractTextPlugin({
+            filename: 'vendor.bundle.css',
+            disable: false,
+            allChunks: true
+        }),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify('production'),
                 BROWSER: JSON.stringify('true')
             }
         }),
-        new webpack.optimize.DedupePlugin(),
         new webpack.optimize.UglifyJsPlugin({
+            sourceMap: true,
             compress: {
                 warnings: false
             }
