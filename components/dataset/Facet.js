@@ -51,7 +51,16 @@ class Facet extends React.Component {
     }
     render() {
         let self = this;
-        let contentClasses = 'content', extraContentClasses='extra content', cardClasses = 'ui segment ' + (this.props.color ? this.props.color : 'blue');
+        //change header color of facet: Violet -> for property chains , Purple -> multigraphs
+        let defaultColor = 'blue';
+        if(this.props.spec.propertyURI.indexOf('->') !== -1){
+            defaultColor = 'violet';
+        }
+        if(this.props.spec.propertyURI.indexOf('->[') !== -1){
+            defaultColor = 'purple';
+        }
+        //-----------------------
+        let contentClasses = 'content', extraContentClasses='extra content', cardClasses = 'ui segment ' + (this.props.color ? this.props.color : defaultColor);
         if(this.state.verticalResized){
             contentClasses = contentClasses + ' hide-element';
             extraContentClasses = extraContentClasses + ' hide-element';
