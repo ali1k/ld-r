@@ -7,6 +7,7 @@ import createASampleFacetsConfig from '../../actions/createASampleFacetsConfig';
 import loadFacets from '../../actions/loadFacets';
 import ResourceList from './ResourceList';
 import ResourceListPager from './ResourceListPager';
+import YASQEViewer from '../object/viewer/individual/YASQEViewer';
 import URIUtil from '../utils/URIUtil';
 
 class FacetedBrowser extends React.Component {
@@ -286,7 +287,7 @@ class FacetedBrowser extends React.Component {
                                     </div>
                                     {dcnf.displayQueries ?
                                         <div className= "ui tertiary segment">
-                                            {this.props.FacetedBrowserStore.resourceQuery}
+                                            <YASQEViewer spec={{value: this.props.FacetedBrowserStore.resourceQuery}} />
                                        </div>
                                     : ''}
                                 </div>

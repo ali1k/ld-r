@@ -14,6 +14,7 @@ import BasicDateTimeView from './viewer/individual/BasicDateTimeView';
 import PrefixBasedView from './viewer/individual/PrefixBasedView';
 import ToggleView from './viewer/individual/ToggleView';
 import BasicMapView from './viewer/individual/BasicMapView';
+import YASQEViewer from './viewer/individual/YASQEViewer';
 
 class ObjectIViewer extends React.Component {
     render() {
@@ -56,6 +57,9 @@ class ObjectIViewer extends React.Component {
                 break;
             case 'BasicImageView':
                 viewer = <BasicImageView spec={this.props.spec} config={this.props.config}/>;
+                break;
+            case 'YASQEViewer':
+                viewer = <YASQEViewer spec={this.props.spec} config={this.props.config}/>;
                 break;
             case 'BasicMapView':
                 viewer = <BasicMapView spec={this.props.spec} config={this.props.config}/>;

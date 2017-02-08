@@ -1,6 +1,7 @@
 import React from 'react';
 import ResourceList from './ResourceList';
 import ResourceListPager from './ResourceListPager';
+import YASQEViewer from '../object/viewer/individual/YASQEViewer';
 import URIUtil from '../utils/URIUtil';
 class Dataset extends React.Component {
     constructor(props){
@@ -68,7 +69,7 @@ class Dataset extends React.Component {
                         </div>
                         {this.props.config && this.props.config.displayQueries ?
                             <div className= "ui tertiary segment">
-                                {this.props.resourceQuery}
+                                <YASQEViewer spec={{value: this.props.resourceQuery}} />
                            </div>
                         : ''}
                     </div>
