@@ -108,7 +108,7 @@ export default {
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
-                    callback(null, {datasetURI: datasetURI, graphName: '', facets: {}, total: 0, page: 1});
+                    callback(null, {datasetURI: datasetURI, graphName: '', facets: {}, total: 0, page: 1, resourceQuery: ''});
                 }else{
                     user = req.user;
                 }
@@ -138,7 +138,7 @@ export default {
                     //send request
                     rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                         let query2 = queryObject.getSecondLevelPropertyValues(endpointParameters, graphName, searchTerm, rftconfig, params.selection.prevSelection, maxOnPage, page);
-                         //console.log(query2);
+                        //console.log(query2);
                         rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query2, endpointParameters, outputFormat)), headers: headers}).then(function(res2){
                             callback(null, {
                                 datasetURI: datasetURI,
@@ -146,15 +146,16 @@ export default {
                                 resourceFocusType: rftconfig.type,
                                 page: page,
                                 facets: {items: utilObject.parseSecondLevelPropertyValues(user, datasetURI, res2)},
-                                total: utilObject.parseCountResourcesByType(res)
+                                total: utilObject.parseCountResourcesByType(res),
+                                resourceQuery: query2
                             });
                         }).catch(function (err2) {
                             console.log(err2);
-                            callback(null, {datasetURI: datasetURI, graphName: graphName, facets: {}, total: 0, page: 1});
+                            callback(null, {datasetURI: datasetURI, graphName: graphName, facets: {}, total: 0, page: 1, resourceQuery: query2});
                         });
                     }).catch(function (err) {
                         console.log(err);
-                        callback(null, {datasetURI: datasetURI, graphName: graphName, facets: {}, total: 0, page: 1});
+                        callback(null, {datasetURI: datasetURI, graphName: graphName, facets: {}, total: 0, page: 1, resourceQuery: ''});
                     });
                 });
             });

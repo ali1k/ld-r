@@ -13,7 +13,7 @@ const outputFormat = 'application/sparql-results+json';
 const headers = {'Accept': 'application/sparql-results+json'};
 let user;
 /*-----------------------------------*/
-let endpointParameters, datasetURI, dg, graphName, query, queryObject, utilObject, configurator, propertyURI;
+let endpointParameters, datasetURI, dg, graphName, query, query2, queryObject, utilObject, configurator, propertyURI;
 queryObject = new DatasetQuery();
 utilObject = new DatasetUtil();
 configurator = new Configurator();
@@ -27,7 +27,7 @@ export default {
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
-                    callback(null, {datasetURI: datasetURI, graphName: graphName, resources: [], page: params.page, config: rconfig});
+                    callback(null, {datasetURI: datasetURI, graphName: graphName, resources: [], page: params.page, config: rconfig, resourceQuery: ''});
                     return 0;
                 }else{
                     user = req.user;
@@ -46,20 +46,21 @@ export default {
                     let page = params.page ? params.page : 1;
                     let offset = (page - 1) * maxOnPage;
                     let searchTerm = params.searchTerm ? params.searchTerm : '';
-                    query = queryObject.getResourcesByType(endpointParameters, graphName, searchTerm,rconfig, maxOnPage, offset);
+                    query2 = queryObject.getResourcesByType(endpointParameters, graphName, searchTerm,rconfig, maxOnPage, offset);
                     //build http uri
                     //send request
-                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query2, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                         callback(null, {
                             datasetURI: datasetURI,
                             graphName: graphName,
                             resources: utilObject.parseResourcesByType(user, res, datasetURI),
                             page: page,
-                            config: rconfig
+                            config: rconfig,
+                            resourceQuery: query2
                         });
                     }).catch(function (err) {
                         console.log(err);
-                        callback(null, {datasetURI: datasetURI, graphName: graphName, resources: [], page: page, config: rconfig});
+                        callback(null, {datasetURI: datasetURI, graphName: graphName, resources: [], page: page, config: rconfig, resourceQuery: ''});
                     });
                 });
             });

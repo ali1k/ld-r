@@ -277,11 +277,18 @@ class FacetedBrowser extends React.Component {
                                 <h3 className="ui header">
                                     {this.props.FacetedBrowserStore.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.FacetedBrowserStore.datasetURI)}><span className="ui blue circular label">{this.state.searchMode ? this.addCommas(this.props.FacetedBrowserStore.resources.length) + '/' :''}{this.addCommas(this.props.FacetedBrowserStore.total)}</span></a> : ''} Resources {typeSt ? <span>of type{typeSt}</span>: ''} from {datasetTitle}
                                  </h3>
-                                <div className="ui segment top attached">
-                                    <ResourceList resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} OpenInNewTab={true} isBig={!showFactes} config={dcnf}/>
-                                </div>
-                                 <div className= "ui secondary segment bottom attached">
-                                     <ResourceListPager onSearchMode={this.handleSearchMode.bind(this)} visibleResourcesTotal={this.props.FacetedBrowserStore.resources.length} selection={{prevSelection: this.state.selection}} onExpandCollapse={this.toggleResourceCol.bind(this)} handleClick={this.gotoPage.bind(this)} datasetURI={this.props.FacetedBrowserStore.datasetURI} total={this.props.FacetedBrowserStore.total} threshold={pagerSize} currentPage={this.props.FacetedBrowserStore.page} maxNumberOfResourcesOnPage={dcnf.maxNumberOfResourcesOnPage}/>
+                                <div className="ui segments">
+                                    <div className="ui segment">
+                                        <ResourceList resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} OpenInNewTab={true} isBig={!showFactes} config={dcnf}/>
+                                    </div>
+                                     <div className= "ui secondary segment ">
+                                         <ResourceListPager onSearchMode={this.handleSearchMode.bind(this)} visibleResourcesTotal={this.props.FacetedBrowserStore.resources.length} selection={{prevSelection: this.state.selection}} onExpandCollapse={this.toggleResourceCol.bind(this)} handleClick={this.gotoPage.bind(this)} datasetURI={this.props.FacetedBrowserStore.datasetURI} total={this.props.FacetedBrowserStore.total} threshold={pagerSize} currentPage={this.props.FacetedBrowserStore.page} maxNumberOfResourcesOnPage={dcnf.maxNumberOfResourcesOnPage}/>
+                                    </div>
+                                    {dcnf.displayQueries ?
+                                        <div className= "ui tertiary segment">
+                                            {this.props.FacetedBrowserStore.resourceQuery}
+                                       </div>
+                                    : ''}
                                 </div>
                               </div>;
             }

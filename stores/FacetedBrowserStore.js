@@ -9,6 +9,7 @@ class FacetedBrowserStore extends BaseStore {
         this.facets = {};
         this.resources = [];
         this.total = 0;
+        this.resourceQuery = '';
         this.page = 1;
         this.graphName = '';
         this.datasetURI = '';
@@ -74,6 +75,7 @@ class FacetedBrowserStore extends BaseStore {
         this.page = payload.page;
         this.graphName = payload.graphName;
         this.datasetURI = payload.datasetURI;
+        this.resourceQuery = payload.resourceQuery;
         this.emitChange();
     }
     updateMasterFacets(payload) {
@@ -105,6 +107,7 @@ class FacetedBrowserStore extends BaseStore {
             config: this.config,
             resources: this.resources,
             total: this.total,
+            resourceQuery: this.resourceQuery,
             page: this.page
         };
     }
@@ -120,6 +123,7 @@ class FacetedBrowserStore extends BaseStore {
         this.resources = state.resources;
         this.total = state.total;
         this.page = state.page;
+        this.resourceQuery = state.resourceQuery;
     }
 }
 

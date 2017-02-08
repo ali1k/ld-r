@@ -18,7 +18,8 @@ class DatasetStore extends BaseStore {
             resources: payload.resources,
             page: payload.page,
             config: payload.config,
-            total: this.dataset.total
+            total: this.dataset.total,
+            resourceQuery: payload.resourceQuery
         };
         this.emitChange();
     }

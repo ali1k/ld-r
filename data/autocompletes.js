@@ -56,6 +56,7 @@ module.exports = {
             {title: 'ldr:allowResourceNew'},
             {title: 'ldr:allowPropertyNew'},
             {title: 'ldr:allowNewValue'},
+            {title: 'ldr:displayQueries'},
             {title: 'ldr:allowInlineConfig'},
             {title: 'ldr:allowExtension'},
             {title: 'ldr:hasBlankNode'},
