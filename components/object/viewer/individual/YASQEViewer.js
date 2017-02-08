@@ -20,14 +20,14 @@ class YASQEViewer extends React.Component {
         self.yasqe.setValue(self.props.spec.value);
         self.yasqe.execCommand('selectAll');
         YASQE.doAutoFormat(self.yasqe);
-        self.yasqe.collapsePrefixes(true)
+        //self.yasqe.collapsePrefixes(true)
     }
     componentDidUpdate() {
         let self = this;
         self.yasqe.setValue(self.props.spec.value);
         self.yasqe.execCommand('selectAll');
         YASQE.doAutoFormat(self.yasqe);
-        self.yasqe.collapsePrefixes(true)
+        //self.yasqe.collapsePrefixes(true)
     }
     render() {
         if(this.props.config){
