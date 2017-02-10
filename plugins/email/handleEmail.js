@@ -1,14 +1,14 @@
 'use strict';
-var nodemailer = require('nodemailer');
-var smtpTransport = require('nodemailer-smtp-transport');
-var config = require('./config.js');
+let nodemailer = require('nodemailer');
+let smtpTransport = require('nodemailer-smtp-transport');
+let config = require('./config.js');
 //parses the email string
-var getEmail = function(st) {
+let getEmail = function(st) {
     if (st.indexOf('mailto:') === -1) {
         //not found
         return st;
     } else {
-        var tmp = st.split('mailto:');
+        let tmp = st.split('mailto:');
         return tmp[1];
     }
 }
@@ -33,7 +33,7 @@ module.exports = {
                 subject = subject;
                 text = text;
         }
-        var transporter = nodemailer.createTransport(smtpTransport(config.emailConfig));
+        let transporter = nodemailer.createTransport(smtpTransport(config.emailConfig));
         // send mail
         transporter.sendMail({
             from: getEmail(from),
