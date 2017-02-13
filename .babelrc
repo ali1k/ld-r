@@ -1,6 +1,6 @@
 {
   "presets": ["es2015", "react"],
   "plugins": [
-    "add-module-exports", "react-hot-loader/babel"
+    "add-module-exports"
   ]
 }

@@ -11,7 +11,6 @@ let webpackConfig = {
     },
     entry: {
         main: [
-            'react-hot-loader/patch',
             'webpack-dev-server/client?http://' + host + ':' + mainPort,
             'webpack/hot/only-dev-server',
             './client.js'
