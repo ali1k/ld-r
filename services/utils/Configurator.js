@@ -200,13 +200,36 @@ class Configurator{
                             output[prop] = config.resource_property[resourceURI][propertyURI][prop];
                         }
                     }
+                }else{
+                    //if config is defined for resource type
+                    if(resourceType && resourceType.length){
+                        resourceType.forEach((resourcet)=>{
+                            if(config.resource_property[resourcet] && config.resource_property[resourcet][propertyURI] && config.resource_property[resourcet][propertyURI].treatAsResourceType){
+                                for(let prop in config.resource_property[resourcet][propertyURI]) {
+                                    output[prop] = config.resource_property[resourcet][propertyURI][prop];
+                                }
+                            }
+                        })
+                    }
                 }
+
                 //design decision: dynamic configs can overwrite existing local configs
                 if (dynamicConfig.resource_property[resourceURI]){
                     if(dynamicConfig.resource_property[resourceURI][propertyURI]){
                         for(let prop in dynamicConfig.resource_property[resourceURI][propertyURI]) {
                             output[prop] = dynamicConfig.resource_property[resourceURI][propertyURI][prop];
                         }
+                    }
+                }else{
+                    //if config is defined for resource type
+                    if(resourceType && resourceType.length){
+                        resourceType.forEach((resourcet)=>{
+                            if(dynamicConfig.resource_property[resourcet] && dynamicConfig.resource_property[resourcet][propertyURI] && dynamicConfig.resource_property[resourcet][propertyURI].treatAsResourceType){
+                                for(let prop in dynamicConfig.resource_property[resourcet][propertyURI]) {
+                                    output[prop] = dynamicConfig.resource_property[resourcet][propertyURI][prop];
+                                }
+                            }
+                        })
                     }
                 }
                 if(config.dataset_resource_property[datasetURI]){
@@ -215,6 +238,17 @@ class Configurator{
                             for(let prop in config.dataset_resource_property[datasetURI][resourceURI][propertyURI]) {
                                 output[prop] = config.dataset_resource_property[datasetURI][resourceURI][propertyURI][prop];
                             }
+                        }
+                    }else{
+                        //if config is defined for resource type
+                        if(resourceType && resourceType.length){
+                            resourceType.forEach((resourcet)=>{
+                                if(config.dataset_resource_property[datasetURI][resourcet] && config.dataset_resource_property[datasetURI][resourcet][propertyURI] && config.dataset_resource_property[datasetURI][resourcet][propertyURI].treatAsResourceType){
+                                    for(let prop in config.dataset_resource_property[datasetURI][resourcet][propertyURI]) {
+                                        output[prop] = config.dataset_resource_property[datasetURI][resourcet][propertyURI][prop];
+                                    }
+                                }
+                            })
                         }
                     }
                 }
@@ -225,6 +259,17 @@ class Configurator{
                             for(let prop in dynamicConfig.dataset_resource_property[datasetURI][resourceURI][propertyURI]) {
                                 output[prop] = dynamicConfig.dataset_resource_property[datasetURI][resourceURI][propertyURI][prop];
                             }
+                        }
+                    }else{
+                        //if config is defined for resource type
+                        if(resourceType && resourceType.length){
+                            resourceType.forEach((resourcet)=>{
+                                if(dynamicConfig.dataset_resource_property[datasetURI][resourcet] && dynamicConfig.dataset_resource_property[datasetURI][resourcet][propertyURI] && dynamicConfig.dataset_resource_property[datasetURI][resourcet][propertyURI].treatAsResourceType){
+                                    for(let prop in dynamicConfig.dataset_resource_property[datasetURI][resourcet][propertyURI]) {
+                                        output[prop] = dynamicConfig.dataset_resource_property[datasetURI][resourcet][propertyURI][prop];
+                                    }
+                                }
+                            })
                         }
                     }
                 }
