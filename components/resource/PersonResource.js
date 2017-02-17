@@ -34,11 +34,11 @@ class PersonResource extends React.Component {
         let user = this.context.getUser();
         let self = this;
         let accessLevel, isWriteable, configReadOnly;
-        if(self.props.readOnly !== 'undefined'){
+        if(typeof self.props.readOnly !== 'undefined'){
             readOnly = self.props.readOnly;
         }else{
             //check the config for resource
-            if(self.props.config && self.props.config.readOnly !== 'undefined'){
+            if(self.props.config && typeof self.props.config.readOnly !== 'undefined'){
                 readOnly = self.props.config.readOnly;
             }
         }
