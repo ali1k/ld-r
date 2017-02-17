@@ -33,7 +33,7 @@ class NewDataset extends React.Component {
         let user , tmp = this.context.getUser();
         //we do not need this for super user
         if(tmp){
-            if(!tmp.isSuperUser){
+            if(!tmp.isSuperUser || !parseInt(tmp.isSuperUser)){
                 user = tmp.id;
             }
         }
