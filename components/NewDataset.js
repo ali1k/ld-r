@@ -32,8 +32,10 @@ class NewDataset extends React.Component {
     handleCreateDataset() {
         let user , tmp = this.context.getUser();
         //we do not need this for super user
-        if(tmp && !user.isSuperUser){
-            user = tmp.id;
+        if(tmp){
+            if(!tmp.isSuperUser){
+                user = tmp.id;
+            }
         }
         let datasetURI, datasetLabel, endpointURI, graphName, resourceFocusType, host, port, path, endpointType;
         graphName= 'default';
