@@ -145,7 +145,7 @@ export default {
                                 graphName: graphName,
                                 resourceFocusType: rftconfig.type,
                                 page: page,
-                                facets: {items: utilObject.parseSecondLevelPropertyValues(user, datasetURI, res2)},
+                                facets: {items: utilObject.parseSecondLevelPropertyValues(user, datasetURI, res2, rconfig)},
                                 total: utilObject.parseCountResourcesByType(res),
                                 resourceQuery: query2
                             });

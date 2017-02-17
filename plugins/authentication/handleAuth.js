@@ -150,7 +150,7 @@ let addUserQueries = (req, res, recaptchaSiteKey) => {
                 console.log('start registration');
                 let rnd = Math.round(+new Date() / 1000);
                 let resourceURI = generalConfig.baseResourceDomain + '/user/' + rnd;
-                let dresourceURI = generalConfig.baseResourceDomain + '/resource/' + rnd;
+                //let dresourceURI = generalConfig.baseResourceDomain + '/resource/' + rnd;
                 let datasetURI = generalConfig.baseResourceDomain + '/dataset/' + rnd;
                 let blanknode = generalConfig.baseResourceDomain + '/editorship/' + rnd;
                 let tmpE= [];
@@ -168,24 +168,23 @@ let addUserQueries = (req, res, recaptchaSiteKey) => {
                                              foaf:lastName """${req.body.lastname}""";
                                              foaf:organization """${req.body.organization}""";
                                              foaf:accountName """${req.body.username}""";
+                                             rdfs:label """${req.body.username}""";
                                              foaf:member ldr:NormalUser ;
                                              foaf:mbox <mailto:${req.body.email}>;
                                              dcterms:created "${currentDate}"^^xsd:dateTime;
                                              ldr:password """${passwordHash.generate(req.body.password)}""";
                                              ldr:isActive "${isActive}"^^xsd:Integer;
                                              ldr:isSuperUser "0"^^xsd:Integer;
-                                             ldr:editorOfDataset <${datasetURI}>;
-                                             ldr:editorOfResource <${dresourceURI}>;
-                                             ldr:editorOfProperty <${blanknode}1>, <${blanknode}2>, <${blanknode}3>, <${blanknode}4> .
-                                             <${blanknode}1> ldr:resource <${resourceURI}> ;
+                                             ldr:viewerOf <${blanknode}0> ;
+                                             ldr:editorOf <${blanknode}1>, <${blanknode}2>, <${blanknode}3>, <${blanknode}4> .
+                                             <${blanknode}1> ldr:scope "RP" ; ldr:resource <${resourceURI}> ;
                                                              ldr:property foaf:firstName .
-                                             <${blanknode}2> ldr:resource <${resourceURI}> ;
+                                             <${blanknode}2> ldr:scope "RP" ; ldr:resource <${resourceURI}> ;
                                                              ldr:property foaf:lastName .
-                                             <${blanknode}3> ldr:resource <${resourceURI}> ;
+                                             <${blanknode}3> ldr:scope "RP" ; ldr:resource <${resourceURI}> ;
                                                              ldr:property foaf:organization .
-                                             <${blanknode}4> ldr:resource <${resourceURI}> ;
+                                             <${blanknode}4> ldr:scope "RP" ; ldr:resource <${resourceURI}> ;
                                                              ldr:property ldr:password .
-
                         ${gEnd}
                     }
                 `;

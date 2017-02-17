@@ -202,51 +202,17 @@ export default {
             getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
                 query = queryObject.getPrefixes() + queryObject.createObjectDetails(endpointParameters, user, graphName, params.resourceURI, params.propertyURI, params.oldObjectValue, params.newObjectValue, params.valueType, params.dataType, params.detailData);
-                async.parallel([
-                    (cback) => {
-                        //send request
-                        HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
-                        rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
-                            if(enableLogs){
-                                log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
-                            }
-                            cback();
-                        }).catch(function (err) {
-                            console.log(err);
-                            if(enableLogs){
-                                log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
-                            }
-                            cback();
-                        });
-                    },
-                    (cback) => {
-                        //we should add this resource into user's profile too
-                        if(enableAuthentication){
-                            let query2 = queryObject.getPrefixes() + queryObject.addTriple(endpointParameters, prepareDG(authDatasetURI[0]).g, user.id, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', params.newObjectValue, 'uri', '');
-                            //send request
-                            HTTPQueryObject = getHTTPQuery('update', query2, endpointParameters, outputFormat);
-                            rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
-                                if(enableLogs){
-                                    log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
-                                }
-                                cback();
-                            }).catch(function (err) {
-                                console.log(err);
-                                if(enableLogs){
-                                    log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
-                                }
-                                cback();
-                            });
-                        }else{
-                            cback();
-                        }
+                //send request
+                HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
+                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                    if(enableLogs){
+                        log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                     }
-                ],
-                // final callback
-                (err, results) => {
-                    if (err){
-                        callback(null, {category: params.category});
-                        return;
+                    callback(null, {category: params.category});
+                }).catch(function (err) {
+                    console.log(err);
+                    if(enableLogs){
+                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
                     callback(null, {category: params.category});
                 });

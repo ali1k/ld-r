@@ -28,33 +28,6 @@ class ObjectReactor extends React.Component {
         });
         return out;
     }
-    checkAccess(user, graph, resource, property) {
-        if (this.props.enableAuthentication) {
-            if (user) {
-                if (parseInt(user.isSuperUser)) {
-                    return {access: true, type: 'full'};
-                } else {
-                    if (graph && user.editorOfDataset.indexOf(graph) !== -1) {
-                        return {access: true, type: 'full'};
-                    } else {
-                        if (resource && user.editorOfResource.indexOf(resource) !== -1) {
-                            return {access: true, type: 'full'};
-                        } else {
-                            if (property && this.includesProperty(user.editorOfProperty, resource, property)) {
-                                return {access: true, type: 'partial'};
-                            } else {
-                                return {access: false};
-                            }
-                        }
-                    }
-                }
-            } else {
-                return {access: false};
-            }
-        } else {
-            return {access: true, type: 'full'};
-        }
-    }
     //considers 0 elements
     calculateValueCount(instances) {
         let count = 0;
@@ -103,12 +76,6 @@ class ObjectReactor extends React.Component {
                             }
                             //check access level for details
                             readOnly = self.props.readOnly;
-                            if (node.extended) {
-                                accessLevel = self.checkAccess(user, self.props.datasetURI, node.value, '');
-                                if (!accessLevel.access) {
-                                    readOnly = true;
-                                }
-                            }
                             return (<IndividualObject key={index} inEditMode={self.props.inEditMode} isNewValue={false} readOnly={readOnly} spec={node} datasetURI={self.props.datasetURI} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={isOnlyChild} onCreate={self.props.onCreateIndividualObject.bind(self)} onDelete={self.props.onDeleteIndividualObject.bind(self)} onUpdate={self.props.onUpdateIndividualObject.bind(self)} onDetailCreate={self.props.onDetailCreateIndividualObject.bind(self)} onDetailUpdate={self.props.onDetailUpdateIndividualObject.bind(self)} onShowDetail={self.handleShowDetails.bind(self)} config={self.configMinus(self.props.config, ['objectReactor'])} objectTypes={self.props.ObjectReactor
                                 ? self.props.ObjectReactor.objectTypes
                                 : {}} objectProperties={self.props.ObjectReactor
@@ -126,12 +93,6 @@ class ObjectReactor extends React.Component {
                             }
                             //check access level for details
                             readOnly = self.props.readOnly;
-                            if (node.extended) {
-                                accessLevel = self.checkAccess(user, self.props.datasetURI, self.props.resource, '');
-                                if (!accessLevel.access) {
-                                    readOnly = true;
-                                }
-                            }
                             return (<IndividualObject key={index} inEditMode={self.props.inEditMode} readOnly={readOnly} isNewValue={false} spec={node} datasetURI={self.props.datasetURI} resource={self.props.resource} property={self.props.spec.propertyURI} isOnlyChild={isOnlyChild} onCreate={self.props.onCreateIndividualObject.bind(self)} onDelete={self.props.onDeleteIndividualObject.bind(self)} onUpdate={self.props.onUpdateIndividualObject.bind(self)} onDetailCreate={self.props.onDetailCreateIndividualObject.bind(self)} onDetailUpdate={self.props.onDetailUpdateIndividualObject.bind(self)} onShowDetail={self.handleShowDetails.bind(self)} config={self.configMinus(self.props.config, ['objectReactor'])} objectTypes={self.props.ObjectReactor
                                 ? self.props.ObjectReactor.objectTypes
                                 : {}} objectProperties={self.props.ObjectReactor

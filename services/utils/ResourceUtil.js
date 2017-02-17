@@ -108,7 +108,7 @@ class ResourceUtil {
             }
             let userIsEditor = 0, checkEditorship;
             if(user){
-                checkEditorship=checkAccess(user, datasetURI, resourceURI, 0);
+                checkEditorship=checkAccess(user, datasetURI, resourceURI, resourceType, 0);
                 if(checkEditorship.access && checkEditorship.type === 'full'){
                     userIsEditor = 1;
                 }
@@ -130,10 +130,10 @@ class ResourceUtil {
                         });
                     }
                     if(user){
-                        if(el.propertyURI==='https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy' && user.id == el.instances[0].value) {
+                        if(el.propertyURI==='https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy' && user.id === el.instances[0].value) {
                             userIsCreator = 1;
                         }
-                        accessLevel=checkAccess(user, datasetURI, resourceURI, el.propertyURI);
+                        accessLevel=checkAccess(user, datasetURI, resourceURI, resourceType, el.propertyURI);
                         modifiedConfig.access =accessLevel.access;
                     }
 
@@ -147,18 +147,22 @@ class ResourceUtil {
                 //sort final output in a consistent way
                 finalOutput.sort(compareProps);
                 //handle permissions
-                if(userIsCreator){
+                if(userIsCreator || userIsEditor){
                     finalOutput.forEach(function(el) {
-                        if(!el.config.readOnly){
+                        if(!el.config.readOnlyProperty){
                             el.config.readOnly = 0;
                             delete el.config.access;
+                        }else {
+                            el.config.readOnly = 1;
                         }
                     });
                 }else{
                     finalOutput.forEach(function(el) {
-                        if(!el.config.readOnly){
+                        if(!el.config.readOnlyProperty){
                             el.config.readOnly = el.config.access ? 0 : 1;
                             delete el.config.access;
+                        }else {
+                            el.config.readOnly = 1;
                         }
                     });
                 }
@@ -350,7 +354,7 @@ class ResourceUtil {
         //------ permission check functions---------------
     deleteAdminProperties(list) {
         let out = []
-        const adminProps = ['https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isSuperUser', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isActive', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfDataset', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfResource', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOfProperty', 'http://purl.org/dc/terms/created'];
+        const adminProps = ['https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isSuperUser', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isActive', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOf', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#viewerOf'];
         list.forEach(function(el) {
             if (adminProps.indexOf(el.propertyURI) === -1) {
                 out.push(el);

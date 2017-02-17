@@ -36,5 +36,21 @@ class AdminQuery{
         this.query = this.queryObject.updateTriple(endpointParameters, graphName, resourceURI, 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isActive', '0', '1', 'literal', '');
         return this.prefixes + this.query;
     }
+    addDatasetEditor(endpointParameters, graphName, user, dataset, bnode) {
+        let {gStart, gEnd} = this.queryObject.prepareGraphName(graphName);
+        this.query = `
+        INSERT {
+            ${gStart}
+                <${user}> ldr:editorOf <${bnode}> .
+                <${bnode}> ldr:scope "D" ; ldr:dataset <${dataset}> .
+            ${gEnd}
+        } WHERE {
+            ${gStart}
+                <${user}> ?p ?o .
+            ${gEnd}
+        }
+        `;
+        return this.prefixes + this.query;
+    }
 }
 export default AdminQuery;

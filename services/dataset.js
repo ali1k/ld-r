@@ -46,14 +46,14 @@ export default {
                     let page = params.page ? params.page : 1;
                     let offset = (page - 1) * maxOnPage;
                     let searchTerm = params.searchTerm ? params.searchTerm : '';
-                    query2 = queryObject.getResourcesByType(endpointParameters, graphName, searchTerm,rconfig, maxOnPage, offset);
+                    query2 = queryObject.getResourcesByType(endpointParameters, graphName, searchTerm, rconfig, maxOnPage, offset);
                     //build http uri
                     //send request
                     rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query2, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                         callback(null, {
                             datasetURI: datasetURI,
                             graphName: graphName,
-                            resources: utilObject.parseResourcesByType(user, res, datasetURI),
+                            resources: utilObject.parseResourcesByType(user, res, datasetURI, rconfig),
                             page: page,
                             config: rconfig,
                             resourceQuery: query2

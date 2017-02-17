@@ -1,5 +1,6 @@
 import {navigateAction} from 'fluxible-router';
 import {baseResourceDomain} from '../configs/general';
+import addDatasetEditor from './addDatasetEditor';
 import createNewReactorConfig from './createNewReactorConfig';
 
 export default function createEmptyDataset(context, payload, done) {
@@ -15,7 +16,9 @@ export default function createEmptyDataset(context, payload, done) {
                 context.executeAction(navigateAction, {
                     url: '/dataset/1/' + encodeURIComponent(res2.datasetURI)
                 });
-                done();
+                context.executeAction(addDatasetEditor, {dataset: newDatasetURI, user: payload.user}, function(err, res){
+                    done();
+                });
             }
         });
     });

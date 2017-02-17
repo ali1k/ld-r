@@ -25,10 +25,10 @@ module.exports = {
         let query = `
             PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
             PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-            SELECT ?p ?o ?pr ?pp WHERE {
+            SELECT ?p ?o ?pp ?oo WHERE {
                 ${gStart}
                     <${id}> a ldr:User ; ?p ?o .
-                    OPTIONAL {?o ldr:resource ?pr . ?o ldr:property ?pp .}
+                    OPTIONAL {?o ?pp ?oo .}
                 ${gEnd}
             }
         `;
@@ -39,30 +39,36 @@ module.exports = {
         }).then(function(res) {
             let parsed = JSON.parse(res);
             let user = {};
-            user.editorOfDataset = [];
-            user.editorOfResource = [];
-            user.editorOfProperty = [];
+            user.editorOf = [];
+            let editorObj ={};
+            user.viewerOf = [];
+            let viewerObj ={};
             if (parsed.results.bindings.length) {
                 parsed.results.bindings.forEach(function(el) {
-                    if (self.getPropertyLabel(el.p.value) === 'editorOfDataset') {
-                        user.editorOfDataset.push(el.o.value);
-                    } else {
-                        if (self.getPropertyLabel(el.p.value) === 'editorOfResource') {
-                            user.editorOfResource.push(el.o.value);
-                        } else {
-                            if (self.getPropertyLabel(el.p.value) === 'editorOfProperty') {
-                                if (el.pp && el.pr) {
-                                    user.editorOfProperty.push({
-                                        p: el.pp.value,
-                                        r: el.pr.value
-                                    })
-                                }
-                            } else {
-                                user[self.getPropertyLabel(el.p.value)] = el.o.value;
+                    if (self.getPropertyLabel(el.p.value) === 'editorOf') {
+                        if (el.o && el.pp && el.oo) {
+                            if(!editorObj[el.o.value]){
+                                editorObj[el.o.value]= {};
                             }
+                            editorObj[el.o.value][self.getPropertyLabel(el.pp.value)] = el.oo.value;
                         }
+                    } else if (self.getPropertyLabel(el.p.value) === 'viewerOf') {
+                        if (el.o && el.pp && el.oo) {
+                            if(!viewerObj[el.o.value]){
+                                viewerObj[el.o.value]= {};
+                            }
+                            viewerObj[el.o.value][self.getPropertyLabel(el.pp.value)] = el.oo.value;
+                        }
+                    } else {
+                        user[self.getPropertyLabel(el.p.value)] = el.o.value;
                     }
                 });
+                for(let prop in editorObj){
+                    user.editorOf.push(editorObj[prop]);
+                }
+                for(let prop in viewerObj){
+                    user.viewerOf.push(viewerObj[prop]);
+                }
                 //to not show password in session
                 delete user.password;
                 user.datasetURI = generalConfig.authDatasetURI[0];

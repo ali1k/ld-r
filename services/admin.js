@@ -1,7 +1,7 @@
 'use strict';
 import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
 import {getDynamicEndpointParameters} from './utils/dynamicHelpers';
-import {authDatasetURI, enableAuthentication, enableEmailNotifications} from '../configs/general';
+import {authDatasetURI, enableAuthentication, enableEmailNotifications, baseResourceDomain} from '../configs/general';
 import {sendMail} from '../plugins/email/handleEmail';
 import AdminQuery from './sparql/AdminQuery';
 import AdminUtil from './utils/AdminUtil';
@@ -58,7 +58,43 @@ export default {
 
     },
     // other methods
-    // create: function(req, resource, params, body, config, callback) {},
+    create: function(req, resource, params, body, config, callback) {
+        if (resource === 'admin.datasetEditor') {
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {});
+                }else{
+                    user = req.user;
+                    //only super users have access to admin services
+                    if(!parseInt(user.isSuperUser)){
+                        callback(null, {});
+                    }
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            if(!params.user){
+                callback(null, {});
+                return 0;
+            }
+            let bnode = baseResourceDomain[0] + '/editor' + Math.round(+new Date() / 1000);
+            datasetURI = authDatasetURI[0];
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=> {
+                graphName = endpointParameters.graphName;
+                query = queryObject.addDatasetEditor(endpointParameters, graphName, params.user, params.dataset, bnode);
+                //console.log(query);
+                //build http uri
+                //send request
+                HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
+                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                    callback(null, {});
+                }).catch(function (err) {
+                    console.log(err);
+                    callback(null, {});
+                });
+            });
+        }
+    },
     update: (req, resource, params, body, config, callback) => {
         if (resource === 'admin.activateUser') {
             if(enableAuthentication){

@@ -21,15 +21,14 @@
       #password: demo1234
       ldr:password "sha1$8b1159fb$1$c933edf77baaa6f6b7558b6b80178bfcb5a6c917";
       ldr:isActive "1"^^xsd:Integer;
-      #this hsould be set only for the admin user who has access to all features
+      #this should be set only for the admin user who has access to all features
       ldr:isSuperUser "1"^^xsd:Integer .
 
 #non-super users will have the following access level properties:
-#ldr:editorOfDataset
-#ldr:editorOfResource
-#ldr:editorOfProperty -> blank node
-#                               ldr: resource
-#                               ldr: property
-#authorization starts from graph level and finishes at property level. i.e. if you give user permission to edit a graph, by default all resources and all property of the resources can be edited. If you restrict user permission to resource level, by default all the properties of the resource can be edited. If you restrict user permission to property level, you also need to specify the resource under which the property can be edited.
-#we make a simplification here: resources should be consistent within different graph names. It means, if you give a user permission to edit a resource, no matter under which graph it is, user always have permission to edit it. Therefore, you do not need to specify graph names for resources.
+
+#ldr:editorOf-> blank node      ldr:dataset
+#                               ldr:resource
+#                               ldr:property
+#                               ldr:scope
+#authorization starts from dataset level and finishes at property level. i.e. if you give user permission to edit a dataset, by default all resources and all property of the resources can be edited. If you restrict user permission to resource level, by default all the properties of the resource can be edited. If you restrict user permission to property level, you can also specify the dataset/resource under which the property can be edited.
 #caveat: superUser has access to all graphs, resources and properties!

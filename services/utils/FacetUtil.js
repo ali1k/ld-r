@@ -39,7 +39,7 @@ class FacetUtil{
         });
         return output;
     }
-    parseSecondLevelPropertyValues(user, datasetURI, body) {
+    parseSecondLevelPropertyValues(user, datasetURI, body, rconfig) {
         let self = this;
         let output=[];
         let resources = [];
@@ -56,7 +56,7 @@ class FacetUtil{
                     if(user.id == el.instances[0].value) {
                         userIsCreator = 1;
                     }*/
-                    accessLevel=checkAccess(user, datasetURI, el.s.value, 0);
+                    accessLevel=checkAccess(user, datasetURI, el.s.value, rconfig.resourceFocusType , 0);
                 }
                 output.push( {v: el.s.value, label: self.getPropertyLabel(el.s.value), title: (el.title && el.title.value ? el.title.value : ''), image: el.image ? el.image.value : '', geo: el.geo ? el.geo.value : '', d: datasetURI, accessLevel: accessLevel});
             }

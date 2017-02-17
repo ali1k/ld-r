@@ -33,12 +33,78 @@ let prepareStaticDGFunc = (datasetURI)=>{
     return {d: d, g: g};
 }
 
-let includesProperty = (list, resource, property)=> {
+let includesDataset= (rights, dataset)=> {
     let out = false;
-    list.forEach(function(el) {
-        if (el.r === resource && el.p === property) {
-            out = true;
-            return out;
+    rights.forEach(function(el) {
+        if (el.scope === 'D') {
+            if(el.dataset === dataset){
+                out = true;
+                return out;
+            }
+        }
+    });
+    return out;
+}
+let includesResource= (rights, dataset, resource, resourceType)=> {
+    let out = false;
+    rights.forEach(function(el) {
+        if (el.scope === 'DR') {
+            if(el.dataset === dataset && el.resource === resource){
+                out = true;
+                return out;
+            }else{
+                if(el.treatAsResourceType && el.dataset === dataset &&  resourceType.indexOf(el.resource)!==-1){
+                    out = true;
+                    return out;
+                }
+            }
+        }else if (el.scope === 'R') {
+            if(el.resource === resource){
+                out = true;
+                return out;
+            }else{
+                if(el.treatAsResourceType &&  resourceType.indexOf(el.resource)!==-1){
+                    out = true;
+                    return out;
+                }
+            }
+        }
+    });
+    return out;
+}
+let includesProperty= (rights, dataset, resource, resourceType, property)=> {
+    let out = false;
+    rights.forEach(function(el) {
+        if (el.scope  && el.scope === 'DP') {
+            if(el.dataset === dataset && el.property === property){
+                out = true;
+                return out;
+            }
+        }else if (el.scope  && el.scope === 'RP') {
+            if(el.resource === resource && el.property === property){
+                out = true;
+                return out;
+            }else{
+                if(el.treatAsResourceType && el.resource === resourceType && el.property === property){
+                    out = true;
+                    return out;
+                }
+            }
+        }else if (el.scope  && el.scope === 'DRP') {
+            if(el.dataset === dataset && el.resource === resource && el.property === property){
+                out = true;
+                return out;
+            }else{
+                if(el.treatAsResourceType && el.dataset === dataset && el.resource === resourceType && el.property === property){
+                    out = true;
+                    return out;
+                }
+            }
+        }else if (el.scope  && el.scope === 'P') {
+            if(el.property === property){
+                out = true;
+                return out;
+            }
         }
     });
     return out;
@@ -130,7 +196,9 @@ export default {
         }
         return {gStart: gStart, gEnd: gEnd}
     },
-    checkAccess(user, graph, resource, property) {
+
+    checkAccess(user, dataset, resource, resourceType, property) {
+        //console.log(user.editorOf, dataset, resource, resourceType, property);
         if(!enableAuthentication){
             return {
                 access: true,
@@ -143,19 +211,19 @@ export default {
                 type: 'full'
             };
         } else {
-            if (graph && user.editorOfDataset && user.editorOfDataset.indexOf(graph) !== -1) {
+            if (dataset && user.editorOf && includesDataset(user.editorOf, dataset)) {
                 return {
                     access: true,
                     type: 'full'
                 };
             } else {
-                if (resource && user.editorOfResource && user.editorOfResource.indexOf(resource) !== -1) {
+                if (resource && user.editorOf && includesResource(user.editorOf, dataset, resource, resourceType)) {
                     return {
                         access: true,
                         type: 'full'
                     };
                 } else {
-                    if (property && user.editorOfProperty && includesProperty(user.editorOfProperty, resource, property)) {
+                    if (property && user.editorOf && includesProperty(user.editorOf, dataset, resource, resourceType, property)) {
                         return {
                             access: true,
                             type: 'partial'
