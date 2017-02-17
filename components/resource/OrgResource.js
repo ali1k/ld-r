@@ -29,7 +29,7 @@ class OrgResource extends React.Component {
         this.setState({showDetails: ! this.state.showDetails});
     }
     render() {
-        let picture, keywords, aboutP, pName, depiction, thumbnail, homepage, email, geometry, ocity,pcity, country, established, city, pcountry, ocountry, pmotto, omotto, motto, comments;
+        let picture, keywords, aboutP, pName, depiction, thumbnail, homepage, email, geometry, ocity,pcity, country, established, city, pcountry, ocountry, pmotto, omotto, motto, comments, creatorDIV, dateDIV;
         let readOnly = 1;
         let user = this.context.getUser();
         let self = this;
@@ -104,9 +104,15 @@ class OrgResource extends React.Component {
                 if(node.propertyURI === 'http://www.w3.org/2003/01/geo/wgs84_pos#geometry'){
                     geometry = node;
                 }
-                return (
-                    <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
-                );
+                if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdOn'){
+                    dateDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy') {
+                    creatorDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                } else {
+                    return (
+                        <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
+                    );
+                }
 
             }
         });
@@ -151,6 +157,8 @@ class OrgResource extends React.Component {
                         <div className="ui grid">
                             <div className="column ui list">
                                 {list}
+                                {dateDIV}
+                                {creatorDIV}
                             </div>
                         </div>
                   </div>;

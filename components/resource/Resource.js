@@ -29,7 +29,7 @@ class Resource extends React.Component {
         let isUserTheCreator = 0;
         let user = this.context.getUser();
         let self = this;
-        let accessLevel, isWriteable, configReadOnly;
+        let accessLevel, isWriteable, configReadOnly, creatorDIV, dateDIV;
         if(self.props.readOnly !== 'undefined'){
             readOnly = self.props.readOnly;
         }else{
@@ -55,9 +55,15 @@ class Resource extends React.Component {
                         }
                     }
                 }
-                return (
-                    <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
-                );
+                if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdOn'){
+                    dateDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy') {
+                    creatorDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                }else{
+                    return (
+                        <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
+                    );
+                }
             }
         });
         let currentCategory, mainDIV, tabsDIV, tabsContentDIV;
@@ -96,6 +102,8 @@ class Resource extends React.Component {
                             <div className="ui grid">
                                 <div className="column ui list">
                                     {list}
+                                    {dateDIV}
+                                    {creatorDIV}
                                 </div>
                             </div>
                       </div>;
