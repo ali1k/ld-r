@@ -46,7 +46,7 @@ class DatasetReactor extends React.Component {
             switch(config.datasetReactor[0]){
                 case 'Dataset':
                     datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])} resourceQuery={resourceQuery} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)}/>;
-                break;
+                    break;
                 default:
                     datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} config={this.configMinus(config, ['datasetReactor'])} resourceQuery={resourceQuery} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)}/>;
             }

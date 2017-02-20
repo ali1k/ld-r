@@ -139,46 +139,46 @@ export default {
         }
 
         switch (endpointParameters.type.toLowerCase()) {
-        case 'virtuoso':
+            case 'virtuoso':
 
-            outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
-            outputObject.params['query'] = query;
-            outputObject.params['format'] = outputFormat;
-
-            break;
-        case 'stardog':
-            outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
-            outputObject.params['query'] = query;
-            outputObject.params['Accept'] = outputFormat;
-
-            break;
-        case 'cliopatria':
-            if(mode === 'update'){
-                outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + 'update';
-                outputObject.params['update'] = query;
-            }else{
-                outputObject.params['query'] = query;
                 outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                outputObject.params['query'] = query;
                 outputObject.params['format'] = outputFormat;
-            }
 
-            break;
-        //todo: check the differences for other triple stores
-        case 'sesame':
-            if(mode === 'update'){
-                outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '/statements';
-                outputObject.params['update'] = query;
-            }else{
-                outputObject.params['query'] = query;
+                break;
+            case 'stardog':
                 outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                outputObject.params['query'] = query;
                 outputObject.params['Accept'] = outputFormat;
-            }
 
-            break;
-        default:
-            outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
-            outputObject.params['query'] = query;
-            outputObject.params['format'] = outputFormat;
+                break;
+            case 'cliopatria':
+                if(mode === 'update'){
+                    outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + 'update';
+                    outputObject.params['update'] = query;
+                }else{
+                    outputObject.params['query'] = query;
+                    outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                    outputObject.params['format'] = outputFormat;
+                }
+
+                break;
+        //todo: check the differences for other triple stores
+            case 'sesame':
+                if(mode === 'update'){
+                    outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '/statements';
+                    outputObject.params['update'] = query;
+                }else{
+                    outputObject.params['query'] = query;
+                    outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                    outputObject.params['Accept'] = outputFormat;
+                }
+
+                break;
+            default:
+                outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                outputObject.params['query'] = query;
+                outputObject.params['format'] = outputFormat;
         }
         return outputObject;
     },
@@ -240,58 +240,58 @@ export default {
     getQueryDataTypeValue(valueType, dataType, objectValue) {
         let newValue, dtype;
         switch (valueType) {
-        case 'uri':
-        case 'bnode':
-        case 'literal':
-            // automatically detect uris even in literal values
-            if(validUrl.is_web_uri(objectValue.toString())){
-                newValue='<'+objectValue+'>';
-                dtype = 'uri';
-            }else{
-                newValue='"""'+objectValue+'"""';
-                dtype = 'str';
-            }
-            break;
-        case 'typed-literal':
-        //handle typed-literal values
-            switch (dataType) {
-            case 'http://www.w3.org/2001/XMLSchema#integer':
-                dtype = 'xsd:integer';
-                newValue='"'+objectValue+'"^^' + dtype;
+            case 'uri':
+            case 'bnode':
+            case 'literal':
+                // automatically detect uris even in literal values
+                if(validUrl.is_web_uri(objectValue.toString())){
+                    newValue='<'+objectValue+'>';
+                    dtype = 'uri';
+                }else{
+                    newValue='"""'+objectValue+'"""';
+                    dtype = 'str';
+                }
                 break;
-            case 'http://www.w3.org/2001/XMLSchema#decimal':
-                dtype = 'xsd:decimal';
-                newValue='"'+objectValue+'"^^' + dtype;
-                break;
-            case 'http://www.w3.org/2001/XMLSchema#float':
-                dtype = 'xsd:float';
-                newValue='"'+objectValue+'"^^' + dtype;
-                break;
-            case 'http://www.w3.org/2001/XMLSchema#double':
-                dtype = 'xsd:double';
-                newValue='"'+objectValue+'"^^' + dtype;
-                break;
-            case 'http://www.w3.org/2001/XMLSchema#dateTime':
-                dtype = 'xsd:dateTime';
-                newValue='"'+objectValue+'"^^' + dtype;
-                break;
-            case 'http://www.w3.org/2001/XMLSchema#date':
-                dtype = 'xsd:date';
-                newValue='"'+objectValue+'"^^' + dtype;
-                break;
-            case 'http://www.w3.org/2001/XMLSchema#boolean':
-                dtype = 'xsd:boolean';
-                newValue='"'+objectValue+'"^^' + dtype;
+            case 'typed-literal':
+            //handle typed-literal values
+                switch (dataType) {
+                    case 'http://www.w3.org/2001/XMLSchema#integer':
+                        dtype = 'xsd:integer';
+                        newValue='"'+objectValue+'"^^' + dtype;
+                        break;
+                    case 'http://www.w3.org/2001/XMLSchema#decimal':
+                        dtype = 'xsd:decimal';
+                        newValue='"'+objectValue+'"^^' + dtype;
+                        break;
+                    case 'http://www.w3.org/2001/XMLSchema#float':
+                        dtype = 'xsd:float';
+                        newValue='"'+objectValue+'"^^' + dtype;
+                        break;
+                    case 'http://www.w3.org/2001/XMLSchema#double':
+                        dtype = 'xsd:double';
+                        newValue='"'+objectValue+'"^^' + dtype;
+                        break;
+                    case 'http://www.w3.org/2001/XMLSchema#dateTime':
+                        dtype = 'xsd:dateTime';
+                        newValue='"'+objectValue+'"^^' + dtype;
+                        break;
+                    case 'http://www.w3.org/2001/XMLSchema#date':
+                        dtype = 'xsd:date';
+                        newValue='"'+objectValue+'"^^' + dtype;
+                        break;
+                    case 'http://www.w3.org/2001/XMLSchema#boolean':
+                        dtype = 'xsd:boolean';
+                        newValue='"'+objectValue+'"^^' + dtype;
+                        break;
+                    default:
+                        newValue='"""'+objectValue+'"""';
+                        dtype = 'str';
+                }
                 break;
             default:
+                // default: handle as string
                 newValue='"""'+objectValue+'"""';
                 dtype = 'str';
-            }
-            break;
-        default:
-            // default: handle as string
-            newValue='"""'+objectValue+'"""';
-            dtype = 'str';
         }
         //fix in virtuoso
         if(dtype === 'uri'){

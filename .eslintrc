@@ -4,6 +4,6 @@
     node: true
   rules:
     strict: 0
-    indent: ['error', 4, { 'SwitchCase': 0 }]
+    indent: ['error', 4, { 'SwitchCase': 1 }]
     quotes: [2, 'single']
     no-unused-vars: 0 // see https://github.com/babel/babel-eslint/issues/21

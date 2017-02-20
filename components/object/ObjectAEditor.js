@@ -17,7 +17,7 @@ class ObjectAEditor extends React.Component {
         switch(editorConfig){
             case 'BasicAggregateInput':
                 editor = <BasicAggregateInput spec={this.props.spec} config={this.props.config} onAggDataEdit={this.handleAggDataEdit.bind(this)}/>;
-            break;
+                break;
             default:
                 editor = <BasicAggregateInput spec={this.props.spec} config={this.props.config} onAggDataEdit={this.handleAggDataEdit.bind(this)}/>;
         }

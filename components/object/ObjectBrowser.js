@@ -21,19 +21,19 @@ class ObjectBrowser extends React.Component {
         switch(browserConfig){
             case 'CheckListBrowser':
                 browser = <CheckListBrowser selection={self.props.selection} expanded={self.props.expanded} datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;
-            break;
+                break;
             case 'TagListBrowser':
                 browser = <TagListBrowser selection={self.props.selection} expanded={self.props.expanded} datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;
-            break;
+                break;
             case 'GeoListBrowser':
                 browser = <GeoListBrowser selection={self.props.selection} expanded={self.props.expanded} datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;
-            break;
+                break;
             case 'BarChartBrowser':
                 browser = <BarChartBrowser selection={self.props.selection} expanded={self.props.expanded} datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;
-            break;
+                break;
             case 'TaxonomyBrowser':
                 browser = <TaxonomyBrowser selection={self.props.selection} expanded={self.props.expanded} datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;
-            break;
+                break;
             default:
                 browser = <CheckListBrowser selection={self.props.selection} expanded={self.props.expanded} datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;
         }

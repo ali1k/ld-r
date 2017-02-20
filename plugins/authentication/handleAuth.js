@@ -67,55 +67,55 @@ module.exports = function handleAuthentication(server) {
             return res.redirect('/');
         }
     });
-     server.post('/register', function(req, res, next) {
-         let recaptchaSiteKey = '';
-         let recaptchaSecretKey = '';
-         if(generalConfig.useGoogleRecaptcha && config.googleRecaptchaService){
-             recaptchaSiteKey = config.googleRecaptchaService.siteKey[0];
-             recaptchaSecretKey = config.googleRecaptchaService.secretKey[0];
-         }
+    server.post('/register', function(req, res, next) {
+        let recaptchaSiteKey = '';
+        let recaptchaSecretKey = '';
+        if(generalConfig.useGoogleRecaptcha && config.googleRecaptchaService){
+            recaptchaSiteKey = config.googleRecaptchaService.siteKey[0];
+            recaptchaSecretKey = config.googleRecaptchaService.secretKey[0];
+        }
 
-         let error= '';
-         if(req.body.password !== req.body.cpassword){
-             error = 'Error! password mismatch...';
-         }else{
-             for (let prop in req.body) {
-                 if(!req.body[prop]){
-                     error = error + ' missing value for "' + prop +'"';
-                 }
-             }
-         }
-         if(error){
-             console.log(error);
-             res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, recaptchaSiteKey: recaptchaSiteKey, data: req.body, errorMsg: 'Error... '+error});
-         }else{
-             //successfull
-             //check recaptcha if enabled
-             if(recaptchaSiteKey){
-                 let recaptchaValidationURL = 'https://www.google.com/recaptcha/api/siteverify';
-                 let recpostOptions = {
-                     method: 'POST',
-                     uri: recaptchaValidationURL + '?secret='+recaptchaSecretKey + '&response=' + encodeURIComponent(req.body['g-recaptcha-response'])
-                 };
-                 rp(recpostOptions).then(function(recres){
-                     let recapRes = JSON.parse(recres);
-                     //console.log(recapRes);
-                     if(recapRes.success !== undefined && !recapRes.success){
-                         //error in recaptcha validation
-                         res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, recaptchaSiteKey: recaptchaSiteKey, data: req.body, errorMsg: 'Error... Captcha is not validated! You seem to be a robot...'});
-                         return 0;
-                     }else{
-                         addUserQueries(req, res, recaptchaSiteKey);
-                     }
-                 }).catch(function (errRecap) {
-                     console.log(errRecap);
-                 });
-             }else{
-                 addUserQueries(req, res, recaptchaSiteKey);
-             }
+        let error= '';
+        if(req.body.password !== req.body.cpassword){
+            error = 'Error! password mismatch...';
+        }else{
+            for (let prop in req.body) {
+                if(!req.body[prop]){
+                    error = error + ' missing value for "' + prop +'"';
+                }
+            }
+        }
+        if(error){
+            console.log(error);
+            res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, recaptchaSiteKey: recaptchaSiteKey, data: req.body, errorMsg: 'Error... '+error});
+        }else{
+            //successfull
+            //check recaptcha if enabled
+            if(recaptchaSiteKey){
+                let recaptchaValidationURL = 'https://www.google.com/recaptcha/api/siteverify';
+                let recpostOptions = {
+                    method: 'POST',
+                    uri: recaptchaValidationURL + '?secret='+recaptchaSecretKey + '&response=' + encodeURIComponent(req.body['g-recaptcha-response'])
+                };
+                rp(recpostOptions).then(function(recres){
+                    let recapRes = JSON.parse(recres);
+                    //console.log(recapRes);
+                    if(recapRes.success !== undefined && !recapRes.success){
+                        //error in recaptcha validation
+                        res.render('register', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, recaptchaSiteKey: recaptchaSiteKey, data: req.body, errorMsg: 'Error... Captcha is not validated! You seem to be a robot...'});
+                        return 0;
+                    }else{
+                        addUserQueries(req, res, recaptchaSiteKey);
+                    }
+                }).catch(function (errRecap) {
+                    console.log(errRecap);
+                });
+            }else{
+                addUserQueries(req, res, recaptchaSiteKey);
+            }
 
-         }
-     });
+        }
+    });
 };
 let prepareGraphName = (graphName)=> {
     let gStart = 'GRAPH <'+ graphName +'> { ';

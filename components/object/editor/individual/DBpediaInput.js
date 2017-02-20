@@ -71,9 +71,9 @@ class DBpediaInput extends React.Component {
             /*global $*/
             $(currentComp).find('.transition').addClass('visible');
             this.context.executeAction(lookupDBpedia, {
-            query: term,
-            lookupClass: this.props.config ? (this.props.config.lookupClass ? this.props.config.lookupClass : '') : ''
-          });
+                query: term,
+                lookupClass: this.props.config ? (this.props.config.lookupClass ? this.props.config.lookupClass : '') : ''
+            });
         }else{
             this.emptySuggesstions();
         }
