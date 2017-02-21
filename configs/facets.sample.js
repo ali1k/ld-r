@@ -14,7 +14,7 @@ export default {
                 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#scope', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#dataset', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resource', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#property',
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#endpointType',
-                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy'
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy->[http://ld-r.org/users]http://xmlns.com/foaf/0.1/accountName'
             ],
             config: {
                 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
@@ -51,7 +51,8 @@ export default {
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#endpointType': {
                     position: 6
                 },
-                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy': {
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy->[http://ld-r.org/users]http://xmlns.com/foaf/0.1/accountName': {
+                    label: ['Creator'],
                     position: 7
                 }
             }
