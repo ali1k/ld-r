@@ -71,7 +71,8 @@ class FacetQuery{
         });
         return qs;
     }
-    getMasterPropertyValues(endpointParameters, graphName, type, propertyURI) {
+    //gets the total number of items on a facet when a property is selected from master level
+    getMasterPropertyValuesCount(endpointParameters, graphName, type, propertyURI) {
         let queryheart = '';
         if(this.isMultiGraphFacet(propertyURI)){
             //to support browsing mutiple graphs
@@ -90,9 +91,35 @@ class FacetQuery{
         }
 
         this.query = `
+        SELECT (count(DISTINCT ?v) AS ?total) WHERE {
+            ${queryheart}
+        }
+        `;
+        return this.prefixes + this.query;
+    }
+    //gets the list of items together with theit count on a facet when a property is selected from master level
+    getMasterPropertyValues(endpointParameters, graphName, type, propertyURI) {
+        let queryheart = '';
+        if(this.isMultiGraphFacet(propertyURI)){
+            //to support browsing mutiple graphs
+            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', '');
+        }else{
+            let {gStart, gEnd} = this.prepareGraphName(graphName);
+            let st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.';
+            //---to support resource focus types
+            let st_extra = this.makeExtraTypeFilters(endpointParameters, type);
+            st = st_extra + ' ' + st;
+            queryheart = `
+                ${gStart}
+                    ${st}
+                ${gEnd}
+            `;
+        }
+        //notice: it limits results to first 777 items
+        this.query = `
         SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
             ${queryheart}
-        } GROUP BY ?v
+        } GROUP BY ?v ORDER BY DESC(?total) LIMIT 777
         `;
         return this.prefixes + this.query;
     }
@@ -241,7 +268,30 @@ class FacetQuery{
         this.query = `
         SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
             ${queryheart}
-        } GROUP BY ?v
+        } GROUP BY ?v ORDER BY DESC(?total) LIMIT 777
+        `;
+        //console.log(this.query);
+        return this.prefixes + this.query;
+    }
+    getSideEffectsCount(endpointParameters, graphName, type, propertyURI, prevSelection) {
+        let queryheart = '';
+        let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, type);
+        if(this.isMultiGraphFacet(propertyURI)){
+            //to support browsing mutiple graphs
+            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', st);
+        }else{
+            let {gStart, gEnd} = this.prepareGraphName(graphName);
+            st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.' + st;
+            queryheart = `
+                ${gStart}
+                    ${st}
+                ${gEnd}
+            `;
+        }
+        this.query = `
+        SELECT (count(DISTINCT ?v) AS ?total) WHERE {
+            ${queryheart}
+        }
         `;
         //console.log(this.query);
         return this.prefixes + this.query;

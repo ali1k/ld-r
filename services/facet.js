@@ -23,7 +23,39 @@ export default {
     name: 'facet',
     // At least one of the CRUD methods is Required
     read: (req, resource, params, config, callback) => {
-        if (resource === 'facet.facetsSideEffect') {
+        if (resource === 'facet.facetsSideEffectCount') {
+            datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
+
+           //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI, graphName: graphName, propertyURI: decodeURIComponent(params.selection.propertyURI), total: 0});
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+                //resource focus type
+                let rftconfig = configurator.getResourceFocusType(0, datasetURI);
+                query = queryObject.getSideEffectsCount(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
+                //build http uri
+                //send request
+                rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                    callback(null, {
+                        datasetURI: datasetURI,
+                        graphName: graphName,
+                        propertyURI: decodeURIComponent(params.selection.propertyURI),
+                        total: utilObject.parseCountResourcesByType(res)
+                    });
+                }).catch(function (err) {
+                    console.log(err);
+                    callback(null, {datasetURI: datasetURI, graphName: graphName, propertyURI: decodeURIComponent(params.selection.propertyURI), total: 0});
+                });
+            });
+        } else if (resource === 'facet.facetsSideEffect') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
 
            //control access on authentication
@@ -55,8 +87,52 @@ export default {
                     callback(null, {datasetURI: datasetURI, graphName: graphName, facets: {}, total: 0, page: 1});
                 });
             });
-
         //handles changes in master level facets
+        } else if (resource === 'facet.facetsMasterCount') {
+            datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
+
+           //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI, graphName: graphName, propertyURI: decodeURIComponent(params.selection.value), total: 0});
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+                //do not query if unselected
+                if(!Boolean(params.selection.status)){
+                    callback(null, {
+                        datasetURI: datasetURI,
+                        graphName: graphName,
+                        propertyURI: decodeURIComponent(params.selection.value),
+                        total: 0
+                    });
+                    return 0;
+                }
+                configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
+                    //resource focus type
+                    let rftconfig = configurator.getResourceFocusType(rconfig, datasetURI);
+                    query = queryObject.getMasterPropertyValuesCount(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.value));
+                    //console.log(query);
+                    //build http uri
+                    //send request
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                        callback(null, {
+                            datasetURI: datasetURI,
+                            graphName: graphName,
+                            propertyURI: decodeURIComponent(params.selection.value),
+                            total: utilObject.parseCountResourcesByType(res)
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {datasetURI: datasetURI, graphName: graphName, propertyURI: decodeURIComponent(params.selection.value), total: 0});
+                    });
+                });
+            });
         } else if (resource === 'facet.facetsMaster') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
 

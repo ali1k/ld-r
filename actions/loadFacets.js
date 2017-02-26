@@ -8,6 +8,8 @@ export default function loadFacets(context, payload, done) {
     //start = new Date().getTime();
     //dispatch action based on the parameter
     if(payload.mode === 'init'){
+        //used for loading progress indicator
+        context.dispatch('LOADING_DATA', {});
         async.parallel([
             (cback) => {
                 //dynamic config
@@ -16,8 +18,6 @@ export default function loadFacets(context, payload, done) {
             (cback) => {
                 //clear facets
                 context.dispatch('CLEAR_FACETS_SUCCESS', {});
-                //used for loading progress indicator
-                context.dispatch('LOADING_DATA', {});
                 context.service.read('facet.facetsSecondLevel', payload, {timeout: 20 * 1000}, function (err, res) {
                     //end = new Date().getTime();
                     //timeElapsed = end - start;
@@ -29,41 +29,85 @@ export default function loadFacets(context, payload, done) {
                     context.dispatch('UPDATE_PAGE_TITLE', {
                         pageTitle: (appFullTitle + ' | Faceted Browser | ' + decodeURIComponent(payload.id)) || ''
                     });
-                    context.dispatch('LOADED_DATA', {});
                     cback();
                 });
             }
         ],
         // final callback
         (err, results) => {
+            context.dispatch('LOADED_DATA', {});
             done();
         });
 
     }else if(payload.mode === 'master'){
         //used for loading progress indicator
         context.dispatch('LOADING_DATA', {});
-        context.service.read('facet.facetsMaster', payload, {timeout: 20 * 1000}, function (err, res) {
-            //end = new Date().getTime();
-            //timeElapsed = end - start;
-            if (err) {
-                context.dispatch('LOAD_FACETS_FAILURE', err);
-            } else {
-                context.dispatch('LOAD_MASTER_FACETS_SUCCESS', res);
+        async.parallel([
+            (cback) => {
+                //total number of items listed in facet
+                context.service.read('facet.facetsMasterCount', payload, {timeout: 20 * 1000}, function (err, res) {
+                    //end = new Date().getTime();
+                    //timeElapsed = end - start;
+                    if (err) {
+                        context.dispatch('LOAD_FACETS_COUNT_FAILURE', err);
+                    } else {
+                        context.dispatch('LOAD_MASTER_FACETS_COUNT_SUCCESS', res);
+                    }
+                    cback();
+                });
+            },
+            (cback) => {
+                //items of facets
+                context.service.read('facet.facetsMaster', payload, {timeout: 20 * 1000}, function (err, res) {
+                    //end = new Date().getTime();
+                    //timeElapsed = end - start;
+                    if (err) {
+                        context.dispatch('LOAD_FACETS_FAILURE', err);
+                    } else {
+                        context.dispatch('LOAD_MASTER_FACETS_SUCCESS', res);
+                    }
+                    cback();
+                });
             }
+        ],
+        // final callback
+        (err, results) => {
             context.dispatch('LOADED_DATA', {});
             done();
         });
     }else if(payload.mode === 'sideEffect'){
         //used for loading progress indicator
         context.dispatch('LOADING_DATA', {});
-        context.service.read('facet.facetsSideEffect', payload, {timeout: 20 * 1000}, function (err, res) {
-            //end = new Date().getTime();
-            //timeElapsed = end - start;
-            if (err) {
-                context.dispatch('LOAD_FACETS_FAILURE', err);
-            } else {
-                context.dispatch('LOAD_SIDE_EFFECTS_FACETS_SUCCESS', res);
+        async.parallel([
+            (cback) => {
+                //total number of items listed in facet
+                context.service.read('facet.facetsSideEffectCount', payload, {timeout: 20 * 1000}, function (err, res) {
+                    //end = new Date().getTime();
+                    //timeElapsed = end - start;
+                    if (err) {
+                        context.dispatch('LOAD_FACETS_FAILURE', err);
+                    } else {
+                        context.dispatch('LOAD_SIDE_EFFECTS_COUNT_FACETS_SUCCESS', res);
+                    }
+                    cback();
+                });
+            },
+            (cback) => {
+                //items of facets
+                context.service.read('facet.facetsSideEffect', payload, {timeout: 20 * 1000}, function (err, res) {
+                    //end = new Date().getTime();
+                    //timeElapsed = end - start;
+                    if (err) {
+                        context.dispatch('LOAD_FACETS_FAILURE', err);
+                    } else {
+                        context.dispatch('LOAD_SIDE_EFFECTS_FACETS_SUCCESS', res);
+                    }
+                    cback();
+                });
             }
+        ],
+        // final callback
+        (err, results) => {
             context.dispatch('LOADED_DATA', {});
             done();
         });

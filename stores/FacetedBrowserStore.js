@@ -7,6 +7,7 @@ class FacetedBrowserStore extends BaseStore {
     }
     clearAll() {
         this.facets = {};
+        this.facetsCount = {};
         this.resources = [];
         this.total = 0;
         this.resourceQuery = '';
@@ -90,6 +91,14 @@ class FacetedBrowserStore extends BaseStore {
         this.datasetURI = payload.datasetURI;
         this.emitChange();
     }
+    updateMasterFacetsCount(payload) {
+        this.facetsCount[payload.propertyURI] = payload.total;
+        this.emitChange();
+    }
+    handleFacetSideEffectsCount(payload) {
+        this.facetsCount[payload.propertyURI] = payload.total;
+        this.emitChange();
+    }
     handleFacetSideEffects(payload) {
         this.facets[payload.facets.propertyURI] = payload.facets.items;
         this.page = payload.page;
@@ -101,6 +110,7 @@ class FacetedBrowserStore extends BaseStore {
     getState() {
         return {
             facets: this.facets,
+            facetsCount: this.facetsCount,
             graphName: this.graphName,
             datasetURI: this.datasetURI,
             datasetConfig: this.datasetConfig,
@@ -116,6 +126,7 @@ class FacetedBrowserStore extends BaseStore {
     }
     rehydrate(state) {
         this.facets = state.facets;
+        this.facetsCount = state.facetsCount;
         this.graphName = state.graphName;
         this.datasetURI = state.datasetURI;
         this.datasetConfig = state.datasetConfig;
@@ -131,7 +142,9 @@ FacetedBrowserStore.storeName = 'FacetedBrowserStore'; // PR open in dispatchr t
 FacetedBrowserStore.handlers = {
     'LOAD_FACETS_RESOURCES_SUCCESS': 'updateFacetResources',
     'LOAD_MASTER_FACETS_SUCCESS': 'updateMasterFacets',
+    'LOAD_MASTER_FACETS_COUNT_SUCCESS': 'updateMasterFacetsCount',
     'LOAD_SIDE_EFFECTS_FACETS_SUCCESS': 'handleFacetSideEffects',
+    'LOAD_SIDE_EFFECTS_COUNT_FACETS_SUCCESS': 'handleFacetSideEffectsCount',
     'LOAD_FACETS_CONFIG': 'loadFacetConfigs',
     'CLEAR_FACETS_SUCCESS': 'clearFacets'
 };

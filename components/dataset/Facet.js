@@ -77,6 +77,7 @@ class Facet extends React.Component {
         }
         let newSpec = {};
         let cloneInstances = this.props.spec.instances.slice(0);
+        let itemsCount = this.props.spec.total;
         newSpec.property = this.props.spec.property;
         newSpec.propertyURI = this.props.spec.propertyURI;
         if (this.refs.search) {
@@ -102,7 +103,7 @@ class Facet extends React.Component {
                 }
                 <div className={contentClasses}>
                      {!this.props.spec.propertyURI ? '' :
-                         <span className="ui teal ribbon label" title="number of items listed in this facet">{this.addCommas(cloneInstances.length)}</span>
+                         <span className="ui teal ribbon label" title="number of items listed in this facet">{this.state.searchTerm ? cloneInstances.length : this.addCommas(itemsCount)}{(!this.state.searchTerm && this.props.spec.propertyURI && parseInt(itemsCount) !== cloneInstances.length) ? '*' : ''}</span>
                      }
                     <div className="ui horizontal list">
                         <div className="item">
@@ -117,6 +118,9 @@ class Facet extends React.Component {
                     <div className="description">
                         <div className="ui form" style={descStyle}>
                             <ObjectBrowser expanded={this.state.expanded} selection={this.props.selection} shortenURI={true} spec={newSpec} config={this.props.config} onSelect={this.checkItem.bind(this)} datasetURI={this.props.datasetURI}/>
+                            {
+                                (!this.state.searchTerm && this.props.spec.propertyURI && parseInt(itemsCount) !== cloneInstances.length) ? <div className="ui orange fluid label">{(itemsCount-cloneInstances.length) + ' remaining items are cut off...'}</div> : ''
+                            }
                         </div>
                     </div>
                   </div>
