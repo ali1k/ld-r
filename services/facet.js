@@ -38,21 +38,23 @@ export default {
             }
             getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                //resource focus type
-                let rftconfig = configurator.getResourceFocusType(0, datasetURI);
-                query = queryObject.getSideEffectsCount(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
-                //build http uri
-                //send request
-                rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
-                    callback(null, {
-                        datasetURI: datasetURI,
-                        graphName: graphName,
-                        propertyURI: decodeURIComponent(params.selection.propertyURI),
-                        total: utilObject.parseCountResourcesByType(res)
+                configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
+                    //resource focus type
+                    let rftconfig = configurator.getResourceFocusType(rconfig, datasetURI);
+                    query = queryObject.getSideEffectsCount(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
+                    //build http uri
+                    //send request
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                        callback(null, {
+                            datasetURI: datasetURI,
+                            graphName: graphName,
+                            propertyURI: decodeURIComponent(params.selection.propertyURI),
+                            total: utilObject.parseCountResourcesByType(res)
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {datasetURI: datasetURI, graphName: graphName, propertyURI: decodeURIComponent(params.selection.propertyURI), total: 0});
                     });
-                }).catch(function (err) {
-                    console.log(err);
-                    callback(null, {datasetURI: datasetURI, graphName: graphName, propertyURI: decodeURIComponent(params.selection.propertyURI), total: 0});
                 });
             });
         } else if (resource === 'facet.facetsSideEffect') {
@@ -70,21 +72,23 @@ export default {
             }
             getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                //resource focus type
-                let rftconfig = configurator.getResourceFocusType(0, datasetURI);
-                query = queryObject.getSideEffects(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
-                //build http uri
-                //send request
-                rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
-                    callback(null, {
-                        datasetURI: datasetURI,
-                        graphName: graphName,
-                        page: 1,
-                        facets: {propertyURI: decodeURIComponent(params.selection.propertyURI), items: utilObject.parseMasterPropertyValues(res)}
+                configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
+                    //resource focus type
+                    let rftconfig = configurator.getResourceFocusType(rconfig, datasetURI);
+                    query = queryObject.getSideEffects(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
+                    //build http uri
+                    //send request
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                        callback(null, {
+                            datasetURI: datasetURI,
+                            graphName: graphName,
+                            page: 1,
+                            facets: {propertyURI: decodeURIComponent(params.selection.propertyURI), items: utilObject.parseMasterPropertyValues(res)}
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {datasetURI: datasetURI, graphName: graphName, facets: {}, total: 0, page: 1});
                     });
-                }).catch(function (err) {
-                    console.log(err);
-                    callback(null, {datasetURI: datasetURI, graphName: graphName, facets: {}, total: 0, page: 1});
                 });
             });
         //handles changes in master level facets
