@@ -118,7 +118,8 @@ class FacetedBrowser extends React.Component {
             atLeastOne = 0;
             for (let key in this.state.selection) {
                 //apply on active but non-selected
-                if(key !== propertyURI && !this.state.selection[key].length){
+                //if(key !== propertyURI && !this.state.selection[key].length){
+                if(!this.state.selection[key].length){
                     sideEffectsArr.push(key);
                 }else{
                     atLeastOne = 1;
