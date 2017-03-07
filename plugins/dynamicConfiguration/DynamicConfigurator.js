@@ -35,7 +35,7 @@ class DynamicConfigurator {
             if(enableDynamicReactorConfiguration){
                 if(userSt){
                     query = `
-                    SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType WHERE {
+                    SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType ?hasLimitedAccess WHERE {
                         ${graph}
                             {
                             ?config1 a ldr:ReactorConfig ;
@@ -47,6 +47,7 @@ class DynamicConfigurator {
                                     OPTIONAL { ?config1 ldr:datasetCategory ?datasetCategory . }
                                     OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                                    OPTIONAL { ?config1 ldr:hasLimitedAccess ?hasLimitedAccess . }
                             }
                             UNION
                             {
@@ -58,6 +59,7 @@ class DynamicConfigurator {
                                     OPTIONAL { ?config1 ldr:datasetCategory ?datasetCategory . }
                                     OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                                    OPTIONAL { ?config1 ldr:hasLimitedAccess ?hasLimitedAccess . }
                                     filter not exists {
                                         ?config1 ldr:createdBy ?user.
                                     }
@@ -67,7 +69,7 @@ class DynamicConfigurator {
                     `;
                 }else{
                     query = `
-                    SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType WHERE {
+                    SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType ?hasLimitedAccess WHERE {
                         ${graph}
                             ?config1 a ldr:ReactorConfig ;
                                     ldr:dataset ?dataset .
@@ -77,6 +79,7 @@ class DynamicConfigurator {
                                     OPTIONAL { ?config1 ldr:datasetCategory ?datasetCategory . }
                                     OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                                    OPTIONAL { ?config1 ldr:hasLimitedAccess ?hasLimitedAccess . }
                         ${graphEnd}
                     }
                     `;
@@ -117,7 +120,7 @@ class DynamicConfigurator {
             if(enableDynamicReactorConfiguration && enableDynamicFacetsConfiguration){
                 if(userSt){
                     query = `
-                    SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType WHERE { ${graph}
+                    SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType ?hasLimitedAccess WHERE { ${graph}
                             {
                             ?config1 a ldr:ReactorConfig ;
                                     ${userSt}
@@ -128,6 +131,7 @@ class DynamicConfigurator {
                                     OPTIONAL { ?config1 ldr:datasetCategory ?datasetCategory . }
                                     OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                                    OPTIONAL { ?config1 ldr:hasLimitedAccess ?hasLimitedAccess . }
                             }
                             UNION
                             {
@@ -145,6 +149,7 @@ class DynamicConfigurator {
                                     OPTIONAL { ?config1 ldr:datasetCategory ?datasetCategory . }
                                     OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                                    OPTIONAL { ?config1 ldr:hasLimitedAccess ?hasLimitedAccess . }
                                     filter not exists {
                                         ?config1 ldr:createdBy ?user.
                                     }
@@ -162,7 +167,7 @@ class DynamicConfigurator {
                     `;
                 }else{
                     query = `
-                    SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType WHERE { ${graph}
+                    SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType ?hasLimitedAccess WHERE { ${graph}
                             {
                             ?config1 a ldr:ReactorConfig ;
                                     ldr:dataset ?dataset .
@@ -172,6 +177,7 @@ class DynamicConfigurator {
                                     OPTIONAL { ?config1 ldr:datasetCategory ?datasetCategory . }
                                     OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
+                                    OPTIONAL { ?config1 ldr:hasLimitedAccess ?hasLimitedAccess . }
                             }
                             UNION
                             {
@@ -1262,6 +1268,9 @@ class DynamicConfigurator {
                 }
                 if(el.isHidden && el.isHidden.value){
                     dynamicReactorDS.dataset[el.dataset.value].isHidden = parseInt(el.isHidden.value);
+                }
+                if(el.hasLimitedAccess && el.hasLimitedAccess.value){
+                    dynamicReactorDS.dataset[el.dataset.value].hasLimitedAccess = parseInt(el.hasLimitedAccess.value);
                 }
             }
 
