@@ -18,6 +18,7 @@ class ResourceStore extends BaseStore {
         this.properties = utilObject.preservePropertiesOrder(this.properties, payload.properties);
         this.title = payload.title ? payload.title : payload.resourceURI;
         this.config = payload.config;
+        this.error = payload.error;
         this.emitChange();
     }
     cleanAll() {
@@ -30,6 +31,7 @@ class ResourceStore extends BaseStore {
         this.title = '';
         this.propertyPath = [];
         this.config = {};
+        this.error = '';
     }
     cleanResource() {
         this.cleanAll();
@@ -45,7 +47,8 @@ class ResourceStore extends BaseStore {
             currentCategory: this.currentCategory,
             properties: this.properties,
             propertyPath: this.propertyPath,
-            config: this.config
+            config: this.config,
+            error: this.error
         };
     }
     dehydrate() {
@@ -61,6 +64,7 @@ class ResourceStore extends BaseStore {
         this.currentCategory = state.currentCategory;
         this.propertyPath = state.propertyPath;
         this.config = state.config;
+        this.error = state.error;
     }
 }
 

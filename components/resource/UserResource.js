@@ -22,6 +22,17 @@ class UserResource extends React.Component {
         e.stopPropagation();
     }
     render() {
+        //check erros first
+        if(this.props.error){
+            return (
+                <div className="ui page grid" ref="resource">
+                    <div className="ui column">
+                        <div className="ui warning message"><h2>{this.props.error}</h2></div>
+                    </div>
+                </div>
+            )
+        }
+        //continue
         let readOnly = 1;
         let user = this.context.getUser();
         let self = this;

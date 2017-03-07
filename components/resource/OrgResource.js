@@ -29,6 +29,17 @@ class OrgResource extends React.Component {
         this.setState({showDetails: ! this.state.showDetails});
     }
     render() {
+        //check erros first
+        if(this.props.error){
+            return (
+                <div className="ui page grid" ref="resource">
+                    <div className="ui column">
+                        <div className="ui warning message"><h2>{this.props.error}</h2></div>
+                    </div>
+                </div>
+            )
+        }
+        //continue
         let picture, keywords, aboutP, pName, depiction, thumbnail, homepage, email, geometry, ocity,pcity, country, established, city, pcountry, ocountry, pmotto, omotto, motto, comments, creatorDIV, dateDIV;
         let readOnly = 1;
         let user = this.context.getUser();

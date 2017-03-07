@@ -1,9 +1,10 @@
 'use strict';
-import {getHTTPQuery, getHTTPGetURL, prepareDG} from './utils/helpers';
+import {getHTTPQuery, getHTTPGetURL, prepareDG, checkViewAccess, checkEditAccess} from './utils/helpers';
 import {getDynamicEndpointParameters, createASampleReactorConfig, createASampleFacetsConfig, createASampleServerConfig} from './utils/dynamicHelpers';
 import {enableLogs, enableAuthentication, authDatasetURI, configDatasetURI} from '../configs/general';
 import ResourceQuery from './sparql/ResourceQuery';
 import ResourceUtil from './utils/ResourceUtil';
+import Configurator from './utils/Configurator';
 import rp from 'request-promise';
 import fs from 'fs';
 import Log from 'log';
@@ -27,6 +28,7 @@ const headers = {'Accept': 'application/sparql-results+json'};
 let endpointParameters, category, cGraphName, datasetURI, dg, graphName, propertyURI, resourceURI, objectURI, objectValue, query, queryObject, utilObject, configurator, propertyPath, HTTPQueryObject;
 queryObject = new ResourceQuery();
 utilObject = new ResourceUtil();
+configurator = new Configurator();
 
 export default {
     name: 'resource',
@@ -56,39 +58,57 @@ export default {
                 if(propertyPath.length > 1){
                     propertyPath = propertyPath.split(',');
                 }
-                query = queryObject.getPrefixes() + queryObject.getProperties(endpointParameters, graphName, resourceURI);
-                //console.log(query);
-                //build http uri
-                //send request
-                let props;
-                rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
-                    //exceptional case for user properties: we hide some admin props from normal users
-                    utilObject.parseProperties(user, res, datasetURI, resourceURI, category, propertyPath, (cres)=> {
-                        if(datasetURI === authDatasetURI[0] && !parseInt(user.isSuperUser)){
-                            props = utilObject.deleteAdminProperties(cres.props);
-                        }else{
-                            props = cres.props;
-                        }
-                        //------------------------------------
-                        callback(null, {
-                            datasetURI: datasetURI,
-                            graphName: graphName,
-                            resourceURI: resourceURI,
-                            resourceType: cres.resourceType,
-                            title: cres.title,
-                            currentCategory: category,
-                            propertyPath: propertyPath,
-                            properties: props,
-                            config: cres.rconfig
-                        });
-                    });
+                //for now only check the dataset access levele
+                //todo: extend view access to resource and property level
+                configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
 
-                }).catch(function (err) {
-                    console.log(err);
-                    if(enableLogs){
-                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                    if(enableAuthentication && rconfig && rconfig.hasLimitedAccess && parseInt(rconfig.hasLimitedAccess)){
+                        //need to handle access to the dataset
+                        //if user is the editor by default he already has view access
+                        let editAccess = checkEditAccess(user, datasetURI, 0, 0, 0);
+                        if(!editAccess.access || editAccess.type === 'partial'){
+                            let viewAccess = checkViewAccess(user, datasetURI, 0, 0, 0);
+                            if(!viewAccess.access){
+                                callback(null, {datasetURI: datasetURI, graphName: graphName, resourceURI: resourceURI, resourceType: '', currentCategory: 0, propertyPath: [], properties: [], config: {}, error: 'You do not have enough permision to access this dataset/resource!'});
+                                return 0;
+                            }
+                        }
                     }
-                    callback(null, {datasetURI: datasetURI, graphName: graphName, resourceURI: resourceURI, resourceType: '', title: '', currentCategory: 0, propertyPath: [], properties: [], config: {}});
+
+                    query = queryObject.getPrefixes() + queryObject.getProperties(endpointParameters, graphName, resourceURI);
+                    //console.log(query);
+                    //build http uri
+                    //send request
+                    let props;
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                        //exceptional case for user properties: we hide some admin props from normal users
+                        utilObject.parseProperties(user, res, datasetURI, resourceURI, category, propertyPath, (cres)=> {
+                            if(datasetURI === authDatasetURI[0] && !parseInt(user.isSuperUser)){
+                                props = utilObject.deleteAdminProperties(cres.props);
+                            }else{
+                                props = cres.props;
+                            }
+                            //------------------------------------
+                            callback(null, {
+                                datasetURI: datasetURI,
+                                graphName: graphName,
+                                resourceURI: resourceURI,
+                                resourceType: cres.resourceType,
+                                title: cres.title,
+                                currentCategory: category,
+                                propertyPath: propertyPath,
+                                properties: props,
+                                config: cres.rconfig
+                            });
+                        });
+
+                    }).catch(function (err) {
+                        console.log(err);
+                        if(enableLogs){
+                            log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                        }
+                        callback(null, {datasetURI: datasetURI, graphName: graphName, resourceURI: resourceURI, resourceType: '', title: '', currentCategory: 0, propertyPath: [], properties: [], config: {}});
+                    });
                 });
             });
 

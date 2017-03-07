@@ -29,6 +29,17 @@ class PersonResource extends React.Component {
         this.setState({showDetails: ! this.state.showDetails});
     }
     render() {
+        //check erros first
+        if(this.props.error){
+            return (
+                <div className="ui page grid" ref="resource">
+                    <div className="ui column">
+                        <div className="ui warning message"><h2>{this.props.error}</h2></div>
+                    </div>
+                </div>
+            )
+        }
+        //continue
         let picture, keywords, pbirthDate, obirthDate, pbirthPlace, obirthPlace, pdeathDate, odeathDate, pdeathPlace, odeathPlace, knownFor, aboutP, pName, firstName, lastName, children, spouse, depiction, thumbnail, homepage, email, comments, creatorDIV, dateDIV;
         let readOnly = 1;
         let user = this.context.getUser();
