@@ -1,6 +1,7 @@
 'use strict';
 import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
 import {getDynamicEndpointParameters, getDynamicFacetsConfig, getDynamicDatasetConfig} from './utils/dynamicHelpers';
+import {checkViewAccess, checkEditAccess} from './utils/accessManagement';
 import {enableAuthentication} from '../configs/general';
 import staticFacets from '../configs/facets';
 import staticReactor from '../configs/reactor';
@@ -199,6 +200,20 @@ export default {
                 graphName = endpointParameters.graphName;
                 //config handler
                 configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
+
+                    if(enableAuthentication && rconfig && rconfig.hasLimitedAccess && parseInt(rconfig.hasLimitedAccess)){
+                        //need to handle access to the dataset
+                        //if user is the editor by default he already has view access
+                        let editAccess = checkEditAccess(user, datasetURI, 0, 0, 0);
+                        if(!editAccess.access){
+                            let viewAccess = checkViewAccess(user, datasetURI, 0, 0, 0);
+                            if(!viewAccess.access){
+                                callback(null, {datasetURI: datasetURI, graphName: '', facets: {}, total: 0, page: 1, resourceQuery: '', error: 'You do not have enough permision to access this dataset!'});
+                                return 0;
+                            }
+                        }
+                    }
+
                     //resource focus type
                     let rftconfig = configurator.getResourceFocusType(rconfig, graphName);
                     let page = params.page ? params.page : 1;

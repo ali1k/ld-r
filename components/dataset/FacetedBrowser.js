@@ -214,6 +214,17 @@ class FacetedBrowser extends React.Component {
         return property;
     }
     render() {
+        //check erros first
+        if(this.props.FacetedBrowserStore.error){
+            return (
+                <div className="ui page grid" ref="facetedBrowser">
+                    <div className="ui column">
+                        <div className="ui warning message"><h2>{this.props.FacetedBrowserStore.error}</h2></div>
+                    </div>
+                </div>
+            )
+        }
+        //continue
         let self = this;
         let showFactes = 0;
         let configDiv = '';
