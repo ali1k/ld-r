@@ -1,7 +1,7 @@
 'use strict';
 import async from 'async';
 import Configurator from './Configurator';
-import {checkAccess} from './helpers';
+import {checkEditAccess} from './helpers';
 function compareProps(a,b) {
     if (a.property < b.property)
         return -1;
@@ -108,7 +108,7 @@ class ResourceUtil {
             }
             let userIsEditor = 0, checkEditorship;
             if(user){
-                checkEditorship=checkAccess(user, datasetURI, resourceURI, resourceType, 0);
+                checkEditorship=checkEditAccess(user, datasetURI, resourceURI, resourceType, 0);
                 if(checkEditorship.access && checkEditorship.type === 'full'){
                     userIsEditor = 1;
                 }
@@ -133,7 +133,7 @@ class ResourceUtil {
                         if(el.propertyURI==='https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy' && user.id === el.instances[0].value) {
                             userIsCreator = 1;
                         }
-                        accessLevel=checkAccess(user, datasetURI, resourceURI, resourceType, el.propertyURI);
+                        accessLevel=checkEditAccess(user, datasetURI, resourceURI, resourceType, el.propertyURI);
                         modifiedConfig.access =accessLevel.access;
                     }
 

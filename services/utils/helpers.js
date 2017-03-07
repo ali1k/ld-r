@@ -197,7 +197,7 @@ export default {
         return {gStart: gStart, gEnd: gEnd}
     },
 
-    checkAccess(user, dataset, resource, resourceType, property) {
+    checkEditAccess(user, dataset, resource, resourceType, property) {
         //console.log(user.editorOf, dataset, resource, resourceType, property);
         if(!enableAuthentication){
             return {

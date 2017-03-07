@@ -147,7 +147,7 @@ export default {
                     //check if user permitted to do the update action
                     user = req.user;
                     /*todo:fix permission on update!
-                    accessLevel = utilObject.checkAccess(user, datasetURI, params.resourceURI, params.propertyURI);
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
@@ -188,7 +188,7 @@ export default {
                 }else{
                     user = req.user;
                     /*todo:fix permission on update!
-                    accessLevel = utilObject.checkAccess(user, datasetURI, params.resourceURI, params.propertyURI);
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
@@ -403,7 +403,7 @@ export default {
                 }else{
                     user = req.user;
                     /*todo:fix permission on update!
-                    accessLevel = utilObject.checkAccess(user, datasetURI, params.resourceURI, params.propertyURI);
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
@@ -445,14 +445,14 @@ export default {
                 }else{
                     user = req.user;
                     /*todo:fix permission on update!
-                    accessLevel = utilObject.checkAccess(user, datasetURI, params.resourceURI, params.propertyURI);
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
                         return 0;
                     }
                     //check access for detail object
-                    accessLevel = utilObject.checkAccess(user, datasetURI, params.oldObjectValue, '');
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, params.oldObjectValue, '');
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
@@ -494,7 +494,7 @@ export default {
                 }else{
                     user = req.user;
                     /*todo:fix permission on update!
-                    accessLevel = utilObject.checkAccess(user, datasetURI, datasetURI, params.propertyURI);
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, datasetURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
@@ -539,7 +539,7 @@ export default {
                 }else{
                     user = req.user;
                     /*todo:fix permission on update!
-                    accessLevel = utilObject.checkAccess(user, datasetURI, params.resourceURI, params.propertyURI);
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
@@ -580,7 +580,7 @@ export default {
                 }else{
                     user = req.user;
                     /*todo:fix permission on update!
-                    accessLevel = utilObject.checkAccess(user, datasetURI, params.resourceURI, params.propertyURI);
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});
@@ -619,7 +619,7 @@ export default {
                 }else{
                     user = req.user;
                     /*todo:fix permission on update!
-                    accessLevel = utilObject.checkAccess(user, datasetURI, params.resourceURI, params.propertyURI);
+                    accessLevel = utilObject.checkEditAccess(user, datasetURI, params.resourceURI, params.propertyURI);
                     if(!accessLevel.access){
                         //action not allowed!
                         callback(null, {category: params.category});

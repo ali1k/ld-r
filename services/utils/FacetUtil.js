@@ -1,5 +1,5 @@
 'use strict';
-import {checkAccess} from './helpers';
+import {checkEditAccess} from './helpers';
 
 class FacetUtil{
     constructor() {
@@ -56,7 +56,7 @@ class FacetUtil{
                     if(user.id == el.instances[0].value) {
                         userIsCreator = 1;
                     }*/
-                    accessLevel=checkAccess(user, datasetURI, el.s.value, rconfig.resourceFocusType , 0);
+                    accessLevel=checkEditAccess(user, datasetURI, el.s.value, rconfig.resourceFocusType , 0);
                 }
                 output.push( {v: el.s.value, label: self.getPropertyLabel(el.s.value), title: (el.title && el.title.value ? el.title.value : ''), image: el.image ? el.image.value : '', geo: el.geo ? el.geo.value : '', d: datasetURI, accessLevel: accessLevel});
             }

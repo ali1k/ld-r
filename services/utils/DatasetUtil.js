@@ -1,5 +1,5 @@
 'use strict';
-import {checkAccess} from './helpers';
+import {checkEditAccess} from './helpers';
 
 class DatasetUtil {
     constructor() {
@@ -31,7 +31,7 @@ class DatasetUtil {
                         if(user.id == el.instances[0].value) {
                             userIsCreator = 1;
                         }*/
-                        accessLevel=checkAccess(user, datasetURI, el.resource.value, rconfig.resourceFocusType , 0);
+                        accessLevel=checkEditAccess(user, datasetURI, el.resource.value, rconfig.resourceFocusType , 0);
                     }
                     output.push({
                         v: el.resource.value,
