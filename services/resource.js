@@ -1,5 +1,6 @@
 'use strict';
-import {getHTTPQuery, getHTTPGetURL, prepareDG, checkViewAccess, checkEditAccess} from './utils/helpers';
+import {getHTTPQuery, getHTTPGetURL, prepareDG} from './utils/helpers';
+import {checkViewAccess, checkEditAccess} from './utils/accessManagement';
 import {getDynamicEndpointParameters, createASampleReactorConfig, createASampleFacetsConfig, createASampleServerConfig} from './utils/dynamicHelpers';
 import {enableLogs, enableAuthentication, authDatasetURI, configDatasetURI} from '../configs/general';
 import ResourceQuery from './sparql/ResourceQuery';

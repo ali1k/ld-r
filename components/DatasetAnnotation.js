@@ -5,6 +5,7 @@ import DatasetsStore from '../stores/DatasetsStore';
 import DatasetAnnotationStore from '../stores/DatasetAnnotationStore';
 import {navigateAction} from 'fluxible-router';
 import {enableAuthentication, enableDatasetAnnotation, baseResourceDomain} from '../configs/general';
+import {checkViewAccess, checkEditAccess} from '../services/utils/accessManagement';
 import { Button, Divider, Form, Progress } from 'semantic-ui-react';
 import PrefixBasedInput from './object/editor/individual/PrefixBasedInput';
 import url from 'url';
@@ -126,8 +127,24 @@ class DatasetAnnotation extends React.Component {
                 errorDIV = <div className="ui warning message"><div className="header"> No dataset found for annotations!</div></div>;
             }
         }
+        let tmpOption = '';
         optionsList = dss.map(function(option, index) {
-            return <option key={index} value={(option.d)}> {(option.features && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
+            tmpOption = <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
+            //filter out datasets if no access is provided
+            if(enableAuthentication && option.features.hasLimitedAccess && parseInt(option.features.hasLimitedAccess)){
+                //need to handle access to the dataset
+                //if user is the editor by default he already has view access
+                let editAccess = checkEditAccess(user, option.d, 0, 0, 0);
+                if(!editAccess.access || editAccess.type === 'partial'){
+                    let viewAccess = checkViewAccess(user, option.d, 0, 0, 0);
+                    if(!viewAccess.access){
+                        tmpOption = '';
+                    }
+                }
+            }
+            if(tmpOption){
+                return tmpOption;
+            }
         });
         let tagsDIV = self.generateTagArray(this.props.DatasetAnnotationStore.tags).map((node, index)=>{
             return (<div className='ui basic label' key={index}><a href={node.uri} target="_blank">{node.text}</a> ({node.count})</div>);

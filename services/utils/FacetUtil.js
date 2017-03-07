@@ -1,5 +1,5 @@
 'use strict';
-import {checkEditAccess} from './helpers';
+import {checkEditAccess} from './accessManagement';
 
 class FacetUtil{
     constructor() {

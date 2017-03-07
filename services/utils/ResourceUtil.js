@@ -1,7 +1,7 @@
 'use strict';
 import async from 'async';
 import Configurator from './Configurator';
-import {checkEditAccess} from './helpers';
+import {checkEditAccess} from './accessManagement';
 function compareProps(a,b) {
     if (a.property < b.property)
         return -1;

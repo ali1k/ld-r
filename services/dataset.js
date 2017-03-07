@@ -1,5 +1,6 @@
 'use strict';
-import {getHTTPQuery, getHTTPGetURL, checkViewAccess, checkEditAccess} from './utils/helpers';
+import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
+import {checkViewAccess, checkEditAccess} from './utils/accessManagement';
 import {getDynamicEndpointParameters, getDynamicDatasets} from './utils/dynamicHelpers';
 import {enableAuthentication, authDatasetURI, configDatasetURI, defaultDatasetURI} from '../configs/general';
 import staticReactor from '../configs/reactor';
