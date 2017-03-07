@@ -23,6 +23,17 @@ class Dataset extends React.Component {
         });
     }
     render() {
+        //check erros first
+        if(this.props.error){
+            return (
+                <div className="ui page grid" ref="dataset">
+                    <div className="ui column">
+                        <div className="ui warning message"><h2>{this.props.error}</h2></div>
+                    </div>
+                </div>
+            )
+        }
+        //continue
         let self = this;
         let resourceFocusType = this.props.config.resourceFocusType;
         let typeSt, typesLink = [];

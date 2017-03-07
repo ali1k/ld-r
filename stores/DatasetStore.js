@@ -5,7 +5,7 @@ class DatasetStore extends BaseStore {
         this.cleanAll();
     }
     cleanAll() {
-        this.dataset = {total: 0, resource: []};
+        this.dataset = {total: 0, resource: [], error: ''};
     }
     cleanDataset() {
         this.cleanAll();
@@ -19,7 +19,8 @@ class DatasetStore extends BaseStore {
             page: payload.page,
             config: payload.config,
             total: this.dataset.total,
-            resourceQuery: payload.resourceQuery
+            resourceQuery: payload.resourceQuery,
+            error: payload.error
         };
         this.emitChange();
     }

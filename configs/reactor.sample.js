@@ -274,7 +274,6 @@ export default {
                     allowNewValue: 1,
                     allowExtension: 1,
                     hasBlankNode: 1,
-                    autoLoadDetails: 1,
                     extensions: [
                         {
                             spec: {
@@ -338,7 +337,6 @@ export default {
                     allowNewValue: 1,
                     allowExtension: 1,
                     hasBlankNode: 1,
-                    autoLoadDetails: 1,
                     extensions: [
                         {
                             spec: {

@@ -1,5 +1,5 @@
 'use strict';
-import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
+import {getHTTPQuery, getHTTPGetURL, checkViewAccess, checkEditAccess} from './utils/helpers';
 import {getDynamicEndpointParameters, getDynamicDatasets} from './utils/dynamicHelpers';
 import {enableAuthentication, authDatasetURI, configDatasetURI, defaultDatasetURI} from '../configs/general';
 import staticReactor from '../configs/reactor';
@@ -43,6 +43,20 @@ export default {
                     if(!maxOnPage){
                         maxOnPage = 20;
                     }
+
+                    if(enableAuthentication && rconfig && rconfig.hasLimitedAccess && parseInt(rconfig.hasLimitedAccess)){
+                        //need to handle access to the dataset
+                        //if user is the editor by default he already has view access
+                        let editAccess = checkEditAccess(user, datasetURI, 0, 0, 0);
+                        if(!editAccess.access){
+                            let viewAccess = checkViewAccess(user, datasetURI, 0, 0, 0);
+                            if(!viewAccess.access){
+                                callback(null, {datasetURI: datasetURI, graphName: graphName, resources: [], page: params.page, config: rconfig, resourceQuery: '', error: 'You do not have enough permision to access this dataset!'});
+                                return 0;
+                            }
+                        }
+                    }
+
                     let page = params.page ? params.page : 1;
                     let offset = (page - 1) * maxOnPage;
                     let searchTerm = params.searchTerm ? params.searchTerm : '';
@@ -83,6 +97,20 @@ export default {
 
                 //config handler
                 configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
+
+                    if(enableAuthentication && rconfig && rconfig.hasLimitedAccess && parseInt(rconfig.hasLimitedAccess)){
+                        //need to handle access to the dataset
+                        //if user is the editor by default he already has view access
+                        let editAccess = checkEditAccess(user, datasetURI, 0, 0, 0);
+                        if(!editAccess.access){
+                            let viewAccess = checkViewAccess(user, datasetURI, 0, 0, 0);
+                            if(!viewAccess.access){
+                                callback(null, {datasetURI: datasetURI, graphName: graphName, total: 0});
+                                return 0;
+                            }
+                        }
+                    }
+
                     query = queryObject.countResourcesByType(endpointParameters, graphName, rconfig.resourceFocusType);
                     //console.log(query);
                     //build http uri

@@ -35,7 +35,7 @@ class UserResource extends React.Component {
             }
         }
         //create a list of properties
-        let firstNameDIV, lastNameDIV, orgDIV, emailDIV, unameDIV, passDIV, creatorDIV, dateDIV;
+        let firstNameDIV, lastNameDIV, orgDIV, emailDIV, unameDIV, passDIV, creatorDIV, dateDIV, editorOfDIV, viewerOfDIV;
         let list = this.props.properties.map(function(node, index) {
             //if there was no config at all or it is hidden, do not render the property
             if(!node.config || !node.config.isHidden){
@@ -66,6 +66,10 @@ class UserResource extends React.Component {
                     emailDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
                 }else if(node.propertyURI === 'http://xmlns.com/foaf/0.1/accountName') {
                     unameDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#viewerOf') {
+                    viewerOfDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOf') {
+                    editorOfDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
                 }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#password') {
                     passDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
                 }else{
@@ -118,6 +122,8 @@ class UserResource extends React.Component {
                                     {unameDIV}
                                     {passDIV}
                                     {list}
+                                    {viewerOfDIV}
+                                    {editorOfDIV}
                                     {dateDIV}
                                     {creatorDIV}
                                 </div>
