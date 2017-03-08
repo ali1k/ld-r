@@ -40,6 +40,7 @@ module.exports = {
             let parsed = JSON.parse(res);
             let user = {};
             user.editorOf = [];
+            user.member = [];
             let editorObj ={};
             user.viewerOf = [];
             let viewerObj ={};
@@ -59,6 +60,9 @@ module.exports = {
                             }
                             viewerObj[el.o.value][self.getPropertyLabel(el.pp.value)] = el.oo.value;
                         }
+                    } else if (self.getPropertyLabel(el.p.value) === 'member') {
+                        //array of membership
+                        user.member.push(el.o.value);
                     } else {
                         user[self.getPropertyLabel(el.p.value)] = el.o.value;
                     }
