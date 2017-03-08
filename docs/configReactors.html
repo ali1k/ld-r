@@ -71,6 +71,11 @@ Config: Reactors
       <td> can be used to hide a dataset. </td>
       <td>0</td>
     </tr>
+    <tr>
+      <td class="positive">hasLimitedAccess</td>
+      <td> can be used to restrict access to a certain dataset (admin only feature!). </td>
+      <td>0</td>
+    </tr>
   </tbody>
 </table>
 <h2>Resource Level</h2>
@@ -169,7 +174,7 @@ Config: Reactors
       <td class="positive">allowExtension</td>
       <td>If set to '1', will allow adding new properties to a given object (works only for URI object values). You can specify the list of property extensions and their config in <span class="ui label">extensions</span>.</td>
       <td>1</td>
-    </tr>      
+    </tr>
     <tr >
       <td class="positive">hasBlankNode</td>
       <td>If set to '1', will hide the object value of the blank node property on view/edit.</td>
@@ -237,7 +242,7 @@ Config: Reactors
       <td class="positive">containerDatasetURI</td>
       <td>defines the URI of the dataset to which the value is linked.</td>
       <td>http://exampleDataset.com</td>
-    </tr>      
+    </tr>
     <tr >
       <td class="positive">shortenURI</td>
       <td>will shorten objects with URI values.</td>
