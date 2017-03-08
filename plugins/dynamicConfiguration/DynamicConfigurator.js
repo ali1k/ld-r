@@ -2,6 +2,7 @@ import {enableDynamicReactorConfiguration, enableDynamicServerConfiguration, ena
 import {getStaticEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
 import rp from 'request-promise';
 const ldr_prefix = 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#';
+
 class DynamicConfigurator {
     getDynamicDatasets(user, callback) {
         let dynamicReactorDS  = {dataset:{}};
@@ -1115,6 +1116,9 @@ class DynamicConfigurator {
         return output;
     }
     parseDatasetConfigs(config, datasetURI, body) {
+        //list of properties which should be taken into account for access management
+        const viewProps = ['hasLimitedAccess', 'readOnly'];
+        const editProps = ['allowResourceClone', 'allowPropertyDelete', 'allowResourceNew', 'allowPropertyNew', 'allowNewValue'];
         let output = config;
         let parsed = JSON.parse(body);
         let settingProp = '';
@@ -1127,7 +1131,23 @@ class DynamicConfigurator {
                 settingProp = el.setting.value.replace(ldr_prefix, '').trim();
                 //assume that all values will be stored in an array expect numbers: Not-a-Number
                 if(!isNaN(el.settingValue.value)){
-                    output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value);
+                    if(viewProps.indexOf(settingProp) !== -1){
+                        if(typeof output.dataset[datasetURI][settingProp] === 'undefined'){
+                            output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value);
+                        }else{
+                            //user cannot overwrite these properties if they have 1 as value
+                            output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value) || output.dataset[datasetURI][settingProp];
+                        }
+                    }else if(editProps.indexOf(settingProp) !== -1){
+                        if(typeof output.dataset[datasetURI][settingProp] === 'undefined'){
+                            output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value);
+                        }else{
+                            //user cannot overwrite these properties if they have 0 as value
+                            output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value) && output.dataset[datasetURI][settingProp];
+                        }
+                    }else{
+                        output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value);
+                    }
                 }else{
                     if(!output.dataset[datasetURI][settingProp]){
                         output.dataset[datasetURI][settingProp] = []
@@ -1261,7 +1281,12 @@ class DynamicConfigurator {
                     }
                 }
                 if(el.readOnly && el.readOnly.value){
-                    dynamicReactorDS.dataset[el.dataset.value].readOnly = parseInt(el.readOnly.value);
+                    if(typeof dynamicReactorDS.dataset[el.dataset.value].readOnly === 'undefined'){
+                        dynamicReactorDS.dataset[el.dataset.value].readOnly = parseInt(el.readOnly.value);
+                    }else{
+                        //this is used to prevent people to switch access
+                        dynamicReactorDS.dataset[el.dataset.value].readOnly = parseInt(el.readOnly.value) || dynamicReactorDS.dataset[el.dataset.value].readOnly;
+                    }
                 }
                 if(el.position && el.position.value){
                     dynamicReactorDS.dataset[el.dataset.value].position = parseInt(el.position.value);
@@ -1270,7 +1295,12 @@ class DynamicConfigurator {
                     dynamicReactorDS.dataset[el.dataset.value].isHidden = parseInt(el.isHidden.value);
                 }
                 if(el.hasLimitedAccess && el.hasLimitedAccess.value){
-                    dynamicReactorDS.dataset[el.dataset.value].hasLimitedAccess = parseInt(el.hasLimitedAccess.value);
+                    if(typeof dynamicReactorDS.dataset[el.dataset.value].hasLimitedAccess === 'undefined'){
+                        dynamicReactorDS.dataset[el.dataset.value].hasLimitedAccess = parseInt(el.hasLimitedAccess.value);
+                    }else{
+                        //this is used to prevent people to switch access
+                        dynamicReactorDS.dataset[el.dataset.value].hasLimitedAccess = parseInt(el.hasLimitedAccess.value) || dynamicReactorDS.dataset[el.dataset.value].hasLimitedAccess;
+                    }
                 }
             }
 
