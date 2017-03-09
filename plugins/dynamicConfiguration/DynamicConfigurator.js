@@ -36,7 +36,7 @@ class DynamicConfigurator {
             if(enableDynamicReactorConfiguration){
                 if(userSt){
                     query = `
-                    SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType ?hasLimitedAccess WHERE {
+                    SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType ?hasLimitedAccess ?metadata WHERE {
                         ${graph}
                             {
                             ?config1 a ldr:ReactorConfig ;
@@ -49,6 +49,7 @@ class DynamicConfigurator {
                                     OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
                                     OPTIONAL { ?config1 ldr:hasLimitedAccess ?hasLimitedAccess . }
+                                    OPTIONAL { ?config1 ldr:metadata ?metadata . }
                             }
                             UNION
                             {
@@ -61,6 +62,7 @@ class DynamicConfigurator {
                                     OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
                                     OPTIONAL { ?config1 ldr:hasLimitedAccess ?hasLimitedAccess . }
+                                    OPTIONAL { ?config1 ldr:metadata ?metadata . }
                                     filter not exists {
                                         ?config1 ldr:createdBy ?user.
                                     }
@@ -70,7 +72,7 @@ class DynamicConfigurator {
                     `;
                 }else{
                     query = `
-                    SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType ?hasLimitedAccess WHERE {
+                    SELECT DISTINCT ?config1 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType ?hasLimitedAccess ?metadata WHERE {
                         ${graph}
                             ?config1 a ldr:ReactorConfig ;
                                     ldr:dataset ?dataset .
@@ -81,6 +83,7 @@ class DynamicConfigurator {
                                     OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
                                     OPTIONAL { ?config1 ldr:hasLimitedAccess ?hasLimitedAccess . }
+                                    OPTIONAL { ?config1 ldr:metadata ?metadata . }
                         ${graphEnd}
                     }
                     `;
@@ -121,7 +124,7 @@ class DynamicConfigurator {
             if(enableDynamicReactorConfiguration && enableDynamicFacetsConfiguration){
                 if(userSt){
                     query = `
-                    SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType ?hasLimitedAccess WHERE { ${graph}
+                    SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType ?hasLimitedAccess ?metadata WHERE { ${graph}
                             {
                             ?config1 a ldr:ReactorConfig ;
                                     ${userSt}
@@ -133,6 +136,7 @@ class DynamicConfigurator {
                                     OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
                                     OPTIONAL { ?config1 ldr:hasLimitedAccess ?hasLimitedAccess . }
+                                    OPTIONAL { ?config1 ldr:metadata ?metadata . }
                             }
                             UNION
                             {
@@ -151,6 +155,7 @@ class DynamicConfigurator {
                                     OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
                                     OPTIONAL { ?config1 ldr:hasLimitedAccess ?hasLimitedAccess . }
+                                    OPTIONAL { ?config1 ldr:metadata ?metadata . }
                                     filter not exists {
                                         ?config1 ldr:createdBy ?user.
                                     }
@@ -168,7 +173,7 @@ class DynamicConfigurator {
                     `;
                 }else{
                     query = `
-                    SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType ?hasLimitedAccess WHERE { ${graph}
+                    SELECT DISTINCT ?config1 ?config2 ?dataset ?datasetLabel ?readOnly ?position ?datasetCategory ?isHidden ?resourceFocusType ?hasLimitedAccess ?metadata WHERE { ${graph}
                             {
                             ?config1 a ldr:ReactorConfig ;
                                     ldr:dataset ?dataset .
@@ -179,6 +184,7 @@ class DynamicConfigurator {
                                     OPTIONAL { ?config1 ldr:isHidden ?isHidden . }
                                     OPTIONAL { ?config1 ldr:resourceFocusType ?resourceFocusType . }
                                     OPTIONAL { ?config1 ldr:hasLimitedAccess ?hasLimitedAccess . }
+                                    OPTIONAL { ?config1 ldr:metadata ?metadata . }
                             }
                             UNION
                             {
@@ -1300,6 +1306,14 @@ class DynamicConfigurator {
                     }else{
                         //this is used to prevent people to switch access
                         dynamicReactorDS.dataset[el.dataset.value].hasLimitedAccess = parseInt(el.hasLimitedAccess.value) || dynamicReactorDS.dataset[el.dataset.value].hasLimitedAccess;
+                    }
+                }
+                if(el.metadata && el.metadata.value){
+                    if(!dynamicReactorDS.dataset[el.dataset.value].metadata){
+                        dynamicReactorDS.dataset[el.dataset.value].metadata = [];
+                    }
+                    if(dynamicReactorDS.dataset[el.dataset.value].metadata.indexOf(el.metadata.value) === -1){
+                        dynamicReactorDS.dataset[el.dataset.value].metadata.push(el.metadata.value);
                     }
                 }
             }

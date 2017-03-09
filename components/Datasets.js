@@ -98,11 +98,11 @@ class Datasets extends React.Component {
                 let dsIcon = '';
                 outputDSS = dss.map(function(ds, index) {
                     dsLink = <a href={'/dataset/1/' + encodeURIComponent(ds.d)} title="go to resource list">{ds.features && ds.features.datasetLabel ? ds.features.datasetLabel : ds.d}</a>;
-                    brwsLink = <a className="ui grey label" href={'/browse/' + encodeURIComponent(ds.d)} title="browse"><i className="zoom icon"></i>browse</a>;
+                    brwsLink = <a className="ui basic blue label" href={'/browse/' + encodeURIComponent(ds.d)} title="browse data"><i className="tasks icon"></i>browse data</a>;
                     dsIcon = ' cubes ';
                     //remove links if no access is provided
                     if(enableAuthentication && ds.features.hasLimitedAccess && parseInt(ds.features.hasLimitedAccess)){
-                        dsIcon = ' lock '
+                        dsIcon = ' unlock '
                         //need to handle access to the dataset
                         //if user is the editor by default he already has view access
                         let editAccess = checkEditAccess(user, ds.d, 0, 0, 0);
@@ -111,6 +111,7 @@ class Datasets extends React.Component {
                             if(!viewAccess.access){
                                 dsLink = <span>{ds.features && ds.features.datasetLabel ? ds.features.datasetLabel : ds.d}</span>;
                                 brwsLink = '';
+                                dsIcon = ' lock '
                             }
                         }
                     }
@@ -130,7 +131,7 @@ class Datasets extends React.Component {
                     {ds.features && ds.features.isBrowsable ? brwsLink : ''}
                     {ds.features && ds.features.isStaticDynamic ? <i className="ui brown theme icon" title="loaded from both static and dynamic config"></i> :''}
                     {ds.features && ds.features.isDynamic && !ds.features.isStaticDynamic ? <i className="ui orange theme icon" title="loaded from dynamic config"></i> :''}
-                    {ds.features && ds.features.isDefaultDataset ? <i className="ui teal flag icon" title="default dataset"></i> :''}</div> </div>;
+                    {ds.features && ds.features.isDefaultDataset ? <i className="ui teal flag icon" title="default dataset"></i> :''}{ds.features && ds.features.metadata ? <a className="ui basic grey label rounded" href={ds.features.metadata} title="metadata" target="_blank"><i className="info icon"></i>metadata</a> : ''}</div> </div>;
                 });
             }
 
