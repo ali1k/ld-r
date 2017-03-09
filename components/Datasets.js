@@ -102,7 +102,7 @@ class Datasets extends React.Component {
                     dsIcon = ' cubes ';
                     //remove links if no access is provided
                     if(enableAuthentication && ds.features.hasLimitedAccess && parseInt(ds.features.hasLimitedAccess)){
-                        dsIcon = ' unlock '
+                        dsIcon = ' unlock ';
                         //need to handle access to the dataset
                         //if user is the editor by default he already has view access
                         let editAccess = checkEditAccess(user, ds.d, 0, 0, 0);
@@ -111,7 +111,7 @@ class Datasets extends React.Component {
                             if(!viewAccess.access){
                                 dsLink = <span>{ds.features && ds.features.datasetLabel ? ds.features.datasetLabel : ds.d}</span>;
                                 brwsLink = '';
-                                dsIcon = ' lock '
+                                dsIcon = ' lock ';
                             }
                         }
                     }
