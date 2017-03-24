@@ -70,7 +70,10 @@ class DatasetsStore extends BaseStore {
                 for(let prop in dynamicFacetsDS.facets[ds]){
                     tmp [ds][prop] = dynamicFacetsDS.facets[ds][prop];
                 }
-                tmp [ds].isStaticDynamic = 1;
+                //if the config is not only from dynamic reactor configs
+                if(!tmp [ds].isDynamic){
+                    tmp [ds].isStaticDynamic = 1;
+                }
             }else{
                 tmp [ds] = dynamicFacetsDS.facets[ds];
                 tmp [ds].isDynamic = 1;
