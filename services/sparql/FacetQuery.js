@@ -45,7 +45,7 @@ class FacetQuery{
                 qs = qs + `
                 GRAPH <${tmp1[0]}> {
                     ?vg${tindex}${counter-1} ${self.filterPropertyPath(tmp1[1])} ?v${(counter === tmp0.length ? tindex : 'g' + tindex + counter)} .
-                    ${(counter !== tmp0.length ? '' : gStart + filterSt + gEnd)}
+                    ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
                 }
                 ` ;
             }else{
@@ -54,11 +54,8 @@ class FacetQuery{
                 if(counter === 1){
                     //first one
                     qs = `
-                    ${gStart}
-                        ${self.makeExtraTypeFilters(endpointParameters, type)}
                         ?s ${self.filterPropertyPath(part)} ?v${(counter === tmp0.length ? tindex : 'g'+tindex+counter)} .
-                        ${(counter !== tmp0.length ? '' : gStart + filterSt + gEnd)}
-                    ${gEnd}
+                        ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
                     ` ;
                 }else{
                     qs = qs + `
