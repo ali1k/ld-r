@@ -48,7 +48,7 @@ How to deploy LD-R on Heroku?
 <pre style='color:#000000;background:#ffffff;'>heroku open
 </pre>
 <p>
-    But hold on! something is wrong if you are getting an error message! RUn the following command to see what went wrong:
+    But hold on! something is wrong if you are getting an error message! Run the following command to see what went wrong:
 </p>
 <pre style='color:#000000;background:#ffffff;'>heroku logs <span style='color:#808030; '>-</span><span style='color:#808030; '>-</span>tail
 </pre>
@@ -56,7 +56,7 @@ How to deploy LD-R on Heroku?
     You can see that there are a bunch of issues when Heroku started to deploy LD-R. Let's resolve them step by step:
 </p>
 <p>
-    Heroku is a production server. So, it doesn't care about all fancy babel, webpack stuff we have put in LD-R! So, we need to get rid of them by building the app first and then move the built bundles to Heroku!
+    Heroku is a production server. So, it doesn't care about all fancy babel, webpack stuff we have put in the LD-R framework! So, we need to get rid of them by building the app first and then move the built bundles to Heroku!
     To build the app, you need to follow the instructions for production mode in <a href="/docs/quickstart.html">installation page</a> and add your desirable configs.
 </p>
     Now you should get all the required bundles in your 'build' folder which is initially ignored by Git. Stop the build script and as next step go to your .gitignore file and simply replace its content by:
