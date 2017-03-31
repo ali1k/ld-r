@@ -1233,12 +1233,16 @@ class DynamicConfigurator {
                         }
                     }else if(settingProp === 'position' || settingProp === 'isHidden'){
                         dynamicReactorDS.dataset[el.dataset.value][settingProp] = parseInt(el.settingValue.value);
-                    } else {
-                        if(!dynamicReactorDS.dataset[el.dataset.value][settingProp]){
-                            dynamicReactorDS.dataset[el.dataset.value][settingProp] = [];
-                        }
-                        if(dynamicReactorDS.dataset[el.dataset.value][settingProp].indexOf(el.settingValue.value) === -1){
-                            dynamicReactorDS.dataset[el.dataset.value][settingProp].push(el.settingValue.value);
+                    }  else {
+                        //list of relevant datasets attributes should be defined here:
+                        let relatedProps = ['resourceFocusType', 'datasetLabel', 'metadata'];
+                        if(relatedProps.indexOf(settingProp) !== -1){
+                            if(!dynamicReactorDS.dataset[el.dataset.value][settingProp]){
+                                dynamicReactorDS.dataset[el.dataset.value][settingProp] = [];
+                            }
+                            if(dynamicReactorDS.dataset[el.dataset.value][settingProp].indexOf(el.settingValue.value) === -1){
+                                dynamicReactorDS.dataset[el.dataset.value][settingProp].push(el.settingValue.value);
+                            }
                         }
                     }
                 }
