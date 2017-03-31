@@ -32,6 +32,17 @@ class FacetQuery{
             return false;
         }
     }
+    returnServiceGraph(str){
+        let out = {service: '', graph: ''};
+        let tmp = str.split('>>');
+        if(tmp.length > 1){
+            out.service = tmp[0];
+            out.graph = tmp[1];
+        }else{
+            out.graph = str;
+        }
+        return out;
+    }
     prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, tindex, filterSt){
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let self = this;
@@ -42,12 +53,37 @@ class FacetQuery{
             if(tmp1.length > 1){
                 //it has named graph
                 //todo: use dataset instead of graph: needs loading dunamic config
-                qs = qs + `
-                GRAPH <${tmp1[0]}> {
-                    ?vg${tindex}${counter-1} ${self.filterPropertyPath(tmp1[1])} ?v${(counter === tmp0.length ? tindex : 'g' + tindex + counter)} .
-                    ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
+                //parse the SPARQL service URI separated by >>
+                //notice: >> is not tested because of the performance issues!
+                let tmp2 = this.returnServiceGraph(tmp1[0]);
+                if(tmp2.service){
+                    if(tmp2.graph !== 'default'){
+                        qs = qs + `
+                        SERVICE <${tmp2.service}> {
+                            GRAPH <${tmp2.graph}> {
+                                ?vg${tindex}${counter-1} ${self.filterPropertyPath(tmp1[1])} ?v${(counter === tmp0.length ? tindex : 'g' + tindex + counter)} .
+                                ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
+                            }
+                        }
+                        ` ;
+                    }else{
+                        qs = qs + `
+                        SERVICE <${tmp2.service}> {
+                            ?vg${tindex}${counter-1} ${self.filterPropertyPath(tmp1[1])} ?v${(counter === tmp0.length ? tindex : 'g' + tindex + counter)} .
+                            ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
+                        }
+                        ` ;
+                    }
+                //use case without federated query
+                }else{
+                    qs = qs + `
+                    GRAPH <${tmp1[0]}> {
+                        ?vg${tindex}${counter-1} ${self.filterPropertyPath(tmp1[1])} ?v${(counter === tmp0.length ? tindex : 'g' + tindex + counter)} .
+                        ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
+                    }
+                    ` ;
                 }
-                ` ;
+
             }else{
                 //we assume we always start from the original graph
                 //use the default graph name
@@ -70,26 +106,24 @@ class FacetQuery{
     }
     //gets the total number of items on a facet when a property is selected from master level
     getMasterPropertyValuesCount(endpointParameters, graphName, type, propertyURI) {
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
         let queryheart = '';
         if(this.isMultiGraphFacet(propertyURI)){
             //to support browsing mutiple graphs
             queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', '');
         }else{
-            let {gStart, gEnd} = this.prepareGraphName(graphName);
             let st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.';
             //---to support resource focus types
             let st_extra = this.makeExtraTypeFilters(endpointParameters, type);
             st = st_extra + ' ' + st;
-            queryheart = `
-                ${gStart}
-                    ${st}
-                ${gEnd}
-            `;
+            queryheart = st;
         }
 
         this.query = `
         SELECT (count(DISTINCT ?v) AS ?total) WHERE {
-            ${queryheart}
+            ${gStart}
+                ${queryheart}
+            ${gEnd}
         }
         `;
         return this.prefixes + this.query;
@@ -97,25 +131,23 @@ class FacetQuery{
     //gets the list of items together with theit count on a facet when a property is selected from master level
     getMasterPropertyValues(endpointParameters, graphName, type, propertyURI) {
         let queryheart = '';
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
         if(this.isMultiGraphFacet(propertyURI)){
             //to support browsing mutiple graphs
             queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', '');
         }else{
-            let {gStart, gEnd} = this.prepareGraphName(graphName);
             let st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.';
             //---to support resource focus types
             let st_extra = this.makeExtraTypeFilters(endpointParameters, type);
             st = st_extra + ' ' + st;
-            queryheart = `
-                ${gStart}
-                    ${st}
-                ${gEnd}
-            `;
+            queryheart = st;
         }
         //notice: it limits results to first 777 items
         this.query = `
         SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
-            ${queryheart}
+            ${gStart}
+                ${queryheart}
+            ${gEnd}
         } GROUP BY ?v ORDER BY DESC(?total) LIMIT 777
         `;
         return this.prefixes + this.query;
@@ -249,22 +281,20 @@ class FacetQuery{
     }
     getSideEffects(endpointParameters, graphName, type, propertyURI, prevSelection) {
         let queryheart = '';
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, type);
         if(this.isMultiGraphFacet(propertyURI)){
             //to support browsing mutiple graphs
             queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', st);
         }else{
-            let {gStart, gEnd} = this.prepareGraphName(graphName);
             st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.' + st;
-            queryheart = `
-                ${gStart}
-                    ${st}
-                ${gEnd}
-            `;
+            queryheart = st;
         }
         this.query = `
         SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
-            ${queryheart}
+            ${gStart}
+                ${queryheart}
+            ${gEnd}
         } GROUP BY ?v ORDER BY DESC(?total) LIMIT 777
         `;
         //console.log(this.query);
@@ -272,22 +302,20 @@ class FacetQuery{
     }
     getSideEffectsCount(endpointParameters, graphName, type, propertyURI, prevSelection) {
         let queryheart = '';
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, type);
         if(this.isMultiGraphFacet(propertyURI)){
             //to support browsing mutiple graphs
             queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', st);
         }else{
-            let {gStart, gEnd} = this.prepareGraphName(graphName);
             st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.' + st;
-            queryheart = `
-                ${gStart}
-                    ${st}
-                ${gEnd}
-            `;
+            queryheart = st;
         }
         this.query = `
         SELECT (count(DISTINCT ?v) AS ?total) WHERE {
-            ${queryheart}
+            ${gStart}
+                ${queryheart}
+            ${gEnd}
         }
         `;
         //console.log(this.query);
