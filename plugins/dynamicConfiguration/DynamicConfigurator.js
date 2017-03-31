@@ -1235,7 +1235,7 @@ class DynamicConfigurator {
                         dynamicReactorDS.dataset[el.dataset.value][settingProp] = parseInt(el.settingValue.value);
                     }  else {
                         //list of relevant datasets attributes should be defined here:
-                        let relatedProps = ['resourceFocusType', 'datasetLabel', 'metadata'];
+                        let relatedProps = ['resourceFocusType', 'datasetLabel', 'metadata', 'datasetCategory'];
                         if(relatedProps.indexOf(settingProp) !== -1){
                             if(!dynamicReactorDS.dataset[el.dataset.value][settingProp]){
                                 dynamicReactorDS.dataset[el.dataset.value][settingProp] = [];
