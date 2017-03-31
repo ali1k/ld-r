@@ -75,11 +75,11 @@ class ResourceUtil {
             }
             for(let propURI in rpIndex.propIndex){
                 asyncTasks.push(function(callback2){
-                    configurator.preparePropertyConfig(user, 1, datasetURI, resourceURI, resourceType, propURI, (config)=> {
+                    configurator.preparePropertyConfig(user, 1, datasetURI, resourceURI, resourceType, propURI, (dconfig)=> {
                         //handle categories
 
                         if (filterByCategory) {
-                            if (!config || !config.category || category !== config.category[0]) {
+                            if (!dconfig || !dconfig.category || category !== dconfig.category[0]) {
                                 //skip property
                                 callback2();
                             }else{
@@ -88,7 +88,7 @@ class ResourceUtil {
                                     propertyURI: propURI,
                                     property: property,
                                     instances: rpIndex.propIndex[propURI],
-                                    config: config
+                                    config: dconfig
                                 });
                                 callback2();
                             }
@@ -98,7 +98,7 @@ class ResourceUtil {
                                 propertyURI: propURI,
                                 property: property,
                                 instances: rpIndex.propIndex[propURI],
-                                config: config
+                                config: dconfig
                             });
                             callback2();
                         }
@@ -273,7 +273,8 @@ class ResourceUtil {
             if (parsed.results.bindings.length) {
                 parsed.results.bindings.forEach(function(el) {
                     asyncTasks.push(function(callback){
-                        configurator.preparePropertyConfig(user, 1, datasetURI, resourceURI, 0, el.p.value, (config)=> {
+                        configurator.preparePropertyConfig(user, 1, datasetURI, resourceURI, 0, el.p.value, (dconfig)=> {
+                            config = configurator.cloneConfig(dconfig);
                             if (el.p.value === 'http://purl.org/dc/terms/title') {
                                 title = el.o.value;
                             } else if (el.p.value === 'http://www.w3.org/2000/01/rdf-schema#label') {
