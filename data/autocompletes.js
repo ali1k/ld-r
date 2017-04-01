@@ -24,7 +24,7 @@ module.exports = {
             {title: 'ldr:annotatedBy'},
             {title: 'ldr:annotations'},
             {title: 'ldr:surfaceForm'},
-            {title: 'ldr:offser'},
+            {title: 'ldr:offset'},
             {title: 'ldr:uri'},
             {title: 'ldr:metadata'},
             {title: 'ldr:position'},
