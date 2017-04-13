@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {navigateAction} from 'fluxible-router';
 import {connectToStores} from 'fluxible-addons-react';
@@ -164,8 +165,8 @@ class Datasets extends React.Component {
     }
 }
 Datasets.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    getUser: React.PropTypes.func
+    executeAction: PropTypes.func.isRequired,
+    getUser: PropTypes.func
 };
 Datasets = connectToStores(Datasets, [DatasetsStore], function (context, props) {
     return {

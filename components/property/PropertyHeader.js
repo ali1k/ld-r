@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Popup, Dropdown, Menu } from 'semantic-ui-react'
 import createNewReactorConfig from '../../actions/createNewReactorConfig';
 
@@ -68,6 +69,6 @@ class PropertyHeader extends React.Component {
     }
 }
 PropertyHeader.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired
+    executeAction: PropTypes.func.isRequired
 };
 export default PropertyHeader;

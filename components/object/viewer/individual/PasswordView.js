@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 /**
 replaces sensitive object values with a given character
 */
@@ -20,6 +21,6 @@ PasswordView.propTypes = {
     /**
     Character used to replace the sensitive value
     */
-    secretChar: React.PropTypes.string,
+    secretChar: PropTypes.string,
 };
 export default PasswordView;

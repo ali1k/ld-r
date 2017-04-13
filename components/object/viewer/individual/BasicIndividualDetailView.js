@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import PropertyHeader from '../../../property/PropertyHeader';
 import ObjectIViewer from '../../ObjectIViewer';
 /**
@@ -50,14 +51,14 @@ BasicIndividualDetailView.propTypes = {
     /**
     Container dataset URI
     */
-    datasetURI: React.PropTypes.string,
+    datasetURI: PropTypes.string,
     /**
     LD-R Configurations object
     */
-    config: React.PropTypes.object,
+    config: PropTypes.object,
     /**
     LD-R spec
     */
-    spec: React.PropTypes.object
+    spec: PropTypes.object
 };
 export default BasicIndividualDetailView;

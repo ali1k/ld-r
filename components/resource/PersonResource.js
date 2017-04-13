@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import PropertyReactor from '../reactors/PropertyReactor';
 import {NavLink} from 'fluxible-router';
 import classNames from 'classnames/bind';
@@ -291,7 +292,7 @@ class PersonResource extends React.Component {
     }
 }
 PersonResource.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    getUser: React.PropTypes.func
+    executeAction: PropTypes.func.isRequired,
+    getUser: PropTypes.func
 };
 export default PersonResource;

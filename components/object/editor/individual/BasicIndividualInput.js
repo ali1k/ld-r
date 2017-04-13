@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 /**
 Default component to edit object values
@@ -74,39 +75,39 @@ BasicIndividualInput.propTypes = {
     /**
     will disable auto-focus on the input box
     */
-    noFocus: React.PropTypes.bool,
+    noFocus: PropTypes.bool,
     /**
     will allow action by pressing enter or other keys
     */
-    allowActionByKey: React.PropTypes.bool,
+    allowActionByKey: PropTypes.bool,
     /**
     the function which will be called when the content of input box changes
     */
-    onDataEdit: React.PropTypes.func,
+    onDataEdit: PropTypes.func,
     /**
     the function to handle user enter key press
     */
-    onEnterPress: React.PropTypes.func,
+    onEnterPress: PropTypes.func,
     /**
     placeholder for the inout box
     */
-    placeholder: React.PropTypes.string,
+    placeholder: PropTypes.string,
     /**
     /**
     will be used as domain name when creating random URIs
     */
-    dynamicResourceDomain: React.PropTypes.string,
+    dynamicResourceDomain: PropTypes.string,
     /**
     default value for the input box
     */
-    defaultValue: React.PropTypes.string,
+    defaultValue: PropTypes.string,
     /**
     LD-R Configurations object
     */
-    config: React.PropTypes.object,
+    config: PropTypes.object,
     /**
     LD-R spec
     */
-    spec: React.PropTypes.object
+    spec: PropTypes.object
 };
 export default BasicIndividualInput;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {enableAuthentication} from '../../configs/general';
 import ResourceStore from '../../stores/ResourceStore';
 import {connectToStores} from 'fluxible-addons-react';
@@ -94,8 +95,8 @@ class ResourceReactor extends React.Component {
     }
 }
 ResourceReactor.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    getUser: React.PropTypes.func
+    executeAction: PropTypes.func.isRequired,
+    getUser: PropTypes.func
 };
 ResourceReactor = connectToStores(ResourceReactor, [ResourceStore], function(context, props) {
     return {ResourceStore: context.getStore(ResourceStore).getState()};

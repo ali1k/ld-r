@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {provideContext, connectToStores} from 'fluxible-addons-react';
 import loadObjectProperties from '../../actions/loadObjectProperties';
 import IndividualObjectStore from '../../stores/IndividualObjectStore';
@@ -110,8 +111,8 @@ class ObjectReactor extends React.Component {
     }
 }
 ObjectReactor.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    getUser: React.PropTypes.func
+    executeAction: PropTypes.func.isRequired,
+    getUser: PropTypes.func
 };
 ObjectReactor = connectToStores(ObjectReactor, [IndividualObjectStore], function(context, props) {
     return {ObjectReactor: context.getStore(IndividualObjectStore).getState()};

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import PropertyReactor from '../reactors/PropertyReactor';
 import {NavLink} from 'fluxible-router';
 import URIUtil from '../utils/URIUtil';
@@ -155,7 +156,7 @@ class UserResource extends React.Component {
     }
 }
 UserResource.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    getUser: React.PropTypes.func
+    executeAction: PropTypes.func.isRequired,
+    getUser: PropTypes.func
 };
 export default UserResource;

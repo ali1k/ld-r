@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {provideContext} from 'fluxible/addons';
 import deleteIndividualObject from '../../actions/deleteIndividualObject';
 import deleteProperty from '../../actions/deleteProperty';
@@ -208,7 +209,7 @@ class PropertyReactor extends React.Component {
     }
 }
 PropertyReactor.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    getUser: React.PropTypes.func
+    executeAction: PropTypes.func.isRequired,
+    getUser: PropTypes.func
 };
 export default PropertyReactor;

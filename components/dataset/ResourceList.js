@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {NavLink} from 'fluxible-router';
 import URIUtil from '../utils/URIUtil';
 import BasicAggregateMapView from '../object/viewer/aggregate/BasicAggregateMapView';
@@ -173,7 +174,7 @@ class ResourceList extends React.Component {
     }
 }
 ResourceList.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    getUser: React.PropTypes.func
+    executeAction: PropTypes.func.isRequired,
+    getUser: PropTypes.func
 };
 export default ResourceList;

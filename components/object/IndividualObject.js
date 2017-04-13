@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {provideContext} from 'fluxible-addons-react';
 import ObjectIViewer from './ObjectIViewer';
 import ObjectIEditor from './ObjectIEditor';
@@ -247,6 +248,6 @@ class IndividualObject extends React.Component {
     }
 }
 IndividualObject.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired
+    executeAction: PropTypes.func.isRequired
 };
 export default IndividualObject;

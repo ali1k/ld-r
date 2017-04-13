@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 
 if (process.env.BROWSER) {
@@ -44,10 +45,10 @@ YASQEViewer.propTypes = {
     /**
     LD-R Configurations object
     */
-    config: React.PropTypes.object,
+    config: PropTypes.object,
     /**
     LD-R spec
     */
-    spec: React.PropTypes.object
+    spec: PropTypes.object
 };
 export default YASQEViewer;

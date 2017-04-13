@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 /**
 Displays Date/Time values in different formats.
@@ -30,14 +31,14 @@ BasicDateTimeView.propTypes = {
     /**
     Date/Time format e.g. YYYY-MM-DD HH:mm:ss
     */
-    dateTimeFormat: React.PropTypes.string,
+    dateTimeFormat: PropTypes.string,
     /**
     LD-R Configurations object
     */
-    config: React.PropTypes.object,
+    config: PropTypes.object,
     /**
     LD-R spec
     */
-    spec: React.PropTypes.object
+    spec: PropTypes.object
 };
 export default BasicDateTimeView;

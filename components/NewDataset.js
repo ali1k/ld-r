@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {navigateAction} from 'fluxible-router';
 import {enableAuthentication, enableAddingNewDatasets, baseResourceDomain} from '../configs/general';
@@ -138,7 +139,7 @@ class NewDataset extends React.Component {
     }
 }
 NewDataset.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    getUser: React.PropTypes.func
+    executeAction: PropTypes.func.isRequired,
+    getUser: PropTypes.func
 };
 export default NewDataset;

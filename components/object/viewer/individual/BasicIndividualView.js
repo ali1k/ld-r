@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import URIUtil from '../../../utils/URIUtil';
 /**
 Default component to display object values
@@ -30,18 +31,18 @@ BasicIndividualView.propTypes = {
     /**
     truncate URI from the middle
     */
-    truncateURI: React.PropTypes.bool,
+    truncateURI: PropTypes.bool,
     /**
     only show the last part of the URI
     */
-    shortenURI: React.PropTypes.bool,
+    shortenURI: PropTypes.bool,
     /**
     LD-R Configurations object
     */
-    config: React.PropTypes.object,
+    config: PropTypes.object,
     /**
     LD-R spec
     */
-    spec: React.PropTypes.object
+    spec: PropTypes.object
 };
 export default BasicIndividualView;

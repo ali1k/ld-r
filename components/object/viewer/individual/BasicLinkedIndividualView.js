@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {NavLink} from 'fluxible-router';
 import URIUtil from '../../../utils/URIUtil';
 /**
@@ -47,18 +48,18 @@ BasicLinkedIndividualView.propTypes = {
     /**
     Opens the link in a new windows
     */
-    openInNewWindows: React.PropTypes.bool,
+    openInNewWindows: PropTypes.bool,
     /**
     Container dataset URI
     */
-    containerDatasetURI: React.PropTypes.string,
+    containerDatasetURI: PropTypes.string,
     /**
     LD-R Configurations object
     */
-    config: React.PropTypes.object,
+    config: PropTypes.object,
     /**
     LD-R spec
     */
-    spec: React.PropTypes.object
+    spec: PropTypes.object
 };
 export default BasicLinkedIndividualView;

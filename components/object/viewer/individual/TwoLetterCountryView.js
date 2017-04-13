@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {list} from '../../../../data/ISO3166_1_alpha2';
 /**
 Display the country codes based on ISO3166_1_alpha2.
@@ -29,6 +30,6 @@ TwoLetterCountryView.propTypes = {
     /**
     LD-R spec
     */
-    spec: React.PropTypes.object
+    spec: PropTypes.object
 };
 export default TwoLetterCountryView;

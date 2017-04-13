@@ -1,6 +1,7 @@
 /*globals document*/
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import Nav from './Nav';
 import HelpModal from './HelpModal';
 import Home from './Home';
@@ -34,9 +35,9 @@ class Application extends React.Component {
 }
 
 Application.contextTypes = {
-    getStore: React.PropTypes.func,
-    executeAction: React.PropTypes.func,
-    getUser: React.PropTypes.func
+    getStore: PropTypes.func,
+    executeAction: PropTypes.func,
+    getUser: PropTypes.func
 };
 
 Application = connectToStores(Application, [ApplicationStore], function (context, props) {
@@ -48,7 +49,7 @@ Application = connectToStores(Application, [ApplicationStore], function (context
 Application = handleHistory(Application, {enableScroll: false});
 
 Application = provideContext(Application, { //jshint ignore:line
-    getUser: React.PropTypes.func
+    getUser: PropTypes.func
 });
 
 export default Application;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connectToStores} from 'fluxible-addons-react';
 import LeafletMapView from '../common/LeafletMapView';
 import BasicAggregateView from './BasicAggregateView';
@@ -41,17 +42,17 @@ class DBpediaMapView extends React.Component {
     }
 }
 DBpediaMapView.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired
+    executeAction: PropTypes.func.isRequired
 };
 DBpediaMapView.propTypes = {
     /**
     LD-R Configurations object
     */
-    config: React.PropTypes.object,
+    config: PropTypes.object,
     /**
     LD-R spec
     */
-    spec: React.PropTypes.object
+    spec: PropTypes.object
 };
 DBpediaMapView = connectToStores(DBpediaMapView, [DBpediaGMapStore], function (context, props) {
     return {

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Wkt from 'wicket/wicket';
 import LeafletMapView from '../common/LeafletMapView';
 /**
@@ -139,30 +140,30 @@ BasicAggregateMapView.propTypes = {
     /**
     Height of the Map
     */
-    mapHeight: React.PropTypes.number,
+    mapHeight: PropTypes.number,
     /**
     Width of the Map
     */
-    mapWidth: React.PropTypes.number,
+    mapWidth: PropTypes.number,
     /**
     If set, will use multiple colors when displaying polygons
     */
-    multiColor: React.PropTypes.bool,
+    multiColor: PropTypes.bool,
     /**
     Swap longitude and latitudes: default is POINT(long lat)
     */
-    swapLongLat: React.PropTypes.bool,
+    swapLongLat: PropTypes.bool,
     /**
     Default level of zoom on the map
     */
-    zoomLevel: React.PropTypes.number,
+    zoomLevel: PropTypes.number,
     /**
     LD-R Configurations object
     */
-    config: React.PropTypes.object,
+    config: PropTypes.object,
     /**
     LD-R spec
     */
-    spec: React.PropTypes.object
+    spec: PropTypes.object
 };
 export default BasicAggregateMapView;

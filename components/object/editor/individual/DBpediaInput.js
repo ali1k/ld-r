@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {provideContext, connectToStores} from 'fluxible-addons-react';
 import lookupDBpedia from '../../../../actions/lookupDBpedia';
@@ -104,7 +105,7 @@ class DBpediaInput extends React.Component {
     }
 }
 DBpediaInput.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired
+    executeAction: PropTypes.func.isRequired
 };
 DBpediaInput = connectToStores(DBpediaInput, [DBpediaStore], function (context, props) {
     return {

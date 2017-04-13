@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import URIUtil from '../../../utils/URIUtil';
 /**
 display values from an option/value list
@@ -36,10 +37,10 @@ class BasicOptionView extends React.Component {
     }
 }
 BasicOptionView.propTypes = {
-    config: React.PropTypes.object,
+    config: PropTypes.object,
     /**
     LD-R spec
     */
-    spec: React.PropTypes.object
+    spec: PropTypes.object
 };
 export default BasicOptionView;

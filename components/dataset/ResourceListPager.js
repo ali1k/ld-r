@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 //import ReactDOM from 'react-dom';
 import {NavLink} from 'fluxible-router';
 import searchInDataset from '../../actions/searchInDataset';
@@ -115,6 +116,6 @@ class ResourceListPager extends React.Component {
     }
 }
 ResourceListPager.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired
+    executeAction: PropTypes.func.isRequired
 };
 export default ResourceListPager;

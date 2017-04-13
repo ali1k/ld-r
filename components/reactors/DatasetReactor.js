@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import DatasetStore from '../../stores/DatasetStore';
 import {connectToStores} from 'fluxible-addons-react';
 import {enableAuthentication} from '../../configs/general';
@@ -61,8 +62,8 @@ class DatasetReactor extends React.Component {
     }
 }
 DatasetReactor.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    getUser: React.PropTypes.func
+    executeAction: PropTypes.func.isRequired,
+    getUser: PropTypes.func
 };
 DatasetReactor = connectToStores(DatasetReactor, [DatasetStore], function (context, props) {
     return {

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Facet from './Facet';
 import {NavLink} from 'fluxible-router';
 import FacetedBrowserStore from '../../stores/FacetedBrowserStore';
@@ -338,8 +339,8 @@ class FacetedBrowser extends React.Component {
     }
 }
 FacetedBrowser.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    getUser: React.PropTypes.func
+    executeAction: PropTypes.func.isRequired,
+    getUser: PropTypes.func
 };
 FacetedBrowser = connectToStores(FacetedBrowser, [FacetedBrowserStore], function (context, props) {
     return {

@@ -9,3 +9,4 @@ configs/reactor.js
 configs/general.js
 plugins/email/config.js
 *.lock
+react-codemod

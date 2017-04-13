@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ObjectIViewer from '../../ObjectIViewer';
 /**
 Default component to display multiple object values as aggregate
@@ -23,10 +24,10 @@ BasicAggregateView.propTypes = {
     /**
     LD-R Configurations object
     */
-    config: React.PropTypes.object,
+    config: PropTypes.object,
     /**
     LD-R spec
     */
-    spec: React.PropTypes.object
+    spec: PropTypes.object
 };
 export default BasicAggregateView;

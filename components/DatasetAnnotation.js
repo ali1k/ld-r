@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {connectToStores} from 'fluxible-addons-react';
 import DatasetsStore from '../stores/DatasetsStore';
@@ -219,8 +220,8 @@ class DatasetAnnotation extends React.Component {
     }
 }
 DatasetAnnotation.contextTypes = {
-    executeAction: React.PropTypes.func.isRequired,
-    getUser: React.PropTypes.func
+    executeAction: PropTypes.func.isRequired,
+    getUser: PropTypes.func
 };
 DatasetAnnotation = connectToStores(DatasetAnnotation, [DatasetsStore, DatasetAnnotationStore], function (context, props) {
     return {

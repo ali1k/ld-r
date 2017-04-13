@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import URIUtil from '../../../utils/URIUtil';
 /**
 Display on and off switch for boolean object values
@@ -39,18 +40,18 @@ ToggleView.propTypes = {
     /**
     Value on on (checked) mode
     */
-    onValue: React.PropTypes.string,
+    onValue: PropTypes.string,
     /**
     value on off (unchecked) mode
     */
-    offValue: React.PropTypes.string,
+    offValue: PropTypes.string,
     /**
     LD-R Configurations object
     */
-    config: React.PropTypes.object,
+    config: PropTypes.object,
     /**
     LD-R spec
     */
-    spec: React.PropTypes.object
+    spec: PropTypes.object
 };
 export default ToggleView;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 /**
 display DBpedia resources
 */
@@ -53,14 +54,14 @@ BasicDBpediaView.propTypes = {
     /**
     display wikipedia page URI instead of DBpedia one
     */
-    asWikipedia: React.PropTypes.bool,
+    asWikipedia: PropTypes.bool,
     /**
     LD-R Configurations object
     */
-    config: React.PropTypes.object,
+    config: PropTypes.object,
     /**
     LD-R spec
     */
-    spec: React.PropTypes.object
+    spec: PropTypes.object
 };
 export default BasicDBpediaView;
