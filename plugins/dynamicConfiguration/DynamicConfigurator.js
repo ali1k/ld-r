@@ -957,7 +957,7 @@ class DynamicConfigurator {
                     if(!output.property[propertyURI][settingProp]){
                         output.property[propertyURI][settingProp] = []
                     }
-                    if(output.property[propertyURI][settingProp].indexOf() === -1) {
+                    if(output.property[propertyURI][settingProp].indexOf(el.settingValue.value) === -1) {
                         output.property[propertyURI][settingProp].push(el.settingValue.value);
                     }
 
@@ -996,7 +996,7 @@ class DynamicConfigurator {
                     if(!output.resource_property[el.resource.value][propertyURI][settingProp]){
                         output.resource_property[el.resource.value][propertyURI][settingProp] = [];
                     }
-                    if(output.resource_property[el.resource.value][propertyURI][settingProp].indexOf() === -1){
+                    if(output.resource_property[el.resource.value][propertyURI][settingProp].indexOf(el.settingValue.value) === -1){
                         output.resource_property[el.resource.value][propertyURI][settingProp].push( el.settingValue.value);
                     }
 
@@ -1020,7 +1020,7 @@ class DynamicConfigurator {
                     if(!output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][settingProp]){
                         output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][settingProp] = [];
                     }
-                    if(output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][settingProp].indexOf() === -1){
+                    if(output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][settingProp].indexOf(el.settingValue.value) === -1){
                         output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][settingProp].push(el.settingValue.value);
                     }
 
@@ -1063,7 +1063,7 @@ class DynamicConfigurator {
                     if(!output.dataset_resource[el.dataset.value][resourceURI][settingProp]){
                         output.dataset_resource[el.dataset.value][resourceURI][settingProp] = [];
                     }
-                    if(output.dataset_resource[el.dataset.value][resourceURI][settingProp].indexOf() === -1){
+                    if(output.dataset_resource[el.dataset.value][resourceURI][settingProp].indexOf(el.settingValue.value) === -1){
                         output.dataset_resource[el.dataset.value][resourceURI][settingProp].push( el.settingValue.value);
                     }
 
