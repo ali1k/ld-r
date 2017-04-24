@@ -16,7 +16,7 @@ class YASQEViewer extends React.Component {
     componentDidMount() {
         let self = this;
         self.yasqe = YASQE.fromTextArea(self.refs.YASQE_query, {
-
+            createShareLink: false
         });
         self.yasqe.setValue(self.props.spec.value);
         self.yasqe.execCommand('selectAll');
@@ -30,13 +30,24 @@ class YASQEViewer extends React.Component {
         YASQE.doAutoFormat(self.yasqe);
         //self.yasqe.collapsePrefixes(true)
     }
+    handleRunQuery(){
+        let self = this;
+        let query = self.yasqe.getValue();
+        //todo: call the right action to run the query
+    }
     render() {
         if(this.props.config){
 
         }
+        let runDIV = '';
+        //this property allows users to manually run a query
+        if(this.props.allowRun){
+            runDIV = <a onClick={this.handleRunQuery.bind(this)} className='ui icon primary fluid button'><i className='ui icon play'></i>Run</a>;
+        }
         return (
             <div className='ui'>
                 <textarea defaultValue={this.props.spec.value} ref='YASQE_query' className='sparql-query'></textarea>
+                {runDIV}
             </div>
         );
     }
