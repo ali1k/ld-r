@@ -84,7 +84,7 @@ export default {
                             datasetURI: datasetURI,
                             graphName: graphName,
                             page: 1,
-                            facets: {propertyURI: decodeURIComponent(params.selection.propertyURI), items: utilObject.parseMasterPropertyValues(res)}
+                            facets: {propertyURI: decodeURIComponent(params.selection.propertyURI), items: utilObject.parseMasterPropertyValues(res), facetQuery: query}
                         });
                     }).catch(function (err) {
                         console.log(err);
@@ -175,7 +175,7 @@ export default {
                             datasetURI: datasetURI,
                             graphName: graphName,
                             page: 1,
-                            facets: {status: Boolean(params.selection.status), propertyURI: decodeURIComponent(params.selection.value), items: utilObject.parseMasterPropertyValues(res)}
+                            facets: {status: Boolean(params.selection.status), propertyURI: decodeURIComponent(params.selection.value), items: utilObject.parseMasterPropertyValues(res), facetQuery: query}
                         });
                     }).catch(function (err) {
                         console.log(err);

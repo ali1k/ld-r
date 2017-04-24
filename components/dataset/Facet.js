@@ -3,6 +3,7 @@ import PropertyHeader from '../property/PropertyHeader';
 import ObjectBrowser from '../object/ObjectBrowser';
 import SearchInput from 'react-search-input';
 import URIUtil from '../utils/URIUtil';
+import YASQEViewer from '../object/viewer/individual/YASQEViewer';
 
 class Facet extends React.Component {
     constructor(props){
@@ -85,6 +86,7 @@ class Facet extends React.Component {
             cloneInstances = cloneInstances.filter(this.refs.search.filter(filters));
         }
         newSpec.instances = cloneInstances;
+        //console.log(this.props.spec.query);
         return (
             <div className={cardClasses} ref="facet">
                 {this.state.verticalResized ?
@@ -143,6 +145,12 @@ class Facet extends React.Component {
                       </div>
 
                   </div>
+                  {this.props.config && this.props.config.displayQueries ?
+                    <div className= "ui tertiary segment">
+                        <YASQEViewer spec={{value: this.props.spec.query}} />
+                    </div>
+                    : ''
+                  }
             </div>
         );
     }

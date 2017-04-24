@@ -10,7 +10,10 @@ class FacetedBrowserStore extends BaseStore {
         this.facetsCount = {};
         this.resources = [];
         this.total = 0;
+        //query used to generate the result list
         this.resourceQuery = '';
+        //queries used to display the values of each property facet
+        this.facetQuery = {};
         this.page = 1;
         this.graphName = '';
         this.datasetURI = '';
@@ -85,8 +88,10 @@ class FacetedBrowserStore extends BaseStore {
         //for master facet
         if(payload.facets.status){
             this.facets[payload.facets.propertyURI] = payload.facets.items;
+            this.facetQuery[payload.facets.propertyURI] = payload.facets.facetQuery;
         }else{
             delete this.facets[payload.facets.propertyURI];
+            delete this.facetQuery[payload.facets.propertyURI];
         }
         this.page = payload.page;
         this.graphName = payload.graphName;
@@ -103,6 +108,7 @@ class FacetedBrowserStore extends BaseStore {
     }
     handleFacetSideEffects(payload) {
         this.facets[payload.facets.propertyURI] = payload.facets.items;
+        this.facetQuery[payload.facets.propertyURI] = payload.facets.facetQuery;
         this.page = payload.page;
         this.graphName = payload.graphName;
         this.datasetURI = payload.datasetURI;
@@ -120,6 +126,7 @@ class FacetedBrowserStore extends BaseStore {
             resources: this.resources,
             total: this.total,
             resourceQuery: this.resourceQuery,
+            facetQuery: this.facetQuery,
             page: this.page,
             error: this.error
         };
@@ -138,6 +145,7 @@ class FacetedBrowserStore extends BaseStore {
         this.total = state.total;
         this.page = state.page;
         this.resourceQuery = state.resourceQuery;
+        this.facetQuery = state.facetQuery;
         this.error = state.error;
     }
 }
