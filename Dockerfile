@@ -1,4 +1,4 @@
-FROM node:7.0-slim
+FROM node:7.9-slim
 MAINTAINER Ali Khalili "hyperir@gmail.com"
 
 # Update aptitude with new repo
