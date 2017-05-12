@@ -230,13 +230,18 @@ class FacetQuery{
             }
         }
         st = st + ' FILTER (' + filters.join(' && ') + ') ';
-        if(!filters.length){
-            //no constrain is selected
-            st = '?s rdf:type ?type .';
-        }
-
         //---to support resource focus types
         let st_extra = this.makeExtraTypeFilters(endpointParameters, type);
+        if(!filters.length){
+            if(!st_extra){
+                //no constrain is selected
+                st = '?s rdf:type ?type .';
+            }else{
+                //type is selected
+                st = '';
+            }
+        }
+
         return st_extra + ' ' + st;
     }
     makeExtraTypeFilters(endpointParameters, type){
