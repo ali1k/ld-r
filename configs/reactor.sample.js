@@ -227,6 +227,7 @@ export default {
                         {label: 'ClioPatria', value: 'cliopatria'},
                         {label: 'Virtuoso', value: 'virtuoso'},
                         {label: 'Stardog', value: 'stardog'},
+                        {label: 'Blazegraph', value: 'blazegraph'},
                         {label: 'Sesame', value: 'sesame'}
                     ]
                 }

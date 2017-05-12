@@ -140,10 +140,16 @@ export default {
 
         switch (endpointParameters.type.toLowerCase()) {
             case 'virtuoso':
-
                 outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
                 outputObject.params['query'] = query;
                 outputObject.params['format'] = outputFormat;
+
+                break;
+            case 'blazegraph':
+                outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                outputObject.params['query'] = query;
+                //application/sparql-results+json is not supported!
+                outputObject.params['format'] = 'json';
 
                 break;
             case 'stardog':
