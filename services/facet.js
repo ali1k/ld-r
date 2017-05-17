@@ -42,7 +42,7 @@ export default {
                 configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
                     //resource focus type
                     let rftconfig = configurator.getResourceFocusType(rconfig, datasetURI);
-                    query = queryObject.getSideEffectsCount(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
+                    query = queryObject.getSideEffectsCount(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, params.selection.options);
                     //build http uri
                     //send request
                     rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
@@ -76,7 +76,7 @@ export default {
                 configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
                     //resource focus type
                     let rftconfig = configurator.getResourceFocusType(rconfig, datasetURI);
-                    query = queryObject.getSideEffects(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection);
+                    query = queryObject.getSideEffects(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, params.selection.options);
                     //build http uri
                     //send request
                     rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
@@ -225,14 +225,14 @@ export default {
                         //get all resources
                         query = queryObject.countSecondLevelPropertyValues(endpointParameters, graphName, rftconfig.type, {});
                     }else{
-                        query = queryObject.countSecondLevelPropertyValues(endpointParameters, graphName, rftconfig.type, params.selection.prevSelection);
+                        query = queryObject.countSecondLevelPropertyValues(endpointParameters, graphName, rftconfig.type, params.selection.prevSelection, params.selection.options);
                     }
                     //console.log(query);
                     let searchTerm = params.searchTerm ? params.searchTerm : '';
                     //build http uri
                     //send request
                     rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
-                        let query2 = queryObject.getSecondLevelPropertyValues(endpointParameters, graphName, searchTerm, rftconfig, params.selection.prevSelection, maxOnPage, page);
+                        let query2 = queryObject.getSecondLevelPropertyValues(endpointParameters, graphName, searchTerm, rftconfig, params.selection.prevSelection, params.selection.options, maxOnPage, page);
                         //console.log(query2);
                         rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query2, endpointParameters, outputFormat)), headers: headers}).then(function(res2){
                             callback(null, {

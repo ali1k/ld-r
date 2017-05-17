@@ -152,7 +152,7 @@ class FacetQuery{
         `;
         return this.prefixes + this.query;
     }
-    getMultipleFilters(endpointParameters, graphName, prevSelection, type) {
+    getMultipleFilters(endpointParameters, graphName, prevSelection, type, options) {
         let st = '', filters, tmp, tmp2, i = 0, hasURIVal = 0, hasLiteralVal = 0, typedLiteralVal = '';
         let typeVal = {};
         filters = [];
@@ -182,41 +182,74 @@ class FacetQuery{
                     if(endpointParameters.type === 'stardog' || endpointParameters.type === 'sesame'){
                         ///---for sesame
                         tmp2 = [];
-                        tmp.forEach(function(fl){
-                            tmp2.push('?v' + i + '=' + fl);
-                        });
-                        filters.push('(' + tmp2.join(' || ') + ')');
+                        if(tmp.length && options && options.invert && options.invert[key]){
+                            tmp.forEach(function(fl){
+                                tmp2.push('?v' + i + '=' + fl);
+                            });
+                            filters.push('(' + tmp2.join(' || ') + ')');
+                        }else{
+                            tmp.forEach(function(fl){
+                                tmp2.push('?v' + i + '!=' + fl);
+                            });
+                            filters.push('(' + tmp2.join(' && ') + ')');
+                        }
                         //---------------
                     }else{
                         //for virtuoso and others
-                        filters.push('str(?v' + i + ') IN ('+ tmp.join(',') +')');
+                        if(tmp.length && options && options.invert && options.invert[key]){
+                            filters.push('str(?v' + i + ') NOT IN ('+ tmp.join(',') +')');
+                        }else{
+                            filters.push('str(?v' + i + ') IN ('+ tmp.join(',') +')');
+                        }
                     }
                 }else{
                     if(hasURIVal){
                         if(endpointParameters.type === 'stardog' || endpointParameters.type === 'sesame'){
                             ///---for sesame
                             tmp2 = [];
-                            tmp.forEach(function(fl){
-                                tmp2.push('?v' + i + '=' + fl);
-                            });
-                            filters.push('(' + tmp2.join(' || ') + ')');
+                            if(tmp.length && options && options.invert && options.invert[key]){
+                                tmp.forEach(function(fl){
+                                    tmp2.push('?v' + i + '!=' + fl);
+                                });
+                                filters.push('(' + tmp2.join(' && ') + ')');
+                            }else{
+                                tmp.forEach(function(fl){
+                                    tmp2.push('?v' + i + '=' + fl);
+                                });
+                                filters.push('(' + tmp2.join(' || ') + ')');
+                            }
                             //---------------
                         }else{
-                            //for virtuoso
-                            filters.push('?v' + i + ' IN ('+ tmp.join(',') +')');
+                            //for virtuoso and others
+                            if(tmp.length && options && options.invert && options.invert[key]){
+                                filters.push('?v' + i + ' NOT IN ('+ tmp.join(',') +')');
+                            }else{
+                                filters.push('?v' + i + ' IN ('+ tmp.join(',') +')');
+                            }
                         }
                     }else{
                         if(endpointParameters.type === 'stardog' || endpointParameters.type === 'sesame'){
                             ///---for sesame
                             tmp2 = [];
-                            tmp.forEach(function(fl){
-                                tmp2.push('?v' + i + '=' + fl);
-                            });
-                            filters.push('(' + tmp2.join(' || ') + ')');
+                            if(tmp.length &&  options && options.invert && options.invert[key]){
+                                tmp.forEach(function(fl){
+                                    tmp2.push('?v' + i + '!=' + fl);
+                                });
+                                filters.push('(' + tmp2.join(' && ') + ')');
+                            }else{
+                                tmp.forEach(function(fl){
+                                    tmp2.push('?v' + i + '=' + fl);
+                                });
+                                filters.push('(' + tmp2.join(' || ') + ')');
+                            }
                             //---------------
                         }else{
                             //for virtuoso
-                            filters.push(typedLiteralVal+'(?v' + i + ') IN ('+ tmp.join(',') +')');
+                            if(tmp.length && options && options.invert && options.invert[key]){
+                                filters.push(typedLiteralVal+'(?v' + i + ') NOT IN ('+ tmp.join(',') +')');
+                            }else{
+                                filters.push(typedLiteralVal+'(?v' + i + ') IN ('+ tmp.join(',') +')');
+                            }
                         }
                     }
                 }
@@ -284,10 +317,10 @@ class FacetQuery{
             return '<'+ propertyURI + '>';
         }
     }
-    getSideEffects(endpointParameters, graphName, type, propertyURI, prevSelection) {
+    getSideEffects(endpointParameters, graphName, type, propertyURI, prevSelection, options) {
         let queryheart = '';
         let {gStart, gEnd} = this.prepareGraphName(graphName);
-        let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, type);
+        let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, type, options);
         if(this.isMultiGraphFacet(propertyURI)){
             //to support browsing mutiple graphs
             queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', st);
@@ -305,10 +338,10 @@ class FacetQuery{
         //console.log(this.query);
         return this.prefixes + this.query;
     }
-    getSideEffectsCount(endpointParameters, graphName, type, propertyURI, prevSelection) {
+    getSideEffectsCount(endpointParameters, graphName, type, propertyURI, prevSelection, options) {
         let queryheart = '';
         let {gStart, gEnd} = this.prepareGraphName(graphName);
-        let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, type);
+        let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, type, options);
         if(this.isMultiGraphFacet(propertyURI)){
             //to support browsing mutiple graphs
             queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', st);
@@ -326,9 +359,9 @@ class FacetQuery{
         //console.log(this.query);
         return this.prefixes + this.query;
     }
-    countSecondLevelPropertyValues(endpointParameters, graphName, type, prevSelection) {
+    countSecondLevelPropertyValues(endpointParameters, graphName, type, prevSelection, options) {
         let {gStart, gEnd} = this.prepareGraphName(graphName);
-        let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, type);
+        let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, type, options);
         this.query = `
         SELECT (count(DISTINCT ?s) AS ?total) WHERE {
             ${gStart}
@@ -339,7 +372,7 @@ class FacetQuery{
         //console.log(this.query);
         return this.prefixes + this.query;
     }
-    getSecondLevelPropertyValues(endpointParameters, graphName, searchTerm, rtconfig, prevSelection, limit, offset) {
+    getSecondLevelPropertyValues(endpointParameters, graphName, searchTerm, rtconfig, prevSelection, options, limit, offset) {
         let self = this;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let type = rtconfig.type;
@@ -382,7 +415,7 @@ class FacetQuery{
             selectStr = selectStr + ' ?geo ';
             geoStr = 'OPTIONAL { ?s ' + self.filterPropertyPath(geoProperty[0]) + ' ?geo .} ';
         }
-        let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, type);
+        let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, type, options);
         let limitOffsetPharse =`LIMIT ${limit} OFFSET ${noffset}`;
         if(searchPhase){
             limitOffsetPharse ='';
