@@ -21,13 +21,15 @@ class UsersList extends React.Component {
         let currentComponent = this;
         if (!user || !parseInt(user.isSuperUser)) {
             return (
-                <div className="ui page grid">
-                    <div className="row">
-                        <div className="column">
-                            <h1 className="ui header">Permission denied!</h1>
-                            <div className="ui segment">
-                                <div className="ui warning message">
-                                    <div className="header">Sorry! You do not have enough permission to access this page!</div>
+                <div className="ui fluid container ldr-padding-more">
+                    <div className="ui grid">
+                        <div className="row">
+                            <div className="column">
+                                <h1 className="ui header">Permission denied!</h1>
+                                <div className="ui segment">
+                                    <div className="ui warning message">
+                                        <div className="header">Sorry! You do not have enough permission to access this page!</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -77,21 +79,23 @@ class UsersList extends React.Component {
             </div>
         }
         return (
-            <div className="ui page grid">
-                <div className="row">
-                    <div className="column">
-                        <h1 className="ui header">
-                            <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(currentComponent.props.UserStore.datasetURI)}>
-                                <span className="ui big black circular label">{i}</span>
-                            </a>
-                            Registered Users</h1>
-                        <div className="ui segment">
-                            <div className="ui huge divided animated list">
-                                {list}
+            <div className="ui fluid container ldr-padding-more" ref="dataset">
+                <div className="ui grid">
+                    <div className="row">
+                        <div className="column">
+                            <h1 className="ui header">
+                                <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(currentComponent.props.UserStore.datasetURI)}>
+                                    <span className="ui big black circular label">{i}</span>
+                                </a>
+                                Registered Users</h1>
+                            <div className="ui segment">
+                                <div className="ui huge divided animated list">
+                                    {list}
+                                </div>
+                                {emailHint
+                                    ? <div>* A notification email will be sent to the user after activation.</div>
+                                    : ''}
                             </div>
-                            {emailHint
-                                ? <div>* A notification email will be sent to the user after activation.</div>
-                                : ''}
                         </div>
                     </div>
                 </div>

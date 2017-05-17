@@ -27,7 +27,7 @@ class Dataset extends React.Component {
         if(this.props.error){
             return (
                 <div className="ui fluid container ldr-padding-more" ref="dataset">
-                    <div className="ui page grid">
+                    <div className="ui grid">
                         <div className="ui column">
                             <div className="ui warning message"><h2>{this.props.error}</h2></div>
                         </div>

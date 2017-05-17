@@ -128,11 +128,13 @@ class NewDataset extends React.Component {
             </Form>;
         }
         return (
-            <div className="ui page grid" ref="datasets">
-                <div className="ui column">
-                    <h2>Add a new dataset</h2>
-                    {errorDIV}
-                    {formDIV}
+            <div className="ui fluid container ldr-padding-more" ref="datasets">
+                <div className="ui grid">
+                    <div className="ui column">
+                        <h2>Add a new dataset</h2>
+                        {errorDIV}
+                        {formDIV}
+                    </div>
                 </div>
             </div>
         );
