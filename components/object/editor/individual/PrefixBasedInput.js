@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import {list} from '../../../../data/prefixes';
 import {autocompletelist} from '../../../../data/autocompletes';
 import {Search, Grid, Header} from 'semantic-ui-react';
-import _ from 'lodash';
+import lodashCollection from 'lodash/collection';
+import lodashString from 'lodash/string';
 /**
 A component to add CURIs based on common prefixes
 */
@@ -148,11 +149,11 @@ class PrefixBasedInput extends React.Component {
         setTimeout(() => {
             if (this.state.value.length < 1) return this.resetComponent()
 
-            const re = new RegExp(_.escapeRegExp(this.state.value), 'i')
+            const re = new RegExp(lodashString.escapeRegExp(this.state.value), 'i')
             const isMatch = (result) => re.test(result.title)
             this.setState({
                 isLoading: false,
-                results: _.filter(alist, isMatch),
+                results: lodashCollection.filter(alist, isMatch),
             })
         }, 500)
     }
