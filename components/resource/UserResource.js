@@ -26,9 +26,11 @@ class UserResource extends React.Component {
         //check erros first
         if(this.props.error){
             return (
-                <div className="ui page grid" ref="resource">
-                    <div className="ui column">
-                        <div className="ui warning message"><h2>{this.props.error}</h2></div>
+                <div className="ui fluid container ldr-padding-more" ref="resource">
+                    <div className="ui grid">
+                        <div className="ui column">
+                            <div className="ui warning message"><h2>{this.props.error}</h2></div>
+                        </div>
                     </div>
                 </div>
             )
@@ -143,13 +145,15 @@ class UserResource extends React.Component {
                       </div>;
         }
         return (
-            <div className="ui page grid" ref="resource" itemScope itemType={this.props.resourceType} itemID={this.props.resource}>
-                <div className="ui column">
+            <div className="ui fluid container ldr-padding-more" ref="resource">
+                <div className="ui grid" ref="resource" itemScope itemType={this.props.resourceType} itemID={this.props.resource}>
+                    <div className="ui column">
 
-                    <h2>
-                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon user"></i></a> <a href={this.props.resource} target="_blank">{this.props.title}</a>&nbsp;&nbsp;
-                    </h2>
-                    {mainDIV}
+                        <h2>
+                            <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon user"></i></a> <a href={this.props.resource} target="_blank">{this.props.title}</a>&nbsp;&nbsp;
+                        </h2>
+                        {mainDIV}
+                    </div>
                 </div>
             </div>
         );

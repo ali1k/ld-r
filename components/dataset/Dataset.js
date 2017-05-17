@@ -26,9 +26,11 @@ class Dataset extends React.Component {
         //check erros first
         if(this.props.error){
             return (
-                <div className="ui page grid" ref="dataset">
-                    <div className="ui column">
-                        <div className="ui warning message"><h2>{this.props.error}</h2></div>
+                <div className="ui fluid container ldr-padding-more" ref="dataset">
+                    <div className="ui page grid">
+                        <div className="ui column">
+                            <div className="ui warning message"><h2>{this.props.error}</h2></div>
+                        </div>
                     </div>
                 </div>
             )
@@ -66,26 +68,28 @@ class Dataset extends React.Component {
              </div>;
         }
         return (
-            <div className="ui page grid" ref="dataset">
-                <div className="ui column">
-                    <h3 className="ui header">
-                        {this.props.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI)}><span className="ui big blue circular label">{this.state.searchMode ? this.addCommas(this.props.resources.length) + '/' :''}{this.addCommas(this.props.total)}</span></a> : ''} Resources of type {typeSt} in {datasetTitle ? datasetTitle : ' all local datasets'}
-                    </h3>
-                    <div className="ui segments">
-                        <div className="ui segment">
-                            <ResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={true} config={this.props.config} onCloneResource={this.props.onCloneResource}/>
+            <div className="ui fluid container ldr-padding-more" ref="dataset">
+                <div className="ui grid">
+                    <div className="ui column">
+                        <h3 className="ui header">
+                            {this.props.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI)}><span className="ui big blue circular label">{this.state.searchMode ? this.addCommas(this.props.resources.length) + '/' :''}{this.addCommas(this.props.total)}</span></a> : ''} Resources of type {typeSt} in {datasetTitle ? datasetTitle : ' all local datasets'}
+                        </h3>
+                        <div className="ui segments">
+                            <div className="ui segment">
+                                <ResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={true} config={this.props.config} onCloneResource={this.props.onCloneResource}/>
+                            </div>
+                            <div className="ui secondary segment">
+                                <ResourceListPager onSearchMode={this.handleSearchMode.bind(this)} datasetURI={this.props.datasetURI} visibleResourcesTotal={this.props.resources.length} total={this.props.total} threshold={10} currentPage={this.props.page} maxNumberOfResourcesOnPage={this.props.config.maxNumberOfResourcesOnPage}/>
+                            </div>
+                            {this.props.config && this.props.config.displayQueries ?
+                                <div className= "ui tertiary segment">
+                                    <YASQEViewer spec={{value: this.props.resourceQuery}} />
+                               </div>
+                            : ''}
                         </div>
-                        <div className="ui secondary segment">
-                            <ResourceListPager onSearchMode={this.handleSearchMode.bind(this)} datasetURI={this.props.datasetURI} visibleResourcesTotal={this.props.resources.length} total={this.props.total} threshold={10} currentPage={this.props.page} maxNumberOfResourcesOnPage={this.props.config.maxNumberOfResourcesOnPage}/>
+                        <div className= "ui bottom attached">
+                            {createResourceDIV}
                         </div>
-                        {this.props.config && this.props.config.displayQueries ?
-                            <div className= "ui tertiary segment">
-                                <YASQEViewer spec={{value: this.props.resourceQuery}} />
-                           </div>
-                        : ''}
-                    </div>
-                    <div className= "ui bottom attached">
-                        {createResourceDIV}
                     </div>
                 </div>
             </div>

@@ -36,25 +36,27 @@ class Nav extends React.Component {
             }
         }
         return (
-            <nav ref="defaultNavbar" className="ui blue menu inverted navbar page grid">
-                    <NavLink routeName="home" className="brand item" href='/'>
-                        {this.props.loading ? <img src="/assets/img/loader.gif" alt="loading..." style={{height: 30, width: 30}} /> : <img style={{height: 22, width: 22}} className="ui mini image" src="/assets/img/ld-reactor.gif" alt="ld-reactor" />}
-                    </NavLink>
-                    <NavLink routeName="about" className="item">About {appShortTitle} </NavLink>
-                    <NavLink routeName="datasets" className="item" href="/datasets"> Datasets</NavLink>
-                    <div className="right menu">
-                        <div className="item link" onClick={this.showHelpModal}>
-                                <i className="small help circle icon"></i>
+            <div className="ui fluid container" ref="defaultNavbar">
+                <nav  className="ui blue menu inverted navbar grid">
+                        <NavLink routeName="home" className="brand item" href='/'>
+                            {this.props.loading ? <img src="/assets/img/loader.gif" alt="loading..." style={{height: 30, width: 30}} /> : <img style={{height: 22, width: 22}} className="ui mini image" src="/assets/img/ld-reactor.gif" alt="ld-reactor" />}
+                        </NavLink>
+                        <NavLink routeName="about" className="item">About {appShortTitle} </NavLink>
+                        <NavLink routeName="datasets" className="item" href="/datasets"> Datasets</NavLink>
+                        <div className="right menu">
+                            <div className="item link" onClick={this.showHelpModal}>
+                                    <i className="small help circle icon"></i>
+                            </div>
+                            {(enableDynamicReactorConfiguration || enableDynamicServerConfiguration || enableDynamicfacetsConfiguration) ?
+                                configMenu
+                            : ''}
+                            <a href="http://github.com/ali1k/ld-r" className="ui item link">
+                                    <i className="github circle icon"></i> Github
+                            </a>
+                            {userMenu}
                         </div>
-                        {(enableDynamicReactorConfiguration || enableDynamicServerConfiguration || enableDynamicfacetsConfiguration) ?
-                            configMenu
-                        : ''}
-                        <a href="http://github.com/ali1k/ld-r" className="ui item link">
-                                <i className="github circle icon"></i> Github
-                        </a>
-                        {userMenu}
-                    </div>
-            </nav>
+                </nav>
+            </div>
         );
     }
 }

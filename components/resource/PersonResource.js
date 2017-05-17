@@ -33,9 +33,11 @@ class PersonResource extends React.Component {
         //check erros first
         if(this.props.error){
             return (
-                <div className="ui page grid" ref="resource">
-                    <div className="ui column">
-                        <div className="ui warning message"><h2>{this.props.error}</h2></div>
+                <div className="ui fluid container ldr-padding-more" ref="personResource">
+                    <div className="ui grid">
+                        <div className="ui column">
+                            <div className="ui warning message"><h2>{this.props.error}</h2></div>
+                        </div>
                     </div>
                 </div>
             )
@@ -248,43 +250,45 @@ class PersonResource extends React.Component {
             personTitle = firstName + ' ' + lastName;
         }
         return (
-            <div className="ui page grid" ref="personResource" itemScope itemType={this.props.resourceType} itemID={this.props.resource}>
-                <div className="ui column">
-                    {breadcrumb}
-                    <h2>
-                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon user"></i></a> <a href={this.props.resource} target="_blank">{personTitle}</a>&nbsp;&nbsp;
-                        {cloneable ?
-                            <a className="medium ui circular basic icon button" onClick={this.handleCloneResource.bind(this, this.props.datasetURI, decodeURIComponent(this.props.resource))} title="clone this resource"><i className="icon teal superscript"></i></a>
-                        : ''}
-                    </h2>
-                    <div className="ui grid">
-                      <div className="four wide column">
-                          <a className="olive card">
-                            <div className="image">
-                              {picture ? <img className="ui medium rounded image" src={picture}/> : <img className="ui medium rounded image" src="/assets/img/person.png"/>}
-                            </div>
-                          </a>
+            <div className="ui fluid container ldr-padding-more" ref="personResource">
+                <div className="ui grid" ref="personResource" itemScope itemType={this.props.resourceType} itemID={this.props.resource}>
+                    <div className="ui column">
+                        {breadcrumb}
+                        <h2>
+                            <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon user"></i></a> <a href={this.props.resource} target="_blank">{personTitle}</a>&nbsp;&nbsp;
+                            {cloneable ?
+                                <a className="medium ui circular basic icon button" onClick={this.handleCloneResource.bind(this, this.props.datasetURI, decodeURIComponent(this.props.resource))} title="clone this resource"><i className="icon teal superscript"></i></a>
+                            : ''}
+                        </h2>
+                        <div className="ui grid">
+                          <div className="four wide column">
+                              <a className="olive card">
+                                <div className="image">
+                                  {picture ? <img className="ui medium rounded image" src={picture}/> : <img className="ui medium rounded image" src="/assets/img/person.png"/>}
+                                </div>
+                              </a>
 
-                      </div>
-                      <div className="twelve wide column">
-                          <div className='ui huge divided list'>
-                              {birthDate ? <div className='item'><i className="icons"><i className='ui icon circle thin'></i></i> {birthDate} {birthPlace ? <a href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(birthPlace)}>({URIUtil.getURILabel(birthPlace)})</a> : ''}</div> : ''}
-                              {deathDate ? <div className='item'><i className="icons"><i className='ui icon circle'></i></i> {deathDate} {deathPlace ? <a href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(deathPlace)}>({URIUtil.getURILabel(deathPlace)})</a> : ''}</div> : ''}
-                              {spouse ? <div className='item ui'><i className="icons"> <i className='ui icon  blue male'></i></i><i className="icons"> <i className='ui icon pink female'></i></i> {spouseDIV}</div>: ''}
-                              {children ? <div className='item ui'><i className="icons"><i className='ui icon green child'></i></i> {childrenDIV}</div>: ''}
-                              {aboutP ? <div className='item'> {aboutP}</div>: ''}
-                              {homepage ? <a className='item' href={homepage}> <i className="icons"><i className='ui icon violet home'></i></i> {homepage}</a>: ''}
-                              {email ? <a className='item' href={'mailto:'+email}> <i className="icons"><i className='ui icon blue mail outline'></i></i> {email}</a>: ''}
-                              {knownFor ? <div className='item ui labels'> {knownForDIV}</div>: ''}
-                              {!knownFor && keywords ? <div className='item ui labels'> {keywordsDIV}</div>: ''}
-
-                              <div className='item'></div>
                           </div>
-                      </div>
-                    </div>
-                    <div className='ui bottom attached button fluid' onClick={this.toggleShowMore.bind(this)}>{!this.state.showDetails ? <span><i className="ui toggle down icon"></i>show details...</span> : <span><i className="ui toggle up icon"></i>hide details...</span>}</div>
-                    <div className={detailClasses}>
-                        {mainDIV}
+                          <div className="twelve wide column">
+                              <div className='ui huge divided list'>
+                                  {birthDate ? <div className='item'><i className="icons"><i className='ui icon circle thin'></i></i> {birthDate} {birthPlace ? <a href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(birthPlace)}>({URIUtil.getURILabel(birthPlace)})</a> : ''}</div> : ''}
+                                  {deathDate ? <div className='item'><i className="icons"><i className='ui icon circle'></i></i> {deathDate} {deathPlace ? <a href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(deathPlace)}>({URIUtil.getURILabel(deathPlace)})</a> : ''}</div> : ''}
+                                  {spouse ? <div className='item ui'><i className="icons"> <i className='ui icon  blue male'></i></i><i className="icons"> <i className='ui icon pink female'></i></i> {spouseDIV}</div>: ''}
+                                  {children ? <div className='item ui'><i className="icons"><i className='ui icon green child'></i></i> {childrenDIV}</div>: ''}
+                                  {aboutP ? <div className='item'> {aboutP}</div>: ''}
+                                  {homepage ? <a className='item' href={homepage}> <i className="icons"><i className='ui icon violet home'></i></i> {homepage}</a>: ''}
+                                  {email ? <a className='item' href={'mailto:'+email}> <i className="icons"><i className='ui icon blue mail outline'></i></i> {email}</a>: ''}
+                                  {knownFor ? <div className='item ui labels'> {knownForDIV}</div>: ''}
+                                  {!knownFor && keywords ? <div className='item ui labels'> {keywordsDIV}</div>: ''}
+
+                                  <div className='item'></div>
+                              </div>
+                          </div>
+                        </div>
+                        <div className='ui bottom attached button fluid' onClick={this.toggleShowMore.bind(this)}>{!this.state.showDetails ? <span><i className="ui toggle down icon"></i>show details...</span> : <span><i className="ui toggle up icon"></i>hide details...</span>}</div>
+                        <div className={detailClasses}>
+                            {mainDIV}
+                        </div>
                     </div>
                 </div>
             </div>

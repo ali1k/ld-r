@@ -307,27 +307,31 @@ class FacetedBrowser extends React.Component {
                               </div>;
             }
             return (
-                <div className="ui page grid" ref="facetedBrowser">
-                    {this.state.hideFirstCol ? '' :
-                        <div className="ui stackable four wide column">
-                            <Facet color="teal" selection={this.state.selection} onCheck={this.handleOnCheck.bind(this, 1, 'uri', '')} key="master" maxHeight={700} minHeight={300} spec={{property: '', propertyURI: '', instances: properties}} config={{label: 'Selected Properties'}} datasetURI={this.props.FacetedBrowserStore.datasetURI} />
-                            {configDiv}
-                        </div>
-                    }
+                <div className="ui fluid container ldr-padding" ref="facetedBrowser">
+                    <div className="ui vertically padded stackable grid">
+                        {this.state.hideFirstCol ? '' :
+                            <div className="ui stackable four wide column">
+                                <Facet color="teal" selection={this.state.selection} onCheck={this.handleOnCheck.bind(this, 1, 'uri', '')} key="master" maxHeight={700} minHeight={300} spec={{property: '', propertyURI: '', instances: properties}} config={{label: 'Selected Properties'}} datasetURI={this.props.FacetedBrowserStore.datasetURI} />
+                                {configDiv}
+                            </div>
+                        }
                         {facetsDIV}
                         <div className={'ui stackable ' + resSize + ' wide column'}>
                             {resourceDIV}
                         </div>
+                    </div>
                 </div>
             );
         }else{
             return (
-                <div className="ui page grid" ref="facetedBrowser">
-                    <div className="ui column">
-                        <div className="ui segment">
-                            <h2>List of available datasets to browse</h2>
-                            <div className="ui big divided animated list">
-                                No Dataset is selected to browse!
+                <div className="ui fluid container ldr-padding" ref="facetedBrowser">
+                    <div className="ui vertically padded stackable grid">
+                        <div className="ui column">
+                            <div className="ui segment">
+                                <h2>List of available datasets to browse</h2>
+                                <div className="ui big divided animated list">
+                                    No Dataset is selected to browse!
+                                </div>
                             </div>
                         </div>
                     </div>

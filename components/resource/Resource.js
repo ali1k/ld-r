@@ -28,9 +28,11 @@ class Resource extends React.Component {
         //check erros first
         if(this.props.error){
             return (
-                <div className="ui page grid" ref="resource">
-                    <div className="ui column">
-                        <div className="ui warning message"><h2>{this.props.error}</h2></div>
+                <div className="ui fluid container ldr-padding-more" ref="resource">
+                    <div className="ui grid">
+                        <div className="ui column">
+                            <div className="ui warning message"><h2>{this.props.error}</h2></div>
+                        </div>
                     </div>
                 </div>
             )
@@ -150,16 +152,18 @@ class Resource extends React.Component {
             cloneable = 1;
         }
         return (
-            <div className="ui page grid" ref="resource" itemScope itemType={this.props.resourceType} itemID={this.props.resource}>
-                <div className="ui column">
-                    {breadcrumb}
-                    <h2>
-                        <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon cube"></i></a> <a href={this.props.resource} target="_blank">{this.props.title}</a>&nbsp;&nbsp;
-                        {cloneable ?
-                            <a className="medium ui circular basic icon button" onClick={this.handleCloneResource.bind(this, this.props.datasetURI, decodeURIComponent(this.props.resource))} title="clone this resource"><i className="icon teal superscript"></i></a>
-                        : ''}
-                    </h2>
-                    {mainDIV}
+            <div className="ui fluid container ldr-padding-more" ref="resource">
+                <div className="ui grid" itemScope itemType={this.props.resourceType} itemID={this.props.resource}>
+                    <div className="ui column">
+                        {breadcrumb}
+                        <h2>
+                            <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon cube"></i></a> <a href={this.props.resource} target="_blank">{this.props.title}</a>&nbsp;&nbsp;
+                            {cloneable ?
+                                <a className="medium ui circular basic icon button" onClick={this.handleCloneResource.bind(this, this.props.datasetURI, decodeURIComponent(this.props.resource))} title="clone this resource"><i className="icon teal superscript"></i></a>
+                            : ''}
+                        </h2>
+                        {mainDIV}
+                    </div>
                 </div>
             </div>
         );

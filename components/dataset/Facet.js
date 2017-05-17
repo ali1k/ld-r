@@ -4,6 +4,7 @@ import ObjectBrowser from '../object/ObjectBrowser';
 import SearchInput from 'react-search-input';
 import URIUtil from '../utils/URIUtil';
 import YASQEViewer from '../object/viewer/individual/YASQEViewer';
+import {Dropdown, Icon} from 'semantic-ui-react';
 
 class Facet extends React.Component {
     constructor(props){
@@ -52,6 +53,16 @@ class Facet extends React.Component {
     }
     render() {
         let self = this;
+        //dropdown setting
+        let d_options = [
+              { key: 1, text: 'Invert the selection', value: 'invert' },
+              { key: 2, text: 'Shuffle the values', value: 'shuffle' },
+        ]
+        const d_trigger = (
+          <span>
+            <Icon name='lightning' />
+          </span>
+        );
         //change header color of facet: Violet -> for property chains , Purple -> multigraphs
         let defaultColor = 'blue';
         if(this.props.spec.propertyURI.indexOf('->') !== -1){
@@ -114,6 +125,12 @@ class Facet extends React.Component {
                         <div className="item">
                             {this.createSelecedList()}
                         </div>
+                        {this.props.spec.property ?
+                            <div className="item">
+                              <Dropdown trigger={d_trigger} options={d_options} icon={null} upward right floating />
+                            </div>
+                            : ''
+                        }
                     </div>
                     <div className="meta">
                     </div>
