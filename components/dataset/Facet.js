@@ -30,6 +30,7 @@ class Facet extends React.Component {
         this.props.toggleExpandFacet(this.props.spec.propertyURI);
     }
     handleDropDownClick(e, data){
+        console.log(data.value);
         if(data.value==='invert'){
             this.props.onInvert();
         }else if(data.value==='shuffle'){
@@ -161,7 +162,7 @@ class Facet extends React.Component {
                         </div>
                         {this.props.spec.property ?
                             <div className="item">
-                              <Dropdown onChange={this.handleDropDownClick.bind(this)} trigger={d_trigger} options={d_options} icon={null} upward floating />
+                              <Dropdown selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={d_trigger} options={d_options} icon={null} upward floating />
                             </div>
                             : ''
                         }
