@@ -158,6 +158,8 @@ class FacetedBrowser extends React.Component {
             if(!status){
                 //empty the selection
                 delete this.state.selection[value];
+                //empty invert
+                delete this.state.invert[value];
             }else{
                 //initiate facet
                 this.state.selection[value] = [];
