@@ -6,10 +6,21 @@ import URIUtil from '../utils/URIUtil';
 import YASQEViewer from '../object/viewer/individual/YASQEViewer';
 import {Dropdown, Icon} from 'semantic-ui-react';
 
+/**
+ * Shuffles array in place. ES6 version
+ * @param {Array} a items The array containing the items.
+ */
+function shuffle(a) {
+    for (let i = a.length; i; i--) {
+        let j = Math.floor(Math.random() * i);
+        [a[i - 1], a[j]] = [a[j], a[i - 1]];
+    }
+}
+
 class Facet extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchTerm: '', expanded: 0, verticalResized: 0};
+        this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0};
     }
     checkItem(status, value) {
         this.props.onCheck(status, value, this.props.spec.propertyURI);
@@ -21,6 +32,8 @@ class Facet extends React.Component {
     handleDropDownClick(e, data){
         if(data.value==='invert'){
             this.props.onInvert();
+        }else if(data.value==='shuffle'){
+            this.setState({shuffled: !this.state.shuffled});
         }
     }
     handleToggleVerticalResize() {
@@ -64,10 +77,11 @@ class Facet extends React.Component {
     render() {
         let self = this;
         //dropdown setting
-        let invertStat = this.props.invert[this.props.spec.propertyURI] ? 'Revert' : 'invert';
+        let invertStat = this.props.invert[this.props.spec.propertyURI] ? 'Revert' : 'Invert';
+        let shuffleStat = !this.state.shuffled ? 'Shuffle' : 'Reset';
         let d_options = [
               { key: 1, text: invertStat + ' the selection', value: 'invert' },
-              { key: 2, text: 'Shuffle the values', value: 'shuffle' }
+              { key: 2, text: shuffleStat + ' the list', value: 'shuffle' }
         ]
         const d_trigger = (
           <span>
@@ -103,6 +117,9 @@ class Facet extends React.Component {
         }
         let newSpec = {};
         let cloneInstances = this.props.spec.instances.slice(0);
+        if(this.state.shuffled){
+            shuffle(cloneInstances);
+        }
         let itemsCount = this.props.spec.total;
         newSpec.property = this.props.spec.property;
         newSpec.propertyURI = this.props.spec.propertyURI;
