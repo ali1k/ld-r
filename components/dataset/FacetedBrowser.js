@@ -97,6 +97,9 @@ class FacetedBrowser extends React.Component {
         });
         return i;
     }
+    handleShowMoreFacet(propertyURI, fpage){
+        this.context.executeAction(loadFacets, {mode: 'masterMore', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, selection: {propertyURI: propertyURI, value: propertyURI, status: 1, prevSelection: this.state.selection, options: {invert: this.state.invert}}, fpage: fpage});
+    }
     handleToggleInvert(propertyURI){
         //todo: only if an item is selected inversion works
         let self = this;
@@ -266,12 +269,12 @@ class FacetedBrowser extends React.Component {
                     if(self.state.expandedFacet){
                         if(self.state.expandedFacet===node.value){
                             return (
-                                <Facet selection={self.state.selection} invert={self.state.invert} minHeight={550} maxHeight={700} onCheck={self.handleOnCheck.bind(self, 2, self.props.FacetedBrowserStore.facets[node.value][0].valueType, self.props.FacetedBrowserStore.facets[node.value][0].dataType)} onInvert={self.handleToggleInvert.bind(self, node.value)} key={self.findIndexInProperties(properties, node.value)} spec={{propertyURI: node.value, property: self.getPropertyLabel(node.value), instances: self.props.FacetedBrowserStore.facets[node.value], total: self.props.FacetedBrowserStore.facetsCount[node.value], query: self.props.FacetedBrowserStore.facetQuery[node.value]}} config={self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, node.value)} datasetURI={self.props.FacetedBrowserStore.datasetURI} toggleExpandFacet={self.toggleExpandFacet.bind(self)}/>
+                                <Facet selection={self.state.selection} invert={self.state.invert} minHeight={550} maxHeight={700} onCheck={self.handleOnCheck.bind(self, 2, self.props.FacetedBrowserStore.facets[node.value][0].valueType, self.props.FacetedBrowserStore.facets[node.value][0].dataType)} onInvert={self.handleToggleInvert.bind(self, node.value)} onShowMore={self.handleShowMoreFacet.bind(self, node.value)} key={self.findIndexInProperties(properties, node.value)} spec={{propertyURI: node.value, property: self.getPropertyLabel(node.value), instances: self.props.FacetedBrowserStore.facets[node.value], total: self.props.FacetedBrowserStore.facetsCount[node.value], query: self.props.FacetedBrowserStore.facetQuery[node.value]}} config={self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, node.value)} datasetURI={self.props.FacetedBrowserStore.datasetURI} toggleExpandFacet={self.toggleExpandFacet.bind(self)}/>
                             );
                         }
                     }else{
                         return (
-                            <Facet selection={self.state.selection} invert={self.state.invert} onCheck={self.handleOnCheck.bind(self, 2, self.props.FacetedBrowserStore.facets[node.value][0].valueType, self.props.FacetedBrowserStore.facets[node.value][0].dataType)} onInvert={self.handleToggleInvert.bind(self, node.value)} key={self.findIndexInProperties(properties, node.value)} spec={{propertyURI: node.value, property: self.getPropertyLabel(node.value), instances: self.props.FacetedBrowserStore.facets[node.value], total: self.props.FacetedBrowserStore.facetsCount[node.value], query: self.props.FacetedBrowserStore.facetQuery[node.value]}} config={self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, node.value)} datasetURI={self.props.FacetedBrowserStore.datasetURI} toggleExpandFacet={self.toggleExpandFacet.bind(self)}/>
+                            <Facet selection={self.state.selection} invert={self.state.invert} onCheck={self.handleOnCheck.bind(self, 2, self.props.FacetedBrowserStore.facets[node.value][0].valueType, self.props.FacetedBrowserStore.facets[node.value][0].dataType)} onInvert={self.handleToggleInvert.bind(self, node.value)} onShowMore={self.handleShowMoreFacet.bind(self, node.value)} key={self.findIndexInProperties(properties, node.value)} spec={{propertyURI: node.value, property: self.getPropertyLabel(node.value), instances: self.props.FacetedBrowserStore.facets[node.value], total: self.props.FacetedBrowserStore.facetsCount[node.value], query: self.props.FacetedBrowserStore.facetQuery[node.value]}} config={self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, node.value)} datasetURI={self.props.FacetedBrowserStore.datasetURI} toggleExpandFacet={self.toggleExpandFacet.bind(self)}/>
                         );
                     }
                 }else{

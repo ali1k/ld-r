@@ -75,6 +75,21 @@ export default function loadFacets(context, payload, done) {
             context.dispatch('LOADED_DATA', {});
             done();
         });
+    }else if(payload.mode === 'masterMore'){
+        //used for loading progress indicator
+        context.dispatch('LOADING_DATA', {});
+        //items of facets
+        context.service.read('facet.facetsMaster', payload, {timeout: 20 * 1000}, function (err, res) {
+            //end = new Date().getTime();
+            //timeElapsed = end - start;
+            if (err) {
+                context.dispatch('LOAD_FACETS_FAILURE', err);
+            } else {
+                context.dispatch('LOADED_DATA', {});
+                context.dispatch('LOAD_MASTER_MORE_FACETS_SUCCESS', res);
+            }
+            done();
+        });
     }else if(payload.mode === 'sideEffect'){
         //used for loading progress indicator
         context.dispatch('LOADING_DATA', {});

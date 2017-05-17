@@ -129,7 +129,7 @@ class FacetQuery{
         return this.prefixes + this.query;
     }
     //gets the list of items together with theit count on a facet when a property is selected from master level
-    getMasterPropertyValues(endpointParameters, graphName, type, propertyURI) {
+    getMasterPropertyValues(endpointParameters, graphName, type, propertyURI, page) {
         let queryheart = '';
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         if(this.isMultiGraphFacet(propertyURI)){
@@ -142,13 +142,13 @@ class FacetQuery{
             st = st_extra + ' ' + st;
             queryheart = st;
         }
-        //notice: it limits results to first 777 items
+        //notice: it limits results to first 500 items
         this.query = `
         SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
             ${gStart}
                 ${queryheart}
             ${gEnd}
-        } GROUP BY ?v ORDER BY DESC(?total) LIMIT 777
+        } GROUP BY ?v ORDER BY DESC(?total) OFFSET ${page*500} LIMIT 500
         `;
         return this.prefixes + this.query;
     }
@@ -333,7 +333,7 @@ class FacetQuery{
             ${gStart}
                 ${queryheart}
             ${gEnd}
-        } GROUP BY ?v ORDER BY DESC(?total) LIMIT 777
+        } GROUP BY ?v ORDER BY DESC(?total) LIMIT 500
         `;
         //console.log(this.query);
         return this.prefixes + this.query;

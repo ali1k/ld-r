@@ -20,10 +20,15 @@ function shuffle(a) {
 class Facet extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0};
+        this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0};
     }
     checkItem(status, value) {
         this.props.onCheck(status, value, this.props.spec.propertyURI);
+    }
+    handleShowMore() {
+        //add next 500 rows if exist
+        this.props.onShowMore(this.state.page+1);
+        this.setState({page: this.state.page+1});
     }
     handleToggleExpand() {
         this.setState({expanded: !this.state.expanded});
@@ -148,7 +153,7 @@ class Facet extends React.Component {
                 }
                 <div className={contentClasses}>
                      {!this.props.spec.propertyURI ? '' :
-                         <span className="ui teal ribbon label" title="number of items listed in this facet">{this.state.searchTerm ? cloneInstances.length : this.addCommas(itemsCount)}{(!this.state.searchTerm && this.props.spec.propertyURI && parseInt(itemsCount) !== cloneInstances.length) ? '*' : ''}</span>
+                         <span className="ui teal ribbon label" title="number of items listed in this facet">{this.state.searchTerm ? cloneInstances.length : this.addCommas(itemsCount)}{(!this.state.searchTerm && this.props.spec.propertyURI && parseInt(itemsCount) > cloneInstances.length) ? '*' : ''}</span>
                      }
                     <div className="ui horizontal list">
                         <div className="item">
@@ -173,7 +178,7 @@ class Facet extends React.Component {
                         <div className="ui form" style={descStyle}>
                             <ObjectBrowser expanded={this.state.expanded} selection={this.props.selection} shortenURI={true} spec={newSpec} config={this.props.config} onSelect={this.checkItem.bind(this)} datasetURI={this.props.datasetURI}/>
                             {
-                                (!this.state.searchTerm && this.props.spec.propertyURI && parseInt(itemsCount) !== cloneInstances.length) ? <div className="ui orange fluid label">{(itemsCount-cloneInstances.length) + ' remaining items are cut off...'}</div> : ''
+                                (!this.state.searchTerm && this.props.spec.propertyURI && parseInt(itemsCount) > cloneInstances.length) ? <a onClick={this.handleShowMore.bind(this)} className="ui orange fluid label">{(itemsCount-cloneInstances.length) + ' items left. Show more...'}</a> : ''
                             }
                         </div>
                     </div>

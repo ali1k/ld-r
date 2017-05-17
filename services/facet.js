@@ -166,7 +166,8 @@ export default {
                 configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
                     //resource focus type
                     let rftconfig = configurator.getResourceFocusType(rconfig, datasetURI);
-                    query = queryObject.getMasterPropertyValues(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.value));
+                    query = queryObject.getMasterPropertyValues(endpointParameters, graphName,
+                         rftconfig.type, decodeURIComponent(params.selection.value), params.fpage ? params.fpage : 0);
                     //console.log(query);
                     //build http uri
                     //send request
