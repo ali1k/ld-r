@@ -107,9 +107,11 @@ class Facet extends React.Component {
         }
         //-----------------------
         let contentClasses = 'content', extraContentClasses='extra content', cardClasses = 'ui segment ' + (this.props.color ? this.props.color : defaultColor);
+        let queryClasses = 'ui tertiary segment';
         if(this.state.verticalResized){
             contentClasses = contentClasses + ' hide-element';
             extraContentClasses = extraContentClasses + ' hide-element';
+            queryClasses = queryClasses + ' hide-element';
         }
         let descStyle = {
             minHeight: this.props.minHeight ? this.props.minHeight : 80,
@@ -203,7 +205,7 @@ class Facet extends React.Component {
 
                   </div>
                   {this.props.config && this.props.config.displayQueries ?
-                    <div className= "ui tertiary segment">
+                    <div className={queryClasses}>
                         <YASQEViewer spec={{value: this.props.spec.query}} />
                     </div>
                     : ''
