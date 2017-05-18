@@ -40,12 +40,14 @@ class ResourceQuery{
     getProperties(endpointParameters, graphName, resourceURI) {
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         this.query = `
-            SELECT ?p ?o (count(DISTINCT ?extendedVal) AS ?hasExtendedValue) (SAMPLE(?ol) AS ?oLabel) (SAMPLE(?ot) AS ?oTitle) WHERE {
+            SELECT ?p ?o (count(DISTINCT ?extendedVal) AS ?hasExtendedValue) (SAMPLE(?olb) AS ?oLabel) (SAMPLE(?otb) AS ?oTitle) WHERE {
                 ${gStart}
                     <${resourceURI}> ?p ?o .
                     OPTIONAL {?o ?uri ?extendedVal .}
                     OPTIONAL {?o rdfs:label ?ol .}
                     OPTIONAL {?o dcterms:title ?ot .}
+                    BIND ( IF (BOUND (?ol), ?ol, '' )  as ?olb  ) .
+                    BIND ( IF (BOUND (?ot), ?ot, '' )  as ?otb  ) .
                 ${gEnd}
             } GROUP BY ?p ?o
         `;
