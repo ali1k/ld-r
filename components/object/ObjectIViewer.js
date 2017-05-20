@@ -112,8 +112,8 @@ class ObjectIViewer extends React.Component {
                 'wordWrap': 'break-word'
             }}>
                 {hideObject
-                    ? <span itemProp={this.props.property}></span>
-                : <div itemProp={this.props.property} className={viewerClasses}>
+                    ? <span></span>
+                : <div className={viewerClasses}>
                         {viewer}
                     </div>}
                 {extendedViewer}

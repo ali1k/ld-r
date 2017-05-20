@@ -104,7 +104,7 @@ class ObjectReactor extends React.Component {
             }
         }
         return (
-            <div ref="objectReactor">
+            <div ref="objectReactor" itemProp={this.props.spec.propertyURI}>
                 {list}
             </div>
         );

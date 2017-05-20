@@ -153,7 +153,7 @@ class Resource extends React.Component {
         }
         return (
             <div className="ui fluid container ldr-padding-more" ref="resource">
-                <div className="ui grid" itemScope itemType={this.props.resourceType} itemID={this.props.resource}>
+                <div className="ui grid">
                     <div className="ui column">
                         {breadcrumb}
                         <h2>

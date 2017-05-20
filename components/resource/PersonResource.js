@@ -251,7 +251,7 @@ class PersonResource extends React.Component {
         }
         return (
             <div className="ui fluid container ldr-padding-more" ref="personResource">
-                <div className="ui grid" ref="personResource" itemScope itemType={this.props.resourceType} itemID={this.props.resource}>
+                <div className="ui grid" ref="personResource">
                     <div className="ui column">
                         {breadcrumb}
                         <h2>

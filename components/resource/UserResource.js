@@ -146,7 +146,7 @@ class UserResource extends React.Component {
         }
         return (
             <div className="ui fluid container ldr-padding-more" ref="resource">
-                <div className="ui grid" ref="resource" itemScope itemType={this.props.resourceType} itemID={this.props.resource}>
+                <div className="ui grid" ref="resource">
                     <div className="ui column">
 
                         <h2>
