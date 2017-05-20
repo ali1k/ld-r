@@ -18,7 +18,7 @@ class TwoLetterCountryView extends React.Component {
     render() {
         let outputDIV, country;
         country = this.prepareCountry(this.props.spec.value);
-        outputDIV = <a href={'http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#'+this.props.spec.value} target="_blank"> {country} </a>
+        outputDIV = <a href={'http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2#'+this.props.spec.value} target="_blank" itemProp={this.props.property}> {country} </a>
         return (
             <div className="ui" ref="twoLetterCountryView">
                 {outputDIV}

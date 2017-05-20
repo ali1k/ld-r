@@ -30,7 +30,7 @@ class BasicDBpediaView extends React.Component {
     render() {
         let label, link, outputDIV;
         label = this.props.spec.value;
-        outputDIV = <span> {label} </span>;
+        outputDIV = <span itemProp={this.props.property}> {label} </span>;
         if(this.props.spec.valueType === 'uri'){
             link = this.props.spec.value;
             if(this.isDBpediaURI(this.props.spec.value)){
@@ -40,7 +40,7 @@ class BasicDBpediaView extends React.Component {
                 }
             }
             if(this.isHTTPURI(this.props.spec.value)){
-                outputDIV = <a href={link} target="_blank"> {label} </a>;
+                outputDIV = <a href={link} target="_blank" itemProp={this.props.property}> {label} </a>;
             }
         }
         return (

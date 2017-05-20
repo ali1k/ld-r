@@ -25,9 +25,9 @@ class BasicOptionView extends React.Component {
                     label = '<' + URIUtil.getURILabel(label) + '>';
                 }
             }
-            outputDIV = <a href={this.props.spec.value} target="_blank"> {label} </a>;
+            outputDIV = <a href={this.props.spec.value} target="_blank" itemProp={this.props.property}> {label} </a>;
         }else{
-            outputDIV = <span> {label} </span>;
+            outputDIV = <span itemProp={this.props.property}> {label} </span>;
         }
         return (
             <div className="ui" ref="basicOptionView">

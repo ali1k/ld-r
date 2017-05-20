@@ -100,7 +100,7 @@ class BasicMapView extends React.Component {
             }
         }
         return (
-            <div className="ui" ref="basicMapView">
+            <div className="ui" ref="basicMapView" itemProp={this.props.property}>
                 {outputDIV}
             </div>
         );

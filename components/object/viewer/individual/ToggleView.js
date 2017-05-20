@@ -25,7 +25,7 @@ class ToggleView extends React.Component {
         }
         val = this.props.spec.value;
         return (
-            <div ref="toggleView">
+            <div ref="toggleView" itemProp={this.props.property}>
                 {(String(val) !== String(onValue)) ? val : ''}
                 <div className="ui fitted toggle read-only checkbox" title={val}>
                   <input type="checkbox" defaultChecked={(String(val) === String(onValue))}/>

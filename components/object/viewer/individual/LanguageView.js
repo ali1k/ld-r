@@ -30,9 +30,9 @@ class LanguageView extends React.Component {
         let outputDIV, lang;
         if(this.props.spec.valueType === 'uri'){
             lang = this.prepareLanguage(this.props.spec.value);
-            outputDIV = <a href={this.props.spec.value} target="_blank"> {lang} </a>;
+            outputDIV = <a href={this.props.spec.value} target="_blank" itemProp={this.props.property}> {lang} </a>;
         }else{
-            outputDIV = <span> {this.props.spec.value} </span>;
+            outputDIV = <span itemProp={this.props.property}> {this.props.spec.value} </span>;
         }
         return (
             <div className="ui" ref="languageView">

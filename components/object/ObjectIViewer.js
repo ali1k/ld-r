@@ -53,49 +53,49 @@ class ObjectIViewer extends React.Component {
         //go to normal view
         switch (viewerConfig) {
             case 'BasicIndividualView':
-                viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
+                viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
                 break;
             case 'BasicImageView':
-                viewer = <BasicImageView spec={this.props.spec} config={this.props.config}/>;
+                viewer = <BasicImageView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
                 break;
             case 'YASQEViewer':
-                viewer = <YASQEViewer spec={this.props.spec} config={this.props.config}/>;
+                viewer = <YASQEViewer spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
                 break;
             case 'BasicMapView':
-                viewer = <BasicMapView spec={this.props.spec} config={this.props.config}/>;
+                viewer = <BasicMapView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
                 break;
             case 'ToggleView':
-                viewer = <ToggleView spec={this.props.spec} config={this.props.config}/>;
+                viewer = <ToggleView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
                 break;
             case 'PrefixBasedView':
-                viewer = <PrefixBasedView spec={this.props.spec} config={this.props.config}/>;
+                viewer = <PrefixBasedView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
                 break;
             case 'BasicDateTimeView':
-                viewer = <BasicDateTimeView spec={this.props.spec} config={this.props.config}/>;
+                viewer = <BasicDateTimeView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
                 break;
             case 'BasicLinkedIndividualView':
-                viewer = <BasicLinkedIndividualView datasetURI={this.props.datasetURI} spec={this.props.spec} config={this.props.config} propertyPath={propertyPath} category={category}/>;
+                viewer = <BasicLinkedIndividualView datasetURI={this.props.datasetURI} spec={this.props.spec} config={this.props.config} propertyPath={propertyPath} category={category} property={this.props.property}/>;
                 break;
             case 'PasswordView':
                 viewer = <PasswordView datasetURI={this.props.datasetURI} spec={this.props.spec} config={this.props.config}/>;
                 break;
             case 'BasicDBpediaView':
-                viewer = <BasicDBpediaView spec={this.props.spec} config={this.props.config}/>;
+                viewer = <BasicDBpediaView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
                 break;
             case 'LanguageView':
-                viewer = <LanguageView spec={this.props.spec} config={this.props.config}/>;
+                viewer = <LanguageView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
                 break;
             case 'BasicOptionView':
-                viewer = <BasicOptionView spec={this.props.spec} config={this.props.config}/>;
+                viewer = <BasicOptionView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
                 break;
             case 'TwoLetterCountryView':
-                viewer = <TwoLetterCountryView spec={this.props.spec} config={this.props.config}/>;
+                viewer = <TwoLetterCountryView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
                 break;
             case 'ThreeLetterCountryView':
-                viewer = <ThreeLetterCountryView spec={this.props.spec} config={this.props.config}/>;
+                viewer = <ThreeLetterCountryView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
                 break;
             default:
-                viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config}/>;
+                viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
         }
         //check if it has a blank node value config
         let hideObject = 0;

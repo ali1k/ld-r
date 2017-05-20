@@ -17,9 +17,9 @@ class BasicImageView extends React.Component {
             }
         }
         if(this.props.spec.valueType === 'uri' || val.indexOf('http:') !== -1){
-            outputDIV = <a href={val} target="_blank"> <img className="ui centered rounded image" style={styleCl} src={val} alt={val} /> </a>;
+            outputDIV = <a href={val} target="_blank"> <img itemProp={this.props.property} className="ui centered rounded image" style={styleCl} src={val} alt={val} /> </a>;
         }else{
-            outputDIV = <span> {val} </span>;
+            outputDIV = <span itemProp={this.props.property}> {val} </span>;
         }
         return (
             <div className="ui" ref="basicImageView">

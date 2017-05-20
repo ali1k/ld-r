@@ -40,9 +40,9 @@ class PrefixBasedView extends React.Component {
         let outputDIV, shortened;
         if(this.props.spec.valueType === 'uri' || this.props.spec.value.indexOf('http://') !== -1){
             shortened = this.preparePrefix(this.props.spec.value);
-            outputDIV = <a href={this.props.spec.value} target="_blank"> {shortened} </a>;
+            outputDIV = <a href={this.props.spec.value} target="_blank" itemProp={this.props.property}> {shortened} </a>;
         }else{
-            outputDIV = <span> {this.props.spec.value} </span>;
+            outputDIV = <span itemProp={this.props.property}> {this.props.spec.value} </span>;
         }
         return (
             <div className="ui" ref="prefixBasedView">

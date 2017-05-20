@@ -21,7 +21,7 @@ class BasicDateTimeView extends React.Component {
         val = this.props.spec.value;
         val = moment(val).format(this.getFormat());
         return (
-            <div className="ui" ref="basicDateTimeView">
+            <div className="ui" ref="basicDateTimeView" itemProp={this.props.property}>
                 {val}
             </div>
         );

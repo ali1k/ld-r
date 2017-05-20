@@ -16,9 +16,9 @@ class BasicIndividualView extends React.Component {
                     val = '<' + URIUtil.getURILabel(val) + '>';
                 }
             }
-            outputDIV = <a href={this.props.spec.value} target="_blank"> {val} </a>;
+            outputDIV = <a href={this.props.spec.value} target="_blank" itemProp={this.props.property}> {val} </a>;
         }else{
-            outputDIV = <span> {val} </span>;
+            outputDIV = <span itemProp={this.props.property}> {val} </span>;
         }
         return (
             <div className="ui" ref="basicIndividualView">

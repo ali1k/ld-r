@@ -45,7 +45,7 @@ class YASQEViewer extends React.Component {
             runDIV = <a onClick={this.handleRunQuery.bind(this)} className='ui icon primary fluid button'><i className='ui icon play'></i>Run</a>;
         }
         return (
-            <div className='ui'>
+            <div className='ui' itemProp={this.props.property}>
                 <textarea defaultValue={this.props.spec.value} ref='YASQE_query' className='sparql-query'></textarea>
                 {runDIV}
             </div>
