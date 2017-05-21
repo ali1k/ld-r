@@ -86,8 +86,14 @@ class ResourceReactor extends React.Component {
                                 <button className="fluid ui primary icon button" onClick={this.handleNewProperty.bind(this)}><i className="icon square add"></i>Add Property/Value</button>
                         </div></div></div></div>;
         }
+        let itemTypes = '';
+        if(Array.isArray(resourceType)){
+            itemTypes = resourceType.join(' ');
+        }else{
+            itemTypes = resourceType;
+        }
         return (
-            <div ref="resourceReactor" itemScope itemType={resourceType.join(' ')} itemID={resourceURI}>
+            <div ref="resourceReactor" itemScope itemType={itemTypes} itemID={resourceURI}>
                 {resourceReactor}
                 {newPropDIV}
             </div>
