@@ -44,7 +44,7 @@ class ResourceQuery{
                 ${gStart}
                     <${resourceURI}> ?p ?o .
                     OPTIONAL {?o ?uri ?extendedVal .}
-                    OPTIONAL {?o rdfs:label ?ol .}
+                    OPTIONAL {?o rdfs:label ?ol . FILTER langMatches( lang(?ol), "EN" )}
                     OPTIONAL {?o dcterms:title ?ot .}
                     BIND ( IF (BOUND (?ol), ?ol, '' )  as ?olb  ) .
                     BIND ( IF (BOUND (?ot), ?ot, '' )  as ?otb  ) .

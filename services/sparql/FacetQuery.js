@@ -405,7 +405,7 @@ class FacetQuery{
             }
         }else{
             selectStr = ' ?title ';
-            titleStr = 'OPTIONAL { ?s rdfs:label ?title .} ';
+            titleStr = 'OPTIONAL { ?s rdfs:label ?title . FILTER langMatches( lang(?title), "EN" )} ';
         }
         if(imageProperty && imageProperty.length){
             selectStr = selectStr + ' ?image ';
