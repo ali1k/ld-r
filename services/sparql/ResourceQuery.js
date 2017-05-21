@@ -44,13 +44,14 @@ class ResourceQuery{
                 ${gStart}
                     <${resourceURI}> ?p ?o .
                     OPTIONAL {?o ?uri ?extendedVal .}
-                    OPTIONAL {?o rdfs:label ?ol . FILTER langMatches( lang(?ol), "EN" )}
+                    OPTIONAL {?o rdfs:label ?ol .}
                     OPTIONAL {?o dcterms:title ?ot .}
                     BIND ( IF (BOUND (?ol), ?ol, '' )  as ?olb  ) .
                     BIND ( IF (BOUND (?ot), ?ot, '' )  as ?otb  ) .
                 ${gEnd}
             } GROUP BY ?p ?o
         `;
+        console.log(this.query);
         return this.query;
     }
     cloneResource(endpointParameters, user, graphName, resourceURI, newResourceURI) {
