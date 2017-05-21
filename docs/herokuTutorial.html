@@ -70,6 +70,9 @@ How to deploy LD-R on Heroku?
 <span style='color:#800000; font-weight:bold; '>const</span> env <span style='color:#808030; '>=</span> <span style='color:#ffffff; background:#dd0000; font-weight:bold; font-style:italic; '>'production'</span><span style='color:#800080; '>;</span>
 </pre>
 <p>
+You also need to copy npm dev_dependencies to normal dependencies in package.json file.
+</p>
+<p>
     There is only one more step left to finish the deployment preparation. You need to add a file called '<a href="https://devcenter.heroku.com/articles/procfile">Procfile</a>' to your repo with the following content:
 </p>
 <pre style='color:#000000;background:#ffffff;'><span style='color:#e34adc; '>web:</span> npm start
