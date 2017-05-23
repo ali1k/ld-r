@@ -314,10 +314,17 @@ class FacetedBrowser extends React.Component {
                     typeSt = typesLink;
                 }
             }
+            let constraintSt, constraints = [];
+            if(dcnf.constraint){
+                for (let prop in dcnf.constraint){
+                    constraints.push(self.getPropertyLabel(prop) + ': ' + dcnf.constraint[prop].join(','));
+                }
+                constraintSt = constraints.join(' && ');
+            }
             if(this.props.FacetedBrowserStore.total){
                 resourceDIV = <div className="ui">
                                 <h3 className="ui header">
-                                    {this.props.FacetedBrowserStore.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.FacetedBrowserStore.datasetURI)}><span className="ui blue circular label">{this.state.searchMode ? this.addCommas(this.props.FacetedBrowserStore.resources.length) + '/' :''}{this.addCommas(this.props.FacetedBrowserStore.total)}</span></a> : ''} Resources {typeSt ? <span>of type{typeSt}</span>: ''} from {datasetTitle}
+                                    {this.props.FacetedBrowserStore.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.FacetedBrowserStore.datasetURI)}><span className="ui blue circular label">{this.state.searchMode ? this.addCommas(this.props.FacetedBrowserStore.resources.length) + '/' :''}{this.addCommas(this.props.FacetedBrowserStore.total)}</span></a> : ''} Resources {typeSt ? <span>of type{typeSt}</span>: ''} from {datasetTitle} {dcnf.constraint ? <a title={constraintSt}><i className="ui orange filter icon"></i></a>: ''}
                                  </h3>
                                 <div className="ui segments">
                                     <div className="ui segment">

@@ -49,6 +49,14 @@ class Dataset extends React.Component {
                 typeSt = typesLink;
             }
         }
+        let constraintSt, constraints = [];
+        let dcnf = this.props.config;
+        if(dcnf.constraint){
+            for (let prop in dcnf.constraint){
+                constraints.push(URIUtil.getURILabel(prop) + ': ' + dcnf.constraint[prop].join(','));
+            }
+            constraintSt = constraints.join(' && ');
+        }
         let datasetTitle;
         if(this.props.datasetURI){
             datasetTitle = <a href={this.props.datasetURI}> {this.props.datasetURI} </a>;
@@ -72,7 +80,7 @@ class Dataset extends React.Component {
                 <div className="ui grid">
                     <div className="ui column">
                         <h3 className="ui header">
-                            {this.props.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI)}><span className="ui big blue circular label">{this.state.searchMode ? this.addCommas(this.props.resources.length) + '/' :''}{this.addCommas(this.props.total)}</span></a> : ''} Resources of type {typeSt} in {datasetTitle ? datasetTitle : ' all local datasets'}
+                            {this.props.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI)}><span className="ui big blue circular label">{this.state.searchMode ? this.addCommas(this.props.resources.length) + '/' :''}{this.addCommas(this.props.total)}</span></a> : ''} Resources of type {typeSt} in {datasetTitle ? datasetTitle : ' all local datasets'} {dcnf.constraint ? <a title={constraintSt}><i className="ui orange filter icon"></i></a>: ''}
                         </h3>
                         <div className="ui segments">
                             <div className="ui segment">

@@ -116,7 +116,6 @@ class Datasets extends React.Component {
                             }
                         }
                     }
-
                     if(ds.features){
                         if(typeof ds.features.readOnly === 'undefined' ){
                             color = 'black';

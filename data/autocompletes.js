@@ -6,13 +6,15 @@ module.exports = {
             {title: 'ldr:ReactorConfig'},
             {title: 'ldr:ServerConfig'},
             {title: 'ldr:FacetsPropertyConfig'},
-            {title: 'ldr:AnnotatedResource'}
+            {title: 'ldr:AnnotatedResource'},
+            {title: 'ldr:Constraint'}
         ],
         ldrProperties: [
             {title: 'ldr:config'},
             {title: 'ldr:dataset'},
             {title: 'ldr:resource'},
             {title: 'ldr:property'},
+            {title: 'ldr:object'},
             {title: 'ldr:scope'},
             {title: 'ldr:list'},
             {title: 'ldr:label'},
@@ -83,7 +85,9 @@ module.exports = {
             {title: 'ldr:allowUserDefinedValue'},
             {title: 'ldr:calendarFormat'},
             {title: 'ldr:containerDatasetURI'},
-            {title: 'ldr:hasLinkedValue'}
+            {title: 'ldr:hasLinkedValue'},
+            {title: 'ldr:constraint'},
+            {title: 'ldr:enabled'}
         ],
         ldrLiterals: [
             {title: 'OrgResource'},

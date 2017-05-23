@@ -112,7 +112,7 @@ export default {
                         }
                     }
 
-                    query = queryObject.countResourcesByType(endpointParameters, graphName, rconfig.resourceFocusType);
+                    query = queryObject.countResourcesByType(endpointParameters, graphName, rconfig);
                     //console.log(query);
                     //build http uri
                     //send request

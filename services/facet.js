@@ -42,7 +42,10 @@ export default {
                 configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
                     //resource focus type
                     let rftconfig = configurator.getResourceFocusType(rconfig, datasetURI);
-                    query = queryObject.getSideEffectsCount(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, params.selection.options);
+                    if(rconfig.constraint){
+                        rftconfig['constraint'] = rconfig.constraint;
+                    }
+                    query = queryObject.getSideEffectsCount(endpointParameters, graphName, rftconfig, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, params.selection.options);
                     //build http uri
                     //send request
                     rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
@@ -76,7 +79,10 @@ export default {
                 configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
                     //resource focus type
                     let rftconfig = configurator.getResourceFocusType(rconfig, datasetURI);
-                    query = queryObject.getSideEffects(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, params.selection.options);
+                    if(rconfig.constraint){
+                        rftconfig['constraint'] = rconfig.constraint;
+                    }
+                    query = queryObject.getSideEffects(endpointParameters, graphName, rftconfig, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, params.selection.options);
                     //build http uri
                     //send request
                     rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
@@ -121,7 +127,10 @@ export default {
                 configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
                     //resource focus type
                     let rftconfig = configurator.getResourceFocusType(rconfig, datasetURI);
-                    query = queryObject.getMasterPropertyValuesCount(endpointParameters, graphName, rftconfig.type, decodeURIComponent(params.selection.value));
+                    if(rconfig.constraint){
+                        rftconfig['constraint'] = rconfig.constraint;
+                    }
+                    query = queryObject.getMasterPropertyValuesCount(endpointParameters, graphName, rftconfig, decodeURIComponent(params.selection.value));
                     //console.log(query);
                     //build http uri
                     //send request
@@ -166,8 +175,11 @@ export default {
                 configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
                     //resource focus type
                     let rftconfig = configurator.getResourceFocusType(rconfig, datasetURI);
+                    if(rconfig.constraint){
+                        rftconfig['constraint'] = rconfig.constraint;
+                    }
                     query = queryObject.getMasterPropertyValues(endpointParameters, graphName,
-                         rftconfig.type, decodeURIComponent(params.selection.value), params.fpage ? params.fpage : 0);
+                         rftconfig, decodeURIComponent(params.selection.value), params.fpage ? params.fpage : 0);
                     //console.log(query);
                     //build http uri
                     //send request
@@ -217,6 +229,9 @@ export default {
 
                     //resource focus type
                     let rftconfig = configurator.getResourceFocusType(rconfig, graphName);
+                    if(rconfig.constraint){
+                        rftconfig['constraint'] = rconfig.constraint;
+                    }
                     let page = params.page ? params.page : 1;
                     let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
                     if(!maxOnPage){
@@ -224,9 +239,9 @@ export default {
                     }
                     if(params.mode === 'init'){
                         //get all resources
-                        query = queryObject.countSecondLevelPropertyValues(endpointParameters, graphName, rftconfig.type, {});
+                        query = queryObject.countSecondLevelPropertyValues(endpointParameters, graphName, rftconfig, {});
                     }else{
-                        query = queryObject.countSecondLevelPropertyValues(endpointParameters, graphName, rftconfig.type, params.selection.prevSelection, params.selection.options);
+                        query = queryObject.countSecondLevelPropertyValues(endpointParameters, graphName, rftconfig, params.selection.prevSelection, params.selection.options);
                     }
                     //console.log(query);
                     let searchTerm = params.searchTerm ? params.searchTerm : '';

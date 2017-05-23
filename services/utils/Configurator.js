@@ -288,6 +288,7 @@ class Configurator{
         });
 
     }
+    //todo:need refactoring
     getResourceFocusType(cnf, datasetURI){
         let out = {'type':[], 'labelProperty': [], 'imageProperty': []};
         if(cnf && cnf.resourceFocusType){

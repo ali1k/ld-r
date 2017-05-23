@@ -386,7 +386,7 @@ class DynamicConfigurator {
             let query;
             if(userSt){
                 query = `
-                SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue WHERE {
+                SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue ?constraintProperty ?constraintObject ?constraintEnabled WHERE {
                     ${graph}
                     {
                         ?config a ldr:ReactorConfig ;
@@ -395,7 +395,14 @@ class DynamicConfigurator {
                                 ldr:scope ?scope ;
                                 ?setting ?settingValue .
                                 OPTIONAL { ?config rdfs:label ?resource . }
-                                FILTER (?setting !=rdf:type && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset)
+                                FILTER (?setting !=rdf:type && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset && ?setting !=ldr:constraint)
+                                OPTIONAL {
+                                    ?config ldr:constraint ?constraint .
+                                    ?constraint a ldr:Constraint ;
+                                    ldr:property ?constraintProperty ;
+                                    ldr:object ?constraintObject ;
+                                    ldr:enabled ?constraintEnabled .
+                                }
                     }
                     UNION
                     {
@@ -404,9 +411,16 @@ class DynamicConfigurator {
                                 ldr:scope ?scope ;
                                 ?setting ?settingValue .
                                 OPTIONAL { ?config rdfs:label ?resource . }
-                                FILTER (?setting !=rdf:type && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset)
+                                FILTER (?setting !=rdf:type && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset && ?setting !=ldr:constraint)
                                 filter not exists {
                                     ?config ldr:createdBy ?user.
+                                }
+                                OPTIONAL {
+                                    ?config ldr:constraint ?constraint .
+                                    ?constraint a ldr:Constraint ;
+                                    ldr:property ?constraintProperty ;
+                                    ldr:object ?constraintObject ;
+                                    ldr:enabled ?constraintEnabled .
                                 }
                     }
                     ${graphEnd}
@@ -414,14 +428,21 @@ class DynamicConfigurator {
                 `;
             }else{
                 query = `
-                SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue WHERE {
+                SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue ?constraintProperty ?constraintObject ?constraintEnabled  WHERE {
                     ${graph}
                         ?config a ldr:ReactorConfig ;
                                 ldr:dataset <${datasetURI}> ;
                                 ldr:scope ?scope ;
                                 ?setting ?settingValue .
                                 OPTIONAL { ?config rdfs:label ?resource . }
-                                FILTER (?setting !=rdf:type && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset)
+                                FILTER (?setting !=rdf:type && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset && ?setting !=ldr:constraint)
+                                OPTIONAL {
+                                    ?config ldr:constraint ?constraint .
+                                    ?constraint a ldr:Constraint ;
+                                    ldr:property ?constraintProperty ;
+                                    ldr:object ?constraintObject ;
+                                    ldr:enabled ?constraintEnabled .
+                                }
                     ${graphEnd}
                 }
                 `;
@@ -1085,6 +1106,25 @@ class DynamicConfigurator {
             if(el.scope.value === 'D'){
                 if(!output.dataset[datasetURI]){
                     output.dataset[datasetURI] = {};
+                }
+                if(el.constraintProperty && el.constraintProperty.value){
+                    if(el.constraintEnabled && parseInt(el.constraintEnabled.value)){
+                        //parse only if enabled
+                        if(!output.dataset[datasetURI]['constraint']){
+                            output.dataset[datasetURI]['constraint'] = {}
+                        }
+                        if(!output.dataset[datasetURI]['constraint'][el.constraintProperty.value]){
+                            if(el.constraintObject && el.constraintObject.value){
+                                output.dataset[datasetURI]['constraint'][el.constraintProperty.value] = [el.constraintObject.value]
+                            }
+                        }else{
+                            if(el.constraintObject && el.constraintObject.value){
+                                if(output.dataset[datasetURI]['constraint'][el.constraintProperty.value].indexOf(el.constraintObject.value) === -1){
+                                    output.dataset[datasetURI]['constraint'][el.constraintProperty.value] .push(el.constraintObject.value);
+                                }
+                            }
+                        }
+                    }
                 }
                 settingProp = el.setting.value.replace(ldr_prefix, '').trim();
                 //assume that all values will be stored in an array expect numbers: Not-a-Number

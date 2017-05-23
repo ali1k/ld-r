@@ -35,7 +35,9 @@ class DatasetQuery{
             return '<'+ propertyURI + '>';
         }
     }
-    countResourcesByType(endpointParameters, graphName, type) {
+    countResourcesByType(endpointParameters, graphName, rconfig) {
+        let self = this;
+        let constraint, type = rconfig.resourceFocusType;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = '?resource a <'+ type + '> .';
         //will get all the types
@@ -49,6 +51,21 @@ class DatasetQuery{
                 typeURIs.push('<' + uri + '>');
             });
             st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
+        }
+        if(rconfig.constraint){
+            constraint = rconfig.constraint;
+        }
+        //handle pre constraints for a dataset
+        let constraintPhrase = '';
+        let oval = '';
+        if(constraint){
+            for(let prop in constraint){
+                constraint[prop].forEach((el)=>{
+                    oval = el.indexOf('http:\/\/') === -1 ? '"""' +el + '"""' : '<'+el+'>';
+                    constraintPhrase = constraintPhrase + ' ?resource ' + self.filterPropertyPath(prop) + ' '+ oval + ' . ' ;
+                });
+            }
+            st = constraintPhrase + st;
         }
         //go to default graph if no graph name is given
         this.query = `
@@ -64,7 +81,7 @@ class DatasetQuery{
         let self = this;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let type = rconfig.resourceFocusType;
-        let resourceLabelProperty, resourceImageProperty, resourceGeoProperty;
+        let resourceLabelProperty, resourceImageProperty, resourceGeoProperty, constraint;
         if(rconfig.resourceLabelProperty){
             resourceLabelProperty = rconfig.resourceLabelProperty;
         }
@@ -73,6 +90,9 @@ class DatasetQuery{
         }
         if(rconfig.resourceGeoProperty){
             resourceGeoProperty = rconfig.resourceGeoProperty;
+        }
+        if(rconfig.constraint){
+            constraint = rconfig.constraint;
         }
         let selectSt = '';
         //specify the right label for resources
@@ -119,6 +139,18 @@ class DatasetQuery{
         let limitOffsetPharse =`LIMIT ${limit} OFFSET ${offset}`;
         if(searchPhase){
             limitOffsetPharse = '';
+        }
+        //handle pre constraints for a dataset
+        let constraintPhrase = '';
+        let oval = '';
+        if(constraint){
+            for(let prop in constraint){
+                constraint[prop].forEach((el)=>{
+                    oval = el.indexOf('http:\/\/') === -1 ? '"""' +el + '"""' : '<'+el+'>';
+                    constraintPhrase = constraintPhrase + ' ?resource ' + self.filterPropertyPath(prop) + ' '+ oval + ' . ' ;
+                });
+            }
+            st = constraintPhrase + st;
         }
         this.query = `
         SELECT DISTINCT ?resource ?title ?label ${selectSt} WHERE {
