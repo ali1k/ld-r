@@ -51,7 +51,6 @@ class ResourceQuery{
                 ${gEnd}
             } GROUP BY ?p ?o
         `;
-        console.log(this.query);
         return this.query;
     }
     cloneResource(endpointParameters, user, graphName, resourceURI, newResourceURI) {
