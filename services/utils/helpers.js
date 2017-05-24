@@ -244,6 +244,10 @@ export default {
                         dtype = 'xsd:date';
                         newValue='"'+objectValue+'"^^' + dtype;
                         break;
+                    case 'http://www.w3.org/2001/XMLSchema#gYear':
+                        dtype = 'xsd:gYear';
+                        newValue='"'+objectValue+'"^^' + dtype;
+                        break;
                     case 'http://www.w3.org/2001/XMLSchema#boolean':
                         dtype = 'xsd:boolean';
                         newValue='"'+objectValue+'"^^' + dtype;

@@ -386,7 +386,7 @@ class DynamicConfigurator {
             let query;
             if(userSt){
                 query = `
-                SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue ?constraintProperty ?constraintObject ?constraintEnabled WHERE {
+                SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue ?constraintProperty ?constraintObject ?constraintEnabled ?cSetting ?cValue WHERE {
                     ${graph}
                     {
                         ?config a ldr:ReactorConfig ;
@@ -402,6 +402,10 @@ class DynamicConfigurator {
                                     ldr:property ?constraintProperty ;
                                     ldr:object ?constraintObject ;
                                     ldr:enabled ?constraintEnabled .
+                                }
+                                OPTIONAL {
+                                    ?constraint ?cSetting ?cValue .
+                                    FILTER (?cSetting !=rdf:type && ?cSetting !=ldr:property && ?cSetting !=ldr:object && ?cSetting !=ldr:enabled)
                                 }
                     }
                     UNION
@@ -422,13 +426,17 @@ class DynamicConfigurator {
                                     ldr:object ?constraintObject ;
                                     ldr:enabled ?constraintEnabled .
                                 }
+                                OPTIONAL {
+                                    ?constraint ?cSetting ?cValue .
+                                    FILTER (?cSetting !=rdf:type && ?cSetting !=ldr:property && ?cSetting !=ldr:object && ?cSetting !=ldr:enabled)
+                                }
                     }
                     ${graphEnd}
                 }
                 `;
             }else{
                 query = `
-                SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue ?constraintProperty ?constraintObject ?constraintEnabled  WHERE {
+                SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue ?constraintProperty ?constraintObject ?constraintEnabled ?cSetting ?cValue  WHERE {
                     ${graph}
                         ?config a ldr:ReactorConfig ;
                                 ldr:dataset <${datasetURI}> ;
@@ -442,6 +450,10 @@ class DynamicConfigurator {
                                     ldr:property ?constraintProperty ;
                                     ldr:object ?constraintObject ;
                                     ldr:enabled ?constraintEnabled .
+                                }
+                                OPTIONAL {
+                                    ?constraint ?cSetting ?cValue .
+                                    FILTER (?cSetting !=rdf:type && ?cSetting !=ldr:property && ?cSetting !=ldr:object && ?cSetting !=ldr:enabled)
                                 }
                     ${graphEnd}
                 }
@@ -1115,12 +1127,23 @@ class DynamicConfigurator {
                         }
                         if(!output.dataset[datasetURI]['constraint'][el.constraintProperty.value]){
                             if(el.constraintObject && el.constraintObject.value){
-                                output.dataset[datasetURI]['constraint'][el.constraintProperty.value] = [el.constraintObject.value]
+                                if(el.cSetting && el.cSetting.value && el.cSetting.value ==='https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#dataType'){
+                                    //we attach dataType to be handled in SPARQL query
+                                    output.dataset[datasetURI]['constraint'][el.constraintProperty.value] = [el.constraintObject.value + '[dt]' + el.cValue.value];
+                                }else{
+                                    output.dataset[datasetURI]['constraint'][el.constraintProperty.value] = [el.constraintObject.value];
+                                }
                             }
                         }else{
                             if(el.constraintObject && el.constraintObject.value){
-                                if(output.dataset[datasetURI]['constraint'][el.constraintProperty.value].indexOf(el.constraintObject.value) === -1){
-                                    output.dataset[datasetURI]['constraint'][el.constraintProperty.value] .push(el.constraintObject.value);
+                                if(el.cSetting && el.cSetting.value && el.cSetting.value ==='https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#dataType'){
+                                    if(output.dataset[datasetURI]['constraint'][el.constraintProperty.value].indexOf(el.constraintObject.value + '[dt]' + el.cValue.value) === -1){
+                                        output.dataset[datasetURI]['constraint'][el.constraintProperty.value].push(el.constraintObject.value + '[dt]' + el.cValue.value);
+                                    }
+                                }else{
+                                    if(output.dataset[datasetURI]['constraint'][el.constraintProperty.value].indexOf(el.constraintObject.value) === -1){
+                                        output.dataset[datasetURI]['constraint'][el.constraintProperty.value] .push(el.constraintObject.value);
+                                    }
                                 }
                             }
                         }

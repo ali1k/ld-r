@@ -15,6 +15,7 @@ module.exports = {
             {title: 'ldr:resource'},
             {title: 'ldr:property'},
             {title: 'ldr:object'},
+            {title: 'ldr:dataType'},
             {title: 'ldr:scope'},
             {title: 'ldr:list'},
             {title: 'ldr:label'},

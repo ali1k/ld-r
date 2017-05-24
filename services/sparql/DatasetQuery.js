@@ -35,38 +35,64 @@ class DatasetQuery{
             return '<'+ propertyURI + '>';
         }
     }
-    countResourcesByType(endpointParameters, graphName, rconfig) {
+    makeExtraTypeFilters(endpointParameters, rconfig){
         let self = this;
-        let constraint, type = rconfig.resourceFocusType;
-        let {gStart, gEnd} = this.prepareGraphName(graphName);
-        let st = '?resource a <'+ type + '> .';
+        let type = rconfig.resourceFocusType;
+        //---to support resource focus types
+        let st_extra = ' ?resource rdf:type <'+ type + '> .';
         //will get all the types
-        if(!type.length || (type.length && !type[0]) ){
-            st = '?resource a ?type .';
+        if(!type || !type.length || (type.length && !type[0]) ){
+            st_extra = '?resource a ?type .';
         }
         //if we have multiple type, get all of them
-        let typeURIs = [];
-        if(type.length > 1){
+        let tmp2, typeURIs = [];
+        if(type && type.length > 1){
             type.forEach(function(uri) {
                 typeURIs.push('<' + uri + '>');
             });
-            st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
+            if(endpointParameters.type === 'stardog' || endpointParameters.type === 'sesame'){
+                ///---for sesame
+                tmp2 = [];
+                typeURIs.forEach(function(fl){
+                    tmp2.push('?type=' + fl);
+                });
+                st_extra = ' ?resource rdf:type ?type . FILTER (' + tmp2.join(' || ') + ')';
+                //---------------
+            }else{
+                //---for virtuoso
+                st_extra = ' ?resource rdf:type ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
+            }
         }
+        //-----------------------------------------------
+        //handle pre constraints for a dataset
+        let constraint;
         if(rconfig.constraint){
             constraint = rconfig.constraint;
         }
-        //handle pre constraints for a dataset
         let constraintPhrase = '';
         let oval = '';
         if(constraint){
             for(let prop in constraint){
                 constraint[prop].forEach((el)=>{
-                    oval = el.indexOf('http:\/\/') === -1 ? '"""' +el + '"""' : '<'+el+'>';
+                    if(el.indexOf('[dt]') === -1){
+                        //no data type is set
+                        oval = (el.indexOf('http:\/\/') === -1) ? '"""' +el + '"""' : '<'+el+'>';
+                    }else{
+                        //add data type to query to literal value
+                        let tmp = el.split('[dt]');
+                        oval = '"""' +tmp[0] + '"""^^<'+tmp[1]+'>'
+                    }
                     constraintPhrase = constraintPhrase + ' ?resource ' + self.filterPropertyPath(prop) + ' '+ oval + ' . ' ;
                 });
             }
-            st = constraintPhrase + st;
+            st_extra = constraintPhrase + st_extra;
         }
+        return st_extra;
+    }
+    countResourcesByType(endpointParameters, graphName, rconfig) {
+        let self = this;
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
+        let st = this.makeExtraTypeFilters(endpointParameters, rconfig);
         //go to default graph if no graph name is given
         this.query = `
         SELECT (count(?resource) AS ?total) WHERE {
@@ -80,8 +106,7 @@ class DatasetQuery{
     getResourcesByType(endpointParameters, graphName, searchTerm, rconfig, limit, offset) {
         let self = this;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
-        let type = rconfig.resourceFocusType;
-        let resourceLabelProperty, resourceImageProperty, resourceGeoProperty, constraint;
+        let resourceLabelProperty, resourceImageProperty, resourceGeoProperty;
         if(rconfig.resourceLabelProperty){
             resourceLabelProperty = rconfig.resourceLabelProperty;
         }
@@ -90,9 +115,6 @@ class DatasetQuery{
         }
         if(rconfig.resourceGeoProperty){
             resourceGeoProperty = rconfig.resourceGeoProperty;
-        }
-        if(rconfig.constraint){
-            constraint = rconfig.constraint;
         }
         let selectSt = '';
         //specify the right label for resources
@@ -123,34 +145,10 @@ class DatasetQuery{
             optPhase = optPhase + ' OPTIONAL { ?resource ' + self.filterPropertyPath(resourceGeoProperty[0]) + ' ?geo .} ';
             selectSt = selectSt + ' ?geo';
         }
-        let st = '?resource a <'+ type + '> .';
-        //will get all the types
-        if(!type.length || (type.length && !type[0]) ){
-            st = '?resource a ?type .';
-        }
-        //if we have multiple type, get all of them
-        let typeURIs = [];
-        if(type.length > 1){
-            type.forEach(function(uri) {
-                typeURIs.push('<' + uri + '>');
-            });
-            st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
-        }
+        let st = this.makeExtraTypeFilters(endpointParameters, rconfig);
         let limitOffsetPharse =`LIMIT ${limit} OFFSET ${offset}`;
         if(searchPhase){
             limitOffsetPharse = '';
-        }
-        //handle pre constraints for a dataset
-        let constraintPhrase = '';
-        let oval = '';
-        if(constraint){
-            for(let prop in constraint){
-                constraint[prop].forEach((el)=>{
-                    oval = el.indexOf('http:\/\/') === -1 ? '"""' +el + '"""' : '<'+el+'>';
-                    constraintPhrase = constraintPhrase + ' ?resource ' + self.filterPropertyPath(prop) + ' '+ oval + ' . ' ;
-                });
-            }
-            st = constraintPhrase + st;
         }
         this.query = `
         SELECT DISTINCT ?resource ?title ?label ${selectSt} WHERE {

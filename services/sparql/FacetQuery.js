@@ -320,7 +320,14 @@ class FacetQuery{
         if(constraint){
             for(let prop in constraint){
                 constraint[prop].forEach((el)=>{
-                    oval = el.indexOf('http:\/\/') === -1 ? '"""' +el + '"""' : '<'+el+'>';
+                    if(el.indexOf('[dt]') === -1){
+                        //no data type is set
+                        oval = (el.indexOf('http:\/\/') === -1) ? '"""' +el + '"""' : '<'+el+'>';
+                    }else{
+                        //add data type to query to literal value
+                        let tmp = el.split('[dt]');
+                        oval = '"""' +tmp[0] + '"""^^<'+tmp[1]+'>'
+                    }
                     constraintPhrase = constraintPhrase + ' ?s ' + self.filterPropertyPath(prop) + ' '+ oval + ' . ' ;
                 });
             }
