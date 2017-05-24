@@ -405,7 +405,7 @@ class DynamicConfigurator {
                                 }
                                 OPTIONAL {
                                     ?constraint ?cSetting ?cValue .
-                                    FILTER (?cSetting !=rdf:type && ?cSetting !=ldr:property && ?cSetting !=ldr:object && ?cSetting !=ldr:enabled)
+                                    FILTER (?cSetting !=rdf:type && ?cSetting !=ldr:property && ?cSetting !=ldr:object && ?cSetting !=ldr:enabled && ?cSetting !=rdfs:label)
                                 }
                     }
                     UNION
@@ -428,7 +428,7 @@ class DynamicConfigurator {
                                 }
                                 OPTIONAL {
                                     ?constraint ?cSetting ?cValue .
-                                    FILTER (?cSetting !=rdf:type && ?cSetting !=ldr:property && ?cSetting !=ldr:object && ?cSetting !=ldr:enabled)
+                                    FILTER (?cSetting !=rdf:type && ?cSetting !=ldr:property && ?cSetting !=ldr:object && ?cSetting !=ldr:enabled && ?cSetting !=rdfs:label)
                                 }
                     }
                     ${graphEnd}
@@ -453,7 +453,7 @@ class DynamicConfigurator {
                                 }
                                 OPTIONAL {
                                     ?constraint ?cSetting ?cValue .
-                                    FILTER (?cSetting !=rdf:type && ?cSetting !=ldr:property && ?cSetting !=ldr:object && ?cSetting !=ldr:enabled)
+                                    FILTER (?cSetting !=rdf:type && ?cSetting !=ldr:property && ?cSetting !=ldr:object && ?cSetting !=ldr:enabled && ?cSetting !=rdfs:label)
                                 }
                     ${graphEnd}
                 }
@@ -1125,6 +1125,7 @@ class DynamicConfigurator {
                         if(!output.dataset[datasetURI]['constraint']){
                             output.dataset[datasetURI]['constraint'] = {}
                         }
+                        //todo: it only works if only dataType is optional otherwise gives error
                         if(!output.dataset[datasetURI]['constraint'][el.constraintProperty.value]){
                             if(el.constraintObject && el.constraintObject.value){
                                 if(el.cSetting && el.cSetting.value && el.cSetting.value ==='https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#dataType'){
