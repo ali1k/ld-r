@@ -69,6 +69,11 @@ export default {
                 objectIViewer: ['PrefixBasedView'],
                 objectIEditor: ['PrefixBasedInput']
             },
+            'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#dataType': {
+                allowPropertyDelete: 0,
+                objectIViewer: ['PrefixBasedView'],
+                objectIEditor: ['PrefixBasedInput']
+            },
             'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy' : {
                 isHidden: 0,
                 allowNewValue: 0,
