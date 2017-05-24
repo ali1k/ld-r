@@ -173,22 +173,13 @@ class DatasetQuery{
         return this.prefixes + this.query;
     }
     //only gives us unannotated ones
-    getResourcePropForAnnotation(endpointParameters, graphName, type, propertyURI, limit, offset, inNewDataset) {
+    getResourcePropForAnnotation(endpointParameters, graphName, rconfig, resourceType, propertyURI, limit, offset, inNewDataset) {
         let self = this;
+        let type = resourceType ? [resourceType] : rconfig.resourceFocusType;
+        let rconfig2 = {};
+        rconfig2.resourceFocusType = type;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
-        let st = '?resource a <'+ type + '> .';
-        //will get all the types
-        if(!type.length || (type.length && !type[0]) ){
-            st = '?resource a ?type .';
-        }
-        //if we have multiple type, get all of them
-        let typeURIs = [];
-        if(type.length > 1){
-            type.forEach(function(uri) {
-                typeURIs.push('<' + uri + '>');
-            });
-            st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
-        }
+        let st = this.makeExtraTypeFilters(endpointParameters, rconfig2);
         //do not care about already annotated ones if annotations are stored in a new dataset
         if(inNewDataset){
             this.query = `
@@ -252,22 +243,13 @@ class DatasetQuery{
     }
     `;
     */
-    countTotalResourcesWithProp(endpointParameters, graphName, type, propertyURI, inNewDataset) {
+    countTotalResourcesWithProp(endpointParameters, graphName, rconfig, resourceType, propertyURI, inNewDataset) {
         let self = this;
+        let type = resourceType ? [resourceType] : rconfig.resourceFocusType;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
-        let st = '?resource a <'+ type + '> .';
-        //will get all the types
-        if(!type.length || (type.length && !type[0]) ){
-            st = '?resource a ?type .';
-        }
-        //if we have multiple type, get all of them
-        let typeURIs = [];
-        if(type.length > 1){
-            type.forEach(function(uri) {
-                typeURIs.push('<' + uri + '>');
-            });
-            st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
-        }
+        let rconfig2 = {};
+        rconfig2.resourceFocusType = type;
+        let st = this.makeExtraTypeFilters(endpointParameters, rconfig2);
         //in case of storing a new dataset, ignore the type
         if(inNewDataset){
             st = '';
@@ -282,22 +264,13 @@ class DatasetQuery{
         `;
         return this.prefixes + this.query;
     }
-    countAnnotatedResourcesWithProp(endpointParameters, graphName, type, propertyURI, inNewDataset) {
+    countAnnotatedResourcesWithProp(endpointParameters, graphName, rconfig, resourceType, propertyURI, inNewDataset) {
         let self = this;
+        let type = resourceType ? [resourceType] : rconfig.resourceFocusType;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
-        let st = '?resource a <'+ type + '> .';
-        //will get all the types
-        if(!type.length || (type.length && !type[0]) ){
-            st = '?resource a ?type .';
-        }
-        //if we have multiple type, get all of them
-        let typeURIs = [];
-        if(type.length > 1){
-            type.forEach(function(uri) {
-                typeURIs.push('<' + uri + '>');
-            });
-            st = '?resource a ?type . FILTER (?type IN (' + typeURIs.join(',') + '))';
-        }
+        let rconfig2 = {};
+        rconfig2.resourceFocusType = type;
+        let st = this.makeExtraTypeFilters(endpointParameters, rconfig2);
         //in case of storing a new dataset, ignore the type
         if(inNewDataset){
             st = '';

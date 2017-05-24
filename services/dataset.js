@@ -155,7 +155,7 @@ export default {
                     maxOnPage = params.maxOnPage ? parseInt(params.maxOnPage) : maxOnPage;
                     let page = params.page ? params.page : 1;
                     let offset = (page - 1) * maxOnPage;
-                    query = queryObject.getResourcePropForAnnotation(endpointParameters, graphName, resourceType ? [resourceType] : rconfig.resourceFocusType, propertyURI, maxOnPage, offset, params.inNewDataset);
+                    query = queryObject.getResourcePropForAnnotation(endpointParameters, graphName, rconfig, resourceType, propertyURI, maxOnPage, offset, params.inNewDataset);
                     //console.log(query);
                     //build http uri
                     //send request
@@ -196,7 +196,7 @@ export default {
                 graphName = endpointParameters.graphName;
                 //config handler
                 configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
-                    query = queryObject.countAnnotatedResourcesWithProp(endpointParameters, graphName, resourceType ? [resourceType] : rconfig.resourceFocusType, propertyURI, params.inANewDataset);
+                    query = queryObject.countAnnotatedResourcesWithProp(endpointParameters, graphName, rconfig, resourceType, propertyURI, params.inANewDataset);
                     //console.log(query);
                     //build http uri
                     //send request
@@ -237,7 +237,7 @@ export default {
                 graphName = endpointParameters.graphName;
                 //config handler
                 configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
-                    query = queryObject.countTotalResourcesWithProp(endpointParameters, graphName, resourceType ? [resourceType] : rconfig.resourceFocusType, propertyURI, params.inANewDataset);
+                    query = queryObject.countTotalResourcesWithProp(endpointParameters, graphName, rconfig, resourceType, propertyURI, params.inANewDataset);
                     //console.log(query);
                     //build http uri
                     //send request
