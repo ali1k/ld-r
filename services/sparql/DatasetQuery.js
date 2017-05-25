@@ -35,6 +35,18 @@ class DatasetQuery{
             return '<'+ propertyURI + '>';
         }
     }
+    addDataTypeToFilter(el){
+        let oval = '';
+        if(el.indexOf('[dt]') === -1){
+            //no data type is set
+            oval = (el.indexOf('http:\/\/') === -1) ? '"""' +el + '"""' : '<'+el+'>';
+        }else{
+            //add data type to query to literal value
+            let tmp = el.split('[dt]');
+            oval = '"""' +tmp[0] + '"""^^<'+tmp[1]+'>'
+        }
+        return oval;
+    }
     makeExtraTypeFilters(endpointParameters, rconfig){
         let self = this;
         let type = rconfig.resourceFocusType;
@@ -71,19 +83,22 @@ class DatasetQuery{
         }
         let constraintPhrase = '';
         let oval = '';
+        let pi = 0;
         if(constraint){
             for(let prop in constraint){
-                constraint[prop].forEach((el)=>{
-                    if(el.indexOf('[dt]') === -1){
-                        //no data type is set
-                        oval = (el.indexOf('http:\/\/') === -1) ? '"""' +el + '"""' : '<'+el+'>';
-                    }else{
-                        //add data type to query to literal value
-                        let tmp = el.split('[dt]');
-                        oval = '"""' +tmp[0] + '"""^^<'+tmp[1]+'>'
-                    }
+                pi++;
+                if(constraint[prop].length>1){
+                    let parts1 = ' ?resource ' + self.filterPropertyPath(prop) + ' ?cp' + pi +' . ';
+                    let parts2 = [];
+                    constraint[prop].forEach((el, index)=>{
+                        oval = self.addDataTypeToFilter(el);
+                        parts2.push('?cp' + pi + '=' + oval);
+                    });
+                    constraintPhrase = constraintPhrase + parts1 +  ' FILTER( ' + parts2.join(' || ') + ' ) ' ;
+                }else{
+                    oval = self.addDataTypeToFilter(constraint[prop][0]);
                     constraintPhrase = constraintPhrase + ' ?resource ' + self.filterPropertyPath(prop) + ' '+ oval + ' . ' ;
-                });
+                }
             }
             st_extra = constraintPhrase + st_extra;
         }

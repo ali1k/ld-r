@@ -10,6 +10,7 @@ import ResourceList from './ResourceList';
 import ResourceListPager from './ResourceListPager';
 import YASQEViewer from '../object/viewer/individual/YASQEViewer';
 import URIUtil from '../utils/URIUtil';
+import {Popup} from 'semantic-ui-react';
 
 class FacetedBrowser extends React.Component {
     constructor(props) {
@@ -324,7 +325,7 @@ class FacetedBrowser extends React.Component {
             if(this.props.FacetedBrowserStore.total){
                 resourceDIV = <div className="ui">
                                 <h3 className="ui header">
-                                    {this.props.FacetedBrowserStore.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.FacetedBrowserStore.datasetURI)}><span className="ui blue circular label">{this.state.searchMode ? this.addCommas(this.props.FacetedBrowserStore.resources.length) + '/' :''}{this.addCommas(this.props.FacetedBrowserStore.total)}</span></a> : ''} Resources {typeSt ? <span>of type{typeSt}</span>: ''} from {datasetTitle} {dcnf.constraint ? <a title={constraintSt}><i className="ui orange filter icon"></i></a>: ''}
+                                    {this.props.FacetedBrowserStore.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.FacetedBrowserStore.datasetURI)}><span className="ui blue circular label">{this.state.searchMode ? this.addCommas(this.props.FacetedBrowserStore.resources.length) + '/' :''}{this.addCommas(this.props.FacetedBrowserStore.total)}</span></a> : ''} Resources {typeSt ? <span>of type{typeSt}</span>: ''} from {datasetTitle} {dcnf.constraint ? <span><Popup trigger={<i className="ui orange filter icon link "> </i>} content={constraintSt} wide position='bottom center' /></span>: ''}
                                  </h3>
                                 <div className="ui segments">
                                     <div className="ui segment">

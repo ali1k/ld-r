@@ -3,6 +3,8 @@ import ResourceList from './ResourceList';
 import ResourceListPager from './ResourceListPager';
 import YASQEViewer from '../object/viewer/individual/YASQEViewer';
 import URIUtil from '../utils/URIUtil';
+import {Popup} from 'semantic-ui-react';
+
 class Dataset extends React.Component {
     constructor(props){
         super(props);
@@ -80,7 +82,7 @@ class Dataset extends React.Component {
                 <div className="ui grid">
                     <div className="ui column">
                         <h3 className="ui header">
-                            {this.props.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI)}><span className="ui big blue circular label">{this.state.searchMode ? this.addCommas(this.props.resources.length) + '/' :''}{this.addCommas(this.props.total)}</span></a> : ''} Resources of type {typeSt} in {datasetTitle ? datasetTitle : ' all local datasets'} {dcnf.constraint ? <a title={constraintSt}><i className="ui orange filter icon"></i></a>: ''}
+                            {this.props.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI)}><span className="ui big blue circular label">{this.state.searchMode ? this.addCommas(this.props.resources.length) + '/' :''}{this.addCommas(this.props.total)}</span></a> : ''} Resources of type {typeSt} in {datasetTitle ? datasetTitle : ' all local datasets'} {dcnf.constraint ? <span><Popup trigger={<i className="ui orange filter icon link "> </i>} content={constraintSt} wide position='bottom center' /></span>: ''}
                         </h3>
                         <div className="ui segments">
                             <div className="ui segment">
