@@ -39,6 +39,7 @@ class BasicLinkedIndividualView extends React.Component {
 
         return (
             <div className="ui" ref="basicLinkedIndividualView">
+                <a itemProp={this.props.property} style={{display: 'none'}} href={this.props.spec.value}></a>
                 {outputDIV}
             </div>
         );

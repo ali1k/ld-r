@@ -27,7 +27,7 @@ class PropertyHeader extends React.Component {
         }
         titleDIV = <a style={{color:'rgb(98, 91, 95)'}} href={this.props.spec.propertyURI} target="_blank"> {label} </a>;
         if(this.props.config && this.props.config.hint){
-            hintDIV = <Popup trigger={<i className="item circle info icon link"></i>} content={this.props.config.hint[0]} wide positioning='right center' />;
+            hintDIV = <Popup trigger={<i className="item circle info icon link"></i>} content={this.props.config.hint[0]} wide position='right center' />;
         }
         if(this.props.config && this.props.config.allowInlineConfig){
             configDIV = <Dropdown trigger={<span className="ui circular icon black button mini"><i className="ui settings icon"></i></span>} icon={null}>
