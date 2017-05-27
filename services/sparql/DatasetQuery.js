@@ -39,7 +39,7 @@ class DatasetQuery{
         let oval = '';
         if(el.indexOf('[dt]') === -1){
             //no data type is set
-            oval = (el.indexOf('http:\/\/') === -1) ? '"""' +el + '"""' : '<'+el+'>';
+            oval = (el.indexOf('http:\/\/') === -1 && el.indexOf('https:\/\/') === -1) ? '"""' +el + '"""' : '<'+el+'>';
         }else{
             //add data type to query to literal value
             let tmp = el.split('[dt]');
