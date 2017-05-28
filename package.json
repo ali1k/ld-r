@@ -60,7 +60,7 @@
     "password-hash": "^1.2.2",
     "prop-types": "^15.5.10",
     "query-string": "^4.3.4",
-    "rc-calendar": "^8.3.3",
+    "rc-calendar": "8.3.1",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
     "react-leaflet": "^1.2.0",
