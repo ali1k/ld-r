@@ -7,7 +7,7 @@ Linked Data Reactor (LD-Reactor or LD-R) is a framework to develop reactive and 
 
 ## Quick Start
 
-###Installation
+### Installation
 
 You should have installed [NodeJS](https://nodejs.org/), [npm](https://github.com/npm/npm) and [Webpack](https://webpack.github.io/) on your system as prerequisite, then:
 
@@ -15,7 +15,8 @@ Clone the repository: `git clone https://github.com/ali1k/ld-r.git`
 
 and simply run `./install` script
 
-###Configuration
+### Configuration
+
 Fill in general settings for your application at `configs/general.js`.
 
 Fill in appropriate values for server port, URLs of your SPARQL endpoint and DBpedia lookup service at `configs/server.js`.
@@ -24,13 +25,13 @@ Fll in appropriate settings for your UI reactors at `configs/reactor.js`.
 
 Fill in appropriate settings for the faceted browser at `configs/facets.js`.
 
-###Run in Production Mode
+### Run in Production Mode
 
 `npm run build`
 
 check server at `localhost:4000`
 
-###Development Mode
+### Development Mode
 
 `npm run dev`
 
