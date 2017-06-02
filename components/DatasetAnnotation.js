@@ -16,7 +16,7 @@ import countAnnotatedResourcesWithProp from '../actions/countAnnotatedResourcesW
 class DatasetAnnotation extends React.Component {
     constructor(props){
         super(props);
-        this.state = {storingDataset: '', datasetURI: '', resourceType: '', propertyURI: '', annotationMode: 0, storeInNewDataset : false};
+        this.state = {storingDataset: '', datasetURI: '', resourceType: '', propertyURI: '', annotationMode: 0, storeInNewDataset : false, noDynamicConfig: 0};
     }
     componentDidMount() {
     }
@@ -69,9 +69,9 @@ class DatasetAnnotation extends React.Component {
             if(baseResourceDomain[0].slice(-1) === '/'){
                 newDatasetURI = baseResourceDomain[0] + 'astore' + Math.round(+new Date() / 1000);
             }
-            this.setState({storeInNewDataset: true, storingDataset: newDatasetURI});
+            this.setState({storeInNewDataset: true, storingDataset: newDatasetURI, noDynamicConfig: 0});
         }else{
-            this.setState({storeInNewDataset: false, storingDataset: ''});
+            this.setState({storeInNewDataset: false, storingDataset: '', noDynamicConfig: 0});
         }
     }
     startInterval(){
@@ -100,7 +100,8 @@ class DatasetAnnotation extends React.Component {
                 resourceType: self.state.resourceType,
                 propertyURI: self.state.propertyURI,
                 storingDataset: self.state.storingDataset,
-                datasetLabel: self.findDatasetLabel(self.state.datasetURI)
+                datasetLabel: self.findDatasetLabel(self.state.datasetURI),
+                noDynamicConfig: self.state.noDynamicConfig
             });
         }
     }
@@ -117,7 +118,8 @@ class DatasetAnnotation extends React.Component {
     }
 
     handleNewDatasetChange(event) {
-        this.setState({storingDataset: event.target.value});
+        //in this case, do not create a dynamic config, admin should handle it manually
+        this.setState({storingDataset: event.target.value, noDynamicConfig: 1});
     }
     render() {
         let optionsList, dss = this.props.DatasetsStore.datasetsList;

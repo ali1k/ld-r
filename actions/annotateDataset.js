@@ -102,7 +102,7 @@ export default function annotateDataset(context, payload, done) {
             propertyURI: payload.propertyURI,
             inNewDataset: payload.storingDataset ? payload.storingDataset : 0
         }, (err1, res1)=>{
-            if(payload.storingDataset){
+            if(payload.storingDataset && !parseInt(payload.noDynamicConfig)){
                 //create a new reactor config if set
                 context.executeAction(createNewReactorConfig, {
                     dataset: payload.storingDataset,
