@@ -115,10 +115,19 @@ class DatasetAnnotation extends React.Component {
         });
         return label;
     }
+
+    handleNewDatasetChange(event) {
+        this.setState({storingDataset: event.target.value});
+    }
     render() {
         let optionsList, dss = this.props.DatasetsStore.datasetsList;
         let self = this, errorDIV='', formDIV='';
         let user = this.context.getUser();
+        allowChaningNewDataset= false;
+        //only admin can change the random new dataset!
+        if (user || parseInt(user.isSuperUser)) {
+            allowChaningNewDataset = true;
+        }
         if(enableAuthentication && !user){
             errorDIV = <div className="ui warning message"><div className="header"> Please <a href="/register">Register</a> or <a href="/login">Login</a> to see the datasets.</div></div>;
         }else{
@@ -169,6 +178,10 @@ class DatasetAnnotation extends React.Component {
                     <Form.Radio label='No, just enrich the original dataset' name='storeAnn' value='0' checked={!this.state.storeInNewDataset} onChange={this.handleStoringCheckBox.bind(this)} />
                     <Form.Radio label='Yes, create a new dataset for annotations' name='storeAnn' value='1' checked={this.state.storeInNewDataset} onChange={this.handleStoringCheckBox.bind(this)} />
                 </Form.Group>
+                <Divider hidden />
+                {allowChaningNewDataset && this.state.storeInNewDataset ?
+                    <input ref="newDatasetInput" type="text" value={this.state.storingDataset} placeholder="Add URI of the new dataset" onChange={this.handleNewDatasetChange.bind(this)} />
+                : ''}
                 <Divider hidden />
                 <div className='ui big blue button' onClick={this.handleAnnotateDataset.bind(this)}>Annotate  Dataset</div>
                 <Divider hidden />
