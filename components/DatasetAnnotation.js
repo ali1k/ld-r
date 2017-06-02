@@ -123,10 +123,10 @@ class DatasetAnnotation extends React.Component {
         let optionsList, dss = this.props.DatasetsStore.datasetsList;
         let self = this, errorDIV='', formDIV='';
         let user = this.context.getUser();
-        allowChaningNewDataset= false;
+        let allowChangingNewDataset= false;
         //only admin can change the random new dataset!
         if (user || parseInt(user.isSuperUser)) {
-            allowChaningNewDataset = true;
+            allowChangingNewDataset = true;
         }
         if(enableAuthentication && !user){
             errorDIV = <div className="ui warning message"><div className="header"> Please <a href="/register">Register</a> or <a href="/login">Login</a> to see the datasets.</div></div>;
@@ -179,7 +179,7 @@ class DatasetAnnotation extends React.Component {
                     <Form.Radio label='Yes, create a new dataset for annotations' name='storeAnn' value='1' checked={this.state.storeInNewDataset} onChange={this.handleStoringCheckBox.bind(this)} />
                 </Form.Group>
                 <Divider hidden />
-                {allowChaningNewDataset && this.state.storeInNewDataset ?
+                {allowChangingNewDataset && this.state.storeInNewDataset ?
                     <input ref="newDatasetInput" type="text" value={this.state.storingDataset} placeholder="Add URI of the new dataset" onChange={this.handleNewDatasetChange.bind(this)} />
                 : ''}
                 <Divider hidden />
