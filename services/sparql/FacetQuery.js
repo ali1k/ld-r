@@ -100,7 +100,10 @@ class FacetQuery{
                     }else{
                     //we assume it starts from the original graph
                     //use the default graph name
+                        let st_extra = self.makeExtraTypeFilters(endpointParameters, {type: type});
+                        console.log(st_extra);
                         qs = `
+                            ${st_extra}
                             ?s ${self.filterPropertyPath(part)} ?v${(counter === tmp0.length ? tindex : 'g'+tindex+counter)} .
                             ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
                         ` ;
