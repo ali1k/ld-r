@@ -373,9 +373,13 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+            let targetDataset = datasetURI;
+            if(params.inNewDataset){
+                targetDataset = params.inNewDataset;
+            }
+            getDynamicEndpointParameters(user, targetDataset, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.annotateResource(endpointParameters, user, datasetURI, graphName, params.resource, propertyURI, params.annotations, params.inNewDataset);
+                query = queryObject.getPrefixes() + queryObject.annotateResource(endpointParameters, user, targetDataset, graphName, params.resource, propertyURI, params.annotations, params.inNewDataset);
                 //console.log(query);
                 //build http uri
                 //send request
@@ -384,13 +388,13 @@ export default {
                     if(enableLogs){
                         log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
                     }
-                    callback(null, {datasetURI: datasetURI, resourceURI: params.resource, annotations: params.annotations});
+                    callback(null, {datasetURI: targetDataset, resourceURI: params.resource, annotations: params.annotations});
                 }).catch(function (err) {
                     console.log(err);
                     if(enableLogs){
                         log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
                     }
-                    callback(null, {datasetURI: datasetURI, resourceURI: params.resource, annotations: params.annotations});
+                    callback(null, {datasetURI: targetDataset, resourceURI: params.resource, annotations: params.annotations});
                 });
             });
 
