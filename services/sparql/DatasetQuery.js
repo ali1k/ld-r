@@ -284,7 +284,11 @@ class DatasetQuery{
     countAnnotatedResourcesWithProp(endpointParameters, graphName, rconfig, resourceType, propertyURI, inNewDataset) {
         let self = this;
         let type = resourceType ? [resourceType] : rconfig.resourceFocusType;
-        let {gStart, gEnd} = this.prepareGraphName(graphName);
+        let targetGraph = graphName;
+        if(inNewDataset){
+            targetGraph = inNewDataset;
+        }
+        let {gStart, gEnd} = this.prepareGraphName(targetGraph);
         let rconfig2 = {};
         rconfig2 = rconfig;
         rconfig2.resourceFocusType = type;
