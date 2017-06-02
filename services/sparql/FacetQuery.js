@@ -26,7 +26,9 @@ class FacetQuery{
     isMultiGraphFacet(propertyURI){
         //recognized by []
         let tmp0 = propertyURI.split('->[');
-        if(tmp0.length > 1){
+        //in case the subject itslef is on another graph e.g. http://asda1233.com<-rdfs:label
+        let tmp1 = propertyURI.split('<-');
+        if(tmp0.length > 1 || tmp1.length > 1){
             return true;
         }else{
             return false;
@@ -46,7 +48,7 @@ class FacetQuery{
     prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, tindex, filterSt){
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let self = this;
-        let counter=0, qs='', tmp1, tmp0 = propertyURI.split('->[');
+        let counter=0, qs='', tmp2, tmp1, tmp0 = propertyURI.split('->[');
         tmp0.forEach((part, index)=>{
             counter++;
             tmp1 = part.split(']');
@@ -85,14 +87,24 @@ class FacetQuery{
                 }
 
             }else{
-                //we assume we always start from the original graph
-                //use the default graph name
+                //first one
                 if(counter === 1){
-                    //first one
-                    qs = `
-                        ?s ${self.filterPropertyPath(part)} ?v${(counter === tmp0.length ? tindex : 'g'+tindex+counter)} .
-                        ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
-                    ` ;
+                    tmp2 = part.split('<-');
+                    if(tmp2.length>1){
+                        qs = `
+                            GRAPH <${tmp2[0]}> {
+                                ?s ${self.filterPropertyPath(tmp2[1])} ?v${(counter === tmp0.length ? tindex : 'g'+tindex+counter)} .
+                                ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
+                            }
+                        ` ;
+                    }else{
+                    //we assume it starts from the original graph
+                    //use the default graph name
+                        qs = `
+                            ?s ${self.filterPropertyPath(part)} ?v${(counter === tmp0.length ? tindex : 'g'+tindex+counter)} .
+                            ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
+                        ` ;
+                    }
                 }else{
                     qs = qs + `
                     ${gStart}
