@@ -123,7 +123,7 @@ export default function annotateDataset(context, payload, done) {
                 }, (err12, res12)=>{
                 });
             }
-            totalToBeAnnotated = parseInt(res0.total) - parseInt(res1.annotated);
+            totalToBeAnnotated = parseInt(res0.total ? res0.total : 0) - parseInt(res1.annotated ? res1.annotated : 0);
             totalPages = Math.ceil(totalToBeAnnotated / maxPerPage);
             //console.log(res1.annotated, res0.total, totalPages);
             //stop if all are annotated
