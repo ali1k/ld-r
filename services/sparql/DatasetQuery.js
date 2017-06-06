@@ -200,22 +200,22 @@ class DatasetQuery{
         //do not care about already annotated ones if annotations are stored in a new dataset
         if(inNewDataset){
             this.query = `
-            SELECT DISTINCT ?resource ?objectValue WHERE {
+            SELECT DISTINCT ?resource ?objectValue ${existingCoordsStS} WHERE {
                 {
-                    GRAPH <${inNewDataset}> {
                         {
-                            SELECT DISTINCT ?resource ?objectValue WHERE {
+                            SELECT DISTINCT ?resource ?objectValue ${existingCoordsStS} WHERE {
                                     ${gStart}
                                         ${st}
                                         ?resource ${self.filterPropertyPath(propertyURI)} ?objectValue .
+                                        ${existingCoordsStQ}
                                     ${gEnd}
+                                    GRAPH <${inNewDataset}> {
+                                        filter not exists {
+                                            ${notExistFilterSt}
+                                        }
+                                    }
                             } LIMIT ${limit} OFFSET ${offset}
                         }
-                        filter not exists {
-                            ?resource ldr:annotatedBy ?annotationD .
-                            ?annotationD ldr:property "${propertyURI}" .
-                        }
-                    }
                 }
             }
             `;

@@ -184,8 +184,7 @@ export default {
             //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
-                    callback(null, {datasetURI: datasetURI, propertyURI: propertyURI, annotated: 0});
-                    return 0;
+                    callback(null, {datasetURI: datasetURI, propertyURI: propertyURI, annotated: 0, total: 0});
                 }else{
                     user = req.user;
                 }
@@ -200,21 +199,21 @@ export default {
                 graphName = endpointParameters.graphName;
                 //config handler
                 configurator.prepareDatasetConfig(user, 1, targetDataset, (rconfig)=> {
-                    query = queryObject.countAnnotatedResourcesWithProp(endpointParameters, graphName, rconfig, resourceType, propertyURI, params.inANewDataset);
+                    query = queryObject.countAnnotatedResourcesWithProp(endpointParameters, endpointParameters.graphName, rconfig, resourceType, propertyURI, params.inANewDataset);
                     //console.log(query);
                     //build http uri
                     //send request
                     rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                         callback(null, {
-                            datasetURI: datasetURI,
+                            datasetURI: targetDataset,
                             resourceType : resourceType ? [resourceType] : rconfig.resourceFocusType,
                             propertyURI: propertyURI,
-                            graphName: graphName,
+                            graphName: endpointParameters.graphName,
                             annotated: utilObject.parseCountAnnotatedResourcesWithProp(res)
                         });
                     }).catch(function (err) {
                         console.log(err);
-                        callback(null, {datasetURI: datasetURI, propertyURI: propertyURI, annotated: 0});
+                        callback(null, {datasetURI: targetDataset, propertyURI: propertyURI, annotated: 0});
                     });
                 });
             });
