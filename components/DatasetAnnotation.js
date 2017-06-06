@@ -82,7 +82,7 @@ class DatasetAnnotation extends React.Component {
                 id: self.state.storeInNewDataset ? self.state.storingDataset : self.state.datasetURI,
                 resourceType: self.state.resourceType,
                 propertyURI: self.state.propertyURI,
-                inANewDataset: self.state.storeInNewDataset
+                inANewDataset: self.state.storingDataset
             });
             if(self.props.DatasetAnnotationStore.stats.annotated && self.props.DatasetAnnotationStore.stats.annotated===self.props.DatasetAnnotationStore.stats.total){
                 clearInterval(intervalId);
