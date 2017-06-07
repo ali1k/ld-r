@@ -21,7 +21,7 @@ let processData = (page, maxPerPage, totalPages, payload, done)=> {
         //console.log('getDatasetResourcePropValues', page, res2);
         asyncAnnotationTasks [page] = [];
         asyncEnrichmentTasks [page] = [];
-        if(res2.resources && res2.resources.length){
+        if(res2 && res2.resources && res2.resources.length){
             res2.resources.forEach((resource)=>{
                 asyncAnnotationTasks [page].push((acallback)=>{
                     //annotation progress
@@ -89,7 +89,7 @@ let asyncAnnotationTasks = {};
 let asyncEnrichmentTasks = {};
 let totalToBeAnnotated = 0;
 let progressCounter = 0;
-let maxPerPage = 10;
+let maxPerPage = 1;
 export default function annotateDataset(context, payload, done) {
     if(payload.maxPerPage){
         maxPerPage = payload.maxPerPage;

@@ -125,13 +125,38 @@ class DatasetAnnotation extends React.Component {
     render() {
         let optionsList, dss = this.props.DatasetsStore.datasetsList;
         let self = this, errorDIV='', formDIV='';
-        let user = this.context.getUser();
+        let user;
         let allowChangingNewDataset= false;
-        //only admin can change the random new dataset!
-        if (!enableAuthentication || parseInt(user.isSuperUser)) {
-            allowChangingNewDataset = true;
+        //do not query for user each time we annotate content!
+        if(!this.state.annotationMode){
+            user = this.context.getUser();
+            //only admin can change the random new dataset!
+            if (!enableAuthentication || parseInt(user.isSuperUser)) {
+                allowChangingNewDataset = true;
+            }
+
+            let tmpOption = '';
+            optionsList = dss.map(function(option, index) {
+                tmpOption = <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
+                //filter out datasets if no access is provided
+                if(enableAuthentication && option.features.hasLimitedAccess && parseInt(option.features.hasLimitedAccess)){
+                    //need to handle access to the dataset
+                    //if user is the editor by default he already has view access
+                    let editAccess = checkEditAccess(user, option.d, 0, 0, 0);
+                    if(!editAccess.access || editAccess.type === 'partial'){
+                        let viewAccess = checkViewAccess(user, option.d, 0, 0, 0);
+                        if(!viewAccess.access){
+                            tmpOption = '';
+                        }
+                    }
+                }
+                if(tmpOption){
+                    return tmpOption;
+                }
+            });
         }
-        if(enableAuthentication && !user){
+
+        if(enableAuthentication && !this.state.annotationMode && !user){
             errorDIV = <div className="ui warning message"><div className="header"> Please <a href="/register">Register</a> or <a href="/login">Login</a> to see the datasets.</div></div>;
         }else{
             if(!enableDatasetAnnotation){
@@ -140,25 +165,7 @@ class DatasetAnnotation extends React.Component {
                 errorDIV = <div className="ui warning message"><div className="header"> No dataset found for annotations!</div></div>;
             }
         }
-        let tmpOption = '';
-        optionsList = dss.map(function(option, index) {
-            tmpOption = <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
-            //filter out datasets if no access is provided
-            if(enableAuthentication && option.features.hasLimitedAccess && parseInt(option.features.hasLimitedAccess)){
-                //need to handle access to the dataset
-                //if user is the editor by default he already has view access
-                let editAccess = checkEditAccess(user, option.d, 0, 0, 0);
-                if(!editAccess.access || editAccess.type === 'partial'){
-                    let viewAccess = checkViewAccess(user, option.d, 0, 0, 0);
-                    if(!viewAccess.access){
-                        tmpOption = '';
-                    }
-                }
-            }
-            if(tmpOption){
-                return tmpOption;
-            }
-        });
+
         let tagsDIV = self.generateTagArray(this.props.DatasetAnnotationStore.tags).map((node, index)=>{
             return (<div className='ui basic label' key={index}><a href={node.uri} target="_blank">{node.text}</a> ({node.count})</div>);
         });

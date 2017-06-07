@@ -197,24 +197,27 @@ class DatasetQuery{
         rconfig2.resourceFocusType = type;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = this.makeExtraTypeFilters(endpointParameters, rconfig2);
+        let notExistFilterSt= `
+            ?resource ldr:annotatedBy ?annotationD .
+            ?annotationD ldr:property "${propertyURI}" .
+        `;
         //do not care about already annotated ones if annotations are stored in a new dataset
         if(inNewDataset){
             this.query = `
-            SELECT DISTINCT ?resource ?objectValue ${existingCoordsStS} WHERE {
+            SELECT DISTINCT ?resource ?objectValue WHERE {
                 {
                         {
-                            SELECT DISTINCT ?resource ?objectValue ${existingCoordsStS} WHERE {
+                            SELECT DISTINCT ?resource ?objectValue WHERE {
                                     ${gStart}
                                         ${st}
                                         ?resource ${self.filterPropertyPath(propertyURI)} ?objectValue .
-                                        ${existingCoordsStQ}
                                     ${gEnd}
                                     GRAPH <${inNewDataset}> {
                                         filter not exists {
                                             ${notExistFilterSt}
                                         }
                                     }
-                            } LIMIT ${limit} OFFSET ${offset}
+                            } LIMIT ${limit}
                         }
                 }
             }
@@ -226,12 +229,11 @@ class DatasetQuery{
                     ${st}
                     ?resource ${self.filterPropertyPath(propertyURI)} ?objectValue .
                     filter not exists {
-                        ?resource ldr:annotatedBy ?annotationD .
-                        ?annotationD ldr:property "${propertyURI}" .
+                        ${notExistFilterSt}
                     }
                 ${gEnd}
             }
-            LIMIT ${limit} OFFSET ${offset}
+            LIMIT ${limit}
             `;
         }
         //console.log(this.prefixes + this.query);
