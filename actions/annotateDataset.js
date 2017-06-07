@@ -89,7 +89,7 @@ let asyncAnnotationTasks = {};
 let asyncEnrichmentTasks = {};
 let totalToBeAnnotated = 0;
 let progressCounter = 0;
-let maxPerPage = 1;
+let maxPerPage = 10;
 export default function annotateDataset(context, payload, done) {
     if(payload.maxPerPage){
         maxPerPage = payload.maxPerPage;
