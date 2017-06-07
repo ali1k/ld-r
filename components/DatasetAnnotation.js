@@ -19,10 +19,18 @@ class DatasetAnnotation extends React.Component {
         this.state = {storingDataset: '', datasetURI: '', resourceType: '', propertyURI: '', annotationMode: 0, storeInNewDataset : false, noDynamicConfig: 0};
     }
     componentDidMount() {
-    }
-    componentDidUpdate() {
 
     }
+    componentDidUpdate() {
+        if(this.state.annotationMode){
+            let tags = this.prepareTagsForCloud(this.props.DatasetAnnotationStore.tags);
+            if(tags.length){
+                //$('.tagCloud').jQCloud(this.prepareTagsForCloud(this.props.DatasetAnnotationStore.tags));
+                $('.tagCloud').jQCloud('update', tags, {autoResize: true});
+            }
+        }
+    }
+    /*
     compareObjProps(a,b) {
         if (a.count < b.count)
             return 1;
@@ -30,6 +38,15 @@ class DatasetAnnotation extends React.Component {
             return -1;
         return 0;
     }
+    */
+    prepareTagsForCloud(obj){
+        let tags = [];
+        for(let prop in obj){
+            tags.push({link: prop, weight: obj[prop].count, text: obj[prop].text, html: {title: obj[prop].count, target: '_blank'}});
+        }
+        return tags;
+    }
+    /*
     generateTagArray(obj){
         let tags = [];
         for(let prop in obj){
@@ -42,6 +59,7 @@ class DatasetAnnotation extends React.Component {
         }
         return tags;
     }
+    */
     handleChange(element, e){
         if(element=== 'datasetURI'){
             if(e.target.value){
@@ -165,10 +183,12 @@ class DatasetAnnotation extends React.Component {
                 errorDIV = <div className="ui warning message"><div className="header"> No dataset found for annotations!</div></div>;
             }
         }
-
-        let tagsDIV = self.generateTagArray(this.props.DatasetAnnotationStore.tags).map((node, index)=>{
+        let tagsDIV ='';
+        /*
+        tagsDIV = self.generateTagArray(this.props.DatasetAnnotationStore.tags).map((node, index)=>{
             return (<div className='ui basic label' key={index}><a href={node.uri} target="_blank">{node.text}</a> ({node.count})</div>);
         });
+        */
         if(!errorDIV){
             formDIV =
             <Form size='big'>
@@ -226,6 +246,7 @@ class DatasetAnnotation extends React.Component {
                     </div>
                 }
                 <div className='ui segment'>
+                    <div ref="tagCloud" className="tagCloud" style={{minHeight: 300, minWidth: 300}}></div>
                     {tagsDIV}
                 </div>
             </div>

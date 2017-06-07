@@ -83,6 +83,7 @@ server.use('/animate.css', express.static(path.join(__dirname, '/node_modules/an
 server.use('/leaflet', express.static(path.join(__dirname, '/node_modules/leaflet')));
 server.use('/yasgui-yasqe', express.static(path.join(__dirname, '/node_modules/yasgui-yasqe')));
 server.use('/codemirror', express.static(path.join(__dirname, '/node_modules/codemirror')));
+server.use('/jqcloud2', express.static(path.join(__dirname, '/node_modules/jqcloud2')));
 
 server.use('/assets', express.static(path.join(__dirname, '/assets')));
 // Get access to the fetchr plugin instance
