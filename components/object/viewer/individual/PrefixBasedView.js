@@ -27,10 +27,24 @@ class PrefixBasedView extends React.Component {
         //case of propertyPath
         let out = [];
         let tmp = uri.split('->');
+        let tmp2, tmp22;
         if(tmp.length > 1){
             tmp.forEach((v)=>{
-                out.push(this.makeShorten(v, this.getPrefix(v)))
-            })
+                tmp2 = v.split(']');
+                //check named graphs
+                if(tmp2.length > 1){
+                    let tmp3 = tmp2[0].replace('[', ''), tmp4 = tmp2[1];
+                    tmp22 = tmp3.split('>>');
+                    //federeated facets
+                    if(tmp22.length > 1){
+                        out.push('['+this.makeShorten(tmp22[0], this.getPrefix(tmp22[0]))+'>>'+this.makeShorten(tmp22[1], this.getPrefix(tmp22[1]))+']'+this.makeShorten(tmp4, this.getPrefix(tmp4)));
+                    }else{
+                        out.push('['+this.makeShorten(tmp3, this.getPrefix(tmp3))+']'+this.makeShorten(tmp4, this.getPrefix(tmp4)));
+                    }
+                }else{
+                    out.push(this.makeShorten(v, this.getPrefix(v)))
+                }
+            });
             return out.join('->');
         }else{
             return this.makeShorten(uri, this.getPrefix(uri));
