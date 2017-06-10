@@ -34,6 +34,15 @@ class FacetQuery{
             return false;
         }
     }
+    isFederatedFacet(propertyURI){
+        //recognized by []
+        let tmp0 = propertyURI.split('>>');
+        if(tmp0.length > 1){
+            return true;
+        }else{
+            return false;
+        }
+    }
     returnServiceGraph(str){
         let out = {service: '', graph: ''};
         let tmp = str.split('>>');
@@ -56,24 +65,28 @@ class FacetQuery{
                 //it has named graph
                 //todo: use dataset instead of graph: needs loading dunamic config
                 //parse the SPARQL service URI separated by >>
-                //notice: >> is not tested because of the performance issues!
+                //notice: >> is not well tested because of the performance issues!
                 let tmp2 = this.returnServiceGraph(tmp1[0]);
                 if(tmp2.service){
                     if(tmp2.graph !== 'default'){
                         qs = qs + `
+                        ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt : '')}
                         SERVICE <${tmp2.service}> {
                             GRAPH <${tmp2.graph}> {
                                 ?vg${tindex}${counter-1} ${self.filterPropertyPath(tmp1[1])} ?v${(counter === tmp0.length ? tindex : 'g' + tindex + counter)} .
-                                ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
+
                             }
                         }
+                        ${(counter !== tmp0.length ? '' : filterSt ?  gEnd : '')}
                         ` ;
                     }else{
                         qs = qs + `
+                        ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt : '')}
                         SERVICE <${tmp2.service}> {
                             ?vg${tindex}${counter-1} ${self.filterPropertyPath(tmp1[1])} ?v${(counter === tmp0.length ? tindex : 'g' + tindex + counter)} .
-                            ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
+
                         }
+                        ${(counter !== tmp0.length ? '' : filterSt ?  gEnd : '')}
                         ` ;
                     }
                 //use case without federated query
@@ -477,6 +490,10 @@ class FacetQuery{
             geoStr = 'OPTIONAL { ?s ' + self.filterPropertyPath(geoProperty[0]) + ' ?geo .} ';
         }
         let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, rtconfig, options);
+        //virtuoso error when combining BIND with SERVICE: https://github.com/openlink/virtuoso-opensource/issues/244
+        if(st.indexOf('SERVICE <') !== -1){
+            titleStr = '';
+        }
         let limitOffsetPharse =`LIMIT ${limit} OFFSET ${noffset}`;
         if(searchPhase){
             limitOffsetPharse ='';
