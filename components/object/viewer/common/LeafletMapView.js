@@ -111,11 +111,11 @@ class LeafletMapView extends React.Component {
             }
             return (
                 <Map ref='map' center={[self.props.center.lat, self.props.center.lng]} zoom={self.props.zoomLevel} style={{minHeight: minHeight, minWidth: minWidth}}>
-                   <TileLayer style={{position: 'relative'}}
-                     url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
-                     attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                   />
-               {markersDIV}{polygonsDIV}{multipolygonsDIV}{geoJSONDIV}
+                    <TileLayer style={{position: 'relative'}}
+                        url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    />
+                    {markersDIV}{polygonsDIV}{multipolygonsDIV}{geoJSONDIV}
                 </Map>
             );
         }else {

@@ -107,20 +107,20 @@ class AggregateObjectReactor extends React.Component {
         let editDIV, saveDIV, undoDIV, deleteDIV;
         if(!this.props.readOnly){
             editDIV = <div ref="edit" title="edit" onClick={this.handleEdit.bind(this)} className="medium ui circular basic icon button">
-                            <i className="edit large blue icon link "></i>
-                      </div>;
+                <i className="edit large blue icon link "></i>
+            </div>;
             if(!isIndividual){
                 saveDIV = <div ref="save" title="save" onClick={this.handleSave.bind(this)} className="medium ui circular basic icon button">
-                            <i className="save large green icon link "></i>
-                          </div>;
+                    <i className="save large green icon link "></i>
+                </div>;
             }
             undoDIV = <div ref="undo" title="undo" onClick={this.handleUndo.bind(this)} className="medium ui circular basic icon button">
-                                <i className="undo large blue icon link "></i>
-                      </div>;
+                <i className="undo large blue icon link "></i>
+            </div>;
             if(this.props.config && this.props.config.allowNewValue && !this.props.isOnlyChild){
                 deleteDIV = <div ref="delete" title="delete" onClick={this.handleAggDelete.bind(this)} className="medium ui circular basic icon button">
-                                          <i className="trash outline large red icon link "></i>
-                            </div>;
+                    <i className="trash outline large red icon link "></i>
+                </div>;
             }
         }
         if (this.state.inEditMode) {
@@ -128,14 +128,14 @@ class AggregateObjectReactor extends React.Component {
                 <div className="ui list" ref="aggregateObjectReactor">
                     <div className="item">
                         <div className="ui form grid">
-                                <div className="twelve wide column field">
-                                    {dataEditType}
-                                </div>
-                                <div className="four wide column field animated fadeInLeft">
-                                    {saveDIV}
-                                    {(this.state.showDelete ? deleteDIV : '')}
-                                    {undoDIV}
-                                </div>
+                            <div className="twelve wide column field">
+                                {dataEditType}
+                            </div>
+                            <div className="four wide column field animated fadeInLeft">
+                                {saveDIV}
+                                {(this.state.showDelete ? deleteDIV : '')}
+                                {undoDIV}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -145,12 +145,12 @@ class AggregateObjectReactor extends React.Component {
                 <div className="ui list" ref="aggregateObjectReactor">
                     <div className="item">
                         <div className="ui form grid">
-                                <div className="twelve wide column field">
-                                    {dataViewType}
-                                </div>
-                                <div className="four wide column field animated fadeInLeft">
-                                    {editDIV}
-                                </div>
+                            <div className="twelve wide column field">
+                                {dataViewType}
+                            </div>
+                            <div className="four wide column field animated fadeInLeft">
+                                {editDIV}
+                            </div>
                         </div>
                     </div>
                 </div>

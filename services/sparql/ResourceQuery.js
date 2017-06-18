@@ -193,7 +193,7 @@ class ResourceQuery{
             tmp = getQueryDataTypeValue(valueType, dataType, objectValue);
             newValue = tmp.value;
             dtype = tmp.dtype;
-          //if we just want to delete a specific value for multi-valued ones
+            //if we just want to delete a specific value for multi-valued ones
             this.query = `
                 DELETE {
                     ${gStart}

@@ -178,20 +178,20 @@ class IndividualObject extends React.Component {
         //disable edit in readOnly mode
         if(!this.props.readOnly){
             editDIV = <div ref="edit" title="edit" onClick={this.handleEdit.bind(this)} className="medium ui circular basic icon button">
-                            <i className="edit large blue icon link "></i>
-                      </div>;
+                <i className="edit large blue icon link "></i>
+            </div>;
             saveDIV = <div ref="save" title="save" onClick={this.handleSave.bind(this)} className="medium ui circular basic icon button">
-                            <i className="save large green icon link "></i>
-                      </div>;
+                <i className="save large green icon link "></i>
+            </div>;
             if(!this.props.isNewValue){
                 undoDIV = <div ref="undo" title="undo" onClick={this.handleUndo.bind(this)} className="medium ui circular basic icon button">
-                                <i className="undo large blue icon link "></i>
-                          </div>;
+                    <i className="undo large blue icon link "></i>
+                </div>;
             }
             if(this.props.config && this.props.config.allowNewValue && !this.props.isOnlyChild){
                 deleteDIV = <div ref="delete" title="delete" onClick={this.handleDelete.bind(this)} className="medium ui circular basic icon button">
-                                <i className="trash outline large red icon link "></i>
-                          </div>;
+                    <i className="trash outline large red icon link "></i>
+                </div>;
             }
         }
         if(this.props.spec.extended){
@@ -205,8 +205,8 @@ class IndividualObject extends React.Component {
             if(this.props.config && this.props.config.allowExtension && !this.props.readOnly){
 
                 detailDIV = <div ref="addDetails" title="add details" onClick={this.handleAddDetails.bind(this)} className="medium ui circular basic icon button">
-                                <i className="add circle large blue icon link "> </i>
-                            </div>;
+                    <i className="add circle large blue icon link "> </i>
+                </div>;
             }
         }
         if (this.state.inEditMode) {
@@ -215,13 +215,13 @@ class IndividualObject extends React.Component {
                 <div className="ui list" ref="individualObjectReactor">
                     <div className="item">
                         <div className="ui form grid">
-                                <div className="twelve wide column field">
-                                        {dataEditType}
-                                </div>
-                                <div className="four wide column field">
-                                    {saveDIV}
-                                    {undoDIV}
-                                </div>
+                            <div className="twelve wide column field">
+                                {dataEditType}
+                            </div>
+                            <div className="four wide column field">
+                                {saveDIV}
+                                {undoDIV}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -232,14 +232,14 @@ class IndividualObject extends React.Component {
                 <div className="ui list" ref="individualObjectReactor">
                     <div className="item">
                         <div className="ui form grid">
-                                <div className="twelve wide column field">
-                                    {dataViewType}
-                                </div>
-                                <div className="four wide column field animated pulse">
-                                    {detailDIV}
-                                    {editDIV}
-                                    {deleteDIV}
-                                </div>
+                            <div className="twelve wide column field">
+                                {dataViewType}
+                            </div>
+                            <div className="four wide column field animated pulse">
+                                {detailDIV}
+                                {editDIV}
+                                {deleteDIV}
+                            </div>
                         </div>
                     </div>
                 </div>

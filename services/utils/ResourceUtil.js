@@ -352,7 +352,7 @@ class ResourceUtil {
         });
 
     }
-        //------ permission check functions---------------
+    //------ permission check functions---------------
     deleteAdminProperties(list) {
         let out = []
         const adminProps = ['https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isSuperUser', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#isActive', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOf', 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#viewerOf'];

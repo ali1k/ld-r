@@ -27,7 +27,7 @@ export default {
         if (resource === 'facet.facetsSideEffectCount') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
 
-           //control access on authentication
+            //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {datasetURI: datasetURI, graphName: graphName, propertyURI: decodeURIComponent(params.selection.propertyURI), total: 0});
@@ -64,7 +64,7 @@ export default {
         } else if (resource === 'facet.facetsSideEffect') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
 
-           //control access on authentication
+            //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {datasetURI: datasetURI, graphName: graphName, facets: {}, total: 0, page: 1});
@@ -102,7 +102,7 @@ export default {
         } else if (resource === 'facet.facetsMasterCount') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
 
-           //control access on authentication
+            //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {datasetURI: datasetURI, graphName: graphName, propertyURI: decodeURIComponent(params.selection.value), total: 0});
@@ -150,7 +150,7 @@ export default {
         } else if (resource === 'facet.facetsMaster') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
 
-           //control access on authentication
+            //control access on authentication
             if(enableAuthentication){
                 if(!req.user){
                     callback(null, {datasetURI: datasetURI, graphName: graphName, facets: {}, total: 0, page: 1});
@@ -179,7 +179,7 @@ export default {
                         rftconfig['constraint'] = rconfig.constraint;
                     }
                     query = queryObject.getMasterPropertyValues(endpointParameters, graphName,
-                         rftconfig, decodeURIComponent(params.selection.value), params.fpage ? params.fpage : 0);
+                        rftconfig, decodeURIComponent(params.selection.value), params.fpage ? params.fpage : 0);
                     //console.log(query);
                     //build http uri
                     //send request

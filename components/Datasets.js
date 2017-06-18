@@ -44,23 +44,23 @@ class Datasets extends React.Component {
         let datasetActionsDIV = '';
         let info = <div className="ui blue message">
                         The list contains only the datasets for which at least one <b>config scope</b> is found!
-                   </div>;
+        </div>;
         let dss = this.props.DatasetsStore.datasetsList;
         if(enableAuthentication && !user){
             output = <div className="ui warning message"><div className="header"> Please <a href="/register">Register</a> or <a href="/login">Login</a> to see the datasets.</div></div>;
         }else{
             if(enableAddingNewDatasets){
                 createDatasetDIV = <div className="item">
-                        <div  className="medium ui basic icon labeled button" onClick={this.handleCreateDataset.bind(this)}>
-                            <i className="cubes square large blue icon "></i> <i className="add black icon"></i>Add a New Dataset
-                        </div>
-                 </div>;
+                    <div  className="medium ui basic icon labeled button" onClick={this.handleCreateDataset.bind(this)}>
+                        <i className="cubes square large blue icon "></i> <i className="add black icon"></i>Add a New Dataset
+                    </div>
+                </div>;
             }
             if(enableDatasetAnnotation){
                 annotateDatasetDIV = <div className="item">
-                        <a  className="medium ui basic icon labeled button" href="/annotateDataset">
-                            <i className="cubes square large blue icon "></i> <i className="hashtag black icon"></i>Annotate a Dataset
-                        </a>
+                    <a  className="medium ui basic icon labeled button" href="/annotateDataset">
+                        <i className="cubes square large blue icon "></i> <i className="hashtag black icon"></i>Annotate a Dataset
+                    </a>
                 </div>;
             }
             datasetActionsDIV = <div className="ui horizontal divided list">
@@ -128,10 +128,10 @@ class Datasets extends React.Component {
                         }
                     }
                     return <div className="ui item" key={ds.d}> <div className="content"> <i className={'ui icon ' + dsIcon + color}></i> {dsLink} {ds.features && ds.features.resourceFocusType ? <span className="ui small circular label"> {self.prepareFocusList(ds.features.resourceFocusType)} </span> : ''}
-                    {ds.features && ds.features.isBrowsable ? brwsLink : ''} {ds.features && ds.features.metadata ? <a className="ui basic grey label rounded" href={ds.features.metadata} title="metadata" target="_blank"><i className="info icon"></i>metadata</a> : ''}
-                    {ds.features && ds.features.isStaticDynamic ? <i className="ui brown theme icon" title="loaded from both static and dynamic config"></i> :''}
-                    {ds.features && ds.features.isDynamic && !ds.features.isStaticDynamic ? <i className="ui orange theme icon" title="loaded from dynamic config"></i> :''}
-                    {ds.features && ds.features.isDefaultDataset ? <i className="ui teal flag icon" title="default dataset"></i> :''}</div> </div>;
+                        {ds.features && ds.features.isBrowsable ? brwsLink : ''} {ds.features && ds.features.metadata ? <a className="ui basic grey label rounded" href={ds.features.metadata} title="metadata" target="_blank"><i className="info icon"></i>metadata</a> : ''}
+                        {ds.features && ds.features.isStaticDynamic ? <i className="ui brown theme icon" title="loaded from both static and dynamic config"></i> :''}
+                        {ds.features && ds.features.isDynamic && !ds.features.isStaticDynamic ? <i className="ui orange theme icon" title="loaded from dynamic config"></i> :''}
+                        {ds.features && ds.features.isDefaultDataset ? <i className="ui teal flag icon" title="default dataset"></i> :''}</div> </div>;
                 });
             }
 
@@ -151,14 +151,14 @@ class Datasets extends React.Component {
                             {datasetActionsDIV}
                         </div>
                         {dss.length ?
-                        <div className="ui grey message form">
-                            <select ref="datasetURI" className="ui search dropdown">
-                                {optionsList}
-                            </select>
-                            <input ref="resourceURI" type="text" className="input" placeholder="Enter the URI of the resource e.g. http://dbpedia.org/resource/VU_University_Amsterdam"/>
-                            <button className="fluid ui primary button" onClick={this.displayResource.bind(this)}>Display resource in the selected dataset</button>
-                        </div>
-                         : ''}
+                            <div className="ui grey message form">
+                                <select ref="datasetURI" className="ui search dropdown">
+                                    {optionsList}
+                                </select>
+                                <input ref="resourceURI" type="text" className="input" placeholder="Enter the URI of the resource e.g. http://dbpedia.org/resource/VU_University_Amsterdam"/>
+                                <button className="fluid ui primary button" onClick={this.displayResource.bind(this)}>Display resource in the selected dataset</button>
+                            </div>
+                            : ''}
                     </div>
                 </div>
             </div>

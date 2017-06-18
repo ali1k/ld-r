@@ -86,13 +86,13 @@ class Facet extends React.Component {
         let invertStat = this.props.invert[this.props.spec.propertyURI] ? 'Revert' : 'Invert';
         let shuffleStat = !this.state.shuffled ? 'Shuffle' : 'Reset';
         let d_options = [
-              { key: 1, text: invertStat + ' the selection', value: 'invert' },
-              { key: 2, text: shuffleStat + ' the list', value: 'shuffle' }
+            { key: 1, text: invertStat + ' the selection', value: 'invert' },
+            { key: 2, text: shuffleStat + ' the list', value: 'shuffle' }
         ]
         const d_trigger = (
-          <span>
-            <Icon name='lightning' />
-          </span>
+            <span>
+                <Icon name='lightning' />
+            </span>
         );
         //change header color of facet: Violet -> for property chains , Purple -> multigraphs
         let defaultColor = 'blue';
@@ -151,12 +151,12 @@ class Facet extends React.Component {
                             </a>
                         </div>
                     </div>
-                : ''
+                    : ''
                 }
                 <div className={contentClasses}>
-                     {!this.props.spec.propertyURI ? '' :
-                         <span className="ui teal ribbon label" title="number of items listed in this facet">{this.state.searchTerm ? cloneInstances.length : this.addCommas(itemsCount)}{(!this.state.searchTerm && this.props.spec.propertyURI && parseInt(itemsCount) > cloneInstances.length) ? '*' : ''}</span>
-                     }
+                    {!this.props.spec.propertyURI ? '' :
+                        <span className="ui teal ribbon label" title="number of items listed in this facet">{this.state.searchTerm ? cloneInstances.length : this.addCommas(itemsCount)}{(!this.state.searchTerm && this.props.spec.propertyURI && parseInt(itemsCount) > cloneInstances.length) ? '*' : ''}</span>
+                    }
                     <div className="ui horizontal list">
                         <div className="item">
                             <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.props.config} size="3" />
@@ -169,7 +169,7 @@ class Facet extends React.Component {
                         </div>
                         {this.props.spec.property ?
                             <div className="item">
-                              <Dropdown selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={d_trigger} options={d_options} icon={null} upward floating />
+                                <Dropdown selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={d_trigger} options={d_options} icon={null} upward floating />
                             </div>
                             : ''
                         }
@@ -184,32 +184,32 @@ class Facet extends React.Component {
                             }
                         </div>
                     </div>
-                  </div>
-                  <br/>
-                  <div className={extraContentClasses}>
-                      <div className="ui tag horizontal labels">
-                          <SearchInput className="ui mini search icon input" ref="search" onChange={this.searchUpdated.bind(this)} throttle={500}/>
-                          {this.props.spec.property ?
-                              <a className='ui icon mini basic button right floated' onClick={this.handleToggleExpand.bind(this)}>
-                                  <i className='ui icon expand'></i>
-                              </a>
-                          : ''
-                          }
-                          {this.props.spec.property ?
-                              <a className='ui icon mini basic button right floated' onClick={this.handleToggleVerticalResize.bind(this)}>
-                                  <i className='ui icon resize vertical'></i>
-                              </a>
-                          : ''
-                          }
-                      </div>
+                </div>
+                <br/>
+                <div className={extraContentClasses}>
+                    <div className="ui tag horizontal labels">
+                        <SearchInput className="ui mini search icon input" ref="search" onChange={this.searchUpdated.bind(this)} throttle={500}/>
+                        {this.props.spec.property ?
+                            <a className='ui icon mini basic button right floated' onClick={this.handleToggleExpand.bind(this)}>
+                                <i className='ui icon expand'></i>
+                            </a>
+                            : ''
+                        }
+                        {this.props.spec.property ?
+                            <a className='ui icon mini basic button right floated' onClick={this.handleToggleVerticalResize.bind(this)}>
+                                <i className='ui icon resize vertical'></i>
+                            </a>
+                            : ''
+                        }
+                    </div>
 
-                  </div>
-                  {this.props.config && this.props.config.displayQueries ?
+                </div>
+                {this.props.config && this.props.config.displayQueries ?
                     <div className={queryClasses}>
                         <YASQEViewer spec={{value: this.props.spec.query}} />
                     </div>
                     : ''
-                  }
+                }
             </div>
         );
     }

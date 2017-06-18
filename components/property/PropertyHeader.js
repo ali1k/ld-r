@@ -31,12 +31,12 @@ class PropertyHeader extends React.Component {
         }
         if(this.props.config && this.props.config.allowInlineConfig){
             configDIV = <Dropdown trigger={<span className="ui circular icon black button mini"><i className="ui settings icon"></i></span>} icon={null}>
-              <Dropdown.Menu>
-                <Dropdown.Item onClick={self.createRConfig.bind(self, 'P')}> Add 'P' Config</Dropdown.Item>
-                <Dropdown.Item onClick={self.createRConfig.bind(self, 'DP')}>Add 'DP' Config</Dropdown.Item>
-                <Dropdown.Item onClick={self.createRConfig.bind(self, 'RP')}>Add 'RP' Config</Dropdown.Item>
-                <Dropdown.Item onClick={self.createRConfig.bind(self, 'DRP')}> Add 'DRP' Config</Dropdown.Item>
-              </Dropdown.Menu>
+                <Dropdown.Menu>
+                    <Dropdown.Item onClick={self.createRConfig.bind(self, 'P')}> Add 'P' Config</Dropdown.Item>
+                    <Dropdown.Item onClick={self.createRConfig.bind(self, 'DP')}>Add 'DP' Config</Dropdown.Item>
+                    <Dropdown.Item onClick={self.createRConfig.bind(self, 'RP')}>Add 'RP' Config</Dropdown.Item>
+                    <Dropdown.Item onClick={self.createRConfig.bind(self, 'DRP')}> Add 'DRP' Config</Dropdown.Item>
+                </Dropdown.Menu>
             </Dropdown>;
         }
         switch(this.props.size){

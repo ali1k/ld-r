@@ -27,7 +27,7 @@ class BasicIndividualDetailView extends React.Component {
                         </div>
                         <div className="ui dividing header"></div>
                         <div className="fourteen wide column field list">
-                                {llist}
+                            {llist}
                         </div>
                         <div className="one wide column field">
 

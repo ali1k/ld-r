@@ -80,11 +80,11 @@ class ResourceReactor extends React.Component {
         let newPropDIV = '';
         if(!error && config && config.allowPropertyNew && !config.readOnly && (config.userIsCreator || config.userIsEditor)){
             newPropDIV =  <div className="ui fluid container ldr-padding-more"><div className="ui grid">
-                                <div className="ui column"><div className="ui grey message form">
-                                <PrefixBasedInput includeOnly={['ldrProperties','properties']} noFocus={true} spec={{value:''}} onDataEdit={this.handleNewPropertyEdit.bind(this)} placeholder="Enter the URI of the property. You can use common prefixes e.g. foaf:name"/>
-                                <PrefixBasedInput noFocus={true} spec={{value:''}} onDataEdit={this.handleNewObjectValueEdit.bind(this)} placeholder="Value of the property" onEnterPress={this.handleNewProperty.bind(this)} allowActionByKey={true}/>
-                                <button className="fluid ui primary icon button" onClick={this.handleNewProperty.bind(this)}><i className="icon square add"></i>Add Property/Value</button>
-                        </div></div></div></div>;
+                <div className="ui column"><div className="ui grey message form">
+                    <PrefixBasedInput includeOnly={['ldrProperties','properties']} noFocus={true} spec={{value:''}} onDataEdit={this.handleNewPropertyEdit.bind(this)} placeholder="Enter the URI of the property. You can use common prefixes e.g. foaf:name"/>
+                    <PrefixBasedInput noFocus={true} spec={{value:''}} onDataEdit={this.handleNewObjectValueEdit.bind(this)} placeholder="Value of the property" onEnterPress={this.handleNewProperty.bind(this)} allowActionByKey={true}/>
+                    <button className="fluid ui primary icon button" onClick={this.handleNewProperty.bind(this)}><i className="icon square add"></i>Add Property/Value</button>
+                </div></div></div></div>;
         }
         let itemTypes = '';
         if(Array.isArray(resourceType)){

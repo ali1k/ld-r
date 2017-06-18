@@ -41,18 +41,18 @@ class ResourceList extends React.Component {
         //in the faceted browser
         if (this.props.OpenInNewTab) {
             let titleDIV = <div className="content">
-                                <a href={'/dataset/' + g + '/resource/' + v} target="_blank" className="ui"> <i className={icon}></i>{title} </a>
-                            </div>;
+                <a href={'/dataset/' + g + '/resource/' + v} target="_blank" className="ui"> <i className={icon}></i>{title} </a>
+            </div>;
             if(this.props.config && this.props.config.resourceImageProperty){
                 return (
                     <div>
                         <div className="content">
-                                <div className="ui fluid card" style={{maxWidth: 150, maxHeight: 235, minHeight: 235}}>
-                                    <div className="image">
-                                        <a href={'/dataset/' + g + '/resource/' + v} target="_blank" className="ui"> <img className="ui small image" src={image ? image : '/assets/img/image.png'} style={{maxHeight: 150, minHeight: 150}} /></a>
-                                    </div>
-                                    {titleDIV}
+                            <div className="ui fluid card" style={{maxWidth: 150, maxHeight: 235, minHeight: 235}}>
+                                <div className="image">
+                                    <a href={'/dataset/' + g + '/resource/' + v} target="_blank" className="ui"> <img className="ui small image" src={image ? image : '/assets/img/image.png'} style={{maxHeight: 150, minHeight: 150}} /></a>
                                 </div>
+                                {titleDIV}
+                            </div>
                         </div>
                     </div>
                 );
@@ -65,18 +65,18 @@ class ResourceList extends React.Component {
             }
         } else {
             let titleDIV = <div className="content">
-                                <NavLink routeName="resource" className="ui" href={'/dataset/' + g + '/resource/' + v}> <i className={icon}></i>{title}</NavLink>&nbsp;{cloneDIV}
-                            </div>;
+                <NavLink routeName="resource" className="ui" href={'/dataset/' + g + '/resource/' + v}> <i className={icon}></i>{title}</NavLink>&nbsp;{cloneDIV}
+            </div>;
             if(this.props.config && this.props.config.resourceImageProperty){
                 return (
                     <div>
                         <div className="content">
-                                <div className="ui fluid card" style={{maxWidth: 150, maxHeight: 235, minHeight: 235}}>
-                                    <div className="image">
-                                        <NavLink routeName="resource" className="ui" href={'/dataset/' + g + '/resource/' + v}> <img className="ui small image" src={image ? image : '/assets/img/image.png'} style={{maxHeight: 150, minHeight: 150}}/></NavLink>
-                                    </div>
-                                    {titleDIV}
+                            <div className="ui fluid card" style={{maxWidth: 150, maxHeight: 235, minHeight: 235}}>
+                                <div className="image">
+                                    <NavLink routeName="resource" className="ui" href={'/dataset/' + g + '/resource/' + v}> <img className="ui small image" src={image ? image : '/assets/img/image.png'} style={{maxHeight: 150, minHeight: 150}}/></NavLink>
                                 </div>
+                                {titleDIV}
+                            </div>
                         </div>
                     </div>
                 );
@@ -168,7 +168,7 @@ class ResourceList extends React.Component {
             <div className={listClasses} ref="resourceList" style={{overflow: 'auto'}}>
                 {this.props.config && this.props.config.resourceGeoProperty ?
                     <BasicAggregateMapView  mapWidth={950} mapHeight={620} zoomLevel={2} spec={{instances: instances}} config={this.props.config}/>
-                : list}
+                    : list}
             </div>
         );
     }

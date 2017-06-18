@@ -169,7 +169,7 @@ export default {
                 }
 
                 break;
-        //todo: check the differences for other triple stores
+                //todo: check the differences for other triple stores
             case 'sesame':
                 if(mode === 'update'){
                     outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '/statements';

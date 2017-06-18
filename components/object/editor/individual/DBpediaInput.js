@@ -88,10 +88,10 @@ class DBpediaInput extends React.Component {
         let suggestions = this.props.DBpediaStore.suggestions.map(function(node, index) {
             return (
                 <a className="result" key={'suggestion_' + index} onClick={self.addSuggestion.bind(self, node.uri)}>
-                  <div className="content">
-                    <div className="title">{node.title}</div>
-                    <div className="description">{node.description}</div>
-                  </div>
+                    <div className="content">
+                        <div className="title">{node.title}</div>
+                        <div className="description">{node.description}</div>
+                    </div>
                 </a>
             );
         });

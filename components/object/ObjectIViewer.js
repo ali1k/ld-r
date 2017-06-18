@@ -113,7 +113,7 @@ class ObjectIViewer extends React.Component {
             }}>
                 {hideObject
                     ? <span></span>
-                : <div className={viewerClasses}>
+                    : <div className={viewerClasses}>
                         {viewer}
                     </div>}
                 {extendedViewer}

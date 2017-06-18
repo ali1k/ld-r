@@ -14,7 +14,7 @@ class ResourceListPager extends React.Component {
     buildLink(page, color, icon) {
         if(this.props.handleClick){
             return (
-            <a onClick={this.props.handleClick.bind(this, page)} key={(icon ? ('i' + page) : page)} className={'ui ' + color + ' label'}> {icon ? <i className={icon}></i> : <span>{page}</span>} </a>
+                <a onClick={this.props.handleClick.bind(this, page)} key={(icon ? ('i' + page) : page)} className={'ui ' + color + ' label'}> {icon ? <i className={icon}></i> : <span>{page}</span>} </a>
             );
         }else{
             return (
@@ -99,7 +99,7 @@ class ResourceListPager extends React.Component {
                     <a className='ui icon mini basic button right floated' onClick={this.props.onExpandCollapse.bind(this)}>
                         <i className='ui icon expand'></i>
                     </a>
-                : ''}
+                    : ''}
                 <a className='ui icon mini basic button right floated' onClick={this.onSearchClick.bind(this)}>
                     <i className='ui icon orange search'></i>
                 </a>

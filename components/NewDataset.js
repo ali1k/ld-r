@@ -115,13 +115,13 @@ class NewDataset extends React.Component {
                 <Divider hidden />
                 {this.state.graphName || this.state.endpointURI ?
                     <Form.Field label='Graph Name' control='input' placeholder='Graph Name / or leave it empty for all graphs' onChange={this.handleChange.bind(this, 'graphName')}/>
-                : ''}
+                    : ''}
                 {this.state.resourceFocusType || this.state.endpointURI ?
                     <div>
                         <b>Resource Focus Type</b>
                         <PrefixBasedInput includeOnly={['classes']} noFocus={true} spec={{value:''}} onDataEdit={this.handleResourceFocusTypeChange.bind(this)} placeholder="Resource Focus Type / or leave it empty for all resource types" onEnterPress={this.handleCreateDataset.bind(this)} allowActionByKey={true}/>
                     </div>
-                : ''}
+                    : ''}
                 <Divider hidden />
                 <div className='ui big blue button' onClick={this.handleCreateDataset.bind(this)}>Add Dataset</div>
                 <Divider hidden />

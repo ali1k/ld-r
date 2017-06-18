@@ -30,11 +30,11 @@ class BasicLinkedIndividualView extends React.Component {
         if(this.props.openInNewWindows || (this.props.config && this.props.config.openInNewWindows)){
             outputDIV = <a target="_blank" className="ui label" href={'/dataset/' + encodeURIComponent(datasetURI) + '/resource/' + encodeURIComponent(this.props.spec.value) + '/' + this.props.category + '/' + encodeURIComponent(this.props.propertyPath)}>
                 <i className="black cube icon"></i> {title}
-                </a>;
+            </a>;
         }else{
             outputDIV = <NavLink routeName="resource" className="ui label" href={'/dataset/' + encodeURIComponent(datasetURI) + '/resource/' + encodeURIComponent(this.props.spec.value) + '/' + this.props.category + '/' + encodeURIComponent(this.props.propertyPath)}>
                 <i className="black cube icon"></i> {title}
-                        </NavLink>;
+            </NavLink>;
         }
 
         return (

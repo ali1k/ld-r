@@ -35,8 +35,8 @@ class DBpediaMapView extends React.Component {
     render () {
         return (
             <div ref="DBpediaMapView">
-                    {this.props.DBpediaGMapStore.coordinates[this.props.property] && this.props.DBpediaGMapStore.coordinates[this.props.property].length? <LeafletMapView key={this.props.DBpediaGMapStore.coordinates[this.props.property].length} markers={this.props.DBpediaGMapStore.coordinates[this.props.property]} zoomLevel={3} center={{lat: 48.2000, lng: 16.3500}}/> :'Loading...'}
-                   <BasicAggregateView spec={this.props.spec} config={this.props.config} />
+                {this.props.DBpediaGMapStore.coordinates[this.props.property] && this.props.DBpediaGMapStore.coordinates[this.props.property].length? <LeafletMapView key={this.props.DBpediaGMapStore.coordinates[this.props.property].length} markers={this.props.DBpediaGMapStore.coordinates[this.props.property]} zoomLevel={3} center={{lat: 48.2000, lng: 16.3500}}/> :'Loading...'}
+                <BasicAggregateView spec={this.props.spec} config={this.props.config} />
             </div>
     	);
     }

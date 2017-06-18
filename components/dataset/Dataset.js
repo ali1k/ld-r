@@ -68,14 +68,15 @@ class Dataset extends React.Component {
         }
         let createResourceDIV = '';
         if(this.props.config && !this.props.readOnly && this.props.config.allowResourceNew){
-            createResourceDIV = <div className="ui list">
+            createResourceDIV =
+            <div className="ui list">
                 <div className="item">
                     <div  className="medium ui basic icon labeled button" onClick={this.props.onCreateResource.bind(this, this.props.datasetURI)}>
                         <i className="cube square large blue icon "></i> <i className="add black icon"></i> Add a New Resource
-                        </div>
                     </div>
+                </div>
                 <br/>
-             </div>;
+            </div>;
         }
         return (
             <div className="ui fluid container ldr-padding-more" ref="dataset">
@@ -94,8 +95,8 @@ class Dataset extends React.Component {
                             {this.props.config && this.props.config.displayQueries ?
                                 <div className= "ui tertiary segment">
                                     <YASQEViewer spec={{value: this.props.resourceQuery}} />
-                               </div>
-                            : ''}
+                                </div>
+                                : ''}
                         </div>
                         <div className= "ui bottom attached">
                             {createResourceDIV}

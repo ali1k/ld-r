@@ -104,7 +104,7 @@ class UserResource extends React.Component {
             tabsDIV = this.props.config.propertyCategories.map(function(node, index) {
                 return (
                     <NavLink className={(node === currentCategory ? 'item link active' : 'item link')} key={index} routeName="resource" href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(self.props.resource) + '/' + node + '/' + encodeURIComponent(self.props.propertyPath)}>
-                      {node}
+                        {node}
                     </NavLink>
                 );
             });
@@ -120,29 +120,29 @@ class UserResource extends React.Component {
                 );
             });
             mainDIV = <div>
-                        <div className="ui top attached tabular menu">
-                            {tabsDIV}
-                        </div>
-                        {tabsContentDIV}
-                      </div>;
+                <div className="ui top attached tabular menu">
+                    {tabsDIV}
+                </div>
+                {tabsContentDIV}
+            </div>;
         }else{
             mainDIV = <div className="ui segment">
-                            <div className="ui grid">
-                                <div className="column ui list">
-                                    {firstNameDIV}
-                                    {lastNameDIV}
-                                    {orgDIV}
-                                    {emailDIV}
-                                    {unameDIV}
-                                    {passDIV}
-                                    {list}
-                                    {viewerOfDIV}
-                                    {editorOfDIV}
-                                    {dateDIV}
-                                    {creatorDIV}
-                                </div>
-                            </div>
-                      </div>;
+                <div className="ui grid">
+                    <div className="column ui list">
+                        {firstNameDIV}
+                        {lastNameDIV}
+                        {orgDIV}
+                        {emailDIV}
+                        {unameDIV}
+                        {passDIV}
+                        {list}
+                        {viewerOfDIV}
+                        {editorOfDIV}
+                        {dateDIV}
+                        {creatorDIV}
+                    </div>
+                </div>
+            </div>;
         }
         return (
             <div className="ui fluid container ldr-padding-more" ref="resource">

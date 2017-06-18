@@ -42,22 +42,22 @@ class IndividualProperty extends React.Component {
             if(this.state.inNewValueMode){
                 defaultValueDIV = <ObjectReactor isNewValue={true} inEditMode={true} key="defaultValue" spec={this.simulateDefaultValue()} config={this.props.config} datasetURI={this.props.datasetURI} resource={this.props.resource} property={this.props.property} readOnly={false} onCreateIndividualObject={this.props.onCreateIndividualObject.bind(this)}/>;
                 newValueDIV = <div className="ui list">
-                                        <div className="item">
-                                            <div onClick={this.handleCancelNewIndividualObject.bind(this)} className="medium ui basic icon labeled button">
-                                                <i className="cancel square large red icon "></i> &nbsp; Cancel adding new <strong> {propLabel} </strong>
-                                            </div>
-                                        </div>
-                               </div>;
+                    <div className="item">
+                        <div onClick={this.handleCancelNewIndividualObject.bind(this)} className="medium ui basic icon labeled button">
+                            <i className="cancel square large red icon "></i> &nbsp; Cancel adding new <strong> {propLabel} </strong>
+                        </div>
+                    </div>
+                </div>;
             }else{
                 defaultValueDIV = '';
                 newValueDIV = <div className="ui list">
-                                    <div className="item">
-                                        <div onClick={this.handleNewIndividualObject.bind(this)} className="medium ui basic icon labeled button">
-                                            <i className="plus square large blue icon "></i> &nbsp; New <strong> {propLabel} </strong>
-                                        </div>
-                                    </div>
-                                    <br/>
-                              </div>;
+                    <div className="item">
+                        <div onClick={this.handleNewIndividualObject.bind(this)} className="medium ui basic icon labeled button">
+                            <i className="plus square large blue icon "></i> &nbsp; New <strong> {propLabel} </strong>
+                        </div>
+                    </div>
+                    <br/>
+                </div>;
             }
         }
         return (

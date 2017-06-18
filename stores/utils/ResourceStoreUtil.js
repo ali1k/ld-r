@@ -19,7 +19,7 @@ class ResourceStoreUtil{
         let self = this;
         let tmp;
         if(self.calculateArrLength(oldArr)<newArr.length){
-          //insertion case
+            //insertion case
             newArr.forEach(function(v, i) {
                 if(self.checkInArray(newArr[i], oldArr).found){
                     // preserve the order
@@ -38,9 +38,9 @@ class ResourceStoreUtil{
                     }
                 });
             }else{
-              //in edit mode we should still preserve empty indices
-              //we should update the value of our old array with 0 indices
-              //only works for single changes
+                //in edit mode we should still preserve empty indices
+                //we should update the value of our old array with 0 indices
+                //only works for single changes
                 tmp = self.detectChangeInArray(oldArr, newArr);
                 output[tmp.oldIndex] = newArr[tmp.newIndex];
             }
@@ -54,7 +54,7 @@ class ResourceStoreUtil{
         let self = this;
         let tmp, out = 0, oldIndex, newIndex, foundIndices = [];
         oldArr.forEach(function(v, i) {
-          //if it was not found and was not 0 it means it is the change point
+            //if it was not found and was not 0 it means it is the change point
             tmp=self.checkInArray(oldArr[i], newArr);
             if(tmp.found){
                 foundIndices.push(tmp.index);
@@ -65,7 +65,7 @@ class ResourceStoreUtil{
                 }
             }
         });
-      //check found indices to detect non-found indices
+        //check found indices to detect non-found indices
         newArr.forEach(function(v, i) {
             if(foundIndices.indexOf(i)!==-1){
                 //it is unchanged

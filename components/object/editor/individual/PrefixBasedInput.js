@@ -33,7 +33,7 @@ class PrefixBasedInput extends React.Component {
     handleKeyDown(evt) {
         if (this.props.allowActionByKey) {
             switch (evt.keyCode) {
-                    //case 9: // Tab
+                //case 9: // Tab
                 case 13: // Enter
                     this.props.onEnterPress();
                     break;

@@ -45,7 +45,7 @@ export default {
                     callback(null, {coordinates: [], property: ''});
                 });
             });
-          /////////////////////////////////////////////
+            /////////////////////////////////////////////
         } else if (resource === 'dbpedia.spotlight') {
             query = params.query;
             //send request

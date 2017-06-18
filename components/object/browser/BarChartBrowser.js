@@ -68,7 +68,7 @@ class BarChartBrowser extends React.Component {
         return (
             <div>
                 <BarChart width={width} height={height} data={data}
-                            margin={{top: 0, right: 0, left: 0, bottom: 0}}>
+                    margin={{top: 0, right: 0, left: 0, bottom: 0}}>
                     <XAxis dataKey="title"/>
                     <YAxis/>
                     <Tooltip/>

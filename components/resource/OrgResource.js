@@ -168,14 +168,14 @@ class OrgResource extends React.Component {
             });
         }
         let mainDIV = <div className="ui segment">
-                        <div className="ui grid">
-                            <div className="column ui list">
-                                {list}
-                                {dateDIV}
-                                {creatorDIV}
-                            </div>
-                        </div>
-                  </div>;
+            <div className="ui grid">
+                <div className="column ui list">
+                    {list}
+                    {dateDIV}
+                    {creatorDIV}
+                </div>
+            </div>
+        </div>;
         let datasetTitle = this.props.datasetURI;
         if(this.props.config && this.props.config.datasetLabel){
             datasetTitle = this.props.config.datasetLabel;
@@ -183,17 +183,17 @@ class OrgResource extends React.Component {
         let breadcrumb;
         if(self.props.propertyPath.length > 1){
             breadcrumb = <div className="ui large breadcrumb">
-                        <a className="section" href={'/dataset/1/' + encodeURIComponent(self.props.datasetURI )}><i className="cubes icon"></i>{datasetTitle}</a>
-                        <i className="big right chevron icon divider"></i>
-                          <a className="section" href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(self.props.propertyPath[0])}><i className="cube icon"></i>{URIUtil.getURILabel(self.props.propertyPath[0])}</a>
-                          <i className="big right arrow icon divider"></i>
-                          <div className="active section">{URIUtil.getURILabel(self.props.propertyPath[1])}</div>
-                        </div>;
+                <a className="section" href={'/dataset/1/' + encodeURIComponent(self.props.datasetURI )}><i className="cubes icon"></i>{datasetTitle}</a>
+                <i className="big right chevron icon divider"></i>
+                <a className="section" href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(self.props.propertyPath[0])}><i className="cube icon"></i>{URIUtil.getURILabel(self.props.propertyPath[0])}</a>
+                <i className="big right arrow icon divider"></i>
+                <div className="active section">{URIUtil.getURILabel(self.props.propertyPath[1])}</div>
+            </div>;
         }else{
             breadcrumb = <div className="ui large breadcrumb">
-                        <a className="section" href={'/dataset/1/' + encodeURIComponent(self.props.datasetURI )}><i className="cubes icon"></i>{datasetTitle}</a>
-                        <i className="big right chevron icon divider"></i>
-                        </div>;
+                <a className="section" href={'/dataset/1/' + encodeURIComponent(self.props.datasetURI )}><i className="cubes icon"></i>{datasetTitle}</a>
+                <i className="big right chevron icon divider"></i>
+            </div>;
         }
         let cloneable = 0;
         if (self.props.config && !this.props.readOnly && typeof self.props.config.allowResourceClone !== 'undefined' && parseInt(self.props.config.allowResourceClone)) {
@@ -221,26 +221,26 @@ class OrgResource extends React.Component {
                             <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI) + '/' + encodeURIComponent(this.props.resource)} className="ui image icon link">{picture ? <img className="ui tiny rounded image" src={picture}/> : <i className="blue icon building"></i>}</a> <a href={this.props.resource} target="_blank">{orgTitle}</a>&nbsp;&nbsp;
                             {cloneable ?
                                 <a className="medium ui circular basic icon button" onClick={this.handleCloneResource.bind(this, this.props.datasetURI, decodeURIComponent(this.props.resource))} title="clone this resource"><i className="icon teal superscript"></i></a>
-                            : ''}
+                                : ''}
                         </h2>
                         <div className="ui grid">
-                          <div className="six wide column">
-                              {geometry ?
-                                  <PropertyReactor spec={geometry} readOnly={1} config={geoConfig} datasetURI ={this.props.datasetURI } resource={this.props.resource} property={geometry.propertyURI} />
-                              : ''}
-                          </div>
-                          <div className="ten wide column">
-                              <div className='ui huge divided list'>
-                                  {motto ? <div className='item'> <div className="ui top black attached fluid compact segment"><i className='ui icon quote left'></i>{motto}<i className='ui icon quote right'></i></div></div>: ''}
-                                  {established ? <div className='item'><i className="icons"><i className='ui icon circle thin'></i></i> Established: <b>{established}</b> </div> : ''}
-                                  {city ? <div className='item'><i className="icons"><i className='ui icon map outline'></i></i> <a href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(city)}>{URIUtil.getURILabel(city)}</a> | {country ? <a href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(country)}>{URIUtil.getURILabel(country)}</a> : ''}</div> : ''}
-                                  {aboutP ? <div className='item'> {aboutP}</div>: ''}
-                                  {homepage ? <a className='item' href={homepage}> <i className="icons"><i className='ui icon violet home'></i></i> {homepage}</a>: ''}
-                                  {email ? <a className='item' href={'mailto:'+email}> <i className="icons"><i className='ui icon blue mail outline'></i></i> {email}</a>: ''}
-                                  {keywords ? <div className='item ui labels'> {keywordsDIV}</div>: ''}
-                                  <div className='item'></div>
-                              </div>
-                          </div>
+                            <div className="six wide column">
+                                {geometry ?
+                                    <PropertyReactor spec={geometry} readOnly={1} config={geoConfig} datasetURI ={this.props.datasetURI } resource={this.props.resource} property={geometry.propertyURI} />
+                                    : ''}
+                            </div>
+                            <div className="ten wide column">
+                                <div className='ui huge divided list'>
+                                    {motto ? <div className='item'> <div className="ui top black attached fluid compact segment"><i className='ui icon quote left'></i>{motto}<i className='ui icon quote right'></i></div></div>: ''}
+                                    {established ? <div className='item'><i className="icons"><i className='ui icon circle thin'></i></i> Established: <b>{established}</b> </div> : ''}
+                                    {city ? <div className='item'><i className="icons"><i className='ui icon map outline'></i></i> <a href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(city)}>{URIUtil.getURILabel(city)}</a> | {country ? <a href={'/dataset/' + encodeURIComponent(self.props.datasetURI ) + '/resource/' + encodeURIComponent(country)}>{URIUtil.getURILabel(country)}</a> : ''}</div> : ''}
+                                    {aboutP ? <div className='item'> {aboutP}</div>: ''}
+                                    {homepage ? <a className='item' href={homepage}> <i className="icons"><i className='ui icon violet home'></i></i> {homepage}</a>: ''}
+                                    {email ? <a className='item' href={'mailto:'+email}> <i className="icons"><i className='ui icon blue mail outline'></i></i> {email}</a>: ''}
+                                    {keywords ? <div className='item ui labels'> {keywordsDIV}</div>: ''}
+                                    <div className='item'></div>
+                                </div>
+                            </div>
                         </div>
                         <div className='ui bottom attached button fluid' onClick={this.toggleShowMore.bind(this)}>{!this.state.showDetails ? <span><i className="ui toggle down icon"></i>show details...</span> : <span><i className="ui toggle up icon"></i>hide details...</span>}</div>
                         <div className={detailClasses}>
