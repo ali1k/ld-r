@@ -96,6 +96,8 @@ module.exports = {
             {title: 'AggregateObject'},
             {title: 'BasicDBpediaView'},
             {title: 'BasicDateTimeView'},
+            {title: 'BasicIndividualView'},
+            {title: 'BasicHTMLContentView'},
             {title: 'BasicImageView'},
             {title: 'YASQEViewer'},
             {title: 'BasicLinkedIndividualView'},

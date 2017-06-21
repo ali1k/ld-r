@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames/bind';
 import BasicIndividualView from './viewer/individual/BasicIndividualView';
+import BasicHTMLContentView from './viewer/individual/BasicHTMLContentView';
 import BasicImageView from './viewer/individual/BasicImageView';
 import BasicIndividualDetailView from './viewer/individual/BasicIndividualDetailView';
 import BasicDBpediaView from './viewer/individual/BasicDBpediaView';
@@ -54,6 +55,9 @@ class ObjectIViewer extends React.Component {
         switch (viewerConfig) {
             case 'BasicIndividualView':
                 viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
+                break;
+            case 'BasicHTMLContentView':
+                viewer = <BasicHTMLContentView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
                 break;
             case 'BasicImageView':
                 viewer = <BasicImageView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
