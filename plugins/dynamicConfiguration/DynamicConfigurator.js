@@ -402,10 +402,8 @@ class DynamicConfigurator {
                                     ldr:property ?constraintProperty ;
                                     ldr:object ?constraintObject ;
                                     ldr:enabled ?constraintEnabled .
-                                }
-                                OPTIONAL {
                                     ?constraint ?cSetting ?cValue .
-                                    FILTER (?cSetting !=rdf:type && ?cSetting !=ldr:property && ?cSetting !=ldr:object && ?cSetting !=ldr:enabled && ?cSetting !=rdfs:label)
+                                    FILTER (?cSetting !=ldr:property && ?cSetting !=ldr:object && ?cSetting !=ldr:enabled && ?cSetting !=rdfs:label)
                                 }
                     }
                     UNION
@@ -425,10 +423,8 @@ class DynamicConfigurator {
                                     ldr:property ?constraintProperty ;
                                     ldr:object ?constraintObject ;
                                     ldr:enabled ?constraintEnabled .
-                                }
-                                OPTIONAL {
                                     ?constraint ?cSetting ?cValue .
-                                    FILTER (?cSetting !=rdf:type && ?cSetting !=ldr:property && ?cSetting !=ldr:object && ?cSetting !=ldr:enabled && ?cSetting !=rdfs:label)
+                                    FILTER (?cSetting !=ldr:property && ?cSetting !=ldr:object && ?cSetting !=ldr:enabled && ?cSetting !=rdfs:label)
                                 }
                     }
                     ${graphEnd}
@@ -450,10 +446,8 @@ class DynamicConfigurator {
                                     ldr:property ?constraintProperty ;
                                     ldr:object ?constraintObject ;
                                     ldr:enabled ?constraintEnabled .
-                                }
-                                OPTIONAL {
                                     ?constraint ?cSetting ?cValue .
-                                    FILTER (?cSetting !=rdf:type && ?cSetting !=ldr:property && ?cSetting !=ldr:object && ?cSetting !=ldr:enabled && ?cSetting !=rdfs:label)
+                                    FILTER (?cSetting !=ldr:property && ?cSetting !=ldr:object && ?cSetting !=ldr:enabled && ?cSetting !=rdfs:label)
                                 }
                     ${graphEnd}
                 }
