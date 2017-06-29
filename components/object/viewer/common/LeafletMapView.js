@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import chroma from 'chroma-js';
+import SimplifyJS from 'simplify-js';
 
 class LeafletMapView extends React.Component {
     constructor(...args) {
@@ -22,10 +23,32 @@ class LeafletMapView extends React.Component {
         return mapping;
     }
     reversePolygonCoords(coords){
+        let self = this;
         let newP = [];
-        coords.forEach((coord)=>{
-            newP.push([coord[1], coord[0]]);
-        })
+        let newPP = [];
+        let simplifyTolerance= 0.001;
+        let simplifyHighQuality= false;
+        //can reduce the quality of polylines for better performance on rendering
+        if(self.props.simplifyPolyLines){
+            coords.forEach((coord)=>{
+                newPP.push({x: coord[1], y: coord[0]})
+            });
+            if(self.props.simplifyTolerance){
+                simplifyTolerance = self.props.simplifyTolerance;
+            }
+            if(self.props.simplifyHighQuality){
+                simplifyHighQuality = self.props.simplifyHighQuality;
+            }
+            //produces less coordinates than original, see docs at http://mourner.github.io/simplify-js/
+            let tmp = SimplifyJS(newPP, simplifyTolerance, simplifyHighQuality);
+            tmp.forEach((coord)=>{
+                newP.push([coord.x, coord.y]);
+            });
+        }else{
+            coords.forEach((coord)=>{
+                newP.push([coord[1], coord[0]]);
+            });
+        }
         return newP;
     }
     reverseMultiPolygonCoords(coords){

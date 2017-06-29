@@ -27,6 +27,7 @@ class BasicMapView extends React.Component {
         let val, outputDIV, coordinates, long, lat, shapeColor = '#1a75ff';
         val = this.props.spec.value;
         let zoomLevel = 14;
+        let simplifyPolyLines, simplifyTolerance, simplifyHighQuality;
         if(this.props.config && this.props.config.zoomLevel){
             zoomLevel = this.props.config.zoomLevel;
         }
@@ -55,9 +56,30 @@ class BasicMapView extends React.Component {
                 if(this.props.zoomLevel){
                     zoomLevel = this.props.zoomLevel;
                 }
+                if(this.props.config){
+                    if( this.props.config.simplifyPolyLines){
+                        simplifyPolyLines = this.props.config.simplifyPolyLines;
+                    }
+                    if( this.props.config.simplifyTolerance){
+                        simplifyTolerance = this.props.config.simplifyTolerance;
+                    }
+                    if( this.props.config.simplifyHighQuality){
+                        simplifyHighQuality = this.props.config.simplifyHighQuality;
+                    }
+                }
+                if(this.props.simplifyPolyLines){
+                    simplifyPolyLines = this.props.simplifyPolyLines;
+                }
+                if(this.props.simplifyTolerance){
+                    simplifyTolerance = this.props.simplifyTolerance;
+                }
+                if(this.props.simplifyHighQuality){
+                    simplifyHighQuality = this.props.simplifyHighQuality;
+                }
+
                 try {
                     let focusPoint = this.getFocusPoint(val, wkt.components);
-                    outputDIV = <LeafletMapView key={'shape'} mapWidth={mapWidth} mapHeight={mapHeight} geometry={[wkt.toJson()]} zoomLevel={zoomLevel} center={focusPoint} styles={{color: shapeColor, fill:true, fillOpacity: 0.25 , opacity: 1, weight: 3, fillColor:shapeColor}}/>;
+                    outputDIV = <LeafletMapView key={'shape'} mapWidth={mapWidth} mapHeight={mapHeight} geometry={[wkt.toJson()]} zoomLevel={zoomLevel} center={focusPoint} styles={{color: shapeColor, fill:true, fillOpacity: 0.25 , opacity: 1, weight: 3, fillColor:shapeColor}} simplifyPolyLines={simplifyPolyLines} simplifyHighQuality={simplifyHighQuality} simplifyTolerance={simplifyTolerance}/>;
                 }
                 catch(err) {
                     console.log(err.message);

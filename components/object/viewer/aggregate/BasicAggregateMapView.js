@@ -27,6 +27,7 @@ class BasicAggregateMapView extends React.Component {
         let self = this;
         let val, outputDIV, coordinates, long, lat, data, coordinatesArr=[], weightArr=[], hintArr=[], shapesArr=[], focusPoint;
         let zoomLevel = 9;
+        let simplifyPolyLines, simplifyTolerance, simplifyHighQuality;
         if(this.props.config && this.props.config.zoomLevel){
             zoomLevel = this.props.config.zoomLevel;
         }
@@ -107,6 +108,15 @@ class BasicAggregateMapView extends React.Component {
             if(this.props.zoomLevel){
                 zoomLevel = this.props.zoomLevel;
             }
+            if(this.props.simplifyPolyLines){
+                simplifyPolyLines = this.props.simplifyPolyLines;
+            }
+            if(this.props.simplifyTolerance){
+                simplifyTolerance = this.props.simplifyTolerance;
+            }
+            if(this.props.simplifyHighQuality){
+                simplifyHighQuality = this.props.simplifyHighQuality;
+            }
         }
         let mapHeight, mapWidth, multiColor = 0;
         if(this.props.config){
@@ -128,10 +138,19 @@ class BasicAggregateMapView extends React.Component {
             if(this.props.config.multiColor){
                 multiColor = this.props.config.multiColor;
             }
+            if( this.props.config.simplifyPolyLines){
+                simplifyPolyLines = this.props.config.simplifyPolyLines;
+            }
+            if( this.props.config.simplifyTolerance){
+                simplifyTolerance = this.props.config.simplifyTolerance;
+            }
+            if( this.props.config.simplifyHighQuality){
+                simplifyHighQuality = this.props.config.simplifyHighQuality;
+            }
         }
         return (
             <div className="ui" ref="basicAggregateMapView">
-                <LeafletMapView key="bamv" multiColor={multiColor} markers={coordinatesArr} geometry={shapesArr} hints={hintArr} weights={weightArr} zoomLevel={zoomLevel} center={center} mapWidth={mapWidth} mapHeight={mapHeight}/>
+                <LeafletMapView key="bamv" multiColor={multiColor} markers={coordinatesArr} geometry={shapesArr} hints={hintArr} weights={weightArr} zoomLevel={zoomLevel} center={center} mapWidth={mapWidth} mapHeight={mapHeight} simplifyPolyLines={simplifyPolyLines} simplifyHighQuality={simplifyHighQuality} simplifyTolerance={simplifyTolerance}/>
             </div>
         );
     }
