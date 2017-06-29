@@ -33,6 +33,7 @@ class LeafletMapView extends React.Component {
             coords.forEach((coord)=>{
                 newPP.push({x: coord[1], y: coord[0]})
             });
+            console.log('Original Number of Coordinates: ' + newPP.length);
             if(self.props.simplifyTolerance){
                 simplifyTolerance = self.props.simplifyTolerance;
             }
@@ -44,6 +45,7 @@ class LeafletMapView extends React.Component {
             tmp.forEach((coord)=>{
                 newP.push([coord.x, coord.y]);
             });
+            console.log('Reduced Number of Coordinates: ' + newP.length);
         }else{
             coords.forEach((coord)=>{
                 newP.push([coord[1], coord[0]]);
