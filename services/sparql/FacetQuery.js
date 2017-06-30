@@ -187,7 +187,9 @@ class FacetQuery{
         let st = '', filters, tmp, tmp2, i = 0, hasURIVal = 0, hasLiteralVal = 0, typedLiteralVal = '';
         let typeVal = {};
         filters = [];
+        let hasRange = 0;
         for (let key in prevSelection) {
+            hasRange = 0;
             hasURIVal = 0;
             hasLiteralVal = 0;
             typedLiteralVal = '';
@@ -203,9 +205,26 @@ class FacetQuery{
                     }else{
                         hasLiteralVal = 1;
                     }
-                })
+                });
+                //apply range filters
+                if(tmp.length && options && options.range && options.range[key]){
+                    if(options.range[key].min && options.range[key].max){
+                        hasRange = 1;
+                        filters.push('(?v' + i + ' < '+ options.range[key].max + ') && ' + '(?v' + i + ' > '+ options.range[key].min + ')');
+                    }else{
+                        if(options.range[key].min){
+                            hasRange = 1;
+                            filters.push('?v' + i + ' > '+ options.range[key].min);
+                        }
+                        if(options.range[key].max){
+                            hasRange = 1;
+                            filters.push('?v' + i + ' < '+ options.range[key].max);
+                        }
+                    }
+
+                }
                 //special case: values are heterogenious, we should convert all to string and use str function then
-                if(hasURIVal && hasLiteralVal) {
+                if(hasURIVal && hasLiteralVal && !hasRange) {
                     tmp = [];
                     prevSelection[key].forEach(function(el){
                         tmp.push('"' + el.value + '"');
@@ -215,14 +234,14 @@ class FacetQuery{
                         tmp2 = [];
                         if(tmp.length && options && options.invert && options.invert[key]){
                             tmp.forEach(function(fl){
-                                tmp2.push('?v' + i + '=' + fl);
-                            });
-                            filters.push('(' + tmp2.join(' || ') + ')');
-                        }else{
-                            tmp.forEach(function(fl){
                                 tmp2.push('?v' + i + '!=' + fl);
                             });
                             filters.push('(' + tmp2.join(' && ') + ')');
+                        }else{
+                            tmp.forEach(function(fl){
+                                tmp2.push('?v' + i + '=' + fl);
+                            });
+                            filters.push('(' + tmp2.join(' || ') + ')');
                         }
                         //---------------
                     }else{
@@ -234,7 +253,7 @@ class FacetQuery{
                         }
                     }
                 }else{
-                    if(hasURIVal){
+                    if(hasURIVal && !hasRange){
                         if(endpointParameters.type === 'stardog' || endpointParameters.type === 'sesame'){
                             ///---for sesame
                             tmp2 = [];
@@ -259,27 +278,29 @@ class FacetQuery{
                             }
                         }
                     }else{
-                        if(endpointParameters.type === 'stardog' || endpointParameters.type === 'sesame'){
-                            ///---for sesame
-                            tmp2 = [];
-                            if(tmp.length &&  options && options.invert && options.invert[key]){
-                                tmp.forEach(function(fl){
-                                    tmp2.push('?v' + i + '!=' + fl);
-                                });
-                                filters.push('(' + tmp2.join(' && ') + ')');
+                        if(!hasRange){
+                            if(endpointParameters.type === 'stardog' || endpointParameters.type === 'sesame'){
+                                ///---for sesame
+                                tmp2 = [];
+                                if(tmp.length &&  options && options.invert && options.invert[key]){
+                                    tmp.forEach(function(fl){
+                                        tmp2.push('?v' + i + '!=' + fl);
+                                    });
+                                    filters.push('(' + tmp2.join(' && ') + ')');
+                                }else{
+                                    tmp.forEach(function(fl){
+                                        tmp2.push('?v' + i + '=' + fl);
+                                    });
+                                    filters.push('(' + tmp2.join(' || ') + ')');
+                                }
+                                //---------------
                             }else{
-                                tmp.forEach(function(fl){
-                                    tmp2.push('?v' + i + '=' + fl);
-                                });
-                                filters.push('(' + tmp2.join(' || ') + ')');
-                            }
-                            //---------------
-                        }else{
-                            //for virtuoso
-                            if(tmp.length && options && options.invert && options.invert[key]){
-                                filters.push(typedLiteralVal+'(?v' + i + ') NOT IN ('+ tmp.join(',') +')');
-                            }else{
-                                filters.push(typedLiteralVal+'(?v' + i + ') IN ('+ tmp.join(',') +')');
+                                //for virtuoso
+                                if(tmp.length && options && options.invert && options.invert[key]){
+                                    filters.push(typedLiteralVal+'(?v' + i + ') NOT IN ('+ tmp.join(',') +')');
+                                }else{
+                                    filters.push(typedLiteralVal+'(?v' + i + ') IN ('+ tmp.join(',') +')');
+                                }
                             }
                         }
                     }

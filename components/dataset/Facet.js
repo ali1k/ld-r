@@ -20,7 +20,7 @@ function shuffle(a) {
 class Facet extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0};
+        this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0, rangeChanged: 0, range: {min: '', max: ''}};
     }
     checkItem(status, value) {
         this.props.onCheck(status, value, this.props.spec.propertyURI);
@@ -34,8 +34,25 @@ class Facet extends React.Component {
         this.setState({expanded: !this.state.expanded});
         this.props.toggleExpandFacet(this.props.spec.propertyURI);
     }
+    handleToggleRangeChange() {
+        if(this.state.rangeChanged){
+            this.setState({rangeChanged: 0, range: {min: '', max: ''}});
+            this.props.onRange({});
+        }else{
+            this.setState({rangeChanged: 1});
+            // check if values of range are valid and then send the request
+            this.props.onRange(this.state.range);
+        }
+    }
+    //data: min or max
+    handleOnRangeChange(data, e){
+        if(data === 'min'){
+            this.setState({range: {min: e.target.value, max: this.state.range.max}});
+        }else{
+            this.setState({range: {max: e.target.value, min: this.state.range.min}});
+        }
+    }
     handleDropDownClick(e, data){
-        console.log(data.value);
         if(data.value==='invert'){
             this.props.onInvert();
         }else if(data.value==='shuffle'){
@@ -108,6 +125,7 @@ class Facet extends React.Component {
         //-----------------------
         let contentClasses = 'content', extraContentClasses='extra content', cardClasses = 'ui segment ' + (this.props.color ? this.props.color : defaultColor);
         let queryClasses = 'ui tertiary segment';
+        let rangeClasses = 'ui secondary inverted blue segment';
         if(this.state.verticalResized){
             contentClasses = contentClasses + ' hide-element';
             extraContentClasses = extraContentClasses + ' hide-element';
@@ -204,6 +222,27 @@ class Facet extends React.Component {
                     </div>
 
                 </div>
+                {this.props.config && this.props.config.allowRangeOfValues ?
+                    <div className={rangeClasses}>
+                        <div className="ui form">
+                            <div className="three fields">
+                                <div className="field">
+                                    <label>Minimum</label>
+                                    <input type="text" placeholder="Min" value={this.state.range.min} onChange={this.handleOnRangeChange.bind(this, 'min')}/>
+                                </div>
+                                <div className="field">
+                                    <label>Maximum</label>
+                                    <input type="text" placeholder="Max" value={this.state.range.max} onChange={this.handleOnRangeChange.bind(this, 'max')}/>
+                                </div>
+                                <div className="field">
+                                    <label> &nbsp; </label>
+                                    <button className="ui button" onClick={this.handleToggleRangeChange.bind(this)}>{this.state.rangeChanged ? 'Revert' : 'Apply'}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    : ''
+                }
                 {this.props.config && this.props.config.displayQueries ?
                     <div className={queryClasses}>
                         <YASQEViewer spec={{value: this.props.spec.query}} />

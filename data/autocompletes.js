@@ -67,6 +67,7 @@ module.exports = {
             {title: 'ldr:allowNewValue'},
             {title: 'ldr:hasLimitedAccess'},
             {title: 'ldr:displayQueries'},
+            {title: 'ldr:allowRangeOfValues'},
             {title: 'ldr:allowInlineConfig'},
             {title: 'ldr:allowExtension'},
             {title: 'ldr:hasBlankNode'},
