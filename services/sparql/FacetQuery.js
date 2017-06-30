@@ -188,8 +188,11 @@ class FacetQuery{
         let typeVal = {};
         filters = [];
         let hasRange = 0;
+        let rangeDataType = 'str', rangeDataTypeTail = '';
         for (let key in prevSelection) {
             hasRange = 0;
+            rangeDataType = 'str';
+            rangeDataTypeTail = ''
             hasURIVal = 0;
             hasLiteralVal = 0;
             typedLiteralVal = '';
@@ -204,21 +207,30 @@ class FacetQuery{
                         hasURIVal = 1;
                     }else{
                         hasLiteralVal = 1;
+                        rangeDataType = typedLiteralVal;
+                        if(typedLiteralVal !=='str'){
+                            rangeDataTypeTail = '^^'+typedLiteralVal;
+                        }
+                    }
+                    //heterogenous case
+                    if(hasURIVal && hasLiteralVal){
+                        rangeDataType = 'str';
+                        rangeDataTypeTail = '';
                     }
                 });
                 //apply range filters
                 if(tmp.length && options && options.range && options.range[key]){
                     if(options.range[key].min && options.range[key].max){
                         hasRange = 1;
-                        filters.push('(?v' + i + ' < '+ options.range[key].max + ') && ' + '(?v' + i + ' > '+ options.range[key].min + ')');
+                        filters.push('(' + rangeDataType + '(?v' + i + ') < "'+ options.range[key].max + '"' + rangeDataTypeTail + ') && ' + '(' + rangeDataType + '(?v' + i + ') > "'+ options.range[key].min + '"' + rangeDataTypeTail + ')');
                     }else{
                         if(options.range[key].min){
                             hasRange = 1;
-                            filters.push('?v' + i + ' > '+ options.range[key].min);
+                            filters.push(rangeDataType + '(?v' + i + ') > "'+ options.range[key].min + '"' + rangeDataTypeTail);
                         }
                         if(options.range[key].max){
                             hasRange = 1;
-                            filters.push('?v' + i + ' < '+ options.range[key].max);
+                            filters.push(rangeDataType + '(?v' + i + ') < "'+ options.range[key].max + '"' + rangeDataTypeTail);
                         }
                     }
 
