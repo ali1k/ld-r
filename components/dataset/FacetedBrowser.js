@@ -109,9 +109,11 @@ class FacetedBrowser extends React.Component {
         }else{
             delete this.state.invert[propertyURI];
         }
-        this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: 1, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert}}});
+        this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: 1, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range}}});
         //apply side effects
         let sideEffectsArr = [];
+        //allow refreshing the facet itself
+        sideEffectsArr.push(propertyURI);
         for (let key in this.state.selection) {
             //apply on active but non-selected
             if(!this.state.selection[key].length){
@@ -119,7 +121,7 @@ class FacetedBrowser extends React.Component {
             }
         }
         sideEffectsArr.forEach(function(el){
-            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: self.props.FacetedBrowserStore.datasetURI, page: self.props.FacetedBrowserStore.page, selection: {status: 0, propertyURI: el, prevSelection: self.state.selection, options: {invert: self.state.invert}}});
+            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: self.props.FacetedBrowserStore.datasetURI, page: self.props.FacetedBrowserStore.page, selection: {status: 0, propertyURI: el, prevSelection: self.state.selection, options: {invert: self.state.invert, range: self.state.range}}});
         });
     }
     handleToggleRange(propertyURI, rangeObj){

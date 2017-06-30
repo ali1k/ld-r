@@ -222,15 +222,28 @@ class FacetQuery{
                 if(tmp.length && options && options.range && options.range[key]){
                     if(options.range[key].min && options.range[key].max){
                         hasRange = 1;
-                        filters.push('(' + rangeDataType + '(?v' + i + ') < "'+ options.range[key].max + '"' + rangeDataTypeTail + ') && ' + '(' + rangeDataType + '(?v' + i + ') > "'+ options.range[key].min + '"' + rangeDataTypeTail + ')');
+                        //handle both invert and normal range case
+                        if(options.invert[key]){
+                            filters.push('(' + rangeDataType + '(?v' + i + ') > "'+ options.range[key].max + '"' + rangeDataTypeTail + ') || ' + '(' + rangeDataType + '(?v' + i + ') < "'+ options.range[key].min + '"' + rangeDataTypeTail + ')');
+                        }else{
+                            filters.push('(' + rangeDataType + '(?v' + i + ') <= "'+ options.range[key].max + '"' + rangeDataTypeTail + ') && ' + '(' + rangeDataType + '(?v' + i + ') >= "'+ options.range[key].min + '"' + rangeDataTypeTail + ')');
+                        }
                     }else{
                         if(options.range[key].min){
                             hasRange = 1;
-                            filters.push(rangeDataType + '(?v' + i + ') > "'+ options.range[key].min + '"' + rangeDataTypeTail);
+                            if(options.invert[key]){
+                                filters.push(rangeDataType + '(?v' + i + ') < "'+ options.range[key].min + '"' + rangeDataTypeTail);
+                            }else{
+                                filters.push(rangeDataType + '(?v' + i + ') >= "'+ options.range[key].min + '"' + rangeDataTypeTail);
+                            }
                         }
                         if(options.range[key].max){
                             hasRange = 1;
-                            filters.push(rangeDataType + '(?v' + i + ') < "'+ options.range[key].max + '"' + rangeDataTypeTail);
+                            if(options.invert[key]){
+                                filters.push(rangeDataType + '(?v' + i + ') > "'+ options.range[key].max + '"' + rangeDataTypeTail);
+                            }else{
+                                filters.push(rangeDataType + '(?v' + i + ') <= "'+ options.range[key].max + '"' + rangeDataTypeTail);
+                            }
                         }
                     }
 
