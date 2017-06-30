@@ -135,6 +135,8 @@ class FacetedBrowser extends React.Component {
         this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: 1, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range}}});
         //apply side effects
         let sideEffectsArr = [];
+        //allow refreshing the facet itself
+        sideEffectsArr.push(propertyURI);
         for (let key in this.state.selection) {
             //apply on active but non-selected
             if(!this.state.selection[key].length){
