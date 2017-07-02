@@ -1,6 +1,6 @@
 import React from 'react';
 import TagListBrowser from './TagListBrowser';
-import {BarChart, Bar, XAxis, YAxis, Tooltip, Legend, Cell} from 'recharts';
+import {BarChart, Bar, XAxis, YAxis, Tooltip, Legend, Cell, ResponsiveContainer} from 'recharts';
 
 class BarChartBrowser extends React.Component {
     constructor(props) {
@@ -67,19 +67,21 @@ class BarChartBrowser extends React.Component {
         }
         return (
             <div>
-                <BarChart width={width} height={height} data={data}
-                    margin={{top: 0, right: 0, left: 0, bottom: 0}}>
-                    <XAxis dataKey="title"/>
-                    <YAxis/>
-                    <Tooltip/>
-                    <Bar dataKey="total" fill="#1a75ff" onClick={this.selectItem.bind(this)}>
-                        {
-                            data.map((entry, index) => (
-                                <Cell cursor="pointer" fill={entry.isSelected ? '#82ca9d' : '#1a75ff' } key={`cell-${index}`}/>
-                            ))
-                        }
-                    </Bar>
-                </BarChart>
+                <ResponsiveContainer width="97%" height={height}>
+                    <BarChart data={data}
+                        margin={{top: 0, right: 10, left: 0, bottom: 0}}>
+                        <XAxis dataKey="title"/>
+                        <YAxis/>
+                        <Tooltip/>
+                        <Bar dataKey="total" fill="#1a75ff" onClick={this.selectItem.bind(this)}>
+                            {
+                                data.map((entry, index) => (
+                                    <Cell cursor="pointer" fill={entry.isSelected ? '#82ca9d' : '#1a75ff' } key={`cell-${index}`}/>
+                                ))
+                            }
+                        </Bar>
+                    </BarChart>
+                </ResponsiveContainer>
                 <TagListBrowser selection={this.props.selection} expanded={this.props.expanded} datasetURI={this.props.datasetURI} propertyURI={this.props.propertyURI} shortenURI={this.props.shortenURI}  config={this.props.config} instances={this.props.instances} onCheck={this.props.onCheck.bind(this)}/>
             </div>
         );
