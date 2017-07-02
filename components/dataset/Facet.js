@@ -39,9 +39,11 @@ class Facet extends React.Component {
             this.setState({rangeChanged: 0, range: {min: '', max: ''}});
             this.props.onRange({});
         }else{
-            this.setState({rangeChanged: 1});
             // check if values of range are valid and then send the request
-            this.props.onRange(this.state.range);
+            if(this.state.range.min || this.state.range.max){
+                this.setState({rangeChanged: 1});
+                this.props.onRange(this.state.range);
+            }
         }
     }
     //data: min or max
@@ -78,10 +80,24 @@ class Facet extends React.Component {
                 selected.push(URIUtil.getURILabel(item.value));
             });
             out = selected.join(',');
-            if(this.props.invert[this.props.spec.propertyURI]){
-                out = '!= '+out;
+            //in case of range selected
+            if(out==='range'){
+                if(this.state.range.min && this.state.range.max){
+                    out = '> ' + this.state.range.min + ' & ' + '< ' + this.state.range.max;
+                }else{
+                    if(this.state.range.min){
+                        out = '> ' + this.state.range.min;
+                    }else{
+                        //max
+                        out = '< ' + this.state.range.max;
+                    }
+                }
             }else{
-                out = '= '+out;
+                if(this.props.invert[this.props.spec.propertyURI]){
+                    out = '!= '+out;
+                }else{
+                    out = '= '+out;
+                }
             }
             return out;
         }else{
@@ -130,6 +146,7 @@ class Facet extends React.Component {
             contentClasses = contentClasses + ' hide-element';
             extraContentClasses = extraContentClasses + ' hide-element';
             queryClasses = queryClasses + ' hide-element';
+            rangeClasses = rangeClasses + ' hide-element';
         }
         let descStyle = {
             minHeight: this.props.minHeight ? this.props.minHeight : 80,
@@ -235,7 +252,7 @@ class Facet extends React.Component {
                                     <input type="text" placeholder="Max" value={this.state.range.max} onChange={this.handleOnRangeChange.bind(this, 'max')}/>
                                 </div>
                                 <div className="field">
-                                    <label> &nbsp; </label>
+                                    <label> &nbsp;</label>
                                     <button className="ui button" onClick={this.handleToggleRangeChange.bind(this)}>{this.state.rangeChanged ? 'Revert' : 'Apply'}</button>
                                 </div>
                             </div>
