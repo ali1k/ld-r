@@ -207,17 +207,23 @@ class FacetQuery{
                         hasURIVal = 1;
                     }else{
                         hasLiteralVal = 1;
-                        rangeDataType = typedLiteralVal;
-                        if(typedLiteralVal !=='str'){
-                            rangeDataTypeTail = '^^'+typedLiteralVal;
-                        }
-                    }
-                    //heterogenous case
-                    if(hasURIVal && hasLiteralVal){
-                        rangeDataType = 'str';
-                        rangeDataTypeTail = '';
                     }
                 });
+                //---handle range case
+                if(hasLiteralVal && typedLiteralVal !=='str'){
+                    rangeDataType = typedLiteralVal;
+                    rangeDataTypeTail = '^^'+typedLiteralVal;
+                }
+                //heterogenous case
+                if(hasURIVal && hasLiteralVal){
+                    rangeDataType = 'str';
+                    rangeDataTypeTail = '';
+                }
+                if(options.facetConfigs && options.facetConfigs[key] && options.facetConfigs[key].dataType){
+                    rangeDataType = '<' + options.facetConfigs[key].dataType + '>';
+                    rangeDataTypeTail = '^^' + '<' + options.facetConfigs[key].dataType + '>';
+                }
+                //-----------
                 //apply range filters
                 if(tmp.length && options && options.range && options.range[key]){
                     if(options.range[key].min && options.range[key].max){

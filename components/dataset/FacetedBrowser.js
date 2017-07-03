@@ -126,6 +126,12 @@ class FacetedBrowser extends React.Component {
     }
     handleToggleRange(propertyURI, rangeObj){
         let self = this;
+        //we can inject some config to the queries e.g. to force a certain data types
+        let pconfig = self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, propertyURI);
+        let facetConfigs = {};
+        if(pconfig.dataType && pconfig.dataType.length){
+            facetConfigs[propertyURI] = {dataType: pconfig.dataType[0]};
+        }
         if(!this.state.range[propertyURI]){
             this.state.range[propertyURI] = rangeObj;
             //sends a fake value to service which is ignored only to refresh the query
@@ -134,7 +140,7 @@ class FacetedBrowser extends React.Component {
             delete this.state.range[propertyURI];
             this.state.selection[propertyURI] = [];
         }
-        this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: 1, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range}}});
+        this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: 1, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs}}});
         //apply side effects
         let sideEffectsArr = [];
         //allow refreshing the facet itself
@@ -146,7 +152,7 @@ class FacetedBrowser extends React.Component {
             }
         }
         sideEffectsArr.forEach(function(el){
-            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: self.props.FacetedBrowserStore.datasetURI, page: self.props.FacetedBrowserStore.page, selection: {status: 0, propertyURI: el, prevSelection: self.state.selection, options: {invert: self.state.invert, range: self.state.range}}});
+            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: self.props.FacetedBrowserStore.datasetURI, page: self.props.FacetedBrowserStore.page, selection: {status: 0, propertyURI: el, prevSelection: self.state.selection, options: {invert: self.state.invert, range: self.state.range, facetConfigs: facetConfigs}}});
         });
     }
     handleOnCheck(level, valueType, dataType, status, value, propertyURI) {
