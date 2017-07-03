@@ -36,7 +36,8 @@ class FacetedBrowser extends React.Component {
 
     }
     gotoPage(page) {
-        this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: page, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range}}});
+        let facetConfigs = self.getNecessaryFaccetsConfig();
+        this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: page, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs}}});
     }
     createFConfig(datasetURI) {
         this.context.executeAction(createASampleFacetsConfig, {dataset: datasetURI, redirect: 1});
@@ -67,6 +68,17 @@ class FacetedBrowser extends React.Component {
     getPropertyConfig(datasetURI, propertyURI){
         let cnf = this.props.FacetedBrowserStore.config;
         return cnf.config[propertyURI];
+    }
+    //here we can determine the configs which should be considered in the query
+    getNecessaryFaccetsConfig(){
+        let facetConfigs = {};
+        let cnf = this.props.FacetedBrowserStore.config;
+        for(let prop in pconfig){
+            if(pconfig.dataType && pconfig.dataType.length){
+                facetConfigs[propertyURI] = {dataType: pconfig.dataType[0]};
+            }
+        }
+        return facetConfigs;
     }
     buildMasterFacet(datasetURI) {
         let self = this;
@@ -127,11 +139,7 @@ class FacetedBrowser extends React.Component {
     handleToggleRange(propertyURI, rangeObj){
         let self = this;
         //we can inject some config to the queries e.g. to force a certain data types
-        let pconfig = self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, propertyURI);
-        let facetConfigs = {};
-        if(pconfig.dataType && pconfig.dataType.length){
-            facetConfigs[propertyURI] = {dataType: pconfig.dataType[0]};
-        }
+        let facetConfigs = self.getNecessaryFaccetsConfig();
         if(!this.state.range[propertyURI]){
             this.state.range[propertyURI] = rangeObj;
             //sends a fake value to service which is ignored only to refresh the query
@@ -159,13 +167,7 @@ class FacetedBrowser extends React.Component {
         // console.log(level, valueType, dataType, status, value, propertyURI);
         let self = this;
         //--add facet configs to queries
-        let pconfig, facetConfigs = {};
-        for (let key in this.state.selection) {
-            pconfig = self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, key);
-            if(pconfig.dataType && pconfig.dataType.length){
-                facetConfigs[key] = {dataType: pconfig.dataType[0]};
-            }
-        }
+        let facetConfigs = self.getNecessaryFaccetsConfig();
         //------------------
         let hadAnySelected = 0;
         //handling cascading facet update
