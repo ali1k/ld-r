@@ -36,7 +36,7 @@ class FacetedBrowser extends React.Component {
 
     }
     gotoPage(page) {
-        let facetConfigs = self.getNecessaryFaccetsConfig();
+        let facetConfigs = this.getNecessaryFaccetsConfig();
         this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: page, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs}}});
     }
     createFConfig(datasetURI) {
