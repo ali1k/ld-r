@@ -158,6 +158,15 @@ class FacetedBrowser extends React.Component {
     handleOnCheck(level, valueType, dataType, status, value, propertyURI) {
         // console.log(level, valueType, dataType, status, value, propertyURI);
         let self = this;
+        //--add facet configs to queries
+        let pconfig, facetConfigs = {};
+        for (let key in this.state.selection) {
+            pconfig = self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, key);
+            if(pconfig.dataType && pconfig.dataType.length){
+                facetConfigs[key] = {dataType: pconfig.dataType[0]};
+            }
+        }
+        //------------------
         let hadAnySelected = 0;
         //handling cascading facet update
         let sideEffectsArr = [];
@@ -184,7 +193,7 @@ class FacetedBrowser extends React.Component {
                     atLeastOne = 1;
                 }
             }
-            this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, selection: {propertyURI: propertyURI, value: value, status: status, prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range}}});
+            this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, selection: {propertyURI: propertyURI, value: value, status: status, prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs}}});
         }else{
             //for master level
             if(this.state.selection[value] && this.state.selection[value].length){
@@ -219,11 +228,11 @@ class FacetedBrowser extends React.Component {
             }
             //should not run if there is a side effect -> prevents duplicate runs
             if(sideEffectsArr.indexOf(value) === -1){
-                this.context.executeAction(loadFacets, {mode: 'master', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, selection: {propertyURI: propertyURI, value: value, status: status, prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range}}});
+                this.context.executeAction(loadFacets, {mode: 'master', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, selection: {propertyURI: propertyURI, value: value, status: status, prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs}}});
             }
             //on uncheck update list of resources
             if(!status && hadAnySelected){
-                this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, selection: {propertyURI: value, value: value, status: status, prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range}}});
+                this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, selection: {propertyURI: value, value: value, status: status, prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs}}});
                 //add new type of side effect on uncheck
                 for (let key in this.state.selection) {
                     sideEffectsArr.push(key);
@@ -233,7 +242,7 @@ class FacetedBrowser extends React.Component {
         // console.log(sideEffectsArr);
         //apply side effects
         sideEffectsArr.forEach(function(el){
-            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: self.props.FacetedBrowserStore.datasetURI, page: self.props.FacetedBrowserStore.page, selection: {status: status, propertyURI: el, prevSelection: self.state.selection, options: {invert: self.state.invert, range: self.state.range}}});
+            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: self.props.FacetedBrowserStore.datasetURI, page: self.props.FacetedBrowserStore.page, selection: {status: status, propertyURI: el, prevSelection: self.state.selection, options: {invert: self.state.invert, range: self.state.range, facetConfigs: facetConfigs}}});
         });
     }
     //used to fix the key of component in dynamic cases
