@@ -73,9 +73,9 @@ class FacetedBrowser extends React.Component {
     getNecessaryFaccetsConfig(){
         let facetConfigs = {};
         let cnf = this.props.FacetedBrowserStore.config;
-        for(let prop in pconfig){
-            if(pconfig.dataType && pconfig.dataType.length){
-                facetConfigs[propertyURI] = {dataType: pconfig.dataType[0]};
+        for(let prop in cnf){ 
+            if(cnf[prop].dataType && cnf[prop].dataType.length){
+                facetConfigs[prop] = {dataType: cnf[prop].dataType[0]};
             }
         }
         return facetConfigs;
