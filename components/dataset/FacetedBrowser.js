@@ -72,8 +72,8 @@ class FacetedBrowser extends React.Component {
     //here we can determine the configs which should be considered in the query
     getNecessaryFaccetsConfig(){
         let facetConfigs = {};
-        let cnf = this.props.FacetedBrowserStore.config;
-        for(let prop in cnf){ 
+        let cnf = this.props.FacetedBrowserStore.config.config;
+        for(let prop in cnf){
             if(cnf[prop].dataType && cnf[prop].dataType.length){
                 facetConfigs[prop] = {dataType: cnf[prop].dataType[0]};
             }
@@ -116,12 +116,13 @@ class FacetedBrowser extends React.Component {
     handleToggleInvert(propertyURI){
         //todo: only if an item is selected inversion works
         let self = this;
+        let facetConfigs = self.getNecessaryFaccetsConfig();
         if(!this.state.invert[propertyURI]){
             this.state.invert[propertyURI] = 1;
         }else{
             delete this.state.invert[propertyURI];
         }
-        this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: 1, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range}}});
+        this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: 1, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs}}});
         //apply side effects
         let sideEffectsArr = [];
         //allow refreshing the facet itself
@@ -133,7 +134,7 @@ class FacetedBrowser extends React.Component {
             }
         }
         sideEffectsArr.forEach(function(el){
-            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: self.props.FacetedBrowserStore.datasetURI, page: self.props.FacetedBrowserStore.page, selection: {status: 0, propertyURI: el, prevSelection: self.state.selection, options: {invert: self.state.invert, range: self.state.range}}});
+            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: self.props.FacetedBrowserStore.datasetURI, page: self.props.FacetedBrowserStore.page, selection: {status: 0, propertyURI: el, prevSelection: self.state.selection, options: {invert: self.state.invert, range: self.state.range, facetConfigs: facetConfigs}}});
         });
     }
     handleToggleRange(propertyURI, rangeObj){
