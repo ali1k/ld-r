@@ -344,6 +344,7 @@ class FacetedBrowser extends React.Component {
             let resourceDIV;
             let dcnf = this.props.FacetedBrowserStore.datasetConfig;
             let cnf = this.props.FacetedBrowserStore.config;
+            let facetConfigs = this.getNecessaryFaccetsConfig();
             let datasetTitle = <a target="_blank" href={this.props.FacetedBrowserStore.datasetURI}> {this.props.FacetedBrowserStore.datasetURI} </a>;
             if(dcnf.datasetLabel){
                 datasetTitle = <a target="_blank" href={this.props.FacetedBrowserStore.datasetURI}> {dcnf.datasetLabel} </a>;
@@ -379,7 +380,7 @@ class FacetedBrowser extends React.Component {
                             <ResourceList resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} OpenInNewTab={true} isBig={!showFactes} config={dcnf}/>
                         </div>
                         <div className= "ui secondary segment ">
-                            <ResourceListPager onSearchMode={this.handleSearchMode.bind(this)} visibleResourcesTotal={this.props.FacetedBrowserStore.resources.length} selection={{prevSelection: this.state.selection}} onExpandCollapse={this.toggleResourceCol.bind(this)} handleClick={this.gotoPage.bind(this)} datasetURI={this.props.FacetedBrowserStore.datasetURI} total={this.props.FacetedBrowserStore.total} threshold={pagerSize} currentPage={this.props.FacetedBrowserStore.page} maxNumberOfResourcesOnPage={dcnf.maxNumberOfResourcesOnPage}/>
+                            <ResourceListPager onSearchMode={this.handleSearchMode.bind(this)} visibleResourcesTotal={this.props.FacetedBrowserStore.resources.length} selection={{prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs}}} onExpandCollapse={this.toggleResourceCol.bind(this)} handleClick={this.gotoPage.bind(this)} datasetURI={this.props.FacetedBrowserStore.datasetURI} total={this.props.FacetedBrowserStore.total} threshold={pagerSize} currentPage={this.props.FacetedBrowserStore.page} maxNumberOfResourcesOnPage={dcnf.maxNumberOfResourcesOnPage}/>
                         </div>
                         {dcnf.displayQueries ?
                             <div className= "ui tertiary segment">
