@@ -192,9 +192,9 @@ class PrefixBasedInput extends React.Component {
         });
     }
     //when user clicks on results
-    handleChange(event, result) {
-        this.setState({value: result.title});
-        this.props.onDataEdit(this.applyPrefix(result.title.trim()));
+    handleChange(event, obj) {
+        this.setState({value: obj.result.title});
+        this.props.onDataEdit(this.applyPrefix(obj.result.title.trim()));
     }
     handleSearchChange(alist, event, value) {
         this.props.onDataEdit(this.applyPrefix(event.target.value.trim()));
