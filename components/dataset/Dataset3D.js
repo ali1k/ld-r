@@ -13,6 +13,7 @@ class Dataset3D extends React.Component {
         // construct the position vector here, because if we use 'new' within render,
         // React will think that things have changed when they have not.
         this.cameraPosition = new THREE.Vector3(0, 0, 5);
+        this.classname1;
 
         this.state = {
             cubeRotation: new THREE.Euler(),
@@ -40,7 +41,6 @@ class Dataset3D extends React.Component {
         this.context.executeAction(getClassFrequency, {
             id: this.props.datasetURI
         });
-
     }
     render() {
         //const width = window.innerWidth; // canvas width
@@ -48,46 +48,62 @@ class Dataset3D extends React.Component {
         const width = 800; // canvas width
         const height = 600; // canvas height
 
-        //console.log(this.props.Dataset3DStore.dataset.classes);
-        let self = this;
-        return (
-            <div className="ui fluid container ldr-padding-more" ref="dataset#D">
-                <div className="ui grid">
-                    <div className="ui column">
-                        Dataset3D Component
-                        <React3
-                            mainCamera="camera" // this points to the perspectiveCamera which has the name set to "camera" below
-                            width={width}
-                            height={height}
-                            onAnimate={this._onAnimate}>
-                            <scene>
-                                <perspectiveCamera
-                                    name="camera"
-                                    fov={75}
-                                    aspect={width / height}
-                                    near={0.1}
-                                    far={1000}
-                                    position={this.cameraPosition}
-                                />
-                                <mesh
-                                    rotation={this.state.cubeRotation}
-                                >
-                                    <boxGeometry
-                                        width={1}
-                                        height={1}
-                                        depth={1}
+        let classname1;
+        let freq1;
+
+        if (this.props.Dataset3DStore.dataset.classes.length)
+        {
+            classname1 = this.props.Dataset3DStore.dataset.classes[0].class;
+            freq1 = this.props.Dataset3DStore.dataset.classes[0].frequency;
+
+            //console.log(this.props.Dataset3DStore.dataset.classes);
+            let self = this;
+            return (
+                <div className="ui fluid container ldr-padding-more" ref="dataset#D">
+                    <div className="ui grid">
+                        <div className="ui column">
+                            Dataset3D Component <br />
+                            Classname: {classname1}<br />
+                            Frequency: {freq1}<br />
+                            <React3
+                                mainCamera="camera" // this points to the perspectiveCamera which has the name set to "camera" below
+                                width={width}
+                                height={height}
+                                onAnimate={this._onAnimate}>
+                                <scene>
+                                    <perspectiveCamera
+                                        name="camera"
+                                        fov={75}
+                                        aspect={width / height}
+                                        near={0.1}
+                                        far={1000}
+                                        position={this.cameraPosition}
                                     />
-                                    <meshBasicMaterial
-                                        color={0x00ff00}
-                                    />
-                                </mesh>
-                            </scene>
-                        </React3>
-                        {JSON.stringify(this.props.Dataset3DStore.dataset.classes)}
+                                    <mesh
+                                        rotation={this.state.cubeRotation}
+                                    >
+                                        <boxGeometry
+                                            width={1}
+                                            height={1}
+                                            depth={1}
+                                        />
+                                        <meshBasicMaterial
+                                            color={0x00ff00}
+                                        />
+                                    </mesh>
+                                </scene>
+                            </React3>
+                            {JSON.stringify(this.props.Dataset3DStore.dataset.classes)}
+                        </div>
                     </div>
                 </div>
-            </div>
-        );
+            );
+        }
+        else
+        {
+            return(<div>Loading</div>);
+        }
+
     }
 }
 Dataset3D.contextTypes = {
