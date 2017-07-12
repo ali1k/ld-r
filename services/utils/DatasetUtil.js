@@ -23,7 +23,7 @@ class DatasetUtil {
         sampleClassFrequency.results.bindings.forEach(function(el) {
             output.push({class: el.class.value, frequency: el.number.value});
         });
-        console.log(output);
+        //console.log(output);
         return output;
     }
     parseResourcesByType(user, body, datasetURI, rconfig) {

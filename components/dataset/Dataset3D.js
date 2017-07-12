@@ -18,13 +18,13 @@ class Dataset3D extends React.Component {
 
     }
     render() {
-
+        //console.log(this.props.Dataset3DStore.dataset.classes);
         let self = this;
         return (
             <div className="ui fluid container ldr-padding-more" ref="dataset#D">
                 <div className="ui grid">
                     <div className="ui column">
-                        Dataset3D Component
+                        {JSON.stringify(this.props.Dataset3DStore.dataset.classes)}
                     </div>
                 </div>
             </div>
