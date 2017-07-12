@@ -15,6 +15,20 @@ class DatasetQuery{
         `;
         this.query='';
     }
+    getClassFrequency(endpointParameters, graphName, rconfig){
+        let self = this;
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
+        //let st = this.makeExtraTypeFilters(endpointParameters, rconfig);
+        //go to default graph if no graph name is given
+        this.query = `
+        SELECT  DISTINCT ?class (count(?class) as ?number) WHERE {
+            ${gStart}
+                ?s a ?class .
+            ${gEnd}
+        } ORDER BY DESC(?number) LIMIT 1000
+        `;
+        return this.prefixes + this.query;
+    }
     prepareGraphName(graphName){
         let gStart = 'GRAPH <'+ graphName +'> { ';
         let gEnd = ' } ';

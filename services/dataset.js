@@ -128,6 +128,63 @@ export default {
                     });
                 });
             });
+        } else if (resource === 'dataset.classFrequency') {
+            datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI, graphName: graphName, total: 0});
+                    return 0;
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+
+                //config handler
+                configurator.prepareDatasetConfig(user, 1, datasetURI, (rconfig)=> {
+
+                    if(enableAuthentication && rconfig && rconfig.hasLimitedAccess && parseInt(rconfig.hasLimitedAccess)){
+                        //need to handle access to the dataset
+                        //if user is the editor by default he already has view access
+                        let editAccess = checkEditAccess(user, datasetURI, 0, 0, 0);
+                        if(!editAccess.access){
+                            let viewAccess = checkViewAccess(user, datasetURI, 0, 0, 0);
+                            if(!viewAccess.access){
+                                callback(null, {datasetURI: datasetURI, graphName: graphName, total: 0});
+                                return 0;
+                            }
+                        }
+                    }
+
+                    query = queryObject.getClassFrequency(endpointParameters, graphName, rconfig);
+                    console.log(query);
+
+                    //build http uri
+                    //send request
+                    //hard-coded for now
+                    callback(null, {
+                        datasetURI: datasetURI,
+                        graphName: graphName,
+                        classes: utilObject.parseClassFrequency({})
+                    });
+                    /*
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                        callback(null, {
+                            datasetURI: datasetURI,
+                            graphName: graphName,
+                            total: utilObject.parseCountResourcesByType(res)
+                        });
+                    }).catch(function (err) {
+                        console.log(err);
+                        callback(null, {datasetURI: datasetURI, graphName: graphName, total: 0});
+                    });
+                    */
+                });
+            });
         } else if (resource === 'dataset.resourceProp') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
             let resourceType = (params.resourceType ? decodeURIComponent(params.resourceType) : 0);

@@ -5,6 +5,7 @@ import Dataset3DStore from '../../stores/Dataset3DStore';
 import * as THREE from 'three';
 import React3 from 'react-three-renderer';
 import ReactDOM from 'react-dom';
+import getClassFrequency from '../../actions/getClassFrequency';
 
 class Dataset3D extends React.Component {
     constructor(props){
@@ -36,7 +37,9 @@ class Dataset3D extends React.Component {
         //call actions to retrieve different characteristics of a dataset
         //Class Names -> their total number of instances
         //Class Names -> max number of properties
-
+        this.context.executeAction(getClassFrequency, {
+            id: this.props.datasetURI
+        });
 
     }
     render() {
@@ -45,6 +48,7 @@ class Dataset3D extends React.Component {
         const width = 800; // canvas width
         const height = 600; // canvas height
 
+        //console.log(this.props.Dataset3DStore.dataset.classes);
         let self = this;
         return (
             <div className="ui fluid container ldr-padding-more" ref="dataset#D">
@@ -79,6 +83,7 @@ class Dataset3D extends React.Component {
                                 </mesh>
                             </scene>
                         </React3>
+                        {JSON.stringify(this.props.Dataset3DStore.dataset.classes)}
                     </div>
                 </div>
             </div>
