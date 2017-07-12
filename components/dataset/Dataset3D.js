@@ -1,5 +1,4 @@
 import React from 'react';
-import { Renderer, Camera, Scene } from 'react-threejs';
 import PropTypes from 'prop-types';
 import {connectToStores} from 'fluxible-addons-react';
 import Dataset3DStore from '../../stores/Dataset3DStore';
@@ -23,15 +22,6 @@ class Dataset3D extends React.Component {
                 <div className="ui grid">
                     <div className="ui column">
                         Dataset3D Component
-                        <Renderer size={rendererSize}>
-                            <Camera position={{ z: 5 }} />
-                            <Scene>
-                                <MyCube color={0x00ff00} rotation={rotation}>
-                                    <MyCube color={0xff0000} position={{ y: 2 }} />
-                                    <MyCube color={0x0000ff} position={{ z: 3 }} />
-                                </MyCube>
-                            </Scene>
-                        </Renderer>)
                     </div>
                 </div>
             </div>
