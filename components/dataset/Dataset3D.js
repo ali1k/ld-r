@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {connectToStores} from 'fluxible-addons-react';
 import Dataset3DStore from '../../stores/Dataset3DStore';
+import getClassFrequency from '../../actions/getClassFrequency';
 
 class Dataset3D extends React.Component {
     constructor(props){
@@ -11,7 +12,9 @@ class Dataset3D extends React.Component {
         //call actions to retrieve different characteristics of a dataset
         //Class Names -> their total number of instances
         //Class Names -> max number of properties
-
+        this.context.executeAction(getClassFrequency, {
+            id: this.props.datasetURI
+        });
 
     }
     render() {
