@@ -5,6 +5,7 @@ import {connectToStores} from 'fluxible-addons-react';
 import {enableAuthentication} from '../../configs/general';
 import getResourcesCount from '../../actions/getResourcesCount';
 import Dataset from '../dataset/Dataset';
+import Dataset3D from '../dataset/Dataset3D';
 import cloneResource from '../../actions/cloneResource';
 import createResource from '../../actions/createResource';
 
@@ -48,6 +49,9 @@ class DatasetReactor extends React.Component {
             switch(config.datasetReactor[0]){
                 case 'Dataset':
                     datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} error={error} config={this.configMinus(config, ['datasetReactor'])} resourceQuery={resourceQuery} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)}/>;
+                    break;
+                case 'Dataset3D':
+                    datasetReactor = <Dataset3D enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} error={error} config={this.configMinus(config, ['datasetReactor'])} resourceQuery={resourceQuery} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)}/>;
                     break;
                 default:
                     datasetReactor = <Dataset enableAuthentication={enableAuthentication} datasetURI={datasetURI} resources={resources} page={page} total={total} error={error} config={this.configMinus(config, ['datasetReactor'])} resourceQuery={resourceQuery} onCloneResource={this.handleCloneResource.bind(this)} onCreateResource={this.handleCreateResource.bind(this)}/>;
