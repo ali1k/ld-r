@@ -4,6 +4,8 @@ import ResourceListPager from './ResourceListPager';
 import YASQEViewer from '../object/viewer/individual/YASQEViewer';
 import URIUtil from '../utils/URIUtil';
 import {Popup} from 'semantic-ui-react';
+import { Component } from 'react';
+import { Renderer, Camera, Scene } from 'react-threejs';
 
 class Dataset3D extends React.Component {
     constructor(props){
@@ -80,11 +82,21 @@ class Dataset3D extends React.Component {
                 <br/>
             </div>;
         }
+        //let rendererSize = 300;
+        //let rotation = 1;
         return (
             <div className="ui fluid container ldr-padding-more" ref="dataset">
                 <div className="ui grid">
                     <div className="ui column">
-  ;lj;lj;j
+                        <Renderer size={rendererSize}>
+                            <Camera position={{ z: 5 }} />
+                            <Scene>
+                                <MyCube color={0x00ff00} rotation={rotation}>
+                                    <MyCube color={0xff0000} position={{ y: 2 }} />
+                                    <MyCube color={0x0000ff} position={{ z: 3 }} />
+                                </MyCube>
+                            </Scene>
+                        </Renderer>)
                     </div>
                 </div>
             </div>

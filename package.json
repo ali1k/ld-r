@@ -64,6 +64,7 @@
     "react-dom": "^15.6.1",
     "react-leaflet": "^1.4.0",
     "react-search-input": "^0.11.2",
+    "react-threejs": "^0.0.3",
     "recharts": "^1.0.0-alpha.2",
     "request-promise": "^4.2.1",
     "semantic-ui-css": "^2.2.10",
