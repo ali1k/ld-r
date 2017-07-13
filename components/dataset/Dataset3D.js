@@ -6,18 +6,20 @@ import * as THREE from 'three';
 import React3 from 'react-three-renderer';
 import ReactDOM from 'react-dom';
 import getClassFrequency from '../../actions/getClassFrequency';
-import TrackballControls from '../trackball';
+import TrackballControls from './trackball.js';
 
 class Dataset3D extends React.Component {
     constructor(props){
         super(props);
         // construct the position vector here, because if we use 'new' within render,
         // React will think that things have changed when they have not.
-        this.cameraPosition = new THREE.Vector3(0, 0, 50);
+        this.cameraPosition = new THREE.Vector3(1, 1, 50);
         this.classname1;
         this.cameraSet = false;
         this.maxfrequency = 0;
         this.maxBuildingHeight = 0;
+        this.maxrows = 0;
+        this.allbuildings;
 
         //this._raycaster = new THREE.Raycaster();
         //this.lightPosition = new THREE.Vector3(20, 20, 20);
@@ -76,11 +78,13 @@ class Dataset3D extends React.Component {
             this.refs.mainCamera, ReactDOM.findDOMNode(this.refs.react3)
         );
         controls.rotateSpeed = 10.0;
-        controls.zoomSpeed = 1.2;
+        controls.zoomSpeed = 0.5;
         controls.panSpeed = 10.2;
 
         controls.noZoom = false;
+        controls.noRotate = false;
         controls.noPan = false;
+        //controls.noTilt = true;
 
         controls.staticMoving = true;
         controls.dynamicDampingFactor = 0.3;
@@ -105,27 +109,93 @@ class Dataset3D extends React.Component {
         if (this.props.Dataset3DStore.dataset.classes.length && !this.cameraSet)
         {
             this.setCamera();
-            this.calculateMaxHeight();
+            this.calculateBuildingDimensions();
             this.cameraSet = true;
         }
     }
-    calculateMaxHeight(){
+    calculateBuildingDimensions(){
+
+        this.maxrows = Math.ceil(Math.sqrt(this.props.Dataset3DStore.dataset.classes.length));
+        let rowX = -this.maxrows;
+        let rowZ = -this.maxrows;
+        let doRow = 'X';
         this.props.Dataset3DStore.dataset.classes.push({ color: { }});
+        this.props.Dataset3DStore.dataset.classes.push({ x: { }});
+        this.props.Dataset3DStore.dataset.classes.push({ z: { }});
         let i=0;
         for(i; i<this.props.Dataset3DStore.dataset.classes.length; i++)
         {
             this.props.Dataset3DStore.dataset.classes[0].frequency = parseInt(this.props.Dataset3DStore.dataset.classes[0].frequency);
-            console.log(this.props.Dataset3DStore.dataset.classes[i].frequency);
+            //console.log(this.props.Dataset3DStore.dataset.classes[i].frequency);
             if(this.maxfrequency < this.props.Dataset3DStore.dataset.classes[i].frequency)
             {this.maxfrequency = this.props.Dataset3DStore.dataset.classes[i].frequency;}
             this.props.Dataset3DStore.dataset.classes[i].color =  Math.random() * 0xffffff;
+            if(doRow === 'X')
+            {
+                if(rowX > this.maxrows){rowX = -this.maxrows; doRow = 'Y';}
+                this.props.Dataset3DStore.dataset.classes[i].x = rowX;
+                this.props.Dataset3DStore.dataset.classes[i].z = rowZ;
+                rowX +=2;
+                console.log('x' + rowX);
+                console.log('z' + rowZ);
+            } else{
+                //if(rowZ > this.maxrows/2){rowZ = -this.maxrows/2; doRow = 'X';}
+                this.props.Dataset3DStore.dataset.classes[i].x = rowX;
+                this.props.Dataset3DStore.dataset.classes[i].z = rowZ;
+                rowZ +=2;
+                console.log('x' + rowX);
+                console.log('z' + rowZ);
+                doRow = 'X';
+            }
+            console.log(i);
         }
         this.maxBuildingHeight = 100/this.maxfrequency;
-        console.log(this.maxfrequency);
-        console.log(this.maxBuildingHeight);
-        console.log(this.props.Dataset3DStore.dataset.classes[0].frequency);
-        console.log(this.props.Dataset3DStore.dataset.classes[0].frequency*this.maxBuildingHeight);
-        console.log(this.props.Dataset3DStore.dataset.classes[0].frequency*this.maxBuildingHeight);
+        //console.log(this.maxfrequency);
+        //console.log(this.maxBuildingHeight);
+        //console.log(this.props.Dataset3DStore.dataset.classes[0].frequency);
+        //console.log(this.props.Dataset3DStore.dataset.classes[0].frequency*this.maxBuildingHeight);
+        //console.log(this.props.Dataset3DStore.dataset.classes[0].frequency*this.maxBuildingHeight);
+
+        this.allbuildings =
+        <mesh
+            pos0tion={new THREE.Vector3(this.props.Dataset3DStore.dataset.classes[0].x, ((this.props.Dataset3DStore.dataset.classes[0].frequency*this.maxBuildingHeight)/2), this.props.Dataset3DStore.dataset.classes[0].z)}
+            castShadow
+            receiveShadow
+        >
+            <boxGeometry
+                width={1}
+                height={this.props.Dataset3DStore.dataset.classes[0].frequency*this.maxBuildingHeight}
+                depth={1}
+            />
+            <meshLambertMaterial
+                color={this.props.Dataset3DStore.dataset.classes[0].color}
+            />
+        </mesh>;
+
+        i = 10;
+        //for(i; i<this.props.Dataset3DStore.dataset.classes.length -990; i++)
+        for(i; i<20; i++)
+        {
+
+            this.allbuildings +=
+            <mesh
+                position={new THREE.Vector3(this.props.Dataset3DStore.dataset.classes[i].x, ((this.props.Dataset3DStore.dataset.classes[i].frequency*this.maxBuildingHeight)/2), this.props.Dataset3DStore.dataset.classes[i].z)}
+                castShadow
+                receiveShadow
+            >
+                <boxGeometry
+                    width={1}
+                    height={this.props.Dataset3DStore.dataset.classes[i].frequency*this.maxBuildingHeight}
+                    depth={1}
+                />
+                <meshLambertMaterial
+                    color={this.props.Dataset3DStore.dataset.classes[i].color}
+                />
+            </mesh>;
+            console.log(this.allbuildings);
+        }
+
+        console.log(this.allbuildings);
 
     }
     render() {
@@ -136,6 +206,8 @@ class Dataset3D extends React.Component {
 
         //let classname0, classname1, freq0, freq1;
         //, color0, color1;
+
+        //console.log(allbuildings);
 
         if (this.props.Dataset3DStore.dataset.classes.length)
         {
@@ -199,12 +271,12 @@ class Dataset3D extends React.Component {
                                         shadowMapHeight={2048}
                                     />
                                     <mesh
-                                        position={new THREE.Vector3(0, 0, 0)}
+                                        position={new THREE.Vector3(0, -0.01, 0)}
                                     >
                                         <boxGeometry
-                                            width={1000}
+                                            width={this.maxrows*4}
                                             height={0.1}
-                                            depth={1000}
+                                            depth={this.maxrows*4}
                                         />
                                         <meshBasicMaterial
                                             color={0x505050}
@@ -253,6 +325,7 @@ class Dataset3D extends React.Component {
                                             color={this.props.Dataset3DStore.dataset.classes[2].color}
                                         />
                                     </mesh>
+                                    {/*this.allbuildings*/}
                                 </scene>
                             </React3>
                             {JSON.stringify(this.props.Dataset3DStore.dataset.classes)}
