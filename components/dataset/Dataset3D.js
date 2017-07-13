@@ -13,9 +13,16 @@ class Dataset3D extends React.Component {
         super(props);
         // construct the position vector here, because if we use 'new' within render,
         // React will think that things have changed when they have not.
-        this.cameraPosition = new THREE.Vector3(0, 0, 5);
+        this.cameraPosition = new THREE.Vector3(0, 0, 50);
         this.classname1;
         this.cameraSet = false;
+        this.maxfrequency = 0;
+        this.maxBuildingHeight = 0;
+
+        //this._raycaster = new THREE.Raycaster();
+        //this.lightPosition = new THREE.Vector3(20, 20, 20);
+        this.lightPosition = new THREE.Vector3(0, 500, 2000);
+        this.lightTarget = new THREE.Vector3(0, 0, 0);
 
         this.state = {
             cubeRotation: new THREE.Euler(),
@@ -23,7 +30,7 @@ class Dataset3D extends React.Component {
             rotate: true,
             wind: true,
             sphere: false,
-            cameraPosition: new THREE.Vector3(0, 0, 5)
+            cameraPosition: new THREE.Vector3(0, 0, 50)
         };
 
         this._onAnimate = () => {
@@ -36,15 +43,15 @@ class Dataset3D extends React.Component {
             // pretend cubeRotation is immutable.
             // this helps with updates and pure rendering.
             // React will be sure that the rotation has now updated.
-            /*
+
             this.setState({
                 cubeRotation: new THREE.Euler(
-                    this.state.cubeRotation.x + 0.1,
-                    this.state.cubeRotation.y + 0.1,
+                    this.state.cubeRotation.x + 0.01,
+                    this.state.cubeRotation.y + 0.01,
                     0
                 ),
             });
-            */
+
         };
     }
 
@@ -68,9 +75,9 @@ class Dataset3D extends React.Component {
         const controls = new TrackballControls(
             this.refs.mainCamera, ReactDOM.findDOMNode(this.refs.react3)
         );
-        controls.rotateSpeed = 1.0;
+        controls.rotateSpeed = 10.0;
         controls.zoomSpeed = 1.2;
-        controls.panSpeed = 0.8;
+        controls.panSpeed = 10.2;
 
         controls.noZoom = false;
         controls.noPan = false;
@@ -98,8 +105,28 @@ class Dataset3D extends React.Component {
         if (this.props.Dataset3DStore.dataset.classes.length && !this.cameraSet)
         {
             this.setCamera();
+            this.calculateMaxHeight();
             this.cameraSet = true;
         }
+    }
+    calculateMaxHeight(){
+        this.props.Dataset3DStore.dataset.classes.push({ color: { }});
+        let i=0;
+        for(i; i<this.props.Dataset3DStore.dataset.classes.length; i++)
+        {
+            this.props.Dataset3DStore.dataset.classes[0].frequency = parseInt(this.props.Dataset3DStore.dataset.classes[0].frequency);
+            console.log(this.props.Dataset3DStore.dataset.classes[i].frequency);
+            if(this.maxfrequency < this.props.Dataset3DStore.dataset.classes[i].frequency)
+            {this.maxfrequency = this.props.Dataset3DStore.dataset.classes[i].frequency;}
+            this.props.Dataset3DStore.dataset.classes[i].color =  Math.random() * 0xffffff;
+        }
+        this.maxBuildingHeight = 100/this.maxfrequency;
+        console.log(this.maxfrequency);
+        console.log(this.maxBuildingHeight);
+        console.log(this.props.Dataset3DStore.dataset.classes[0].frequency);
+        console.log(this.props.Dataset3DStore.dataset.classes[0].frequency*this.maxBuildingHeight);
+        console.log(this.props.Dataset3DStore.dataset.classes[0].frequency*this.maxBuildingHeight);
+
     }
     render() {
         //const width = window.innerWidth; // canvas width
@@ -107,14 +134,17 @@ class Dataset3D extends React.Component {
         const width = 800; // canvas width
         const height = 600; // canvas height
 
-        let classname1;
-        let freq1;
-
+        //let classname0, classname1, freq0, freq1;
+        //, color0, color1;
 
         if (this.props.Dataset3DStore.dataset.classes.length)
         {
-            classname1 = this.props.Dataset3DStore.dataset.classes[0].class;
-            freq1 = this.props.Dataset3DStore.dataset.classes[0].frequency;
+            //classname0 = this.props.Dataset3DStore.dataset.classes[0].class;
+            //freq0 = this.props.Dataset3DStore.dataset.classes[0].frequency;
+            //color0 = (Math.random() * 0xffffff);
+            //classname1 = this.props.Dataset3DStore.dataset.classes[1].class;
+            //freq1 = this.props.Dataset3DStore.dataset.classes[1].frequency;
+            //color1 = (Math.random() * 0xffffff);
 
             //console.log(this.props.Dataset3DStore.dataset.classes);
             let self = this;
@@ -123,8 +153,6 @@ class Dataset3D extends React.Component {
                     <div className="ui grid">
                         <div className="ui column">
                             Dataset3D Component <br />
-                            Classname: {classname1}<br />
-                            Frequency: {freq1}<br />
                             <React3
                                 ref="react3"
                                 mainCamera="mainCamera" // this points to the perspectiveCamera which has the name set to "camera" below
@@ -135,6 +163,10 @@ class Dataset3D extends React.Component {
                                 gammaOutput
                                 shadowMapEnabled
                                 shadowMapDebug
+                                shadowMapType={THREE.PCFShadowMap}
+                                sortObjects={false}
+                                pixelRatio={window.devicePixelRatio}
+                                clearColor={0xf0f0f0}
                                 onAnimate={this._onAnimate}>
                                 <scene>
                                     <perspectiveCamera
@@ -147,16 +179,78 @@ class Dataset3D extends React.Component {
                                         far={1000}
                                         lookAt={this.state.rotate ? this.scenePosition : null}
                                     />
+                                    <ambientLight
+                                        color={0x505050}
+                                    />
+                                    <spotLight
+                                        color={0xffffff}
+                                        intensity={1.5}
+                                        position={this.lightPosition}
+                                        lookAt={this.lightTarget}
+
+                                        castShadow
+                                        shadowCameraNear={200}
+                                        shadowCameraFar={10000}
+                                        shadowCameraFov={50}
+
+                                        shadowBias={-0.00022}
+
+                                        shadowMapWidth={2048}
+                                        shadowMapHeight={2048}
+                                    />
                                     <mesh
-                                        rotation={this.state.cubeRotation}
+                                        position={new THREE.Vector3(0, 0, 0)}
+                                    >
+                                        <boxGeometry
+                                            width={1000}
+                                            height={0.1}
+                                            depth={1000}
+                                        />
+                                        <meshBasicMaterial
+                                            color={0x505050}
+                                        />
+                                    </mesh>
+                                    <mesh
+                                        position={new THREE.Vector3(0, ((this.props.Dataset3DStore.dataset.classes[0].frequency*this.maxBuildingHeight)/2), 0)}
+                                        castShadow
+                                        receiveShadow
                                     >
                                         <boxGeometry
                                             width={1}
-                                            height={1}
+                                            height={this.props.Dataset3DStore.dataset.classes[0].frequency*this.maxBuildingHeight}
                                             depth={1}
                                         />
-                                        <meshBasicMaterial
-                                            color={0xDDDDDD}
+                                        <meshLambertMaterial
+                                            color={this.props.Dataset3DStore.dataset.classes[0].color}
+                                        />
+                                    </mesh>
+                                    <mesh
+                                        position={new THREE.Vector3(2, ((this.props.Dataset3DStore.dataset.classes[1].frequency*this.maxBuildingHeight)/2), 0)}
+                                        castShadow
+                                        receiveShadow
+                                    >
+                                        <boxGeometry
+                                            width={1}
+                                            height={this.props.Dataset3DStore.dataset.classes[1].frequency*this.maxBuildingHeight}
+                                            depth={1}
+                                        />
+                                        <meshLambertMaterial
+                                            color={this.props.Dataset3DStore.dataset.classes[1].color}
+                                        />
+                                    </mesh>
+
+                                    <mesh
+                                        castShadow
+                                        receiveShadow
+                                        position={new THREE.Vector3(4, ((this.props.Dataset3DStore.dataset.classes[2].frequency*this.maxBuildingHeight)/2), 0)}
+                                    >
+                                        <boxGeometry
+                                            width={1}
+                                            height={this.props.Dataset3DStore.dataset.classes[2].frequency*this.maxBuildingHeight}
+                                            depth={1}
+                                        />
+                                        <meshLambertMaterial
+                                            color={this.props.Dataset3DStore.dataset.classes[2].color}
                                         />
                                     </mesh>
                                 </scene>
@@ -166,6 +260,7 @@ class Dataset3D extends React.Component {
                     </div>
                 </div>
             );
+
         }
         else
         {
