@@ -83,17 +83,21 @@ class Dataset3D extends React.Component {
             this.refs.mainCamera, ReactDOM.findDOMNode(this.refs.react3)
         );
         */
-        controls.rotateSpeed = 5.0;
-        controls.zoomSpeed = 0.5;
-        controls.panSpeed = 5.2;
+        controls.rotateSpeed = 2.0;
+        controls.zoomSpeed = 1.5;
+        controls.panSpeed = 2.2;
 
         controls.noZoom = false;
         controls.noRotate = false;
         controls.noPan = false;
         //controls.noTilt = true;
 
-        controls.staticMoving = false;
-        controls.dynamicDampingFactor = 0.3;
+        controls.staticMoving = true;
+        controls.dynamicDampingFactor = 0.2;
+
+        // Set to true to automatically rotate around the target
+    	controls.autoRotate = true;
+    	controls.autoRotateSpeed = 2.0; // 30 seconds per round when fps is 60
 
 
         controls.addEventListener('change', () => {
@@ -162,7 +166,7 @@ class Dataset3D extends React.Component {
                 //console.log('z' + rowZ);
                 doRow = 'X';
             }
-            console.log(i);
+            //console.log(i);
         }
         //need to determine maxbuildingheight before creating building objects
         this.maxBuildingHeight = 10/this.maxfrequency;
@@ -227,8 +231,8 @@ class Dataset3D extends React.Component {
     render() {
         //const width = window.innerWidth; // canvas width
         //const height = window.innerHeight; // canvas height
-        const width = 800; // canvas width
-        const height = 600; // canvas height
+        const width = 1400; // canvas width
+        const height = 1050; // canvas height
 
         //let classname0, classname1, freq0, freq1;
         //, color0, color1;
