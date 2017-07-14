@@ -13,7 +13,7 @@ class Dataset3D extends React.Component {
         super(props);
         // construct the position vector here, because if we use 'new' within render,
         // React will think that things have changed when they have not.
-        this.cameraPosition = new THREE.Vector3(0, 3, 30);
+        this.cameraPosition = new THREE.Vector3(0, 20, 50);
         this.classname1;
         this.cameraSet = false;
         this.maxfrequency = 0;
@@ -77,16 +77,16 @@ class Dataset3D extends React.Component {
         const controls = new TrackballControls(
             this.refs.mainCamera, ReactDOM.findDOMNode(this.refs.react3)
         );
-        controls.rotateSpeed = 10.0;
+        controls.rotateSpeed = 5.0;
         controls.zoomSpeed = 0.5;
-        controls.panSpeed = 10.2;
+        controls.panSpeed = 5.2;
 
         controls.noZoom = false;
         controls.noRotate = false;
         controls.noPan = false;
         //controls.noTilt = true;
 
-        controls.staticMoving = true;
+        controls.staticMoving = false;
         controls.dynamicDampingFactor = 0.3;
 
         controls.addEventListener('change', () => {
