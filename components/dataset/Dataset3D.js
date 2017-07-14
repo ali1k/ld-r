@@ -7,6 +7,7 @@ import React3 from 'react-three-renderer';
 import ReactDOM from 'react-dom';
 import getClassFrequency from '../../actions/getClassFrequency';
 import TrackballControls from './trackball.js';
+import OrbitControls from './orbitcontrols.js';
 
 class Dataset3D extends React.Component {
     constructor(props){
@@ -73,10 +74,15 @@ class Dataset3D extends React.Component {
         //Class Names -> max number of properties
 
 
+        const controls = new OrbitControls(
+            this.refs.mainCamera, ReactDOM.findDOMNode(this.refs.react3)
+        );
 
+        /*
         const controls = new TrackballControls(
             this.refs.mainCamera, ReactDOM.findDOMNode(this.refs.react3)
         );
+        */
         controls.rotateSpeed = 5.0;
         controls.zoomSpeed = 0.5;
         controls.panSpeed = 5.2;
@@ -88,6 +94,7 @@ class Dataset3D extends React.Component {
 
         controls.staticMoving = false;
         controls.dynamicDampingFactor = 0.3;
+
 
         controls.addEventListener('change', () => {
             this.setState({
