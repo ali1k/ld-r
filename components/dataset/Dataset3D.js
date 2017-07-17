@@ -14,7 +14,7 @@ class Dataset3D extends React.Component {
         super(props);
         // construct the position vector here, because if we use 'new' within render,
         // React will think that things have changed when they have not.
-        this.cameraPosition = new THREE.Vector3(0, 20, 50);
+        this.cameraPosition = new THREE.Vector3(0, 50, 0);
         this.classname1;
         this.cameraSet = false;
         this.maxfrequency = 0;
@@ -49,7 +49,7 @@ class Dataset3D extends React.Component {
 
             this.setState({
                 cubeRotation: new THREE.Euler(
-                    this.state.cubeRotation.x + 0.01,
+                    this.state.cubeRotation.xpos + 0.01,
                     this.state.cubeRotation.y + 0.01,
                     0
                 ),
@@ -83,9 +83,10 @@ class Dataset3D extends React.Component {
             this.refs.mainCamera, ReactDOM.findDOMNode(this.refs.react3)
         );
         */
-        controls.rotateSpeed = 2.0;
-        controls.zoomSpeed = 1.5;
-        controls.panSpeed = 2.2;
+        controls.rotateSpeed = 3.0;
+        controls.zposoomSpeed = 3.0;
+        controls.panSpeed = 3.0;
+        controls.keyPanSpeed = 75;
 
         controls.noZoom = false;
         controls.noRotate = false;
@@ -131,8 +132,12 @@ class Dataset3D extends React.Component {
         let rowZ = -this.maxrows;
         let doRow = 'X';
         this.props.Dataset3DStore.dataset.classes.push({ color: { }});
+        this.props.Dataset3DStore.dataset.classes.push({ xpos: { }});
+        this.props.Dataset3DStore.dataset.classes.push({ zpos: { }});
         this.props.Dataset3DStore.dataset.classes.push({ x: { }});
         this.props.Dataset3DStore.dataset.classes.push({ z: { }});
+
+        Math.random()
         let i=6; //ignore first 6 few datasets, start at entry 7 (array position 6):
         /*
         [{"class":"http://www.wikidata.org/ontology#Statement","frequency":84444106,"color":127865.52621428466,"x":-32,"z":-32},
@@ -149,23 +154,19 @@ class Dataset3D extends React.Component {
             if(this.maxfrequency < this.props.Dataset3DStore.dataset.classes[i].frequency)
             {this.maxfrequency = this.props.Dataset3DStore.dataset.classes[i].frequency;}
             this.props.Dataset3DStore.dataset.classes[i].color =  Math.random() * 0xffffff;
-            if(doRow === 'X')
-            {
-                if(rowX > this.maxrows){rowX = -this.maxrows; doRow = 'Y';}
-                this.props.Dataset3DStore.dataset.classes[i].x = rowX;
-                this.props.Dataset3DStore.dataset.classes[i].z = rowZ;
-                rowX +=2;
-                //console.log('x' + rowX);
-                //console.log('z' + rowZ);
-            } else{
-                //if(rowZ > this.maxrows/2){rowZ = -this.maxrows/2; doRow = 'X';}
-                this.props.Dataset3DStore.dataset.classes[i].x = rowX;
-                this.props.Dataset3DStore.dataset.classes[i].z = rowZ;
+            if(rowX > this.maxrows){
+                rowX = -this.maxrows;
                 rowZ +=2;
-                //console.log('x' + rowX);
-                //console.log('z' + rowZ);
-                doRow = 'X';
+                this.props.Dataset3DStore.dataset.classes[i].xpos = rowX;
+                this.props.Dataset3DStore.dataset.classes[i].zpos = rowZ;
+                rowX +=2;
             }
+            else {
+                this.props.Dataset3DStore.dataset.classes[i].xpos = rowX;
+                this.props.Dataset3DStore.dataset.classes[i].zpos = rowZ;
+                rowX +=2;
+            }
+            console.log(rowX + ' and ' + rowZ);
             //console.log(i);
         }
         //need to determine maxbuildingheight before creating building objects
@@ -179,7 +180,7 @@ class Dataset3D extends React.Component {
 
         this.allbuildings.push(
             <mesh key=''
-                pos0tion={new THREE.Vector3(this.props.Dataset3DStore.dataset.classes[0].x, ((this.props.Dataset3DStore.dataset.classes[0].frequency*this.maxBuildingHeight)/2), this.props.Dataset3DStore.dataset.classes[0].z)}
+                pos0tion={new THREE.Vector3(this.props.Dataset3DStore.dataset.classes[0].xpos, ((this.props.Dataset3DStore.dataset.classes[0].frequency*this.maxBuildingHeight)/2), this.props.Dataset3DStore.dataset.classes[0].zpos)}
                 castShadow
                 receiveShadow
             >
@@ -209,7 +210,7 @@ class Dataset3D extends React.Component {
 
             this.allbuildings.push(
                 <mesh key={i}
-                    position={new THREE.Vector3(this.props.Dataset3DStore.dataset.classes[i].x, ((this.props.Dataset3DStore.dataset.classes[i].frequency*this.maxBuildingHeight)/2), this.props.Dataset3DStore.dataset.classes[i].z)}
+                    position={new THREE.Vector3(this.props.Dataset3DStore.dataset.classes[i].xpos, ((this.props.Dataset3DStore.dataset.classes[i].frequency*this.maxBuildingHeight)/2), this.props.Dataset3DStore.dataset.classes[i].zpos)}
                     castShadow
                     receiveShadow
                 >
@@ -231,8 +232,8 @@ class Dataset3D extends React.Component {
     render() {
         //const width = window.innerWidth; // canvas width
         //const height = window.innerHeight; // canvas height
-        const width = 1400; // canvas width
-        const height = 1050; // canvas height
+        const width = 1050; // canvas width
+        const height = 700; // canvas height
 
         //let classname0, classname1, freq0, freq1;
         //, color0, color1;
@@ -254,7 +255,10 @@ class Dataset3D extends React.Component {
                 <div className="ui fluid container ldr-padding-more" ref="dataset#D">
                     <div className="ui grid">
                         <div className="ui column">
-                            Dataset3D Component <br />
+                            <b>Dataset3D Component </b><br />
+                            <b>Mouse controls:</b> Use your scroll-wheel to zoom-in and out. Click + mouve your mouse to pan up, down, left, and right <br />
+                            <b>Key controls:</b> Press the 'p', 'q', or 'e'-key to stop auto-rotation. Press the arrow keys (up, down, left, right, or A,S,D,W) to move your view around, relative to what you are looking at. <br />
+                            <br />Tip: view the city from above and use the arrow-keys to move above to a building on which you can zoom in and inspect it.
                             <React3
                                 ref="react3"
                                 mainCamera="mainCamera" // this points to the perspectiveCamera which has the name set to "camera" below
@@ -305,7 +309,7 @@ class Dataset3D extends React.Component {
                                     >
                                         <boxGeometry
                                             width={this.maxrows*2.5}
-                                            height={0.1}
+                                            height={0.09}
                                             depth={this.maxrows*2.5}
                                         />
                                         <meshBasicMaterial

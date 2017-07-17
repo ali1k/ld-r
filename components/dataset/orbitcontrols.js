@@ -63,8 +63,8 @@ class OrbitControls extends THREE.EventDispatcher {
 	// Set to true to disable use of the keys
 	this.noKeys = false;
 
-	// The four arrow keys
-	this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
+	// The four arrow keys and enter key and p-key
+	this.keys = { PAUSEQ: 81, PAUSEE: 69, PAUSEP: 80, LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40, LEFTA: 65, UPW: 87, RIGHTD: 68, BOTTOMS: 83};
 
 	// Mouse buttons
 	this.mouseButtons = { ORBIT: THREE.MOUSE.LEFT, ZOOM: THREE.MOUSE.MIDDLE, PAN: THREE.MOUSE.RIGHT };
@@ -523,28 +523,56 @@ class OrbitControls extends THREE.EventDispatcher {
 
 		if ( scope.enabled === false || scope.noKeys === true || scope.noPan === true ) return;
 
+        console.log(event.keyCode);
 		switch ( event.keyCode ) {
 
 			case scope.keys.UP:
 				scope.pan( 0, scope.keyPanSpeed );
 				scope.update();
 				break;
-
 			case scope.keys.BOTTOM:
 				scope.pan( 0, - scope.keyPanSpeed );
 				scope.update();
 				break;
-
 			case scope.keys.LEFT:
 				scope.pan( scope.keyPanSpeed, 0 );
 				scope.update();
 				break;
-
 			case scope.keys.RIGHT:
 				scope.pan( - scope.keyPanSpeed, 0 );
 				scope.update();
 				break;
-
+            case scope.keys.UPW :
+				scope.pan( 0, scope.keyPanSpeed );
+				scope.update();
+				break;
+			case scope.keys.BOTTOMS:
+				scope.pan( 0, - scope.keyPanSpeed );
+				scope.update();
+				break;
+			case scope.keys.LEFTA:
+				scope.pan( scope.keyPanSpeed, 0 );
+				scope.update();
+				break;
+			case scope.keys.RIGHTD:
+				scope.pan( - scope.keyPanSpeed, 0 );
+				scope.update();
+				break;
+            case scope.keys.PAUSEQ:
+				//scope.pan( - scope.keyPanSpeed, 0 );
+                if (scope.autoRotate === true){scope.autoRotate = false} else {scope.autoRotate = true;}
+				scope.update();
+				break;
+            case scope.keys.PAUSEP:
+				//scope.pan( - scope.keyPanSpeed, 0 );
+                if (scope.autoRotate === true){scope.autoRotate = false} else {scope.autoRotate = true;}
+				scope.update();
+				break;
+            case scope.keys.PAUSEE:
+				//scope.pan( - scope.keyPanSpeed, 0 );
+                if (scope.autoRotate === true){scope.autoRotate = false} else {scope.autoRotate = true;}
+				scope.update();
+				break;
 		}
 
 	}
