@@ -153,7 +153,11 @@ class Dataset3D extends React.Component {
             //console.log(this.props.Dataset3DStore.dataset.classes[i].frequency);
             if(this.maxfrequency < this.props.Dataset3DStore.dataset.classes[i].frequency)
             {this.maxfrequency = this.props.Dataset3DStore.dataset.classes[i].frequency;}
+            //Generate colours and
             this.props.Dataset3DStore.dataset.classes[i].color =  Math.random() * 0xffffff;
+            this.props.Dataset3DStore.dataset.classes[i].x = Math.random();
+            this.props.Dataset3DStore.dataset.classes[i].z = Math.random();
+            //assign position based on maxrows
             if(rowX > this.maxrows){
                 rowX = -this.maxrows;
                 rowZ +=2;
@@ -166,7 +170,7 @@ class Dataset3D extends React.Component {
                 this.props.Dataset3DStore.dataset.classes[i].zpos = rowZ;
                 rowX +=2;
             }
-            console.log(rowX + ' and ' + rowZ);
+            //console.log(rowX + ' and ' + rowZ);
             //console.log(i);
         }
         //need to determine maxbuildingheight before creating building objects
@@ -215,9 +219,9 @@ class Dataset3D extends React.Component {
                     receiveShadow
                 >
                     <boxGeometry
-                        width={1}
+                        width={this.props.Dataset3DStore.dataset.classes[i].x}
                         height={this.props.Dataset3DStore.dataset.classes[i].frequency*this.maxBuildingHeight}
-                        depth={1}
+                        depth={this.props.Dataset3DStore.dataset.classes[i].z}
                     />
                     <meshLambertMaterial
                         color={this.props.Dataset3DStore.dataset.classes[i].color}
