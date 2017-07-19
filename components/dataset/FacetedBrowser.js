@@ -11,10 +11,21 @@ import ResourceListPager from './ResourceListPager';
 import YASQEViewer from '../object/viewer/individual/YASQEViewer';
 import URIUtil from '../utils/URIUtil';
 import {Popup} from 'semantic-ui-react';
+// Parse a SPARQL query to a JSON object
+let SparqlParser = require('sparqljs').Parser;
+let parser = new SparqlParser();
 
 class FacetedBrowser extends React.Component {
+    componentDidMount() {
+        //console.log(this.dynamicSelection);
+        this.setState({selection: this.dynamicSelection});
+        this.context.executeAction(loadFacets, {mode: 'master', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, selection: {prevSelection: this.dynamicSelection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: {}}}});
+        this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: 1, selection: { prevSelection: this.dynamicSelection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: {}}}});
+
+    }
     constructor(props) {
         super(props);
+        this.dynamicSelection = {};
         this.state = {searchMode: 0, selection: {}, expandedFacet: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}};
     }
     handleSearchMode(searchMode) {
@@ -34,6 +45,68 @@ class FacetedBrowser extends React.Component {
             this.setState({expandedFacet: propertyURI})
         }
 
+    }
+    parseQuery(query){
+        let parseQuery = parser.parse(query);
+        //console.log(parseQuery);
+        let graphName = parseQuery.where[0].name;
+        ////console.log(graphName);
+        ////console.log('//--------------------------------//');
+        let selection = {};
+        let tmpPropMap ={};
+        parseQuery.where[0].patterns.forEach((el)=>{
+            if(el.type === 'query'){
+                el.where[0].patterns.forEach((el2)=>{
+                    //console.log('//--------------------------------//');
+                    if(el2.type === 'bgp'){
+                        el2.triples.forEach((el3)=>{
+                        //todo: handle property path
+                        //console.log(el3.predicate);
+                            if(!selection[el3.predicate]){
+                                if(el3.predicate.type && el3.predicate.type=== 'path'){
+                                    selection[el3.predicate.items.join('->')] = [];
+                                    tmpPropMap[el3.object]= el3.predicate.items.join('->');
+                                }else{
+                                    selection[el3.predicate] = [];
+                                    tmpPropMap[el3.object]= el3.predicate;
+                                }
+
+                            }
+                            //id there is already a value
+                            if(el3.object.indexOf('?v') === -1){
+
+                                selection[el3.predicate].push({valueType:'', dataType:'', value: el3.object.replace(new RegExp('"', 'g'), '')});
+                            }else{
+                                tmpPropMap[el3.object]= el3.predicate;
+                            }
+                        });
+                    }
+                    if(el2.type === 'filter'){
+                        el2.expression.args.forEach((el4)=>{
+                            if(el4.operator === '&&'){
+                                el4.args.forEach((el5)=>{
+                                    selection[tmpPropMap[el5.args[0].args[0]]].push({valueType:'', dataType:'', value: el5.args[1][0].replace(new RegExp('"', 'g'), '')});
+                                    //console.log(el5.args);
+                                    //console.log('------');
+                                });
+                            }
+                            if(el4.operator === 'in'){
+                                //todo: handle array
+                                //console.log(el4.args[0].args[0]);
+                                //console.log(el4.args[1][0]);
+                                //console.log(el4.args[0].args[0]);
+                                selection[tmpPropMap[el4.args[0].args[0]]].push({valueType:'', dataType:'', value: el4.args[1][0].replace(new RegExp('"', 'g'), '')});
+                            }
+                        })
+                    }
+                });
+
+            }
+        });
+        ////console.log(selection);
+        //console.log(tmpPropMap);
+        //console.log(JSON.stringify(parseQuery));
+        return selection;
     }
     gotoPage(page) {
         let facetConfigs = this.getNecessaryFaccetsConfig();
@@ -101,6 +174,15 @@ class FacetedBrowser extends React.Component {
         }
         return properties;
     }
+    buildMasterFacetFromQuery(selection) {
+        let self = this;
+        let properties = [];
+        for(let prop in selection){
+            properties.push({label:  self.getPropertyLabel(prop), value: prop, valueType: 'uri', position: 0, category: ''});
+        }
+        return properties;
+    }
+
     findIndexInSelection(arr, value){
         let i = -1;
         arr.forEach(function(el, index){
@@ -305,24 +387,57 @@ class FacetedBrowser extends React.Component {
         let self = this;
         let showFactes = 0;
         let configDiv = '';
-        let properties = this. buildMasterFacet(this.props.FacetedBrowserStore.datasetURI);
+        //let properties = this.buildMasterFacet(this.props.FacetedBrowserStore.datasetURI);
+        const query = `
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX owl: <http://www.w3.org/2002/07/owl#>
+        PREFIX dcterms: <http://purl.org/dc/terms/>
+        PREFIX void: <http://rdfs.org/ns/void#>
+        PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+        SELECT DISTINCT ?s  ?title  WHERE {
+          GRAPH <http://grid.ac/20170522> {
+            {
+              SELECT DISTINCT ?s WHERE {
+                GRAPH <http://grid.ac/20170522> {
+                  ?s rdf:type <http://xmlns.com/foaf/0.1/Organization> .
+                  ?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?v1.
+                  ?s <http://www.grid.ac/ontology/establishedYear> ?v2.
+                  FILTER (iri(?v1) IN (<http://www.grid.ac/ontology/Company>) && str(?v2) IN ("""1989+01:00"""))
+                }
+              }
+              LIMIT 20 OFFSET 0
+            }
+            OPTIONAL {
+              ?s <http://www.w3.org/2000/01/rdf-schema#label> ?title .
+            }
+          }
+        }
+        `;
+        this.dynamicSelection = this.parseQuery(query);
+        let properties = this.buildMasterFacetFromQuery(this.dynamicSelection);
         //console.log(self.props.FacetedBrowserStore.facets);
         //if no default graph is selected, show all the graph names
         if(this.props.FacetedBrowserStore.datasetURI){
             let list = properties.map(function(node, index) {
                 //console.log(self.props.FacetedBrowserStore.facets);
-                if(self.props.FacetedBrowserStore.facets[node.value] && self.props.FacetedBrowserStore.facets[node.value].length){
+                //if(self.props.FacetedBrowserStore.facets[node.value] && self.props.FacetedBrowserStore.facets[node.value].length){
+                if(self.dynamicSelection[node.value] && self.dynamicSelection[node.value].length){
                     showFactes = 1;
                     //console.log(self.findIndexInProperties(properties, node.value));
                     if(self.state.expandedFacet){
                         if(self.state.expandedFacet===node.value){
                             return (
-                                <Facet selection={self.state.selection} invert={self.state.invert} range={self.state.range} minHeight={550} maxHeight={700} onCheck={self.handleOnCheck.bind(self, 2, self.props.FacetedBrowserStore.facets[node.value][0].valueType, self.props.FacetedBrowserStore.facets[node.value][0].dataType)} onInvert={self.handleToggleInvert.bind(self, node.value)} onRange={self.handleToggleRange.bind(self, node.value)} onShowMore={self.handleShowMoreFacet.bind(self, node.value)} key={self.findIndexInProperties(properties, node.value)} spec={{propertyURI: node.value, property: self.getPropertyLabel(node.value), instances: self.props.FacetedBrowserStore.facets[node.value], total: self.props.FacetedBrowserStore.facetsCount[node.value], query: self.props.FacetedBrowserStore.facetQuery[node.value]}} config={self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, node.value)} datasetURI={self.props.FacetedBrowserStore.datasetURI} toggleExpandFacet={self.toggleExpandFacet.bind(self)}/>
+                                //<Facet selection={self.state.selection} invert={self.state.invert} range={self.state.range} minHeight={550} maxHeight={700} onCheck={self.handleOnCheck.bind(self, 2, self.props.FacetedBrowserStore.facets[node.value][0].valueType, self.props.FacetedBrowserStore.facets[node.value][0].dataType)} onInvert={self.handleToggleInvert.bind(self, node.value)} onRange={self.handleToggleRange.bind(self, node.value)} onShowMore={self.handleShowMoreFacet.bind(self, node.value)} key={self.findIndexInProperties(properties, node.value)} spec={{propertyURI: node.value, property: self.getPropertyLabel(node.value), instances: self.props.FacetedBrowserStore.facets[node.value], total: self.props.FacetedBrowserStore.facetsCount[node.value], query: self.props.FacetedBrowserStore.facetQuery[node.value]}} config={self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, node.value)} datasetURI={self.props.FacetedBrowserStore.datasetURI} toggleExpandFacet={self.toggleExpandFacet.bind(self)}/>
+                                <Facet selection={self.state.selection} invert={self.state.invert} range={self.state.range} minHeight={550} maxHeight={700} onCheck={self.handleOnCheck.bind(self, 2, self.dynamicSelection[node.value][0].valueType, self.dynamicSelection[node.value][0].dataType)} onInvert={self.handleToggleInvert.bind(self, node.value)} onRange={self.handleToggleRange.bind(self, node.value)} onShowMore={self.handleShowMoreFacet.bind(self, node.value)} key={self.findIndexInProperties(properties, node.value)} spec={{propertyURI: node.value, property: self.getPropertyLabel(node.value), instances: self.dynamicSelection[node.value], total: self.dynamicSelection[node.value].length, query: self.props.FacetedBrowserStore.facetQuery[node.value]}} config={self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, node.value)} datasetURI={self.props.FacetedBrowserStore.datasetURI} toggleExpandFacet={self.toggleExpandFacet.bind(self)}/>
                             );
                         }
                     }else{
                         return (
-                            <Facet selection={self.state.selection} invert={self.state.invert} range={self.state.range} onCheck={self.handleOnCheck.bind(self, 2, self.props.FacetedBrowserStore.facets[node.value][0].valueType, self.props.FacetedBrowserStore.facets[node.value][0].dataType)} onInvert={self.handleToggleInvert.bind(self, node.value)} onRange={self.handleToggleRange.bind(self, node.value)} onShowMore={self.handleShowMoreFacet.bind(self, node.value)} key={self.findIndexInProperties(properties, node.value)} spec={{propertyURI: node.value, property: self.getPropertyLabel(node.value), instances: self.props.FacetedBrowserStore.facets[node.value], total: self.props.FacetedBrowserStore.facetsCount[node.value], query: self.props.FacetedBrowserStore.facetQuery[node.value]}} config={self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, node.value)} datasetURI={self.props.FacetedBrowserStore.datasetURI} toggleExpandFacet={self.toggleExpandFacet.bind(self)}/>
+                            //<Facet selection={self.state.selection} invert={self.state.invert} range={self.state.range} onCheck={self.handleOnCheck.bind(self, 2, self.props.FacetedBrowserStore.facets[node.value][0].valueType, self.props.FacetedBrowserStore.facets[node.value][0].dataType)} onInvert={self.handleToggleInvert.bind(self, node.value)} onRange={self.handleToggleRange.bind(self, node.value)} onShowMore={self.handleShowMoreFacet.bind(self, node.value)} key={self.findIndexInProperties(properties, node.value)} spec={{propertyURI: node.value, property: self.getPropertyLabel(node.value), instances: self.props.FacetedBrowserStore.facets[node.value], total: self.props.FacetedBrowserStore.facetsCount[node.value], query: self.props.FacetedBrowserStore.facetQuery[node.value]}} config={self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, node.value)} datasetURI={self.props.FacetedBrowserStore.datasetURI} toggleExpandFacet={self.toggleExpandFacet.bind(self)}/>
+                            <Facet selection={self.state.selection} invert={self.state.invert} range={self.state.range} onCheck={self.handleOnCheck.bind(self, 2, self.dynamicSelection[node.value][0].valueType, self.dynamicSelection[node.value][0].dataType)} onInvert={self.handleToggleInvert.bind(self, node.value)} onRange={self.handleToggleRange.bind(self, node.value)} onShowMore={self.handleShowMoreFacet.bind(self, node.value)} key={self.findIndexInProperties(properties, node.value)} spec={{propertyURI: node.value, property: self.getPropertyLabel(node.value), instances: self.dynamicSelection[node.value], total: self.dynamicSelection[node.value].length, query: self.props.FacetedBrowserStore.facetQuery[node.value]}} config={self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, node.value)} datasetURI={self.props.FacetedBrowserStore.datasetURI} toggleExpandFacet={self.toggleExpandFacet.bind(self)}/>
                         );
                     }
                 }else{
