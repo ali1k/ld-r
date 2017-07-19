@@ -30,7 +30,6 @@ let parseQuery = function(query){
                         }
                         //id there is already a value
                         if(el3.object.indexOf('?v') === -1){
-
                             selection[el3.predicate].push({valueType:'', dataType:'', value: el3.object.replace(new RegExp('"', 'g'), '')});
                         }else{
                             tmpPropMap[el3.object]= el3.predicate;
@@ -41,7 +40,9 @@ let parseQuery = function(query){
                     el2.expression.args.forEach((el4)=>{
                         if(el4.operator === '&&'){
                             el4.args.forEach((el5)=>{
-                                selection[tmpPropMap[el5.args[0].args[0]]].push({valueType:'', dataType:'', value: el5.args[1][0].replace(new RegExp('"', 'g'), '')});
+                                el4.args[1].forEach((el6)=>{
+                                    selection[tmpPropMap[el5.args[0].args[0]]].push({valueType:'', dataType:'', value: el6.replace(new RegExp('"', 'g'), '')});
+                                });
                                 //console.log(el5.args);
                                 //console.log('------');
                             });
@@ -51,7 +52,9 @@ let parseQuery = function(query){
                             //console.log(el4.args[0].args[0]);
                             //console.log(el4.args[1][0]);
                             //console.log(el4.args[0].args[0]);
-                            selection[tmpPropMap[el4.args[0].args[0]]].push({valueType:'', dataType:'', value: el4.args[1][0].replace(new RegExp('"', 'g'), '')});
+                            el4.args[1].forEach((el6)=>{
+                                selection[tmpPropMap[el4.args[0].args[0]]].push({valueType:'', dataType:'', value: el6.replace(new RegExp('"', 'g'), '')});
+                            });
                         }
                     })
                 }
