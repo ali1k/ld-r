@@ -395,7 +395,7 @@ class FacetedBrowser extends React.Component {
                         <div className= "ui secondary segment ">
                             <ResourceListPager onSearchMode={this.handleSearchMode.bind(this)} visibleResourcesTotal={this.props.FacetedBrowserStore.resources.length} selection={{prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs}}} onExpandCollapse={this.toggleResourceCol.bind(this)} handleClick={this.gotoPage.bind(this)} datasetURI={this.props.FacetedBrowserStore.datasetURI} total={this.props.FacetedBrowserStore.total} threshold={pagerSize} currentPage={this.props.FacetedBrowserStore.page} maxNumberOfResourcesOnPage={dcnf.maxNumberOfResourcesOnPage}/>
                         </div>
-                        {dcnf.displayQueries ?
+                        {this.props.FacetedBrowserStore.loadedFromAPI || dcnf.displayQueries ?
                             <div className= "ui tertiary segment">
                                 <YASQEViewer spec={{value: this.props.FacetedBrowserStore.resourceQuery}} />
                             </div>

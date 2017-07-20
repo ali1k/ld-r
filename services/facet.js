@@ -61,6 +61,16 @@ export default {
                     });
                 });
             });
+        } else if (resource === 'facet.fromAPI') {
+            let apiURL = decodeURIComponent(params.apiFlag);
+            rp.get({uri: apiURL}).then(function(res){
+                callback(null, {
+                    query: res
+                });
+            }).catch(function (err) {
+                console.log(err);
+                callback(null, {query: ''});
+            });
         } else if (resource === 'facet.facetsSideEffect') {
             datasetURI = (params.id ? decodeURIComponent(params.id) : 0);
 

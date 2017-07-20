@@ -1,3 +1,4 @@
+import {navigateAction} from 'fluxible-router';
 // Parse a SPARQL query to a JSON object
 let SparqlParser = require('sparqljs').Parser;
 let parser = new SparqlParser();
@@ -67,42 +68,19 @@ let parseQuery = function(query){
     //console.log(JSON.stringify(parseQuery));
     return {selection: selection, graphName: graphName};
 }
-
+let parsed;
 export default function prepareFacetsFromQueryAPI(context, payload, done) {
-    //todo: connect to API to get the query
-    //for now it is hard-coded
-    const query = `
-    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    PREFIX owl: <http://www.w3.org/2002/07/owl#>
-    PREFIX dcterms: <http://purl.org/dc/terms/>
-    PREFIX void: <http://rdfs.org/ns/void#>
-    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-    PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-    SELECT DISTINCT ?s  ?title  WHERE {
-      GRAPH <http://grid.ac/20170522> {
-        {
-          SELECT DISTINCT ?s WHERE {
-            GRAPH <http://grid.ac/20170522> {
-              ?s rdf:type <http://xmlns.com/foaf/0.1/Organization> .
-              ?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?v1.
-              ?s <http://www.grid.ac/ontology/establishedYear> ?v2.
-              FILTER (iri(?v1) IN (<http://www.grid.ac/ontology/Company>,<http://www.grid.ac/ontology/Healthcare>) && str(?v2) IN ("""1998+01:00""","""2001+01:00"""))
-            }
-          }
-          LIMIT 20 OFFSET 0
+    context.service.read('facet.fromAPI', payload, {timeout: 20 * 1000}, function (err, res) {
+        parsed = parseQuery(res.query);
+        context.dispatch('LOAD_FACETS_CONFIG_FROM_API', parsed);
+        if(payload.redirect){
+            context.executeAction(navigateAction, {
+                url: '/browse/'+ encodeURIComponent(parsed.graphName) + '/' + encodeURIComponent(payload.apiFlag)
+            });
+            done();
         }
-        OPTIONAL {
-          ?s <http://www.w3.org/2000/01/rdf-schema#label> ?title .
-        }
-      }
-    }
-    `;
-    let dynamicSelection = parseQuery(query);
-    //context.service.read('facet.fromAPI', payload, {timeout: 20 * 1000}, function (err, res) {
-    context.dispatch('LOAD_FACETS_CONFIG_FROM_API', dynamicSelection);
-    done();
-    //});
+        done();
+
+    });
 
 }
