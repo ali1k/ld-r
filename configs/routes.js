@@ -46,7 +46,7 @@ export default {
             context.executeAction(loadDatasets, {pageTitle: 'Annotate a dataset'}, done);
         }
     },
-    annotateDataset: {
+    wysiwyq: {
         path: '/wysiwyq',
         method: 'get',
         handler: require('../components/WYSIWYQ'),

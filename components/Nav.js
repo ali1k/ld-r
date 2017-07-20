@@ -43,6 +43,7 @@ class Nav extends React.Component {
                     </NavLink>
                     <NavLink routeName="about" className="item">About {appShortTitle} </NavLink>
                     <NavLink routeName="datasets" className="item" href="/datasets"> Datasets</NavLink>
+                    <NavLink routeName="wysiwyq" className="item" href="/wysiwyq"> WYSIWYQ</NavLink>
                     <div className="right menu">
                         <div className="item link" onClick={this.showHelpModal}>
                             <i className="small help circle icon"></i>
