@@ -11,14 +11,14 @@ let parseQuery = function(query){
     ////console.log('//--------------------------------//');
     let selection = {};
     let tmpPropMap ={};
-    if(parseQuery.where[0].patterns && parseQuery.where[0].patterns.isArray){
+    if(parseQuery.where[0].patterns && Array.isArray(parseQuery.where[0].patterns)){
         parseQuery.where[0].patterns.forEach((el)=>{
             if(el.type === 'query'){
-                if(el.where[0].patterns && el.where[0].patterns.isArray){
+                if(el.where[0].patterns && Array.isArray(el.where[0].patterns)){
                     el.where[0].patterns.forEach((el2)=>{
                         //console.log('//--------------------------------//');
                         if(el2.type === 'bgp'){
-                            if (el2.triples && el2.triples.isArray){
+                            if (el2.triples && Array.isArray(el2.triples)){
                                 el2.triples.forEach((el3)=>{
                                     //todo: handle property path
                                     //console.log(el3.predicate);
@@ -42,12 +42,12 @@ let parseQuery = function(query){
                             }
                         }
                         if(el2.type === 'filter'){
-                            if (el2.expression.args && el2.expression.args.isArray){
+                            if (el2.expression.args && Array.isArray(el2.expression.args)){
                                 el2.expression.args.forEach((el4)=>{
                                     if(el4.operator === '&&'){
-                                        if (el4.args && el4.args.isArray){
+                                        if (el4.args && Array.isArray(el4.args)){
                                             el4.args.forEach((el5)=>{
-                                                if (el4.args[1] && el4.args[1].isArray){
+                                                if (el4.args[1] && Array.isArray(el4.args[1])){
                                                     el4.args[1].forEach((el6)=>{
                                                         selection[tmpPropMap[el5.args[0].args[0]]].push({valueType:'', dataType:'', value: el6.replace(new RegExp('"', 'g'), '')});
                                                     });
@@ -62,7 +62,7 @@ let parseQuery = function(query){
                                         //console.log(el4.args[0].args[0]);
                                         //console.log(el4.args[1][0]);
                                         //console.log(el4.args[0].args[0]);
-                                        if (el4.args[1] && el4.args[1].isArray){
+                                        if (el4.args[1] && Array.isArray(el4.args[1])){
                                             el4.args[1].forEach((el6)=>{
                                                 selection[tmpPropMap[el4.args[0].args[0]]].push({valueType:'', dataType:'', value: el6.replace(new RegExp('"', 'g'), '')});
                                             });
