@@ -17,14 +17,18 @@ class WYSIWYQ extends React.Component {
     }
     handleForm() {
         let queryUri = this.state.resource;
-        this.context.executeAction(prepareFacetsFromQueryAPI, {
-            apiFlag: queryUri,
-            redirect: 1
-        });
+        if(queryUri.trim()){
+            this.context.executeAction(prepareFacetsFromQueryAPI, {
+                apiFlag: queryUri,
+                redirect: 1
+            });
+        }
     }
     render() {
         const exampleQueryURIs = [
-            {'title': 'https://raw.githubusercontent.com/ali1k/wysiwyq/master/exampleQueries/example1.rq'}
+            {'title': 'https://raw.githubusercontent.com/ali1k/wysiwyq/master/exampleQueries/example1.rq'},
+            {'title': 'https://raw.githubusercontent.com/ali1k/wysiwyq/master/exampleQueries/example2.rq'},
+            {'title': 'https://raw.githubusercontent.com/ali1k/wysiwyq/master/exampleQueries/example3.rq'}
         ]
         return (
             <div className="ui fluid container ldr-padding" ref="WYSIWYQ">
@@ -34,9 +38,9 @@ class WYSIWYQ extends React.Component {
                             <div className="ui segment content">
                                 <h2 className="ui header">WYSIWYQ: What You See Is What You Query</h2>
                                 <Form size='big'>
-                                    <PrefixBasedInput autocompletelist={exampleQueryURIs} spec={{value:''}} onDataEdit={this.handleResourceURIChange.bind(this)} placeholder="URI of the grlc query on Github" allowActionByKey={false}/>
+                                    <PrefixBasedInput autocompletelist={exampleQueryURIs} spec={{value:''}} onDataEdit={this.handleResourceURIChange.bind(this)} placeholder="URI of the SPARQL query" allowActionByKey={false}/>
                                     <Divider hidden />
-                                    <div className='ui big blue button' onClick={this.handleForm.bind(this)}>Build UI</div>
+                                    <div className='ui big blue button' onClick={this.handleForm.bind(this)}>Turn Query to a Faceted Browsing UI</div>
                                     <Divider hidden />
                                 </Form>
                             </div>
