@@ -75,9 +75,17 @@ class Facet extends React.Component {
     createSelecedList(){
         let out = '';
         let selected = [];
+        let shortenURI = 1;
+        if((this.props.config && this.props.config.shortenURI === 0)){
+            shortenURI = 0;
+        }
         if(this.props.selection && this.props.selection[this.props.spec.propertyURI] && this.props.selection[this.props.spec.propertyURI].length){
             this.props.selection[this.props.spec.propertyURI].forEach((item)=>{
-                selected.push(URIUtil.getURILabel(item.value));
+                if(shortenURI){
+                    selected.push(URIUtil.getURILabel(item.value));
+                }else{
+                    selected.push(item.value);
+                }
             });
             out = selected.join(',');
             //in case of range selected
