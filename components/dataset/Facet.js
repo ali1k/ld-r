@@ -20,7 +20,7 @@ function shuffle(a) {
 class Facet extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0, rangeChanged: 0, range: {min: '', max: ''}};
+        this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0, rangeChanged: 0, range: {min: '', max: ''}, config: this.props.config};
     }
     checkItem(status, value) {
         this.props.onCheck(status, value, this.props.spec.propertyURI);
@@ -61,6 +61,11 @@ class Facet extends React.Component {
             this.setState({shuffled: !this.state.shuffled});
         }
     }
+    handleDropDown2Click(e, data){
+        let tmp = this.state.config;
+        tmp.objectBrowser = [data.value];
+        this.setState({config: tmp});
+    }
     handleToggleVerticalResize() {
         this.setState({verticalResized: !this.state.verticalResized});
     }
@@ -76,7 +81,7 @@ class Facet extends React.Component {
         let out = '';
         let selected = [];
         let shortenURI = 1;
-        if((this.props.config && this.props.config.shortenURI === 0)){
+        if((this.state.config && this.state.config.shortenURI === 0)){
             shortenURI = 0;
         }
         if(this.props.selection && this.props.selection[this.props.spec.propertyURI] && this.props.selection[this.props.spec.propertyURI].length){
@@ -130,9 +135,19 @@ class Facet extends React.Component {
             { key: 1, text: invertStat + ' the selection', value: 'invert' },
             { key: 2, text: shuffleStat + ' the list', value: 'shuffle' }
         ]
+        let b_options = [
+            { key: 1, text:  'Check List', value: 'CheckListBrowser' },
+            { key: 2, text:  'Tag List', value: 'TagListBrowser' },
+            { key: 3, text:  'Bar Chart', value: 'BarChartBrowser' }
+        ]
         const d_trigger = (
             <span>
                 <Icon name='lightning' />
+            </span>
+        );
+        const b_trigger = (
+            <span>
+                <Icon name='pie chart' />
             </span>
         );
         //change header color of facet: Violet -> for property chains , Purple -> multigraphs
@@ -185,7 +200,7 @@ class Facet extends React.Component {
                 {this.state.verticalResized ?
                     <div className="ui horizontal list">
                         <div className="item">
-                            <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.props.config} size="3" />
+                            <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.state.config} size="3" />
                         </div>
                         <div className="item">
                             {this.createSelecedList()}
@@ -202,7 +217,7 @@ class Facet extends React.Component {
                     }
                     <div className="ui horizontal list">
                         <div className="item">
-                            <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.props.config} size="3" />
+                            <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.state.config} size="3" />
                         </div>
                         <div className="item" style={{
                             'wordBreak': 'break-all',
@@ -213,6 +228,11 @@ class Facet extends React.Component {
                         {this.props.spec.property ?
                             <div className="item">
                                 <Dropdown selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={d_trigger} options={d_options} icon={null} upward floating />
+                                {this.state.config && !this.state.config.freezeBrowser ?
+                                    <Dropdown selectOnBlur={false} onChange={this.handleDropDown2Click.bind(this)} trigger={b_trigger} options={b_options} icon={null} floating />
+                                    :
+                                    ''
+                                }
                             </div>
                             : ''
                         }
@@ -221,7 +241,7 @@ class Facet extends React.Component {
                     </div>
                     <div className="description">
                         <div className="ui form" style={descStyle}>
-                            <ObjectBrowser expanded={this.state.expanded} selection={this.props.selection} shortenURI={true} spec={newSpec} config={this.props.config} onSelect={this.checkItem.bind(this)} datasetURI={this.props.datasetURI}/>
+                            <ObjectBrowser expanded={this.state.expanded} selection={this.props.selection} shortenURI={true} spec={newSpec} config={this.state.config} onSelect={this.checkItem.bind(this)} datasetURI={this.props.datasetURI}/>
                             {
                                 (!this.state.searchTerm && this.props.spec.propertyURI && parseInt(itemsCount) > cloneInstances.length) ? <a onClick={this.handleShowMore.bind(this)} className="ui orange fluid label">{(itemsCount-cloneInstances.length) + ' items left. Show more...'}</a> : ''
                             }
@@ -247,7 +267,7 @@ class Facet extends React.Component {
                     </div>
 
                 </div>
-                {this.props.config && this.props.config.allowRangeOfValues ?
+                {this.state.config && this.state.config.allowRangeOfValues ?
                     <div className={rangeClasses}>
                         <div className="ui form">
                             <div className="three fields">
@@ -268,7 +288,7 @@ class Facet extends React.Component {
                     </div>
                     : ''
                 }
-                {this.props.config && this.props.config.displayQueries ?
+                {this.state.config && this.state.displayQueries ?
                     <div className={queryClasses}>
                         <YASQEViewer spec={{value: this.props.spec.query}} />
                     </div>

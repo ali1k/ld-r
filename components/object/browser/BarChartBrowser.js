@@ -1,5 +1,5 @@
 import React from 'react';
-import TagListBrowser from './TagListBrowser';
+//import TagListBrowser from './TagListBrowser';
 import {BarChart, Bar, XAxis, YAxis, Tooltip, Legend, Cell, ResponsiveContainer} from 'recharts';
 
 class BarChartBrowser extends React.Component {
@@ -82,7 +82,7 @@ class BarChartBrowser extends React.Component {
                         </Bar>
                     </BarChart>
                 </ResponsiveContainer>
-                <TagListBrowser selection={this.props.selection} expanded={this.props.expanded} datasetURI={this.props.datasetURI} propertyURI={this.props.propertyURI} shortenURI={this.props.shortenURI}  config={this.props.config} instances={this.props.instances} onCheck={this.props.onCheck.bind(this)}/>
+                {/*<TagListBrowser selection={this.props.selection} expanded={this.props.expanded} datasetURI={this.props.datasetURI} propertyURI={this.props.propertyURI} shortenURI={this.props.shortenURI}  config={this.props.config} instances={this.props.instances} onCheck={this.props.onCheck.bind(this)}/>*/}
             </div>
         );
     }
