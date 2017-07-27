@@ -20,7 +20,7 @@ function shuffle(a) {
 class Facet extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0, rangeChanged: 0, range: {min: '', max: ''}, config: this.props.config};
+        this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0, rangeChanged: 0, range: {min: '', max: ''}, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : ''};
     }
     checkItem(status, value) {
         this.props.onCheck(status, value, this.props.spec.propertyURI);
@@ -67,7 +67,7 @@ class Facet extends React.Component {
             tmp ={};
         }
         if(data.value === 'Default'){
-            tmp = this.props.config;
+            tmp = this.props.config ? JSON.parse(JSON.stringify(this.props.config)): '';
         }else{
             tmp.objectBrowser = [data.value];
         }
