@@ -147,7 +147,8 @@ class Facet extends React.Component {
             { key: 2, text:  'Tag List', value: 'TagListBrowser' },
             { key: 3, text:  'Bar Chart', value: 'BarChartBrowser' },
             { key: 4, text:  'Pie Chart', value: 'PieChartBrowser' },
-            { key: 5, text:  'Default', value: 'Default' }
+            { key: 5, text:  'Tree Map', value: 'TreeMapBrowser' },
+            { key: 6, text:  'Default', value: 'Default' }
         ]
         const d_trigger = (
             <span>
