@@ -66,7 +66,11 @@ class Facet extends React.Component {
         if(!this.state.config){
             tmp ={};
         }
-        tmp.objectBrowser = [data.value];
+        if(data.value === 'Default'){
+            tmp = this.props.config;
+        }else{
+            tmp.objectBrowser = [data.value];
+        }
         this.setState({config: tmp});
     }
     handleToggleVerticalResize() {
@@ -142,7 +146,8 @@ class Facet extends React.Component {
             { key: 1, text:  'Check List', value: 'CheckListBrowser' },
             { key: 2, text:  'Tag List', value: 'TagListBrowser' },
             { key: 3, text:  'Bar Chart', value: 'BarChartBrowser' },
-            { key: 4, text:  'Pie Chart', value: 'PieChartBrowser' }
+            { key: 4, text:  'Pie Chart', value: 'PieChartBrowser' },
+            { key: 5, text:  'Default', value: 'Default' }
         ]
         const d_trigger = (
             <span>
