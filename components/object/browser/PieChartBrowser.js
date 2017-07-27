@@ -1,11 +1,22 @@
 import React from 'react';
 import URIUtil from '../../utils/URIUtil';
+import chroma from 'chroma-js';
 //import TagListBrowser from './TagListBrowser';
 import {PieChart, Pie, Sector, Tooltip, Legend, Cell, ResponsiveContainer} from 'recharts';
 
 class PieChartBrowser extends React.Component {
     constructor(props) {
         super(props);
+    }
+    //maps values to colors
+    colorMapping(weights){
+        let arr1= weights;
+        let colors = chroma.scale(['#1a75ff', 'grey']).colors(arr1.length);
+        let mapping = {};
+        arr1.forEach((v,i)=>{
+            mapping[v.value] = colors[i];
+        });
+        return mapping;
     }
     doesExist(value){
         let selected=[];
@@ -40,6 +51,8 @@ class PieChartBrowser extends React.Component {
     }
     render() {
         let self = this;
+        let colorMap ={};
+        colorMap = self.colorMapping(self.props.instances);
         let data=[];
         let title;
         self.props.instances.forEach((node)=> {
@@ -61,11 +74,11 @@ class PieChartBrowser extends React.Component {
                 <ResponsiveContainer width="97%" height={height}>
                     <PieChart>
                         <Tooltip />
-                        <Pie data={data} dataKey="total" nameKey="title" labelLine={this.props.expanded ? true: false} label={this.props.expanded ? this.renderCustomizedLabel: false}
+                        <Pie outerRadius="90%" innerRadius="0" data={data} dataKey="total" nameKey="title" labelLine={this.props.expanded ? true: false} label={this.props.expanded ? this.renderCustomizedLabel: false}
                             margin={{top: 0, right: 10, left: 0, bottom: 0}} fill="#1a75ff" onClick={this.selectItem.bind(this)}>
                             {
                                 data.map((entry, index) => (
-                                    <Cell cursor="pointer" fill={entry.isSelected ? '#82ca9d' : '#1a75ff' } key={`cell-${index}`}/>
+                                    <Cell cursor="pointer" fill={entry.isSelected ? '#82ca9d' : colorMap[entry.ovalue] } key={`cell-${index}`}/>
                                 ))
                             }
                         </Pie>
