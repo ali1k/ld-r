@@ -63,6 +63,9 @@ class Facet extends React.Component {
     }
     handleDropDown2Click(e, data){
         let tmp = this.state.config;
+        if(!this.state.config){
+            tmp ={};
+        }
         tmp.objectBrowser = [data.value];
         this.setState({config: tmp});
     }
@@ -138,7 +141,8 @@ class Facet extends React.Component {
         let b_options = [
             { key: 1, text:  'Check List', value: 'CheckListBrowser' },
             { key: 2, text:  'Tag List', value: 'TagListBrowser' },
-            { key: 3, text:  'Bar Chart', value: 'BarChartBrowser' }
+            { key: 3, text:  'Bar Chart', value: 'BarChartBrowser' },
+            { key: 4, text:  'Pie Chart', value: 'PieChartBrowser' }
         ]
         const d_trigger = (
             <span>
@@ -228,10 +232,10 @@ class Facet extends React.Component {
                         {this.props.spec.property ?
                             <div className="item">
                                 <Dropdown selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={d_trigger} options={d_options} icon={null} upward floating />
-                                {this.state.config && !this.state.config.freezeBrowser ?
-                                    <Dropdown selectOnBlur={false} onChange={this.handleDropDown2Click.bind(this)} trigger={b_trigger} options={b_options} icon={null} floating />
-                                    :
+                                {this.state.config && this.state.config.freezeBrowser ?
                                     ''
+                                    :
+                                    <Dropdown selectOnBlur={false} onChange={this.handleDropDown2Click.bind(this)} trigger={b_trigger} options={b_options} icon={null} floating />
                                 }
                             </div>
                             : ''

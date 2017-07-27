@@ -1,9 +1,9 @@
 import React from 'react';
 import URIUtil from '../../utils/URIUtil';
 //import TagListBrowser from './TagListBrowser';
-import {BarChart, Bar, XAxis, YAxis, Tooltip, Legend, Cell, ResponsiveContainer} from 'recharts';
+import {PieChart, Pie, Sector, Tooltip, Legend, Cell, ResponsiveContainer} from 'recharts';
 
-class BarChartBrowser extends React.Component {
+class PieChartBrowser extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -34,19 +34,9 @@ class BarChartBrowser extends React.Component {
             this.props.onCheck(1, data.ovalue);
         }
     }
-    comparePropsFloat(a,b) {
-        if (parseFloat(a.title) < parseFloat(b.title))
-            return -1;
-        if (parseFloat(a.title) > parseFloat(b.title))
-            return 1;
-        return 0;
-    }
-    comparePropsString(a,b) {
-        if (a.title < b.title)
-            return -1;
-        if (a.title > b.title)
-            return 1;
-        return 0;
+    renderCustomizedLabel({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, title })  {
+        return  `${title}`;
+        //return  `${title}: ${(percent * 100).toFixed(0)}%`;
     }
     render() {
         let self = this;
@@ -59,11 +49,6 @@ class BarChartBrowser extends React.Component {
             }
             data.push({ovalue: node.value, title: title, total: parseFloat(node.total), isSelected: self.doesExist(node.value)});
         })
-        if(self.props.config && self.props.config.hasNumericValues){
-            data.sort(this.comparePropsFloat);
-        }else{
-            data.sort(this.comparePropsString);
-        }
         //todo: change width/height on expansion
         let width = 230;
         let height = 180;
@@ -74,19 +59,17 @@ class BarChartBrowser extends React.Component {
         return (
             <div>
                 <ResponsiveContainer width="97%" height={height}>
-                    <BarChart data={data}
-                        margin={{top: 0, right: 10, left: 0, bottom: 0}}>
-                        <XAxis dataKey="title"/>
-                        <YAxis/>
-                        <Tooltip/>
-                        <Bar dataKey="total" fill="#1a75ff" onClick={this.selectItem.bind(this)}>
+                    <PieChart>
+                        <Tooltip />
+                        <Pie data={data} dataKey="total" nameKey="title" labelLine={this.props.expanded ? true: false} label={this.props.expanded ? this.renderCustomizedLabel: false}
+                            margin={{top: 0, right: 10, left: 0, bottom: 0}} fill="#1a75ff" onClick={this.selectItem.bind(this)}>
                             {
                                 data.map((entry, index) => (
                                     <Cell cursor="pointer" fill={entry.isSelected ? '#82ca9d' : '#1a75ff' } key={`cell-${index}`}/>
                                 ))
                             }
-                        </Bar>
-                    </BarChart>
+                        </Pie>
+                    </PieChart>
                 </ResponsiveContainer>
                 {/*<TagListBrowser selection={this.props.selection} expanded={this.props.expanded} datasetURI={this.props.datasetURI} propertyURI={this.props.propertyURI} shortenURI={this.props.shortenURI}  config={this.props.config} instances={this.props.instances} onCheck={this.props.onCheck.bind(this)}/>*/}
             </div>
@@ -94,4 +77,4 @@ class BarChartBrowser extends React.Component {
     }
 }
 
-export default BarChartBrowser;
+export default PieChartBrowser;
