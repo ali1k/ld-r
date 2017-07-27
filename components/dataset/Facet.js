@@ -146,12 +146,12 @@ class Facet extends React.Component {
         ]
         const d_trigger = (
             <span>
-                <Icon name='lightning' />
+                <Icon name='lightning' className="orange"/>
             </span>
         );
         const b_trigger = (
             <span>
-                <Icon name='pie chart' />
+                <Icon name='pie chart' className="brown" />
             </span>
         );
         //change header color of facet: Violet -> for property chains , Purple -> multigraphs
@@ -166,7 +166,7 @@ class Facet extends React.Component {
             defaultColor = 'red';
         }
         //-----------------------
-        let contentClasses = 'content', extraContentClasses='extra content', cardClasses = 'ui segment ' + (this.props.color ? this.props.color : defaultColor);
+        let contentClasses = 'content', extraContentClasses='extra content', cardClasses = 'ui top attached segment ' + (this.props.color ? this.props.color : defaultColor);
         let queryClasses = 'ui tertiary segment';
         let rangeClasses = 'ui secondary inverted blue segment';
         if(this.state.verticalResized){
@@ -200,104 +200,125 @@ class Facet extends React.Component {
         newSpec.instances = cloneInstances;
         //console.log(this.props.spec.query);
         return (
-            <div className={cardClasses} ref="facet">
-                {this.state.verticalResized ?
-                    <div className="ui horizontal list">
-                        <div className="item">
-                            <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.state.config} size="3" />
-                        </div>
-                        <div className="item">
-                            {this.createSelecedList()}
-                            <a className='ui icon mini basic button right floated' onClick={this.handleToggleVerticalResize.bind(this)}>
-                                <i className='ui icon resize vertical'></i>
-                            </a>
-                        </div>
-                    </div>
-                    : ''
-                }
-                <div className={contentClasses}>
-                    {!this.props.spec.propertyURI ? '' :
-                        <span className="ui teal ribbon label" title="number of items listed in this facet">{this.state.searchTerm ? cloneInstances.length : this.addCommas(itemsCount)}{(!this.state.searchTerm && this.props.spec.propertyURI && parseInt(itemsCount) > cloneInstances.length) ? '*' : ''}</span>
-                    }
-                    <div className="ui horizontal list">
-                        <div className="item">
-                            <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.state.config} size="3" />
-                        </div>
-                        <div className="item" style={{
-                            'wordBreak': 'break-all',
-                            'wordWrap': 'break-word'
-                        }}>
-                            {this.createSelecedList()}
-                        </div>
-                        {this.props.spec.property ?
+            <div ref="facet">
+
+                <div className={cardClasses}>
+                    {this.state.verticalResized ?
+                        <div className="ui horizontal list">
                             <div className="item">
-                                <Dropdown selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={d_trigger} options={d_options} icon={null} upward floating />
-                                {this.state.config && this.state.config.freezeBrowser ?
-                                    ''
-                                    :
-                                    <Dropdown selectOnBlur={false} onChange={this.handleDropDown2Click.bind(this)} trigger={b_trigger} options={b_options} icon={null} floating />
+                                <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.state.config} size="3" />
+                            </div>
+                            <div className="item">
+                                {this.createSelecedList()}
+                                <a className='ui icon mini basic button right floated' onClick={this.handleToggleVerticalResize.bind(this)}>
+                                    <i className='ui icon resize vertical'></i>
+                                </a>
+                            </div>
+                        </div>
+                        : ''
+                    }
+                    <div className={contentClasses}>
+                        {!this.props.spec.propertyURI ? '' :
+                            <span className="ui teal ribbon label" title="number of items listed in this facet">{this.state.searchTerm ? cloneInstances.length : this.addCommas(itemsCount)}{(!this.state.searchTerm && this.props.spec.propertyURI && parseInt(itemsCount) > cloneInstances.length) ? '*' : ''}</span>
+                        }
+                        <div className="ui horizontal list">
+                            <div className="item">
+                                <PropertyHeader spec={{property: this.props.spec.property, propertyURI: this.props.spec.propertyURI}} config={this.state.config} size="3" />
+                            </div>
+                            <div className="item" style={{
+                                'wordBreak': 'break-all',
+                                'wordWrap': 'break-word'
+                            }}>
+                                {this.createSelecedList()}
+                            </div>
+                        </div>
+                        <div className="meta">
+                        </div>
+                        <div className="description">
+                            <div className="ui form" style={descStyle}>
+                                <ObjectBrowser expanded={this.state.expanded} selection={this.props.selection} shortenURI={true} spec={newSpec} config={this.state.config} onSelect={this.checkItem.bind(this)} datasetURI={this.props.datasetURI}/>
+                                {
+                                    (!this.state.searchTerm && this.props.spec.propertyURI && parseInt(itemsCount) > cloneInstances.length) ? <a onClick={this.handleShowMore.bind(this)} className="ui orange fluid label">{(itemsCount-cloneInstances.length) + ' items left. Show more...'}</a> : ''
                                 }
                             </div>
-                            : ''
-                        }
-                    </div>
-                    <div className="meta">
-                    </div>
-                    <div className="description">
-                        <div className="ui form" style={descStyle}>
-                            <ObjectBrowser expanded={this.state.expanded} selection={this.props.selection} shortenURI={true} spec={newSpec} config={this.state.config} onSelect={this.checkItem.bind(this)} datasetURI={this.props.datasetURI}/>
-                            {
-                                (!this.state.searchTerm && this.props.spec.propertyURI && parseInt(itemsCount) > cloneInstances.length) ? <a onClick={this.handleShowMore.bind(this)} className="ui orange fluid label">{(itemsCount-cloneInstances.length) + ' items left. Show more...'}</a> : ''
-                            }
                         </div>
                     </div>
-                </div>
-                <br/>
-                <div className={extraContentClasses}>
-                    <div className="ui tag horizontal labels">
-                        <SearchInput className="ui mini search icon input" ref="search" onChange={this.searchUpdated.bind(this)} throttle={500}/>
-                        {this.props.spec.property ?
-                            <a className='ui icon mini basic button right floated' onClick={this.handleToggleExpand.bind(this)}>
-                                <i className='ui icon expand'></i>
-                            </a>
-                            : ''
-                        }
-                        {this.props.spec.property ?
-                            <a className='ui icon mini basic button right floated' onClick={this.handleToggleVerticalResize.bind(this)}>
-                                <i className='ui icon resize vertical'></i>
-                            </a>
-                            : ''
-                        }
-                    </div>
 
-                </div>
-                {this.state.config && this.state.config.allowRangeOfValues ?
-                    <div className={rangeClasses}>
-                        <div className="ui form">
-                            <div className="three fields">
-                                <div className="field">
-                                    <label>Minimum</label>
-                                    <input type="text" placeholder="Min" value={this.state.range.min} onChange={this.handleOnRangeChange.bind(this, 'min')}/>
-                                </div>
-                                <div className="field">
-                                    <label>Maximum</label>
-                                    <input type="text" placeholder="Max" value={this.state.range.max} onChange={this.handleOnRangeChange.bind(this, 'max')}/>
-                                </div>
-                                <div className="field">
-                                    <label> &nbsp;</label>
-                                    <button className="ui button" onClick={this.handleToggleRangeChange.bind(this)}>{this.state.rangeChanged ? 'Revert' : 'Apply'}</button>
+                    {this.state.config && this.state.config.allowRangeOfValues ?
+                        <div className={rangeClasses}>
+                            <div className="ui form">
+                                <div className="three fields">
+                                    <div className="field">
+                                        <label>Minimum</label>
+                                        <input type="text" placeholder="Min" value={this.state.range.min} onChange={this.handleOnRangeChange.bind(this, 'min')}/>
+                                    </div>
+                                    <div className="field">
+                                        <label>Maximum</label>
+                                        <input type="text" placeholder="Max" value={this.state.range.max} onChange={this.handleOnRangeChange.bind(this, 'max')}/>
+                                    </div>
+                                    <div className="field">
+                                        <label> &nbsp;</label>
+                                        <button className="ui button" onClick={this.handleToggleRangeChange.bind(this)}>{this.state.rangeChanged ? 'Revert' : 'Apply'}</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        : ''
+                    }
+                    {this.state.config && this.state.displayQueries ?
+                        <div className={queryClasses}>
+                            <YASQEViewer spec={{value: this.props.spec.query}} />
+                        </div>
+                        : ''
+                    }
+                </div>
+
+                {this.state.verticalResized ?
+                    ''
+                    :
+                    <div className="ui bottom attached compact menu">
+                        <div className="left menu flui">
+                            <div className="ui left aligned category search item">
+                                <div className="ui transparent icon input">
+                                    <SearchInput className="ui mini search icon input" ref="search" onChange={this.searchUpdated.bind(this)} throttle={500}/>
+                                </div>
+                                <div className="results"></div>
+                            </div>
+                        </div>
+                        <div className="right menu">
+                            {this.props.spec.property ?
+                                <div className="item" title="actions">
+                                    <Dropdown selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={d_trigger} options={d_options} icon={null} floating />
+                                </div>
+                                : ''
+                            }
+                            {this.props.spec.property ?
+                                <div className="item" title="change the browser">
+                                    {this.state.config && this.state.config.freezeBrowser ?
+                                        ''
+                                        :
+                                        <Dropdown selectOnBlur={false} onChange={this.handleDropDown2Click.bind(this)} trigger={b_trigger} options={b_options} icon={null} floating />
+                                    }
+                                </div>
+                                : ''
+                            }
+                            {this.props.spec.property ?
+                                <a title="vertical collapse" className='ui icon item' onClick={this.handleToggleVerticalResize.bind(this)}>
+                                    <i className='ui icon resize vertical'></i>
+                                </a>
+                                : ''
+                            }
+                            {this.props.spec.property ?
+                                <a title="expand facet" className='ui icon item' onClick={this.handleToggleExpand.bind(this)}>
+                                    <i className='ui icon expand'></i>
+                                </a>
+                                : ''
+                            }
+                        </div>
+
                     </div>
-                    : ''
                 }
-                {this.state.config && this.state.displayQueries ?
-                    <div className={queryClasses}>
-                        <YASQEViewer spec={{value: this.props.spec.query}} />
-                    </div>
-                    : ''
-                }
+                <br/>
             </div>
         );
     }
