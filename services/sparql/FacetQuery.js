@@ -15,9 +15,24 @@ class FacetQuery{
         this.query='';
     }
     getPropertyLabel(uri) {
-        var property = '';
-        var tmp = uri;
-        var tmp2 = tmp.split('#');
+
+        let property = '';
+        let tmp = uri;
+        //todo: handle multigraph labels
+        let tmp01 = tmp.split('->[');
+        if(tmp01.length > 1){
+            return 'MX';
+        }
+        let tmp02 = tmp.split('>>');
+        if(tmp02.length > 1){
+            return 'FX';
+        }
+        let tmp03 = tmp.split('->');
+        if(tmp03.length > 1){
+            tmp = tmp03[tmp03.length -1];
+        }
+        //---------
+        let tmp2 = tmp.split('#');
         if (tmp2.length > 1) {
             property = tmp2[1];
         } else {
