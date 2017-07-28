@@ -20,7 +20,7 @@ function shuffle(a) {
 class Facet extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, addedAsVar:0, page: 0, rangeChanged: 0, range: {min: '', max: ''}, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : ''};
+        this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0, rangeChanged: 0, range: {min: '', max: ''}, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : '', addedAsVar: this.props.analysisProps[this.props.spec.propertyURI] ? 1 : 0};
     }
     checkItem(status, value) {
         this.props.onCheck(status, value, this.props.spec.propertyURI);
@@ -59,6 +59,7 @@ class Facet extends React.Component {
             this.props.onInvert();
         }else if(data.value==='asVariable'){
             this.setState({addedAsVar: !this.state.addedAsVar});
+            this.props.onAnalyzeProp();
         }else if(data.value==='shuffle'){
             this.setState({shuffled: !this.state.shuffled});
         }
@@ -140,7 +141,7 @@ class Facet extends React.Component {
         //dropdown setting
         let invertStat = this.props.invert[this.props.spec.propertyURI] ? 'Revert' : 'Invert';
         let shuffleStat = !this.state.shuffled ? 'Shuffle' : 'Reset';
-        let addedAsVarStat = !this.state.addedAsVar ? 'Analyze property' : 'Remove from analysis';
+        let addedAsVarStat = !this.props.analysisProps[this.props.spec.propertyURI] ? 'Analyze property' : 'Remove from analysis';
         let d_options = [
             { key: 1, text: invertStat + ' the selection', value: 'invert' },
             { key: 2, text: addedAsVarStat , value: 'asVariable' },
