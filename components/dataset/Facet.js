@@ -20,7 +20,7 @@ function shuffle(a) {
 class Facet extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0, rangeChanged: 0, range: {min: '', max: ''}, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : ''};
+        this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, addedAsVar:0, page: 0, rangeChanged: 0, range: {min: '', max: ''}, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : ''};
     }
     checkItem(status, value) {
         this.props.onCheck(status, value, this.props.spec.propertyURI);
@@ -57,6 +57,8 @@ class Facet extends React.Component {
     handleDropDownClick(e, data){
         if(data.value==='invert'){
             this.props.onInvert();
+        }else if(data.value==='asVariable'){
+            this.setState({addedAsVar: !this.state.addedAsVar});
         }else if(data.value==='shuffle'){
             this.setState({shuffled: !this.state.shuffled});
         }
@@ -138,9 +140,11 @@ class Facet extends React.Component {
         //dropdown setting
         let invertStat = this.props.invert[this.props.spec.propertyURI] ? 'Revert' : 'Invert';
         let shuffleStat = !this.state.shuffled ? 'Shuffle' : 'Reset';
+        let addedAsVarStat = !this.state.addedAsVar ? 'Analyze property' : 'Remove from analysis';
         let d_options = [
             { key: 1, text: invertStat + ' the selection', value: 'invert' },
-            { key: 2, text: shuffleStat + ' the list', value: 'shuffle' }
+            { key: 2, text: addedAsVarStat , value: 'asVariable' },
+            { key: 3, text: shuffleStat + ' the list', value: 'shuffle' }
         ]
         let b_options = [
             { key: 1, text:  'Check List', value: 'CheckListBrowser' },
@@ -155,13 +159,24 @@ class Facet extends React.Component {
                 <Icon name='lightning' className="orange"/>
             </span>
         );
+        const browserIcons = {
+            'CheckListBrowser': 'list layout',
+            'TagListBrowser': 'block layout',
+            'BarChartBrowser': 'bar chart',
+            'PieChartBrowser': 'pie chart',
+            'TreeMapBrowser': 'grid layout'
+
+        };
+        const defaultBrowseIcon = 'list layout';
+        let iconC =  (this.state.config && this.state.config.objectBrowser) ? (browserIcons[this.state.config.objectBrowser] ? browserIcons[this.state.config.objectBrowser] : defaultBrowseIcon) : defaultBrowseIcon;
         const b_trigger = (
             <span>
-                <Icon name='pie chart' className="brown" />
+                <Icon name={iconC} className="olive" />
             </span>
         );
         //change header color of facet: Violet -> for property chains , Purple -> multigraphs
         let defaultColor = 'blue';
+        let defaultEmphasis = '';
         if(this.props.spec.propertyURI.indexOf('->') !== -1){
             defaultColor = 'violet';
         }
@@ -171,8 +186,11 @@ class Facet extends React.Component {
         if(this.props.invert[this.props.spec.propertyURI]){
             defaultColor = 'red';
         }
+        if(this.state.addedAsVar){
+            defaultEmphasis = ' tertiary';
+        }
         //-----------------------
-        let contentClasses = 'content', extraContentClasses='extra content', cardClasses = 'ui top attached segment ' + (this.props.color ? this.props.color : defaultColor);
+        let contentClasses = 'content', extraContentClasses='extra content', cardClasses = 'ui top attached segment ' + (this.props.color ? this.props.color : defaultColor) + defaultEmphasis;
         let queryClasses = 'ui tertiary segment';
         let rangeClasses = 'ui secondary inverted blue segment';
         if(this.state.verticalResized){
