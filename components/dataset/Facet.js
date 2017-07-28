@@ -143,10 +143,12 @@ class Facet extends React.Component {
         let shuffleStat = !this.state.shuffled ? 'Shuffle' : 'Reset';
         let addedAsVarStat = !this.props.analysisProps[this.props.spec.propertyURI] ? 'Analyze property' : 'Remove from analysis';
         let d_options = [
-            { key: 1, text: invertStat + ' the selection', value: 'invert' },
             { key: 2, text: addedAsVarStat , value: 'asVariable' },
             { key: 3, text: shuffleStat + ' the list', value: 'shuffle' }
         ]
+        if(this.props.selection && this.props.selection[this.props.spec.propertyURI] && this.props.selection[this.props.spec.propertyURI].length){
+            d_options.unshift({ key: 1, text: invertStat + ' the selection', value: 'invert' });
+        }
         let b_options = [
             { key: 1, text:  'Check List', value: 'CheckListBrowser' },
             { key: 2, text:  'Tag List', value: 'TagListBrowser' },
