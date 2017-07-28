@@ -48,18 +48,32 @@ class FacetUtil{
         if(!parsed.results.bindings || !parsed.results.bindings.length){
             return output;
         }
+        //----handle analysisProps
+        let aprops = [];
+        let propsForAnalysis = {};
         parsed.results.bindings.forEach(function(el) {
-            if(resources.indexOf(el.s.value) === -1){
-                resources.push(el.s.value);
-                if(user){
-                    /*
-                    if(user.id == el.instances[0].value) {
-                        userIsCreator = 1;
-                    }*/
-                    accessLevel=checkEditAccess(user, datasetURI, el.s.value, rconfig.resourceFocusType , 0);
+            for(let prop in el){
+                if(prop.indexOf('ldr_ap') !== -1 && aprops.indexOf(prop) === -1){
+                    aprops.push(prop);
                 }
-                output.push( {v: el.s.value, label: self.getPropertyLabel(el.s.value), title: (el.title && el.title.value ? el.title.value : ''), image: el.image ? el.image.value : '', geo: el.geo ? el.geo.value : '', d: datasetURI, accessLevel: accessLevel});
             }
+        });
+        //----------------
+        parsed.results.bindings.forEach(function(el) {
+            if(user){
+                /*
+                if(user.id == el.instances[0].value) {
+                    userIsCreator = 1;
+                }*/
+                accessLevel=checkEditAccess(user, datasetURI, el.s.value, rconfig.resourceFocusType , 0);
+            }
+            propsForAnalysis = {};
+            aprops.forEach(function(ap) {
+                if(el[ap].value){
+                    propsForAnalysis[ap.replace('ldr_ap', '')] = el[ap].value;
+                }
+            });
+            output.push({v: el.s.value, label: self.getPropertyLabel(el.s.value), title: (el.title && el.title.value ? el.title.value : ''), image: el.image ? el.image.value : '', geo: el.geo ? el.geo.value : '', d: datasetURI, accessLevel: accessLevel, propsForAnalysis: propsForAnalysis});
         });
         return output;
     }

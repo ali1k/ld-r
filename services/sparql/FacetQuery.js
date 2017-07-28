@@ -14,6 +14,22 @@ class FacetQuery{
         `;
         this.query='';
     }
+    getPropertyLabel(uri) {
+        var property = '';
+        var tmp = uri;
+        var tmp2 = tmp.split('#');
+        if (tmp2.length > 1) {
+            property = tmp2[1];
+        } else {
+            tmp2 = tmp.split('/');
+            property = tmp2[tmp2.length - 1];
+            tmp2 = property.split(':');
+            property = tmp2[tmp2.length - 1];
+        }
+        //make first letter capital case
+        property = property.charAt(0).toUpperCase() + property.slice(1);
+        return property;
+    }
     prepareGraphName(graphName){
         let gStart = 'GRAPH <'+ graphName +'> { ';
         let gEnd = ' } ';
@@ -520,8 +536,8 @@ class FacetQuery{
         if(options && options.analysisProps){
             for(let prop in options.analysisProps){
                 aCounter++;
-                analysisSelector = analysisSelector + ' ?ap'+aCounter;
-                analysisPhrase = analysisPhrase + '?s ' + self.filterPropertyPath(prop) + ' ?ap'+aCounter+' .';
+                analysisSelector = analysisSelector + ' ?ldr_ap'+aCounter+'_' + self.getPropertyLabel(prop);
+                analysisPhrase = analysisPhrase + '?s ' + self.filterPropertyPath(prop) + ' ?ldr_ap'+aCounter+'_' + self.getPropertyLabel(prop)+' .';
             }
         }
         //---------------------

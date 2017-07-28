@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {NavLink} from 'fluxible-router';
 import URIUtil from '../utils/URIUtil';
+import { Header, Table } from 'semantic-ui-react';
 import BasicAggregateMapView from '../object/viewer/aggregate/BasicAggregateMapView';
 import classNames from 'classnames/bind';
 
@@ -93,6 +94,22 @@ class ResourceList extends React.Component {
         this.props.onCloneResource(datasetURI, resourceURI);
         e.stopPropagation();
     }
+    checkAnalysisProps(){
+        let out = 0;
+        if(this.props.resources.length){
+            if(this.props.resources[0].propsForAnalysis){
+                for(let prop in this.props.resources[0].propsForAnalysis){
+                    out = 1;
+                    return out;
+                }
+                return out;
+            }else{
+                return 0
+            }
+        }else{
+            return 0 ;
+        }
+    }
     render() {
         let self = this;
         let user = this.context.getUser();
@@ -105,6 +122,7 @@ class ResourceList extends React.Component {
             instances =[],
             list,
             dbClass = 'black cube icon';
+        let theaderDIV, dtableHeaders = [], dtableCells = [];
         let cloneable = 0;
         if (self.props.config && typeof self.props.config.allowResourceClone !== 'undefined' && parseInt(self.props.config.allowResourceClone)) {
             cloneable = 1;
@@ -115,7 +133,19 @@ class ResourceList extends React.Component {
                     There was no resource in the selected dataset! This might be due to the connection problems. Please check the connection parameters of your dataset's Sparql endpoint or add resources to your dataset...</div>
             </div>;
         } else {
-
+            if(this.checkAnalysisProps()){
+                for(let prop in this.props.resources[0].propsForAnalysis){
+                    dtableHeaders.push(<Table.HeaderCell key={prop}>{prop}</Table.HeaderCell>);
+                }
+                theaderDIV =
+                <Table.Header>
+                    <Table.Row>
+                        <Table.HeaderCell singleLine>Title</Table.HeaderCell>
+                        {dtableHeaders}
+                    </Table.Row>
+                </Table.Header>
+                ;
+            }
             list = this.props.resources.map((node, index) => {
                 title = node.title
                     ? node.title
@@ -146,10 +176,22 @@ class ResourceList extends React.Component {
                         dbClass = 'black cube icon';
                     }
                 }
-                resourceDIV =
-                    <div className={itemClass} key={index}>
-                        {self.buildLink(0, encodeURIComponent(node.v), encodeURIComponent(node.d), title, image, dbClass, cloneable)}
-                    </div>;
+                dtableCells = [];
+                if(self.checkAnalysisProps()){
+                    for(let prop in node.propsForAnalysis){
+                        dtableCells.push(<Table.Cell key={'c'+prop}>{node.propsForAnalysis[prop]}</Table.Cell>);
+                    }
+                    resourceDIV =
+                        <Table.Row key={index}>
+                            <Table.Cell>{self.buildLink(0, encodeURIComponent(node.v), encodeURIComponent(node.d), title, image, dbClass, cloneable)}</Table.Cell>
+                            {dtableCells}
+                        </Table.Row>;
+                }else{
+                    resourceDIV =
+                        <div className={itemClass} key={index}>
+                            {self.buildLink(0, encodeURIComponent(node.v), encodeURIComponent(node.d), title, image, dbClass, cloneable)}
+                        </div>;
+                }
                 if(self.props.config && self.props.config.resourceGeoProperty && geo) {
                     instances.push({value: geo, hint: self.buildLink(1, encodeURIComponent(node.v), encodeURIComponent(node.d), title, image, dbClass, cloneable)});
                 }
@@ -164,11 +206,24 @@ class ResourceList extends React.Component {
             'divided list': this.props.config && !this.props.config.resourceImageProperty,
             'cards': this.props.config && this.props.config.resourceImageProperty
         });
+
+        let finalOutDIV = list;
+        if(self.checkAnalysisProps()){
+            finalOutDIV =
+            <Table celled padded striped selectable compact>
+                {theaderDIV}
+                <Table.Body>
+                    {list}
+                </Table.Body>
+            </Table>
+            ;
+        }
+
         return (
             <div className={listClasses} ref="resourceList" style={{overflow: 'auto'}}>
                 {this.props.config && this.props.config.resourceGeoProperty ?
                     <BasicAggregateMapView  mapWidth={950} mapHeight={620} zoomLevel={2} spec={{instances: instances}} config={this.props.config}/>
-                    : list}
+                    : finalOutDIV}
             </div>
         );
     }
