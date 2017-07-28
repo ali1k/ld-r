@@ -136,7 +136,11 @@ class DatasetQuery{
         let optPhase = 'OPTIONAL { ?resource dcterms:title ?title .} ';
         let searchPhase='';
         if(searchTerm && searchTerm.length>2){
-            searchPhase = 'FILTER( regex(?title, "'+searchTerm+'", "i") || regex(?label, "'+searchTerm+'", "i") || regex(STR(?resource), "'+searchTerm+'", "i"))';
+            if(searchTerm === 'ldr_showAll'){
+                searchPhase =' ';
+            }else{
+                searchPhase = 'FILTER( regex(?title, "'+searchTerm+'", "i") || regex(?label, "'+searchTerm+'", "i") || regex(STR(?resource), "'+searchTerm+'", "i"))';
+            }
         }
         let bindPhase = '';
         if(resourceLabelProperty && resourceLabelProperty.length){

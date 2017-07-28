@@ -23,7 +23,11 @@ class ResourceListPager extends React.Component {
         }
     }
     onShowAllClick(){
-        //this.props.onSearchMode(!this.state.searchMode);
+        if(this.state.showAll){
+            this.searchOnDataset('');
+        }else{
+            this.searchOnDataset('ldr_showAll');
+        }
         this.setState({showAll: !this.state.showAll});
     }
     onSearchClick(){
@@ -98,12 +102,16 @@ class ResourceListPager extends React.Component {
         }
         return (
             <div className="ui" ref="resourceListPager">
-                {totalPages} Page(s): <span>{pageList}</span> &nbsp;
+                {this.state.showAll ?
+                    ''
+                    :
+                    <span>{totalPages} Page(s): {pageList} &nbsp;</span>
+                }
                 {this.props.total<= 10000 ?
                     <a className={'ui icon mini button ' + (this.state.showAll ? 'blue': 'basic')} onClick={this.onShowAllClick.bind(this)}>
-                         show all
+                        {this.state.showAll ? 'go back to pagination' : 'show all'}
                     </a>
-                    : 
+                    :
                     ''
                 }
                 {this.props.onExpandCollapse ?

@@ -585,7 +585,12 @@ class FacetQuery{
         let noffset = (offset-1)*limit;
         let searchPhase='';
         if(searchTerm && searchTerm.length>2){
-            searchPhase = 'FILTER( regex(?title, "'+searchTerm+'", "i") || regex(STR(?s), "'+searchTerm+'", "i"))';
+            //we use a fixed searchTern for show all
+            if(searchTerm === 'ldr_showAll'){
+                searchPhase =' ';
+            }else{
+                searchPhase = 'FILTER( regex(?title, "'+searchTerm+'", "i") || regex(STR(?s), "'+searchTerm+'", "i"))';    
+            }
         }
         //handle analysis props
         let apLabel = '', analysisSelector = '', analysisPhrase = '', aCounter = 0;
