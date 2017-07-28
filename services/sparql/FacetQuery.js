@@ -19,13 +19,19 @@ class FacetQuery{
         let property = '';
         let tmp = uri;
         //todo: handle multigraph labels
-        let tmp01 = tmp.split('->[');
+        let tmp00 = tmp.split('<-');
+        if(tmp00.length > 1){
+            tmp = tmp00[tmp00.length -1];
+        }
+        let tmp001, tmp01 = tmp.split('->[');
         if(tmp01.length > 1){
-            return 'MX';
+            tmp001 = tmp.split(']');
+            tmp = tmp001[tmp001.length -1];
         }
         let tmp02 = tmp.split('>>');
         if(tmp02.length > 1){
-            return 'FX';
+            tmp001 = tmp.split(']');
+            tmp = tmp001[tmp001.length -1];
         }
         let tmp03 = tmp.split('->');
         if(tmp03.length > 1){
@@ -85,7 +91,7 @@ class FacetQuery{
         }
         return out;
     }
-    prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, tindex, filterSt){
+    prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, tindex, filterSt, withPropAnalysis){
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let self = this;
         let counter=0, qs='', tmp2, tmp1, tmp0 = propertyURI.split('->[');
@@ -122,12 +128,21 @@ class FacetQuery{
                     }
                 //use case without federated query
                 }else{
-                    qs = qs + `
-                    GRAPH <${tmp1[0]}> {
-                        ?vg${tindex}${counter-1} ${self.filterPropertyPath(tmp1[1])} ?v${(counter === tmp0.length ? tindex : 'g' + tindex + counter)} .
-                        ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
+                    if(withPropAnalysis){
+                        qs = qs + `
+                        GRAPH <${tmp1[0]}> {
+                            ?vg${withPropAnalysis}${counter-1} ${self.filterPropertyPath(tmp1[1])} ?${(counter === tmp0.length ? withPropAnalysis : 'vg' + withPropAnalysis + counter)} .
+                            ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
+                        }
+                        ` ;
+                    }else{
+                        qs = qs + `
+                        GRAPH <${tmp1[0]}> {
+                            ?vg${tindex}${counter-1} ${self.filterPropertyPath(tmp1[1])} ?v${(counter === tmp0.length ? tindex : 'g' + tindex + counter)} .
+                            ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
+                        }
+                        ` ;
                     }
-                    ` ;
                 }
 
             }else{
@@ -135,28 +150,54 @@ class FacetQuery{
                 if(counter === 1){
                     tmp2 = part.split('<-');
                     if(tmp2.length>1){
-                        qs = `
-                            GRAPH <${tmp2[0]}> {
-                                ?s ${self.filterPropertyPath(tmp2[1])} ?v${(counter === tmp0.length ? tindex : 'g'+tindex+counter)} .
-                                ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
-                            }
-                        ` ;
+                        if(withPropAnalysis){
+                            qs = `
+                                GRAPH <${tmp2[0]}> {
+                                    ?s ${self.filterPropertyPath(tmp2[1])} ?${(counter === tmp0.length ? withPropAnalysis : 'vg'+withPropAnalysis+counter)} .
+                                    ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
+                                }
+                            ` ;
+                        }else{
+                            qs = `
+                                GRAPH <${tmp2[0]}> {
+                                    ?s ${self.filterPropertyPath(tmp2[1])} ?v${(counter === tmp0.length ? tindex : 'g'+tindex+counter)} .
+                                    ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
+                                }
+                            ` ;
+                        }
                     }else{
-                    //we assume it starts from the original graph
-                    //use the default graph name
-                        let st_extra = self.makeExtraTypeFilters(endpointParameters, {type: type});
-                        qs = `
-                            ${st_extra}
-                            ?s ${self.filterPropertyPath(part)} ?v${(counter === tmp0.length ? tindex : 'g'+tindex+counter)} .
-                            ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
-                        ` ;
+                        if(withPropAnalysis){
+                            qs = `
+                                    ?s ${self.filterPropertyPath(part)} ?${(counter === tmp0.length ? withPropAnalysis : 'vg'+withPropAnalysis+counter)} .
+                                    ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
+                            ` ;
+                        }else{
+                            //we assume it starts from the original graph
+                            //use the default graph name
+                            let st_extra = self.makeExtraTypeFilters(endpointParameters, {type: type});
+                            qs = `
+                                    ${st_extra}
+                                    ?s ${self.filterPropertyPath(part)} ?v${(counter === tmp0.length ? tindex : 'g'+tindex+counter)} .
+                                    ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
+                            ` ;
+                        }
+
                     }
                 }else{
-                    qs = qs + `
-                    ${gStart}
-                        ?vg${tindex}${counter-1} ${self.filterPropertyPath(part)} ?v${(counter === tmp0.length ? tindex : 'g'+tindex+counter)} .
-                    ${gEnd}
-                    ` ;
+                    if(withPropAnalysis){
+                        qs = qs + `
+                        ${gStart}
+                            ?vg${withPropAnalysis}${counter-1} ${self.filterPropertyPath(part)} ?${(counter === tmp0.length ? withPropAnalysis : 'vg'+withPropAnalysis+counter)} .
+                        ${gEnd}
+                        ` ;
+                    }else{
+                        qs = qs + `
+                        ${gStart}
+                            ?vg${tindex}${counter-1} ${self.filterPropertyPath(part)} ?v${(counter === tmp0.length ? tindex : 'g'+tindex+counter)} .
+                        ${gEnd}
+                        ` ;
+                    }
+
                 }
             }
         });
@@ -169,7 +210,7 @@ class FacetQuery{
         let queryheart = '';
         if(this.isMultiGraphFacet(propertyURI)){
             //to support browsing mutiple graphs
-            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', '');
+            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', '', '');
         }else{
             let st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.';
             //---to support resource focus types
@@ -194,7 +235,7 @@ class FacetQuery{
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         if(this.isMultiGraphFacet(propertyURI)){
             //to support browsing mutiple graphs
-            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', '');
+            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', '', '');
         }else{
             let st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.';
             //---to support resource focus types
@@ -370,7 +411,7 @@ class FacetQuery{
                 //---------
                 if(this.isMultiGraphFacet(key)){
                     //to support browsing mutiple graphs
-                    st = st + this.prepareMultiGraphQuery(endpointParameters, graphName, type, key, i, '');
+                    st = st + this.prepareMultiGraphQuery(endpointParameters, graphName, type, key, i, '', '');
                 }else{
                     st = st + '?s '+ this.filterPropertyPath(key) + ' ?v' + i + '. ';
                 }
@@ -478,7 +519,7 @@ class FacetQuery{
         let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, rconfig, options);
         if(this.isMultiGraphFacet(propertyURI)){
             //to support browsing mutiple graphs
-            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', st);
+            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', st, '');
         }else{
             st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.' + st;
             queryheart = st;
@@ -500,7 +541,7 @@ class FacetQuery{
         let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, rconfig, options);
         if(this.isMultiGraphFacet(propertyURI)){
             //to support browsing mutiple graphs
-            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', st);
+            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', st, '');
         }else{
             st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.' + st;
             queryheart = st;
@@ -547,12 +588,18 @@ class FacetQuery{
             searchPhase = 'FILTER( regex(?title, "'+searchTerm+'", "i") || regex(STR(?s), "'+searchTerm+'", "i"))';
         }
         //handle analysis props
-        let analysisSelector = '', analysisPhrase = '', aCounter = 0;
+        let apLabel = '', analysisSelector = '', analysisPhrase = '', aCounter = 0;
         if(options && options.analysisProps){
             for(let prop in options.analysisProps){
                 aCounter++;
-                analysisSelector = analysisSelector + ' ?ldr_ap'+aCounter+'_' + self.getPropertyLabel(prop);
-                analysisPhrase = analysisPhrase + '?s ' + self.filterPropertyPath(prop) + ' ?ldr_ap'+aCounter+'_' + self.getPropertyLabel(prop)+' .';
+                apLabel = 'ldr_ap'+aCounter+'_' + self.getPropertyLabel(prop);
+                analysisSelector = analysisSelector + ' ?' + apLabel;
+                if(self.isMultiGraphFacet(prop)){
+                    //to support browsing mutiple graphs
+                    analysisPhrase = analysisPhrase + self.prepareMultiGraphQuery(endpointParameters, graphName, type, prop, '', '', apLabel);
+                }else{
+                    analysisPhrase = analysisPhrase + '?s ' + self.filterPropertyPath(prop) + ' ?' + apLabel + ' .';
+                }
             }
         }
         //---------------------

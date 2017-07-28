@@ -122,6 +122,7 @@ class FacetedBrowser extends React.Component {
             delete this.state.analysisProps[propertyURI];
         }
         this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: 1, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}});
+        /*
         //apply side effects
         let sideEffectsArr = [];
         for (let key in this.state.selection) {
@@ -133,6 +134,7 @@ class FacetedBrowser extends React.Component {
         sideEffectsArr.forEach(function(el){
             self.context.executeAction(loadFacets, {mode: 'sideEffect', id: self.props.FacetedBrowserStore.datasetURI, page: self.props.FacetedBrowserStore.page, selection: {status: 0, propertyURI: el, prevSelection: self.state.selection, options: {invert: self.state.invert, range: self.state.range, facetConfigs: facetConfigs}}});
         });
+        */
     }
     handleToggleInvert(propertyURI){
         //todo: only if an item is selected inversion works
