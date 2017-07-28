@@ -7,7 +7,7 @@ import searchInDataset from '../../actions/searchInDataset';
 class ResourceListPager extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchTerm: '', searchMode: 0};
+        this.state = {searchTerm: '', searchMode: 0, showAll: 0};
     }
     componentDidMount() {
     }
@@ -21,6 +21,10 @@ class ResourceListPager extends React.Component {
                 <NavLink key={(icon ? ('i' + page) : page)} routeName="dataset" className={'ui ' + color + ' label'} href={'/dataset/' + page + '/' + encodeURIComponent(this.props.datasetURI)}> {icon ? <i className={icon}></i> : <span>{page}</span>} </NavLink>
             );
         }
+    }
+    onShowAllClick(){
+        //this.props.onSearchMode(!this.state.searchMode);
+        this.setState({showAll: !this.state.showAll});
     }
     onSearchClick(){
         this.props.onSearchMode(!this.state.searchMode);
@@ -94,7 +98,14 @@ class ResourceListPager extends React.Component {
         }
         return (
             <div className="ui" ref="resourceListPager">
-                {totalPages} Page(s): <span>{pageList}</span>
+                {totalPages} Page(s): <span>{pageList}</span> &nbsp;
+                {this.props.total<= 10000 ?
+                    <a className={'ui icon mini button ' + (this.state.showAll ? 'blue': 'basic')} onClick={this.onShowAllClick.bind(this)}>
+                         show all
+                    </a>
+                    : 
+                    ''
+                }
                 {this.props.onExpandCollapse ?
                     <a className='ui icon mini basic button right floated' onClick={this.props.onExpandCollapse.bind(this)}>
                         <i className='ui icon expand'></i>
