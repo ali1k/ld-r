@@ -107,7 +107,7 @@ class ResourceListPager extends React.Component {
                     :
                     <span>{totalPages} Page(s): {pageList} &nbsp;</span>
                 }
-                {this.props.total<= 10000 ?
+                {totalPages > 1 && this.props.total<= 10000 ?
                     <a className={'ui icon mini button ' + (this.state.showAll ? 'blue': 'basic')} onClick={this.onShowAllClick.bind(this)}>
                         {this.state.showAll ? 'go back to pagination' : 'show all'}
                     </a>
