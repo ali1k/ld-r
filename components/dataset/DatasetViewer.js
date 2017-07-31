@@ -10,7 +10,7 @@ class DatasetViewer extends React.Component {
             }
         }
         switch(viewerConfig){
-            case 'ResourceList':
+            case 'BasicResourceList':
                 viewer = <BasicResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={this.props.isBig} config={this.props.config} cloneable={this.props.cloneable} onCloneResource={this.props.onCloneResource}/>;
                 break;
             default:
