@@ -10,7 +10,8 @@ export default {
                 readOnly: 1,
                 //used for pagination in resource list
                 maxNumberOfResourcesOnPage: 20,
-                datasetReactor: ['Dataset']
+                datasetReactor: ['Dataset'],
+                datasetViewer: ['BasicResourceList']
             },
             //authentication graph
             'http://ld-r.org/users': {

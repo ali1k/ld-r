@@ -1,5 +1,5 @@
 import React from 'react';
-import ResourceList from './ResourceList';
+import BasicResourceList from './viewer/BasicResourceList';
 
 class DatasetViewer extends React.Component {
     render() {
@@ -11,10 +11,10 @@ class DatasetViewer extends React.Component {
         }
         switch(viewerConfig){
             case 'ResourceList':
-                viewer = <ResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={this.props.isBig} config={this.props.config} cloneable={this.props.cloneable} onCloneResource={this.props.onCloneResource}/>;
+                viewer = <BasicResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={this.props.isBig} config={this.props.config} cloneable={this.props.cloneable} onCloneResource={this.props.onCloneResource}/>;
                 break;
             default:
-                viewer = <ResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={this.props.isBig} config={this.props.config} cloneable={this.props.cloneable} onCloneResource={this.props.onCloneResource}/>;
+                viewer = <BasicResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={this.props.isBig} config={this.props.config} cloneable={this.props.cloneable} onCloneResource={this.props.onCloneResource}/>;
         }
         return (
             <div className="ui" ref="datasetViewer">

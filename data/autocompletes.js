@@ -121,7 +121,7 @@ module.exports = {
             {title: 'PasswordInput'},
             {title: 'PrefixBasedInput'},
             {title: 'ToggleEdit'},
-            {title: 'ResourceList'},
+            {title: 'BasicResourceList'},
             {title: 'TagListBrowser'},
             {title: 'GeoListBrowser'},
             {title: 'CheckListBrowser'},
