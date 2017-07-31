@@ -3,6 +3,7 @@ import DatasetHeader from './DatasetHeader';
 import DatasetViewer from './DatasetViewer';
 import DatasetPager from './DatasetPager';
 import YASQEViewer from '../object/viewer/individual/YASQEViewer';
+import {enableAuthentication} from '../../configs/general';
 
 class DatasetFB extends React.Component {
     constructor(props){
@@ -36,7 +37,7 @@ class DatasetFB extends React.Component {
                 <DatasetHeader config={dcnf} total={this.props.total}  datasetURI={this.props.datasetURI} searchMode={this.state.searchMode} resourcesLength={this.props.resourcesLength}/>
                 <div className="ui segments">
                     <div className="ui segment">
-                        <DatasetViewer resources={this.props.resources} datasetURI={this.props.datasetURI} OpenInNewTab={true} isBig={this.props.isBig} config={dcnf}/>
+                        <DatasetViewer enableAuthentication={enableAuthentication} cloneable={0} resources={this.props.resources} datasetURI={this.props.datasetURI} OpenInNewTab={true} isBig={this.props.isBig} config={dcnf}/>
                     </div>
                     <div className= "ui secondary segment ">
                         <DatasetPager config={dcnf} onSearchMode={this.handleSearchMode.bind(this)} selection={this.props.selection} onExpandCollapse={this.props.onExpandCollapse} handleClick={this.props.handleClick} datasetURI={this.props.datasetURI} total={this.props.total} threshold={this.props.pagerSize} currentPage={this.props.currentPage} maxNumberOfResourcesOnPage={dcnf.maxNumberOfResourcesOnPage}/>

@@ -3,6 +3,7 @@ import DatasetHeader from './DatasetHeader';
 import DatasetViewer from './DatasetViewer';
 import DatasetPager from './DatasetPager';
 import YASQEViewer from '../object/viewer/individual/YASQEViewer';
+import {enableAuthentication} from '../../configs/general';
 
 class Dataset extends React.Component {
     constructor(props){
@@ -49,7 +50,7 @@ class Dataset extends React.Component {
                         <DatasetHeader config={dcnf} total ={this.props.total} datasetURI={this.props.datasetURI} searchMode={this.state.searchMode} resourcesLength={this.props.resources.length}/>
                         <div className="ui segments">
                             <div className="ui segment">
-                                <DatasetViewer enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={true} config={dcnf} cloneable={1} onCloneResource={this.props.onCloneResource}/>
+                                <DatasetViewer enableAuthentication={enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={true} config={dcnf} cloneable={1} onCloneResource={this.props.onCloneResource}/>
                             </div>
                             <div className="ui secondary segment">
                                 <DatasetPager onSearchMode={this.handleSearchMode.bind(this)} datasetURI={this.props.datasetURI} visibleResourcesTotal={this.props.resources.length} total={this.props.total} threshold={10} currentPage={this.props.page} maxNumberOfResourcesOnPage={dcnf.maxNumberOfResourcesOnPage}/>
