@@ -6,19 +6,12 @@ import FacetedBrowserStore from '../../stores/FacetedBrowserStore';
 import {connectToStores} from 'fluxible-addons-react';
 import createASampleFacetsConfig from '../../actions/createASampleFacetsConfig';
 import loadFacets from '../../actions/loadFacets';
-import ResourceList from './ResourceList';
-import ResourceListPager from './ResourceListPager';
-import YASQEViewer from '../object/viewer/individual/YASQEViewer';
-import URIUtil from '../utils/URIUtil';
-import {Popup} from 'semantic-ui-react';
+import DatasetFB from './DatasetFB';
 
 class FacetedBrowser extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {searchMode: 0, selection: {}, expandedFacet: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}};
-    }
-    handleSearchMode(searchMode) {
-        this.setState({searchMode: searchMode});
+        this.state = {selection: {}, expandedFacet: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}};
     }
     toggleFirstCol(){
         this.setState({hideFirstCol: !this.state.hideFirstCol})
@@ -366,54 +359,11 @@ class FacetedBrowser extends React.Component {
             if(this.state.expandedResources){
                 facetsDIV = '';
             }
-            let resourceDIV;
             let dcnf = this.props.FacetedBrowserStore.datasetConfig;
             let cnf = this.props.FacetedBrowserStore.config;
             let facetConfigs = this.getNecessaryFaccetsConfig();
-            let datasetTitle = <a target="_blank" href={this.props.FacetedBrowserStore.datasetURI}> {this.props.FacetedBrowserStore.datasetURI} </a>;
-            if(dcnf.datasetLabel){
-                datasetTitle = <a target="_blank" href={this.props.FacetedBrowserStore.datasetURI}> {dcnf.datasetLabel} </a>;
-            }
             if(dcnf.allowInlineConfig){
                 configDiv = <a onClick={this.createFConfig.bind(this, this.props.FacetedBrowserStore.datasetURI)} className="ui icon mini black circular button"><i className="ui settings icon"></i> </a>;
-            }
-            let typeSt, typesLink = [];
-            if(dcnf.resourceFocusType){
-                if(!dcnf.resourceFocusType.length || (dcnf.resourceFocusType.length && !dcnf.resourceFocusType[0]) ){
-                    typeSt = '';
-                }else{
-                    dcnf.resourceFocusType.forEach(function(uri) {
-                        typesLink.push(<a key={uri} className="ui black label" target="_blank" href={uri}> {URIUtil.getURILabel(uri)} </a>);
-                    });
-                    typeSt = typesLink;
-                }
-            }
-            let constraintSt, constraints = [];
-            if(dcnf.constraint){
-                for (let prop in dcnf.constraint){
-                    constraints.push(self.getPropertyLabel(prop) + ': ' + dcnf.constraint[prop].join(','));
-                }
-                constraintSt = constraints.join(' && ');
-            }
-            if(this.props.FacetedBrowserStore.total){
-                resourceDIV = <div className="ui">
-                    <h3 className="ui header">
-                        {this.props.FacetedBrowserStore.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.FacetedBrowserStore.datasetURI)}><span className="ui blue circular label">{this.state.searchMode ? this.addCommas(this.props.FacetedBrowserStore.resources.length) + '/' :''}{this.addCommas(this.props.FacetedBrowserStore.total)}</span></a> : ''} Resources {typeSt ? <span>of type{typeSt}</span>: ''} from {datasetTitle} {dcnf.constraint ? <span><Popup trigger={<i className="ui orange filter icon link "> </i>} content={constraintSt} wide position='bottom center' /></span>: ''}
-                    </h3>
-                    <div className="ui segments">
-                        <div className="ui segment">
-                            <ResourceList resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} OpenInNewTab={true} isBig={!showFactes} config={dcnf}/>
-                        </div>
-                        <div className= "ui secondary segment ">
-                            <ResourceListPager onSearchMode={this.handleSearchMode.bind(this)} visibleResourcesTotal={this.props.FacetedBrowserStore.resources.length} selection={{prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}} onExpandCollapse={this.toggleResourceCol.bind(this)} handleClick={this.gotoPage.bind(this)} datasetURI={this.props.FacetedBrowserStore.datasetURI} total={this.props.FacetedBrowserStore.total} threshold={pagerSize} currentPage={this.props.FacetedBrowserStore.page} maxNumberOfResourcesOnPage={dcnf.maxNumberOfResourcesOnPage}/>
-                        </div>
-                        {dcnf.displayQueries ?
-                            <div className= "ui tertiary segment">
-                                <YASQEViewer spec={{value: this.props.FacetedBrowserStore.resourceQuery}} />
-                            </div>
-                            : ''}
-                    </div>
-                </div>;
             }
             return (
                 <div className="ui fluid container ldr-padding" ref="facetedBrowser">
@@ -426,7 +376,7 @@ class FacetedBrowser extends React.Component {
                         }
                         {facetsDIV}
                         <div className={'ui stackable ' + resSize + ' wide column'}>
-                            {resourceDIV}
+                            <DatasetFB resourceQuery={this.props.FacetedBrowserStore.resourceQuery} config={dcnf} total={this.props.FacetedBrowserStore.total} pagerSize={pagerSize} currentPage={this.props.FacetedBrowserStore.page} resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} searchMode={this.state.searchMode} resourcesLength={this.props.FacetedBrowserStore.resources.length} isBig={!showFactes} selection={{prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}} onExpandCollapse={this.toggleResourceCol.bind(this)} handleClick={this.gotoPage.bind(this)}/>
                         </div>
                     </div>
                 </div>

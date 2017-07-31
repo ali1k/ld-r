@@ -127,6 +127,9 @@ class ResourceList extends React.Component {
         if (self.props.config && typeof self.props.config.allowResourceClone !== 'undefined' && parseInt(self.props.config.allowResourceClone)) {
             cloneable = 1;
         }
+        if(!self.props.cloneable){
+            cloneable = 0;
+        }
         if (!this.props.resources.length) {
             list = <div className="ui warning message">
                 <div className="header">
