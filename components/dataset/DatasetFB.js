@@ -4,6 +4,7 @@ import DatasetViewer from './DatasetViewer';
 import DatasetPager from './DatasetPager';
 import YASQEViewer from '../object/viewer/individual/YASQEViewer';
 import {enableAuthentication} from '../../configs/general';
+import json2csv from 'json2csv';
 
 class DatasetFB extends React.Component {
     constructor(props){
@@ -18,6 +19,13 @@ class DatasetFB extends React.Component {
         tmp.datasetViewer = [viewer];
         this.setState({config: tmp});
     }
+    handleExport(){
+        let fields = this.getPropsForAnalysis();
+        let csv = json2csv({ data: this.props.resources, fields: fields });
+        //console.log(csv);
+        let uriContent = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+        window.open(uriContent, 'data.csv');
+    }
     //it is required for providing different types of visualizations
     getNoOfPropsForAnalysis(){
         let out = 0;
@@ -28,8 +36,25 @@ class DatasetFB extends React.Component {
                     out = out + 1;
                 }
                 return out;
-            }else{
-                out = 0;
+            }
+        }
+        return out;
+    }
+    getPropsForAnalysis() {
+        let out = [];
+        let r = this.props.resources;
+        if(r.length){
+            out.push('v');//uri
+            if(r[0].title){
+                out.push('title')
+            }else if(r[0].label){
+                out.push('label')
+            }
+            if(r[0].propsForAnalysis){
+                for(let prop in r[0].propsForAnalysis){
+                    out.push('propsForAnalysis.'+prop);
+                }
+                return out;
             }
         }
         return out;
@@ -60,7 +85,7 @@ class DatasetFB extends React.Component {
                     <div className="ui segment">
                         <DatasetViewer enableAuthentication={enableAuthentication} cloneable={0} resources={this.props.resources} datasetURI={this.props.datasetURI} OpenInNewTab={true} isBig={this.props.isBig} config={dcnf}/>
                     </div>
-                    <DatasetPager config={dcnf} onSearchMode={this.handleSearchMode.bind(this)} selection={this.props.selection} onExpandCollapse={this.props.onExpandCollapse} handleClick={this.props.handleClick} datasetURI={this.props.datasetURI} total={this.props.total} threshold={this.props.pagerSize} currentPage={this.props.currentPage} noOfAnalysisProps={this.getNoOfPropsForAnalysis()} handleViewerChange={this.handleViewerChange.bind(this)}/>
+                    <DatasetPager config={dcnf} onSearchMode={this.handleSearchMode.bind(this)} selection={this.props.selection} onExpandCollapse={this.props.onExpandCollapse} handleClick={this.props.handleClick} datasetURI={this.props.datasetURI} total={this.props.total} threshold={this.props.pagerSize} currentPage={this.props.currentPage} noOfAnalysisProps={this.getNoOfPropsForAnalysis()} handleViewerChange={this.handleViewerChange.bind(this)} handleExport={this.handleExport.bind(this)}/>
                     {dcnf.displayQueries ?
                         <div className= "ui tertiary segment">
                             <YASQEViewer spec={{value: this.props.resourceQuery}} />

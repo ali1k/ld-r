@@ -48,6 +48,7 @@
     "hogan-express": "^0.5.2",
     "jqcloud2": "^2.0.3",
     "jquery": "^3.2.1",
+    "json2csv": "^3.10.0",
     "json3": "^3.3.2",
     "leaflet": "^1.1.0",
     "log": "^1.4.0",

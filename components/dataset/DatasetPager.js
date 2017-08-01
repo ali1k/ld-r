@@ -162,14 +162,17 @@ class DatasetPager extends React.Component {
                         </div>
                     </div>
                     <div className="right menu">
+                        {this.props.total ?
+                            <a title="Download" className='ui icon mini basic button right floated item' onClick={this.props.handleExport}><i className='icon download'></i></a>
+                            : ''}
                         <div className="item" title="actions">
                             <Dropdown selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={v_trigger} options={v_options} icon={null} floating />
                         </div>
-                        <a className='ui icon mini basic button right floated item ' onClick={this.onSearchClick.bind(this)}>
+                        <a className='ui icon mini basic button right floated item ' onClick={this.onSearchClick.bind(this)} title="search">
                             <i className='ui icon orange search'></i>
                         </a>
                         {this.props.onExpandCollapse ?
-                            <a className='ui icon mini basic button right floated item ' onClick={this.props.onExpandCollapse.bind(this)}>
+                            <a className='ui icon mini basic button right floated item ' onClick={this.props.onExpandCollapse.bind(this)} title="expand/collapse">
                                 <i className='ui icon expand'></i>
                             </a>
                             : ''}
