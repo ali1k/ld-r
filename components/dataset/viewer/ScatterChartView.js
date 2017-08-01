@@ -20,7 +20,9 @@ class ScatterChartView extends React.Component {
         }
         return {x: x, y: y, xLabel: xLabel, yLabel: yLabel};
     }
-
+    handleNodeClick(params){
+        console.log(params);
+    }
     renderTooltip(params){
         if(params.payload.length){
             return (
@@ -87,7 +89,7 @@ class ScatterChartView extends React.Component {
                     <ScatterChart margin={{top: 0, right: 10, left: 0, bottom: 0}}>
                       	<XAxis dataKey={'x'} name={xLabel} type={xType} />
                       	<YAxis dataKey={'y'} name={yLabel} type={yType} />
-                      	<Scatter name='Chart' data={instances} fill='#1a75ff' />
+                      	<Scatter name='Chart' data={instances} fill='#1a75ff' onClick={this.handleNodeClick.bind(this)}/>
                       	<CartesianGrid trokeDasharray="3 3"/>
                       	<Tooltip cursor={{strokeDasharray: '3 3'}} content={this.renderTooltip.bind(this)}/>
                     </ScatterChart>
