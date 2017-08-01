@@ -182,7 +182,7 @@ class BasicResourceList extends React.Component {
                 dtableCells = [];
                 if(self.checkAnalysisProps()){
                     for(let prop in node.propsForAnalysis){
-                        dtableCells.push(<Table.Cell key={'c'+prop}>{node.propsForAnalysis[prop]}</Table.Cell>);
+                        dtableCells.push(<Table.Cell key={'c'+prop} title={node.propsForAnalysis[prop]}>{URIUtil.getURILabel(node.propsForAnalysis[prop])}</Table.Cell>);
                     }
                     resourceDIV =
                         <Table.Row key={index}>
