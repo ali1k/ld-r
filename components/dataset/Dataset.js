@@ -8,10 +8,15 @@ import {enableAuthentication} from '../../configs/general';
 class Dataset extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchMode: 0};
+        this.state = {searchMode: 0, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : ''};
     }
     handleSearchMode(searchMode) {
         this.setState({searchMode: searchMode});
+    }
+    handleViewerChange(viewer) {
+        let tmp = this.state.config;
+        tmp.datasetViewer = [viewer];
+        this.setState({config: tmp});
     }
     componentDidMount() {
     }
@@ -52,9 +57,7 @@ class Dataset extends React.Component {
                             <div className="ui segment">
                                 <DatasetViewer enableAuthentication={enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={true} config={dcnf} cloneable={1} onCloneResource={this.props.onCloneResource}/>
                             </div>
-                            <div className="ui secondary segment">
-                                <DatasetPager onSearchMode={this.handleSearchMode.bind(this)} datasetURI={this.props.datasetURI} visibleResourcesTotal={this.props.resources.length} total={this.props.total} threshold={10} currentPage={this.props.page} maxNumberOfResourcesOnPage={dcnf.maxNumberOfResourcesOnPage}/>
-                            </div>
+                            <DatasetPager config={dcnf} onSearchMode={this.handleSearchMode.bind(this)} datasetURI={this.props.datasetURI} visibleResourcesTotal={this.props.resources.length} total={this.props.total} threshold={10} currentPage={this.props.page}  handleViewerChange={this.handleViewerChange.bind(this)}/>
                             {dcnf && dcnf.displayQueries ?
                                 <div className= "ui tertiary segment">
                                     <YASQEViewer spec={{value: this.props.resourceQuery}} />
