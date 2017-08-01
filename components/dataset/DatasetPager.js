@@ -73,7 +73,7 @@ class DatasetPager extends React.Component {
     render() {
         let self = this;
         let v_icons = {};
-        const defaultViewIcon = 'list layout';
+        let defaultViewIcon = 'list layout';
         let v_options = [];
         //menu is customized if there are props for analysis
         if(this.props.noOfAnalysisProps && this.props.noOfAnalysisProps > 1){
@@ -85,6 +85,7 @@ class DatasetPager extends React.Component {
                 'BasicResourceList': 'table',
                 'ScatterChartView': 'line chart'
             };
+            defaultViewIcon = 'table';
         }else{
             v_options = [
                 { key: 1, text:  'List', value: 'BasicResourceList' }
