@@ -77,7 +77,7 @@ class ScatterChartView extends React.Component {
                     yLabel = xyz.yLabel;
                 }
                 //2D
-                instances.push({title: title , x: Number(xyz.x), y: Number(xyz.y)});
+                instances.push({uri: node.v, title: title , x: Number(xyz.x), y: Number(xyz.y)});
             });
             //console.log(instances);
         }
