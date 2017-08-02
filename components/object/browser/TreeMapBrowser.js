@@ -1,6 +1,6 @@
 import React from 'react';
 import URIUtil from '../../utils/URIUtil';
-import chroma from 'chroma-js';
+//import chroma from 'chroma-js';
 //import TagListBrowser from './TagListBrowser';
 import {Treemap, Tooltip, Legend, Cell, ResponsiveContainer} from 'recharts';
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import BasicResourceList from './viewer/BasicResourceList';
 import ScatterChartView from './viewer/ScatterChartView';
+import TreeMapView from './viewer/TreeMapView';
 
 class DatasetViewer extends React.Component {
     render() {
@@ -16,6 +17,9 @@ class DatasetViewer extends React.Component {
                 break;
             case 'ScatterChartView':
                 viewer = <ScatterChartView enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={this.props.isBig} config={this.props.config} cloneable={this.props.cloneable} onCloneResource={this.props.onCloneResource} OpenInNewTab={this.props.OpenInNewTab}/>;
+                break;
+            case 'TreeMapView':
+                viewer = <TreeMapView enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={this.props.isBig} config={this.props.config} cloneable={this.props.cloneable} onCloneResource={this.props.onCloneResource} OpenInNewTab={this.props.OpenInNewTab}/>;
                 break;
             default:
                 viewer = <BasicResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={this.props.isBig} config={this.props.config} cloneable={this.props.cloneable} onCloneResource={this.props.onCloneResource} OpenInNewTab={this.props.OpenInNewTab}/>;

@@ -79,10 +79,12 @@ class DatasetPager extends React.Component {
         if(this.props.noOfAnalysisProps && this.props.noOfAnalysisProps > 1){
             v_options = [
                 { key: 1, text:  'Table', value: 'BasicResourceList' },
-                { key: 2, text:  'Scatter Chart', value: 'ScatterChartView' }
+                { key: 2, text:  'Tree Map', value: 'TreeMapView' },
+                { key: 3, text:  'Scatter Chart', value: 'ScatterChartView' }
             ]
             v_icons = {
                 'BasicResourceList': 'table',
+                'TreeMapView': 'grid layout',
                 'ScatterChartView': 'line chart'
             };
             defaultViewIcon = 'table';
