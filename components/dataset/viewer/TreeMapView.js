@@ -26,7 +26,7 @@ class TreeMapView extends React.Component {
         if(params.payload.length){
             return (
                 <div className="ui compact info message">
-                    {xLabel}: <b>{params.payload[0].payload.root.name}</b>
+                    {xLabel}: <b>{URIUtil.getURILabel(params.payload[0].payload.root.name)}</b>
                     <br/>
                     {yLabel}: <b>{URIUtil.getURILabel(params.payload[0].name)}</b>
                 </div>
