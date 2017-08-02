@@ -28,7 +28,7 @@ class TreeMapView extends React.Component {
                 <div className="ui compact info message">
                     {xLabel}: <b>{params.payload[0].payload.root.name}</b>
                     <br/>
-                    {yLabel}: <b>{params.payload[0].name}</b>
+                    {yLabel}: <b>{URIUtil.getURILabel(params.payload[0].name)}</b>
                 </div>
             );
         } else {
@@ -44,7 +44,7 @@ class TreeMapView extends React.Component {
                 {
                     depth === 1 ?
                         <text x={x + width / 2} y={y + height / 2 + 7} textAnchor="middle" fill="#fff" fontSize={14} >
-                            {name}
+                            {URIUtil.getURILabel(name)}
                         </text>
                         : null
                 }
