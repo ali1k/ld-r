@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import URIUtil from '../../utils/URIUtil';
 import {Treemap, Tooltip, Legend, Cell, ResponsiveContainer} from 'recharts';
 import chroma from 'chroma-js';
-
+//----handling colors
+let treemap_xCat = [];
+let treemap_yCat = [];
+let treemap_all_colors = [];
+//------
 class TreeMapView extends React.Component {
     componentDidMount() {}
     getXYZ(propsForAnalysis){
@@ -21,14 +25,22 @@ class TreeMapView extends React.Component {
         }
         return {x: x, y: y, xLabel: xLabel, yLabel: yLabel};
     }
-
+    prepareColors(l1, l2){
+        //const colors = chroma.scale(['#fafa6e','#2A4858']).mode('lch').colors(l1);
+        const colors = chroma.cubehelix().start(200).rotations(-0.35).gamma(0.7).lightness([0.7, 1]).scale().correctLightness().colors(l1);
+        //const sub_colors = chroma.scale(['#1a75ff', 'grey']).mode('lch').colors(l2);
+        //const sub_colors = chroma.scale('OrRd').colors(l2);
+        //const sub_colors = chroma.cubehelix().start(200).rotations(-0.35).gamma(0.7).lightness([0.4, 0.85]).scale().correctLightness().colors(l2);
+        const sub_colors = chroma.scale(['green', 'yellow', 'teal', 'blue']).mode('lch').colors(l2)
+        return [colors, sub_colors];
+    }
     renderTooltip(xLabel, yLabel, params){
         if(params.payload.length){
             return (
                 <div className="ui compact info message">
                     {xLabel}: <b>{URIUtil.getURILabel(params.payload[0].payload.root.name)}</b>
                     <br/>
-                    {yLabel}: <b>{URIUtil.getURILabel(params.payload[0].name)}({params.payload[0].payload.size})</b>
+                    {yLabel}: <b>{URIUtil.getURILabel(params.payload[0].name)} ({params.payload[0].payload.size})</b>
                 </div>
             );
         } else {
@@ -36,11 +48,9 @@ class TreeMapView extends React.Component {
         }
     }
     renderCustomizedLabel({ root, depth, x, y, width, height, index, payload, colors, rank, name })  {
-        const COLORSP = chroma.scale(['#fafa6e','#2A4858']).mode('lch').colors(50);
-        let sub_colors = chroma.scale(['#1a75ff', 'grey']).colors(100);
         return  (
             <g>
-                <rect x={x} y={y} width={width} height={height} style={{ opacity: depth < 2 ? 1 : 0.15, fill: depth < 2 ? COLORSP[Math.floor(index / root.children.length * 50)] : sub_colors[Math.floor(index / root.children.length * 100)], stroke: '#fff', strokeWidth: 2 / (depth + 1e-10), strokeOpacity: 1 / (depth + 1e-10),}} />
+                <rect x={x} y={y} width={width} height={height} style={{ opacity: depth < 2 ? 1 : 0.85, fill: depth < 2 ? '#000' : treemap_all_colors[1][treemap_yCat.indexOf(name)], stroke: '#000', strokeWidth: depth <2 ? 8 : 3 / (depth + 1e-10), strokeOpacity: 1 / (depth + 1e-10),}} />
                 {
                     depth === 1 ?
                         <text x={x + width / 2} y={y + height / 2 + 7} textAnchor="middle" fill="#fff" fontSize={14} >
@@ -50,7 +60,7 @@ class TreeMapView extends React.Component {
                 }
                 {
                     depth === 1 ?
-                        <text x={x + 4} y={y + 18} fill="#fff" fontSize={12} fillOpacity={0.9} >
+                        <text x={x + 4} y={y + 18} fill="#fff" fontSize={12} fillOpacity={0.7} >
                             {index + 1}
                         </text>
                         : null
@@ -91,8 +101,11 @@ class TreeMapView extends React.Component {
             });
             //group by variable x
             let tmp ={};
+            treemap_xCat = [];
+            treemap_yCat = [];
             instances.forEach((node, index) => {
                 if(!tmp[node.x]){
+                    treemap_xCat.push(node.x);
                     tmp[node.x]={};
                     tmp[node.x][node.y] = 1;
                 }else{
@@ -102,7 +115,13 @@ class TreeMapView extends React.Component {
                         tmp[node.x][node.y] = 1;
                     }
                 }
+                if(treemap_yCat.indexOf(node.y)=== -1){
+                    treemap_yCat.push(node.y);
+                }
             });
+            //generate unique colors for each main and sub categories
+            treemap_all_colors = this.prepareColors(treemap_xCat.length, treemap_yCat.length);
+            //console.log(treemap_xCat, treemap_yCat);
             let children= [];
             for(let prop in tmp){
                 children = [];

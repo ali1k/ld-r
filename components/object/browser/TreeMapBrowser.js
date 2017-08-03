@@ -45,10 +45,18 @@ class TreeMapBrowser extends React.Component {
             </g>
         );
     }
-    renderCustomizedLabel2({ root, depth, x, y, width, height, index, payload, colors, rank, title })  {
+    renderCustomizedLabel({ root, depth, x, y, width, height, index, payload, colors, rank, title, isSelected})  {
+        let expanded = this.props.expanded ? 1 : 0;
         return  (
             <g>
-                <rect x={x} y={y} width={width} height={height} />
+                <rect x={x} y={y} width={width} height={height} style={{ opacity: depth < 2 ? 1 : 0.85, fill: isSelected ? '#82ca9d' : '#1a75ff', stroke: '#fff', strokeWidth:  2 / (1 + 1e-10), strokeOpacity: 1 / (1 + 1e-10),}} />
+                {
+                    expanded === 1 ?
+                        <text x={x + width / 2} y={y + height / 2 + 7} textAnchor="middle" fill="#fff" fontSize={14} >
+                            {title}
+                        </text>
+                        : null
+                }
             </g>
         );
     }
@@ -73,7 +81,7 @@ class TreeMapBrowser extends React.Component {
         return (
             <div>
                 <ResponsiveContainer width="97%" height={height}>
-                    <Treemap data={data} dataKey="total" nameKey="title" ratio={4/3} stroke="#fff"  fill="#1a75ff" content={this.props.expanded ? this.renderCustomizedLabel : this.renderCustomizedLabel2} onClick={this.selectItem.bind(this)}>
+                    <Treemap data={data} dataKey="total" nameKey="title" ratio={4/3} stroke="#fff"  fill="#1a75ff" content={this.renderCustomizedLabel.bind(this)} onClick={this.selectItem.bind(this)}>
                         <Tooltip />
                     </Treemap>
                 </ResponsiveContainer>

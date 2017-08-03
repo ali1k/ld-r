@@ -173,7 +173,7 @@ class Facet extends React.Component {
         b_options.push({ key: 30, text:  'Default', value: 'Default' });
         const d_trigger = (
             <span>
-                <Icon name='lightning' className="orange"/>
+                <Icon name='lab' className="orange"/>
             </span>
         );
         const browserIcons = {
