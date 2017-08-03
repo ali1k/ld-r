@@ -25,6 +25,16 @@ class Facet extends React.Component {
     checkItem(status, value) {
         this.props.onCheck(status, value, this.props.spec.propertyURI);
     }
+    checkGeoFeatures(){
+        let check, out = 0;
+        if(this.props.spec.instances.length){
+            check = this.props.spec.instances[0].value;
+            if(check.indexOf('POINT') !==-1 || check.indexOf('MULTIPOLYGON')!==-1 || check.indexOf('POLYGON')!==-1){
+                out = 1;
+            }
+        }
+        return out;
+    }
     handleShowMore() {
         //add next 500 rows if exist
         this.props.onShowMore(this.state.page+1);
@@ -154,9 +164,13 @@ class Facet extends React.Component {
             { key: 2, text:  'Tag List', value: 'TagListBrowser' },
             { key: 3, text:  'Bar Chart', value: 'BarChartBrowser' },
             { key: 4, text:  'Pie Chart', value: 'PieChartBrowser' },
-            { key: 5, text:  'Tree Map', value: 'TreeMapBrowser' },
-            { key: 6, text:  'Default', value: 'Default' }
+            { key: 5, text:  'Tree Map', value: 'TreeMapBrowser' }
         ]
+        let check = this.checkGeoFeatures();
+        if(check){
+            b_options.push({ key: 6, text:  'Map', value: 'GeoListBrowser' });
+        }
+        b_options.push({ key: 30, text:  'Default', value: 'Default' });
         const d_trigger = (
             <span>
                 <Icon name='lightning' className="orange"/>
@@ -167,7 +181,8 @@ class Facet extends React.Component {
             'TagListBrowser': 'block layout',
             'BarChartBrowser': 'bar chart',
             'PieChartBrowser': 'pie chart',
-            'TreeMapBrowser': 'grid layout'
+            'TreeMapBrowser': 'grid layout',
+            'GeoListBrowser': 'map'
 
         };
         const defaultBrowseIcon = 'list layout';
