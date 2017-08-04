@@ -61,6 +61,33 @@ class RadarChartView extends React.Component {
                     instances.push({uri: node.v, title: title , x: xyz.x, y: Number(xyz.y)});
                 }
             });
+            //group by variable x
+            let tmp ={};
+            instances.forEach((node, index) => {
+                if(!tmp[node.x]){
+                    tmp[node.x]={};
+                    tmp[node.x][yLabel] = node.y;
+                    if(zLabel){
+                        tmp[node.x][zLabel] = node.z;
+                    }
+                }else{
+                    //aggregate the numbers in terms of multiple instance
+                    tmp[node.x][yLabel] = tmp[node.x][yLabel] + node.y;
+                    if(zLabel){
+                        tmp[node.x][zLabel] = tmp[node.x][zLabel] + node.z;
+                    }
+                }
+            });
+            let data2 = [];
+            for(let prop in tmp){
+                if(zLabel){
+                    data2.push({x: prop, y: tmp[prop][yLabel], z: tmp[prop][zLabel]});
+                }else{
+                    data2.push({x: prop, y: tmp[prop][yLabel]});
+                }
+
+            }
+            instances = data2;
         }
         //console.log(xType, yType);
         let height = 500;
