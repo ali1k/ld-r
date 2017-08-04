@@ -110,6 +110,8 @@ class FacetedBrowser extends React.Component {
         this.context.executeAction(loadFacets, {mode: 'masterMore', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, selection: {propertyURI: propertyURI, value: propertyURI, status: 1, prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range}}, fpage: fpage});
     }
     handleAnalysisProps(propertyURI){
+        //revert showAll on facet interactions
+        this.state.showAllResources = 0;
         let self = this;
         let facetConfigs = self.getNecessaryFaccetsConfig();
         if(!this.state.analysisProps[propertyURI]){
@@ -133,6 +135,8 @@ class FacetedBrowser extends React.Component {
         */
     }
     handleToggleInvert(propertyURI){
+        //revert showAll on facet interactions
+        this.state.showAllResources = 0;
         //todo: only if an item is selected inversion works
         let self = this;
         let facetConfigs = self.getNecessaryFaccetsConfig();
@@ -157,6 +161,8 @@ class FacetedBrowser extends React.Component {
         });
     }
     handleToggleRange(propertyURI, rangeObj){
+        //revert showAll on facet interactions
+        this.state.showAllResources = 0;
         let self = this;
         //we can inject some config to the queries e.g. to force a certain data types
         let facetConfigs = self.getNecessaryFaccetsConfig();
