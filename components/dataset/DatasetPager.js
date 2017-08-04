@@ -8,7 +8,7 @@ import {Dropdown, Icon} from 'semantic-ui-react';
 class DatasetPager extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchTerm: '', searchMode: 0, showAll: 0, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : ''};
+        this.state = {searchTerm: '', searchMode: 0, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : ''};
     }
     componentDidMount() {
     }
@@ -37,12 +37,13 @@ class DatasetPager extends React.Component {
         this.props.handleViewerChange(data.value);
     }
     onShowAllClick(){
-        if(this.state.showAll){
+        if(this.props.showAllResources){
             this.searchOnDataset('');
         }else{
             this.searchOnDataset('ldr_showAll');
         }
-        this.setState({showAll: !this.state.showAll});
+        this.props.onShowAllResources();
+
     }
     onSearchClick(){
         this.props.onSearchMode(!this.state.searchMode);
@@ -149,14 +150,14 @@ class DatasetPager extends React.Component {
                 <div className="ui bottom attached compact secondary menu" ref="datasetPager">
                     <div className="left menu">
                         <div className='item'>
-                            {this.state.showAll ?
+                            {this.props.showAllResources ?
                                 ''
                                 :
                                 <span>{totalPages} Page(s): {pageList} &nbsp;</span>
                             }
                             {totalPages > 1 && this.props.total<= 10000 ?
-                                <a className={'ui icon mini button ' + (this.state.showAll ? 'blue': 'basic')} onClick={this.onShowAllClick.bind(this)}>
-                                    {this.state.showAll ? 'go back to pagination' : 'show all'}
+                                <a className={'ui icon mini button ' + (this.props.showAllResources ? 'blue': 'basic')} onClick={this.onShowAllClick.bind(this)}>
+                                    {this.props.showAllResources ? 'go back to pagination' : 'show all'}
                                 </a>
                                 :
                                 ''

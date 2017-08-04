@@ -9,10 +9,13 @@ import json2csv from 'json2csv';
 class Dataset extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchMode: 0, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : ''};
+        this.state = {searchMode: 0, showAllResources: 0, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : ''};
     }
     handleSearchMode(searchMode) {
         this.setState({searchMode: searchMode});
+    }
+    toggleShowAllResources() {
+        this.setState({showAllResources: !this.state.showAllResources});
     }
     handleExport(){
         let fields = this.getPropsForAnalysis();
@@ -84,7 +87,7 @@ class Dataset extends React.Component {
                             <div className="ui segment">
                                 <DatasetViewer enableAuthentication={enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={true} config={dcnf} cloneable={1} onCloneResource={this.props.onCloneResource}/>
                             </div>
-                            <DatasetPager config={dcnf} onSearchMode={this.handleSearchMode.bind(this)} datasetURI={this.props.datasetURI} visibleResourcesTotal={this.props.resources.length} total={this.props.total} threshold={10} currentPage={this.props.page}  handleViewerChange={this.handleViewerChange.bind(this)} handleExport={this.handleExport.bind(this)}/>
+                            <DatasetPager config={dcnf} showAllResources={this.state.showAllResources} onShowAllResources={this.toggleShowAllResources.bind(this)} onSearchMode={this.handleSearchMode.bind(this)} datasetURI={this.props.datasetURI} visibleResourcesTotal={this.props.resources.length} total={this.props.total} threshold={10} currentPage={this.props.page}  handleViewerChange={this.handleViewerChange.bind(this)} handleExport={this.handleExport.bind(this)}/>
                             {dcnf && dcnf.displayQueries ?
                                 <div className= "ui tertiary segment">
                                     <YASQEViewer spec={{value: this.props.resourceQuery}} />

@@ -11,10 +11,13 @@ import DatasetFB from './DatasetFB';
 class FacetedBrowser extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {selection: {}, expandedFacet: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}};
+        this.state = {selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}};
     }
     toggleFirstCol(){
         this.setState({hideFirstCol: !this.state.hideFirstCol})
+    }
+    toggleShowAllResources(){
+        this.setState({showAllResources: !this.state.showAllResources})
     }
     toggleResourceCol(){
         this.setState({hideFirstCol: !this.state.hideFirstCol, expandedResources: !this.state.expandedResources})
@@ -181,6 +184,8 @@ class FacetedBrowser extends React.Component {
         });
     }
     handleOnCheck(level, valueType, dataType, status, value, propertyURI) {
+        //revert showAll on facet interactions
+        this.state.showAllResources = 0;
         // console.log(level, valueType, dataType, status, value, propertyURI);
         let self = this;
         //--add facet configs to queries
@@ -376,7 +381,7 @@ class FacetedBrowser extends React.Component {
                         }
                         {facetsDIV}
                         <div className={'ui stackable ' + resSize + ' wide column'}>
-                            <DatasetFB resourceQuery={this.props.FacetedBrowserStore.resourceQuery} config={dcnf} total={this.props.FacetedBrowserStore.total} pagerSize={pagerSize} currentPage={this.props.FacetedBrowserStore.page} resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} searchMode={this.state.searchMode} resourcesLength={this.props.FacetedBrowserStore.resources.length} isBig={!showFactes} selection={{prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}} onExpandCollapse={this.toggleResourceCol.bind(this)} handleClick={this.gotoPage.bind(this)}/>
+                            <DatasetFB showAllResources={this.state.showAllResources} resourceQuery={this.props.FacetedBrowserStore.resourceQuery} config={dcnf} total={this.props.FacetedBrowserStore.total} pagerSize={pagerSize} currentPage={this.props.FacetedBrowserStore.page} resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} searchMode={this.state.searchMode} resourcesLength={this.props.FacetedBrowserStore.resources.length} isBig={!showFactes} selection={{prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}} onExpandCollapse={this.toggleResourceCol.bind(this)} onShowAllResources={this.toggleShowAllResources.bind(this)} handleClick={this.gotoPage.bind(this)}/>
                         </div>
                     </div>
                 </div>
