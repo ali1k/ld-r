@@ -97,15 +97,14 @@ class BarChartView extends React.Component {
                     <BarChart data={instances}
                         margin={{top: 0, right: 10, left: 0, bottom: 0}}>
                         <XAxis dataKey="x"/>
-                        <YAxis name={yLabel} label={yLabel}/>
+                        <YAxis/>
                         <Tooltip/>
-                        <Bar dataKey="y" fill="#1a75ff">
-                            {
-                                data.map((entry, index) => (
-                                    <Cell cursor="pointer" fill={'#1a75ff'} key={`cell-${index}`}/>
-                                ))
-                            }
+                        <Bar dataKey="y" fill="#8884d8">
                         </Bar>
+                        {zLabel ?
+                            <Bar dataKey="z" fill="#82ca9d">
+                            </Bar>
+                            : null}
                     </BarChart>
                 </ResponsiveContainer>
             </div>
