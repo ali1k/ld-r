@@ -262,11 +262,11 @@ export default {
                             });
                         }).catch(function (err2) {
                             console.log(err2);
-                            callback(null, {datasetURI: datasetURI, graphName: graphName, facets: {}, total: 0, page: 1, resourceQuery: query2});
+                            callback(null, {datasetURI: datasetURI, graphName: graphName, resourceFocusType: rftconfig.type, facets: {items: []}, total: 0, page: 1, resourceQuery: query2});
                         });
                     }).catch(function (err) {
                         console.log(err);
-                        callback(null, {datasetURI: datasetURI, graphName: graphName, facets: {}, total: 0, page: 1, resourceQuery: ''});
+                        callback(null, {datasetURI: datasetURI, graphName: graphName, resourceFocusType: rftconfig.type, facets: {items: []}, total: 0, page: 1, resourceQuery: query2});
                     });
                 });
             });
