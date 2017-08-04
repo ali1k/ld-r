@@ -82,12 +82,14 @@ class DatasetPager extends React.Component {
                 { key: 1, text:  'Table', value: 'BasicResourceList' },
                 { key: 2, text:  'Tree Map', value: 'TreeMapView' },
                 { key: 3, text:  'Scatter Chart', value: 'ScatterChartView' },
-                { key: 4, text:  'Radar Chart', value: 'RadarChartView' }
+                { key: 4, text:  'Bar Chart', value: 'BarChartView' },
+                { key: 5, text:  'Radar Chart', value: 'RadarChartView' }
             ]
             v_icons = {
                 'BasicResourceList': 'table',
                 'TreeMapView': 'grid layout',
                 'ScatterChartView': 'line chart',
+                'BarChartView': 'bar chart',
                 'RadarChartView': 'bullseye'
             };
             defaultViewIcon = 'table';
