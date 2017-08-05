@@ -69,8 +69,11 @@ class FacetUtil{
             }
             propsForAnalysis = {};
             aprops.forEach(function(ap) {
-                if(el[ap].value){
+                if(el[ap] && el[ap].value){
                     propsForAnalysis[ap.replace('ldr_ap', '')] = el[ap].value;
+                }else{
+                    //missing values
+                    propsForAnalysis[ap.replace('ldr_ap', '')] = '--m--';
                 }
             });
             output.push({v: el.s.value, label: self.getPropertyLabel(el.s.value), title: (el.title && el.title.value ? el.title.value : ''), image: el.image ? el.image.value : '', geo: el.geo ? el.geo.value : '', d: datasetURI, accessLevel: accessLevel, propsForAnalysis: propsForAnalysis});

@@ -556,14 +556,37 @@ class FacetQuery{
         //console.log(this.query);
         return this.prefixes + this.query;
     }
+    handleAnalysisProps(options, endpointParameters, graphName, type){
+        let self = this;
+        let apLabel = '', analysisSelector = '', analysisPhrase = '', aCounter = 0;
+        if(options && options.analysisProps){
+            for(let prop in options.analysisProps){
+                aCounter++;
+                apLabel = 'ldr_ap'+aCounter+'_' + self.getPropertyLabel(prop);
+                analysisSelector = analysisSelector + ' ?' + apLabel;
+                if(self.isMultiGraphFacet(prop)){
+                    //to support browsing mutiple graphs
+                    analysisPhrase = analysisPhrase + self.prepareMultiGraphQuery(endpointParameters, graphName, type, prop, '', '', apLabel);
+                }else{
+                    analysisPhrase = analysisPhrase + '?s ' + self.filterPropertyPath(prop) + ' ?' + apLabel + ' .';
+                }
+            }
+        }
+        //todo: OPTIONAL for missing values
+        return {analysisPhrase: analysisPhrase, analysisSelector: analysisSelector};
+    }
     countSecondLevelPropertyValues(endpointParameters, graphName, rconfig, prevSelection, options) {
         let type = rconfig.type;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, rconfig, options);
+        //handle analysis props
+        let {analysisPhrase} = this.handleAnalysisProps(options, endpointParameters, graphName, type);
+        //---------------------
         this.query = `
         SELECT (count(DISTINCT ?s) AS ?total) WHERE {
             ${gStart}
                 ${st}
+                ${analysisPhrase}
             ${gEnd}
         }
         `;
@@ -589,24 +612,11 @@ class FacetQuery{
             if(searchTerm === 'ldr_showAll'){
                 searchPhase =' ';
             }else{
-                searchPhase = 'FILTER( regex(?title, "'+searchTerm+'", "i") || regex(STR(?s), "'+searchTerm+'", "i"))';    
+                searchPhase = 'FILTER( regex(?title, "'+searchTerm+'", "i") || regex(STR(?s), "'+searchTerm+'", "i"))';
             }
         }
         //handle analysis props
-        let apLabel = '', analysisSelector = '', analysisPhrase = '', aCounter = 0;
-        if(options && options.analysisProps){
-            for(let prop in options.analysisProps){
-                aCounter++;
-                apLabel = 'ldr_ap'+aCounter+'_' + self.getPropertyLabel(prop);
-                analysisSelector = analysisSelector + ' ?' + apLabel;
-                if(self.isMultiGraphFacet(prop)){
-                    //to support browsing mutiple graphs
-                    analysisPhrase = analysisPhrase + self.prepareMultiGraphQuery(endpointParameters, graphName, type, prop, '', '', apLabel);
-                }else{
-                    analysisPhrase = analysisPhrase + '?s ' + self.filterPropertyPath(prop) + ' ?' + apLabel + ' .';
-                }
-            }
-        }
+        let {analysisSelector, analysisPhrase} = self.handleAnalysisProps(options, endpointParameters, graphName, type);
         //---------------------
         //add labels for entities
         if(labelProperty && labelProperty.length){
@@ -654,7 +664,12 @@ class FacetQuery{
                     }
                     ${limitOffsetPharse}
                 }
-                ${titleStr} ${imageStr} ${geoStr} ${analysisPhrase} ${bindPhase} ${searchPhase}
+                ${titleStr}
+                ${imageStr}
+                ${geoStr}
+                ${analysisPhrase}
+                ${bindPhase}
+                ${searchPhase}
             ${gEnd}
         }
         `;
