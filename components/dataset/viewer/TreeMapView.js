@@ -31,7 +31,12 @@ class TreeMapView extends React.Component {
         //const sub_colors = chroma.scale(['#1a75ff', 'grey']).mode('lch').colors(l2);
         //const sub_colors = chroma.scale('OrRd').colors(l2);
         //const sub_colors = chroma.cubehelix().start(200).rotations(-0.35).gamma(0.7).lightness([0.4, 0.85]).scale().correctLightness().colors(l2);
-        const sub_colors = chroma.scale(['green', 'yellow', 'teal', 'blue']).mode('lch').colors(l2)
+        //const sub_colors = chroma.scale(['green', 'yellow', 'teal', 'blue']).mode('lch').colors(l2)
+        let rc, sub_colors = [];
+        for(let i=1; i<= l2; i++){
+            rc = chroma.random();
+            sub_colors.push(rc);
+        }
         return [colors, sub_colors];
     }
     renderTooltip(xLabel, yLabel, params){
