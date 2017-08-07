@@ -4,6 +4,7 @@ import ScatterChartView from './viewer/ScatterChartView';
 import TreeMapView from './viewer/TreeMapView';
 import RadarChartView from './viewer/RadarChartView';
 import BarChartView from './viewer/BarChartView';
+import NetworkView from './viewer/NetworkView';
 
 class DatasetViewer extends React.Component {
     render() {
@@ -28,6 +29,9 @@ class DatasetViewer extends React.Component {
                 break;
             case 'BarChartView':
                 viewer = <BarChartView enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={this.props.isBig} config={this.props.config} cloneable={this.props.cloneable} onCloneResource={this.props.onCloneResource} OpenInNewTab={this.props.OpenInNewTab}/>;
+                break;
+            case 'NetworkView':
+                viewer = <NetworkView enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={this.props.isBig} config={this.props.config} cloneable={this.props.cloneable} onCloneResource={this.props.onCloneResource} OpenInNewTab={this.props.OpenInNewTab}/>;
                 break;
             default:
                 viewer = <BasicResourceList enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={this.props.isBig} config={this.props.config} cloneable={this.props.cloneable} onCloneResource={this.props.onCloneResource} OpenInNewTab={this.props.OpenInNewTab}/>;

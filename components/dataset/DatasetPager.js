@@ -83,23 +83,36 @@ class DatasetPager extends React.Component {
                 { key: 2, text:  'Tree Map', value: 'TreeMapView' },
                 { key: 3, text:  'Scatter Chart', value: 'ScatterChartView' },
                 { key: 4, text:  'Bar Chart', value: 'BarChartView' },
-                { key: 5, text:  'Radar Chart', value: 'RadarChartView' }
+                { key: 5, text:  'Radar Chart', value: 'RadarChartView' },
+                { key: 6, text:  'Network Diagram', value: 'NetworkView' }
             ]
             v_icons = {
                 'BasicResourceList': 'table',
                 'TreeMapView': 'grid layout',
                 'ScatterChartView': 'line chart',
                 'BarChartView': 'bar chart',
-                'RadarChartView': 'bullseye'
+                'RadarChartView': 'bullseye',
+                'NetworkView': 'share alternate'
             };
             defaultViewIcon = 'table';
         }else{
-            v_options = [
-                { key: 1, text:  'List', value: 'BasicResourceList' }
-            ]
-            v_icons = {
-                'BasicResourceList': 'list layout'
-            };
+            if(this.props.noOfAnalysisProps && this.props.noOfAnalysisProps === 1){
+                v_options = [
+                    { key: 1, text:  'List', value: 'BasicResourceList' },
+                    { key: 2, text:  'Network Diagram', value: 'NetworkView' }
+                ];
+                v_icons = {
+                    'BasicResourceList': 'list layout',
+                    'NetworkView': 'share alternate'
+                };
+            }else{
+                v_options = [
+                    { key: 1, text:  'List', value: 'BasicResourceList' }
+                ];
+                v_icons = {
+                    'BasicResourceList': 'list layout'
+                };
+            }
         }
         let iconC =  (this.state.config && this.state.config.datasetViewer) ? (v_icons[this.state.config.datasetViewer] ? v_icons[this.state.config.datasetViewer] : defaultViewIcon) : defaultViewIcon;
         const v_trigger = (
