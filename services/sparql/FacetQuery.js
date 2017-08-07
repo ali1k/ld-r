@@ -660,6 +660,7 @@ class FacetQuery{
                     SELECT DISTINCT ?s WHERE {
                         ${gStart}
                             ${st}
+                            ${analysisPhrase}
                         ${gEnd}
                     }
                     ${limitOffsetPharse}
