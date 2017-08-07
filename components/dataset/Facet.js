@@ -44,6 +44,18 @@ class Facet extends React.Component {
         this.setState({expanded: !this.state.expanded});
         this.props.toggleExpandFacet(this.props.spec.propertyURI);
     }
+    handleToggleShowQuery() {
+        let tmp = this.state.config;
+        if(!this.state.config){
+            tmp ={};
+        }
+        if(tmp.displayQueries){
+            tmp.displayQueries = 0;
+        }else{
+            tmp.displayQueries = 1;
+        }
+        this.setState({config: tmp});
+    }
     handleToggleRangeChange() {
         if(this.state.rangeChanged){
             this.setState({rangeChanged: 0, range: {min: '', max: ''}});
@@ -261,7 +273,7 @@ class Facet extends React.Component {
                     }
                     <div className={contentClasses}>
                         {!this.props.spec.propertyURI ? '' :
-                            <span className="ui teal ribbon label" title="number of items listed in this facet">{this.state.searchTerm ? cloneInstances.length : this.addCommas(itemsCount)}{(!this.state.searchTerm && this.props.spec.propertyURI && parseInt(itemsCount) > cloneInstances.length) ? '*' : ''}</span>
+                            <span className="ui teal ribbon label" title="number of items listed in this facet" onDoubleClick={this.handleToggleShowQuery.bind(this)}>{this.state.searchTerm ? cloneInstances.length : this.addCommas(itemsCount)}{(!this.state.searchTerm && this.props.spec.propertyURI && parseInt(itemsCount) > cloneInstances.length) ? '*' : ''}</span>
                         }
                         <div className="ui horizontal list">
                             <div className="item">
