@@ -2,13 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import URIUtil from '../../utils/URIUtil';
 
-let Sigma, RandomizeNodePositions, RelativeSize;
-if (process.env.BROWSER) {
-    Sigma = require('react-sigma').Sigma;
-    RandomizeNodePositions = require('react-sigma').RandomizeNodePositions;
-    RelativeSize = require('react-sigma').RelativeSize;
-}
-
 class NetworkView extends React.Component {
     componentDidMount() {}
     getXYZ(propsForAnalysis){
@@ -32,6 +25,12 @@ class NetworkView extends React.Component {
     }
     render() {
         let self = this;
+        let Sigma, RandomizeNodePositions, RelativeSize;
+        if (process.env.BROWSER) {
+            Sigma = require('react-sigma').Sigma;
+            RandomizeNodePositions = require('react-sigma').RandomizeNodePositions;
+            RelativeSize = require('react-sigma').RelativeSize;
+        }
         let network = {nodes: [], edges: []};
         let data = [];
         let title,

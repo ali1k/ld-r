@@ -307,7 +307,7 @@ class Facet extends React.Component {
                         </div>
                         : ''
                     }
-                    {this.state.config && this.state.displayQueries ?
+                    {this.state.config && this.state.config.displayQueries ?
                         <div className={queryClasses}>
                             <YASQEViewer spec={{value: this.props.spec.query}} />
                         </div>
