@@ -24,6 +24,18 @@ class Dataset extends React.Component {
         let uriContent = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
         window.open(uriContent, 'data.csv');
     }
+    handleToggleShowQuery() {
+        let tmp = this.state.config;
+        if(!this.state.config){
+            tmp ={};
+        }
+        if(tmp.displayQueries){
+            tmp.displayQueries = 0;
+        }else{
+            tmp.displayQueries = 1;
+        }
+        this.setState({config: tmp});
+    }
     getPropsForAnalysis() {
         let out = [];
         let r = this.props.resources;
@@ -66,7 +78,7 @@ class Dataset extends React.Component {
         //continue
         let self = this;
         let createResourceDIV = '';
-        let dcnf = this.props.config;
+        let dcnf = this.state.config;
         if(dcnf && !this.props.readOnly && dcnf.allowResourceNew){
             createResourceDIV =
             <div className="ui list">
@@ -87,7 +99,7 @@ class Dataset extends React.Component {
                             <div className="ui segment">
                                 <DatasetViewer enableAuthentication={enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={true} config={dcnf} cloneable={1} onCloneResource={this.props.onCloneResource}/>
                             </div>
-                            <DatasetPager config={dcnf} showAllResources={this.state.showAllResources} onShowAllResources={this.toggleShowAllResources.bind(this)} onSearchMode={this.handleSearchMode.bind(this)} datasetURI={this.props.datasetURI} visibleResourcesTotal={this.props.resources.length} total={this.props.total} threshold={10} currentPage={this.props.page}  handleViewerChange={this.handleViewerChange.bind(this)} handleExport={this.handleExport.bind(this)}/>
+                            <DatasetPager config={dcnf} showAllResources={this.state.showAllResources} handleToggleShowQuery={this.handleToggleShowQuery.bind(this)} onShowAllResources={this.toggleShowAllResources.bind(this)} onSearchMode={this.handleSearchMode.bind(this)} datasetURI={this.props.datasetURI} visibleResourcesTotal={this.props.resources.length} total={this.props.total} threshold={10} currentPage={this.props.page}  handleViewerChange={this.handleViewerChange.bind(this)} handleExport={this.handleExport.bind(this)}/>
                             {dcnf && dcnf.displayQueries ?
                                 <div className= "ui tertiary segment">
                                     <YASQEViewer spec={{value: this.props.resourceQuery}} />

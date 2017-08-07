@@ -19,6 +19,18 @@ class DatasetFB extends React.Component {
         tmp.datasetViewer = [viewer];
         this.setState({config: tmp});
     }
+    handleToggleShowQuery() {
+        let tmp = this.state.config;
+        if(!this.state.config){
+            tmp ={};
+        }
+        if(tmp.displayQueries){
+            tmp.displayQueries = 0;
+        }else{
+            tmp.displayQueries = 1;
+        }
+        this.setState({config: tmp});
+    }
     handleExport(){
         let fields = this.getPropsForAnalysis();
         let csv = json2csv({ data: this.props.resources, fields: fields });
@@ -85,7 +97,7 @@ class DatasetFB extends React.Component {
                     <div className="ui segment">
                         <DatasetViewer enableAuthentication={enableAuthentication} cloneable={0} resources={this.props.resources} datasetURI={this.props.datasetURI} OpenInNewTab={true} isBig={this.props.isBig} config={dcnf}/>
                     </div>
-                    <DatasetPager config={dcnf} showAllResources={this.props.showAllResources} onShowAllResources={this.props.onShowAllResources} onSearchMode={this.handleSearchMode.bind(this)} selection={this.props.selection} onExpandCollapse={this.props.onExpandCollapse} handleClick={this.props.handleClick} datasetURI={this.props.datasetURI} total={this.props.total} threshold={this.props.pagerSize} currentPage={this.props.currentPage} noOfAnalysisProps={this.getNoOfPropsForAnalysis()} handleViewerChange={this.handleViewerChange.bind(this)} handleExport={this.handleExport.bind(this)}/>
+                    <DatasetPager config={dcnf} showAllResources={this.props.showAllResources} onShowAllResources={this.props.onShowAllResources} onSearchMode={this.handleSearchMode.bind(this)} selection={this.props.selection} onExpandCollapse={this.props.onExpandCollapse} handleClick={this.props.handleClick} datasetURI={this.props.datasetURI} total={this.props.total} threshold={this.props.pagerSize} currentPage={this.props.currentPage} noOfAnalysisProps={this.getNoOfPropsForAnalysis()} handleViewerChange={this.handleViewerChange.bind(this)} handleToggleShowQuery={this.handleToggleShowQuery.bind(this)} handleExport={this.handleExport.bind(this)}/>
                     {dcnf.displayQueries ?
                         <div className= "ui tertiary segment">
                             <YASQEViewer spec={{value: this.props.resourceQuery}} />

@@ -170,7 +170,7 @@ class DatasetPager extends React.Component {
                             {this.props.showAllResources ?
                                 ''
                                 :
-                                <span>{totalPages} Page(s): {pageList} &nbsp;</span>
+                                <span><span onDoubleClick={this.props.handleToggleShowQuery}>{totalPages}</span> Page(s): {pageList} &nbsp;</span>
                             }
                             {totalPages > 1 && this.props.total<= 10000 ?
                                 <a className={'ui icon mini button ' + (this.props.showAllResources ? 'blue': 'basic')} onClick={this.onShowAllClick.bind(this)}>
