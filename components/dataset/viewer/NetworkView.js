@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import URIUtil from '../../utils/URIUtil';
+
 let Sigma, RandomizeNodePositions, RelativeSize;
 if (process.env.BROWSER) {
     Sigma = require('react-sigma').Sigma;
@@ -62,11 +63,11 @@ class NetworkView extends React.Component {
                     if(!zLabel){
                         zLabel = xyz.zLabel;
                     }
-                    instances.push({uri: node.v, title: title , x: xyz.x, y: Number(xyz.y), z: Number(xyz.z)});
+                    instances.push({uri: node.v, title: title , x: xyz.x, y: xyz.y, z: xyz.z});
                 }else{
                     if(xyz.y){
                         //2D
-                        instances.push({uri: node.v, title: title , x: xyz.x, y: Number(xyz.y)});
+                        instances.push({uri: node.v, title: title , x: xyz.x, y: xyz.y});
                     }else{
                         //1D
                         instances.push({uri: node.v, title: title , x: xyz.x});
@@ -88,6 +89,27 @@ class NetworkView extends React.Component {
                 if(!edgesObj[node.uri+'_'+node.x]){
                     edgesObj[node.uri+'_'+node.x] = 1;
                     edges.push({id: node.uri+'_'+node.x, source: node.uri, target: node.x, label: xLabel});
+                }
+                //for y and z dimensions
+                if(yLabel){
+                    if(!nodesObj[node.y]){
+                        nodesObj[node.y] = 1;
+                        nodes.push({id: node.y, label: URIUtil.getURILabel(node.y), color: '#ff3399'});
+                    }
+                    if(!edgesObj[node.uri+'_'+node.y]){
+                        edgesObj[node.uri+'_'+node.y] = 1;
+                        edges.push({id: node.uri+'_'+node.y, source: node.uri, target: node.y, label: yLabel});
+                    }
+                }
+                if(zLabel){
+                    if(!nodesObj[node.z]){
+                        nodesObj[node.z] = 1;
+                        nodes.push({id: node.z, label: URIUtil.getURILabel(node.z), color: '#caaf8f'});
+                    }
+                    if(!edgesObj[node.uri+'_'+node.z]){
+                        edgesObj[node.uri+'_'+node.z] = 1;
+                        edges.push({id: node.uri+'_'+node.z, source: node.uri, target: node.z, label: zLabel});
+                    }
                 }
             });
             network = {nodes: nodes, edges: edges};
