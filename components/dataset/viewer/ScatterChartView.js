@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import URIUtil from '../../utils/URIUtil';
-import {ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
+import chroma from 'chroma-js';
+import {ScatterChart, Scatter, Cell, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
 
 class ScatterChartView extends React.Component {
     componentDidMount() {}
     getXYZ(propsForAnalysis){
-        let c = 0, x, y, xLabel, yLabel;
+        let c = 0, x, y, z, xLabel, yLabel, zLabel;
         for(let prop in propsForAnalysis){
             c++;
             if(c ==1){
@@ -17,8 +18,12 @@ class ScatterChartView extends React.Component {
                 y = propsForAnalysis[prop];
                 yLabel = prop;
             }
+            if(c ==3){
+                z = propsForAnalysis[prop];
+                zLabel = prop;
+            }
         }
-        return {x: x, y: y, xLabel: xLabel, yLabel: yLabel};
+        return {x: x, y: y, z: z, xLabel: xLabel, yLabel: yLabel, zLabel: zLabel};
     }
     handleNodeClick(params){
         console.log(params);
@@ -28,6 +33,7 @@ class ScatterChartView extends React.Component {
             return (
                 <div className="ui compact info message">
                     <b>{params.payload[0].payload.title}</b>
+                    {params.payload[0].payload.z ? <span> (<i>{params.payload[0].payload.z}</i>)</span>:null}
                     <br/>
                     {params.payload[0].name}: {params.payload[0].value}
                     <br/>
@@ -40,12 +46,12 @@ class ScatterChartView extends React.Component {
     }
     render() {
         let self = this;
-
+        let colorGroup = {};
         let title,
             instances =[],
             out, xyz;
-        let xType, yType;
-        let xLabel, yLabel;
+        let xType, yType, zType;
+        let xLabel, yLabel, zLabel;
         if (!this.props.resources.length) {
             out = <div className="ui warning message">
                 <div className="header">
@@ -76,8 +82,25 @@ class ScatterChartView extends React.Component {
                     }
                     yLabel = xyz.yLabel;
                 }
-                //2D
-                instances.push({uri: node.v, title: title , x: Number(xyz.x), y: Number(xyz.y)});
+                if(xyz.z && !zType){
+                    if (isNaN(xyz.z)){
+                        zType = 'category';
+                    }else{
+                        zType = 'number';
+                    }
+                    zLabel = xyz.zLabel;
+                }
+                if(zLabel){
+                    //3D
+                    instances.push({uri: node.v, title: title , x: Number(xyz.x), y: Number(xyz.y), z: xyz.z});
+                    //define
+                    if(!colorGroup[xyz.z]){
+                        colorGroup[xyz.z] = chroma.random().hex();
+                    }
+                }else{
+                    //2D
+                    instances.push({uri: node.v, title: title , x: Number(xyz.x), y: Number(xyz.y)});
+                }
             });
             //console.log(instances);
         }
@@ -89,7 +112,13 @@ class ScatterChartView extends React.Component {
                     <ScatterChart margin={{top: 0, right: 10, left: 0, bottom: 0}}>
                       	<XAxis dataKey={'x'} name={xLabel} type={xType} />
                       	<YAxis dataKey={'y'} name={yLabel} type={yType} />
-                      	<Scatter name='Chart' data={instances} fill='#1a75ff' onClick={this.handleNodeClick.bind(this)}/>
+                      	<Scatter name='Chart' data={instances} onClick={this.handleNodeClick.bind(this)}>
+                            {
+                                instances.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={zLabel ? colorGroup[entry.z]: '#1a75ff'}/>
+                                ))
+                            }
+                        </Scatter>
                       	<CartesianGrid trokeDasharray="3 3"/>
                       	<Tooltip cursor={{strokeDasharray: '3 3'}} content={this.renderTooltip.bind(this)}/>
                     </ScatterChart>
