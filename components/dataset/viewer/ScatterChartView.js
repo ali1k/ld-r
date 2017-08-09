@@ -105,6 +105,10 @@ class ScatterChartView extends React.Component {
                 //collect all other attributes
                 if(Object.keys(xyz.others).length){
                     instances.push({uri: node.v, title: title , x: Number(xyz.x), y: Number(xyz.y), z: xyz.z, others: xyz.others});
+                    //define
+                    if(!colorGroup[xyz.z]){
+                        colorGroup[xyz.z] = chroma.random().hex();
+                    }
                 }else{
                     if(zLabel){
                         //3D
