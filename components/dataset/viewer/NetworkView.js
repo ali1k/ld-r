@@ -25,11 +25,12 @@ class NetworkView extends React.Component {
     }
     render() {
         let self = this;
-        let Sigma, RandomizeNodePositions, RelativeSize;
+        let Sigma, RandomizeNodePositions, RelativeSize, ForceAtlas2;
         if (process.env.BROWSER) {
             Sigma = require('react-sigma').Sigma;
             RandomizeNodePositions = require('react-sigma').RandomizeNodePositions;
             RelativeSize = require('react-sigma').RelativeSize;
+            ForceAtlas2 = require('react-sigma').ForceAtlas2;
         }
         let network = {nodes: [], edges: []};
         let data = [];
@@ -117,6 +118,7 @@ class NetworkView extends React.Component {
         return (
             <div ref="networkView" style={{overflow: 'auto'}}>
                 <Sigma graph={network} settings={{drawEdges: true, clone: true}} key={Math.round(+new Date() / 1000)}>
+                    <ForceAtlas2 barnesHutOptimize barnesHutTheta={0.8} iterationsPerRender={2}/>
                     <RelativeSize initialSize={50}/>
                     <RandomizeNodePositions/>
                 </Sigma>
