@@ -38,7 +38,7 @@ class ScatterChartView extends React.Component {
             tmp = params.payload[0].payload.others;
             if(tmp){
                 for(let prop in tmp){
-                    othersDIV.push(<div key={prop}>{prop}: {tmp[prop]}</div>);
+                    othersDIV.push(<div key={prop}>{prop}: {URIUtil.getURILabel(tmp[prop])}</div>);
                 }
             }
             return (
