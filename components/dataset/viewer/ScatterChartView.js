@@ -8,28 +8,39 @@ class ScatterChartView extends React.Component {
     componentDidMount() {}
     getXYZ(propsForAnalysis){
         let c = 0, x, y, z, xLabel, yLabel, zLabel;
+        let others = {};
         for(let prop in propsForAnalysis){
             c++;
-            if(c ==1){
+            if(c == 1){
                 x = propsForAnalysis[prop];
                 xLabel = prop;
             }
-            if(c ==2){
+            if(c == 2){
                 y = propsForAnalysis[prop];
                 yLabel = prop;
             }
-            if(c ==3){
+            if(c == 3){
                 z = propsForAnalysis[prop];
                 zLabel = prop;
             }
+            if(c > 3){
+                others[prop] = propsForAnalysis[prop];
+            }
         }
-        return {x: x, y: y, z: z, xLabel: xLabel, yLabel: yLabel, zLabel: zLabel};
+        return {x: x, y: y, z: z, xLabel: xLabel, yLabel: yLabel, zLabel: zLabel, others: others};
     }
     handleNodeClick(params){
         console.log(params);
     }
     renderTooltip(params){
+        let tmp, othersDIV = [];
         if(params.payload.length){
+            tmp = params.payload[0].payload.others;
+            if(tmp){
+                for(let prop in tmp){
+                    othersDIV.push(<div key={prop}>{prop}: {tmp[prop]}</div>);
+                }
+            }
             return (
                 <div className="ui compact info message">
                     <b>{params.payload[0].payload.title}</b>
@@ -38,6 +49,7 @@ class ScatterChartView extends React.Component {
                     {params.payload[0].name}: {params.payload[0].value}
                     <br/>
                     {params.payload[1].name}: {params.payload[1].value}
+                    {othersDIV}
                 </div>
             );
         } else {
@@ -90,16 +102,21 @@ class ScatterChartView extends React.Component {
                     }
                     zLabel = xyz.zLabel;
                 }
-                if(zLabel){
-                    //3D
-                    instances.push({uri: node.v, title: title , x: Number(xyz.x), y: Number(xyz.y), z: xyz.z});
-                    //define
-                    if(!colorGroup[xyz.z]){
-                        colorGroup[xyz.z] = chroma.random().hex();
-                    }
+                //collect all other attributes
+                if(Object.keys(xyz.others).length){
+                    instances.push({uri: node.v, title: title , x: Number(xyz.x), y: Number(xyz.y), z: xyz.z, others: xyz.others});
                 }else{
-                    //2D
-                    instances.push({uri: node.v, title: title , x: Number(xyz.x), y: Number(xyz.y)});
+                    if(zLabel){
+                        //3D
+                        instances.push({uri: node.v, title: title , x: Number(xyz.x), y: Number(xyz.y), z: xyz.z});
+                        //define
+                        if(!colorGroup[xyz.z]){
+                            colorGroup[xyz.z] = chroma.random().hex();
+                        }
+                    }else{
+                        //2D
+                        instances.push({uri: node.v, title: title , x: Number(xyz.x), y: Number(xyz.y)});
+                    }
                 }
             });
             //console.log(instances);
