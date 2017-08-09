@@ -116,7 +116,7 @@ class NetworkView extends React.Component {
         const height = 500;
         return (
             <div ref="networkView" style={{overflow: 'auto'}}>
-                <Sigma graph={network} settings={{drawEdges: true, clone: true}}>
+                <Sigma graph={network} settings={{drawEdges: true, clone: true}} key={Math.round(+new Date() / 1000)}>
                     <RelativeSize initialSize={50}/>
                     <RandomizeNodePositions/>
                 </Sigma>
