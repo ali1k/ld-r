@@ -48,7 +48,8 @@ export default {
                     query = queryObject.getSideEffectsCount(endpointParameters, graphName, rftconfig, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, params.selection.options);
                     //build http uri
                     //send request
-                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                    let tmp = getHTTPQuery('read', query, endpointParameters, outputFormat);
+                    rp.post({uri: tmp.uri, form: tmp.params, headers: headers}).then(function(res){
                         callback(null, {
                             datasetURI: datasetURI,
                             graphName: graphName,
@@ -85,7 +86,8 @@ export default {
                     query = queryObject.getSideEffects(endpointParameters, graphName, rftconfig, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, params.selection.options);
                     //build http uri
                     //send request
-                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                    let tmp = getHTTPQuery('read', query, endpointParameters, outputFormat);
+                    rp.post({uri: tmp.uri, form: tmp.params, headers: headers}).then(function(res){
                         callback(null, {
                             datasetURI: datasetURI,
                             graphName: graphName,
@@ -134,7 +136,8 @@ export default {
                     //console.log(query);
                     //build http uri
                     //send request
-                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                    let tmp = getHTTPQuery('read', query, endpointParameters, outputFormat);
+                    rp.post({uri: tmp.uri, form: tmp.params, headers: headers}).then(function(res){
                         callback(null, {
                             datasetURI: datasetURI,
                             graphName: graphName,
@@ -183,7 +186,8 @@ export default {
                     //console.log(query);
                     //build http uri
                     //send request
-                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                    let tmp = getHTTPQuery('read', query, endpointParameters, outputFormat);
+                    rp.post({uri: tmp.uri, form: tmp.params, headers: headers}).then(function(res){
                         callback(null, {
                             datasetURI: datasetURI,
                             graphName: graphName,
@@ -247,10 +251,12 @@ export default {
                     let searchTerm = params.searchTerm ? params.searchTerm : '';
                     //build http uri
                     //send request
-                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                    let tmp = getHTTPQuery('read', query, endpointParameters, outputFormat);
+                    rp.post({uri: tmp.uri, form: tmp.params, headers: headers}).then(function(res){
                         let query2 = queryObject.getSecondLevelPropertyValues(endpointParameters, graphName, searchTerm, rftconfig, params.selection.prevSelection, params.selection.options, maxOnPage, page);
                         //console.log(query2);
-                        rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query2, endpointParameters, outputFormat)), headers: headers}).then(function(res2){
+                        let tmp2 = getHTTPQuery('read', query2, endpointParameters, outputFormat);
+                        rp.post({uri: tmp2.uri, form: tmp2.params, headers: headers}).then(function(res2){
                             callback(null, {
                                 datasetURI: datasetURI,
                                 graphName: graphName,
