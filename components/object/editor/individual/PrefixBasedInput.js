@@ -156,9 +156,13 @@ class PrefixBasedInput extends React.Component {
                         if(tmp4i.length > 1){
                             if(tmp4i[0].split(':')[0]!=='http' && tmp4i[0].split(':')[0]!=='https'){
                                 tmp_i = tmp4i[0].replace(tmp4i[0].split(':')[0] + ':', list[tmp4i[0].split(':')[0]]);
+                            }else{
+                                tmp_i = tmp4i[0];
                             }
-                            if(tmp4i[1].split(':')[1]!=='http' && tmp4i[1].split(':')[0]!=='https'){
+                            if(tmp4i[1].split(':')[0]!=='http' && tmp4i[1].split(':')[0]!=='https'){
                                 tmp_i = tmp_i + '||' + tmp4i[1].replace(tmp4i[1].split(':')[0] + ':', list[tmp4i[1].split(':')[0]]);
+                            }else{
+                                tmp_i = tmp_i + '||' + tmp4i[1];
                             }
                             tmp4 = tmp_i ;
                         }else{
