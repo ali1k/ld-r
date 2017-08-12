@@ -171,6 +171,7 @@ class FacetQuery{
         */
         let parts ={};
         let counter=0;
+        let isIntermediate = 0;
         //start making the nested graphs
         graphs.forEach((graph, index)=>{
             parts = self.parseGraphPath(graph);
@@ -213,9 +214,18 @@ class FacetQuery{
                             pgStart[0] = pgStart[0] + ` ?s ${self.filterPropertyPath(parts.property)} ?v${(counter === graphs.length ? tindex : 'g' + tindex + counter)} . `;
                         }
                     }else{
-                        //[g]prop1->prop2->[g2]prop3
+                        //[g]prop1->prop2||prop3->[g2]prop4
                         //just re-base the resource
-                        pgStart[0] = pgStart[0] + ` ?osp ${self.filterPropertyPath(parts.property)} ?s . `;
+                        //source and target properties are separated by ||
+                        //console.log(parts);
+                        isIntermediate = 1;
+                        let itemp = parts.property.split('||');
+                        pgStart[0] = pgStart[0] + `
+                        #source property
+                        ?osp ${self.filterPropertyPath(itemp[0])} ?s .
+                        #target property
+                        ?osp ${self.filterPropertyPath(itemp[1])} ?s2 .
+                        `;
                     }
                 }else{
                     if(withPropAnalysis){
@@ -254,9 +264,22 @@ class FacetQuery{
                     }
                 }
                 if(withPropAnalysis){
-                    pgStart[index] = pgStart[index] + ` ?vg${withPropAnalysis}${counter-1} ${self.filterPropertyPath(parts.property)} ?${(counter === graphs.length ? withPropAnalysis : 'vg' + withPropAnalysis + counter)} . `;
+                    if(isIntermediate && counter === 2){
+                        //this is an exception to enable refering to a resource which is property in another graph
+                        pgStart[index] = pgStart[index] + `
+                        ?s2 ${self.filterPropertyPath(parts.property)} ?${(counter === graphs.length ? withPropAnalysis : 'vg' + withPropAnalysis + counter)} .
+                        `;
+                    }else{
+                        pgStart[index] = pgStart[index] + `
+                        ?vg${withPropAnalysis}${counter-1} ${self.filterPropertyPath(parts.property)} ?${(counter === graphs.length ? withPropAnalysis : 'vg' + withPropAnalysis + counter)} .
+                        `;
+                    }
                 }else{
-                    pgStart[index] = pgStart[index] + ` ?vg${tindex}${counter-1} ${self.filterPropertyPath(parts.property)} ?v${(counter === graphs.length ? tindex : 'g' + tindex + counter)} . `;
+                    if(isIntermediate && counter === 2){
+                        pgStart[index] = pgStart[index] + ` ?s2 ${self.filterPropertyPath(parts.property)} ?v${(counter === graphs.length ? tindex : 'g' + tindex + counter)} . `;
+                    }else{
+                        pgStart[index] = pgStart[index] + ` ?vg${tindex}${counter-1} ${self.filterPropertyPath(parts.property)} ?v${(counter === graphs.length ? tindex : 'g' + tindex + counter)} . `;
+                    }
                 }
             }
         });
@@ -317,6 +340,7 @@ class FacetQuery{
             ${gEnd}
         } GROUP BY ?v ORDER BY DESC(?total) OFFSET ${page*500} LIMIT 500
         `;
+        // console.log(this.prefixes + this.query);
         return this.prefixes + this.query;
     }
     getMultipleFilters(endpointParameters, graphName, prevSelection, rconfig, options) {
