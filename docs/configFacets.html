@@ -33,7 +33,7 @@ Config: Facets
   <i class="ui info icon"></i> If you want to use a chain of properties in the faceted browser, use '->' when specifiying the URIs of the properties in your list. For example, 'ex:address->geo:geo'
 </div>
 <div class="ui ignored info message">
-  <i class="ui info icon"></i> If you want to use a chain of properties scattered around multiple graph names, use '[graphURI]' when specifiying the URIs of the properties in your list. For example, 'ex:orcidID->[http://orcid.org]rdfs:label' . If the property initiates from a graph other than the original one, you can use '<-' operator. For example 'http://anothergraph2323.com<-rdf:label'
+  <i class="ui info icon"></i> If you want to use a chain of properties scattered around multiple graph names, use '[graphURI]' when specifiying the URIs of the properties in your list. For example, 'ex:orcidID->[http://orcid.org]rdfs:label' . If the property initiates from a graph other than the original one, you can use '[]->' operator. For example '[http://anothergraph2323.com]->rdf:label'
 </div>
 <div class="ui ignored info message">
   <i class="ui info icon"></i> If you want to use a chain of properties scattered around multiple graph names and multiple SPARQL endpoints, use '[endpointURI>>graphURI]' when specifiying the URIs of the properties in your list. For example, 'ex:orcidID->[http://myendpoint.com>>http://orcid.org]rdfs:label'.
