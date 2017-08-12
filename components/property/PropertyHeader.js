@@ -62,7 +62,10 @@ class PropertyHeader extends React.Component {
                 outputDIV = <h3> {titleDIV} {hintDIV} {configDIV}</h3>;
         }
         return (
-            <span ref="propertyHeader">
+            <span ref="propertyHeader" style={{
+                'wordBreak': 'break-all',
+                'wordWrap': 'break-word'
+            }}>
                 {outputDIV}
             </span>
         );

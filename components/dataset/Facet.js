@@ -231,7 +231,7 @@ class Facet extends React.Component {
         }
         let descStyle = {
             minHeight: this.props.minHeight ? this.props.minHeight : 80,
-            maxHeight: this.props.maxHeight ? this.props.maxHeight : 200,
+            maxHeight: this.props.maxHeight ? this.props.maxHeight : this.props.spec.property ? 200: 1200,
             position: 'relative',
             overflow: 'auto'
         };
@@ -254,7 +254,7 @@ class Facet extends React.Component {
         newSpec.instances = cloneInstances;
         //console.log(this.props.spec.query);
         return (
-            <div ref="facet">
+            <div ref="facet" style={{'wordBreak': 'break-all', 'wordWrap': 'break-word'}}>
 
                 <div className={cardClasses}>
                     {this.state.verticalResized ?
