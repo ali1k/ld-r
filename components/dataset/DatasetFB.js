@@ -74,8 +74,6 @@ class DatasetFB extends React.Component {
     componentDidMount() {
     }
     render() {
-        console.log(this.props.selection);
-        console.log(this.props.config);
         let facetConfigs;
         if(this.props.selection && this.props.selection.options && this.props.selection.options.facetConfigs){
             facetConfigs = this.props.selection.options.facetConfigs;
