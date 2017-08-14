@@ -254,7 +254,8 @@ class FacetQuery{
                     //after service
                     if(filterSt && (counter === graphs.length)) {
                         //append filters if required
-                        psEnd[index] = gStart + filterSt + gEnd + psEnd[index];
+                        psStart[index] = gStart + filterSt + psStart[index];
+                        psEnd[index] = psEnd[index] + gEnd;
                     }
                 }else{
                     //filter in the graph
