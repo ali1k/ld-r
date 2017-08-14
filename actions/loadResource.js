@@ -1,7 +1,7 @@
 import {appFullTitle} from '../configs/general';
 export default function loadResource(context, payload, done) {
     context.dispatch('LOADING_DATA', {});
-    context.service.read('resource.properties', payload, {timeout: 15 * 1000}, function (err, res) {
+    context.service.read('resource.properties', payload, {timeout: 25 * 1000}, function (err, res) {
         if (err) {
             context.dispatch('LOAD_RESOURCE_FAILURE', err);
         } else {
