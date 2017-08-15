@@ -112,7 +112,7 @@ class BasicResourceList extends React.Component {
     getAnalysisPropsConfgis(facetConfigs){
         let out = {};
         let index, tmp = [];
-        if(!Object.keys(facetConfigs).length){
+        if(!facetConfigs || !Object.keys(facetConfigs).length){
             return out;
         }
         if(this.props.resources.length){
