@@ -5,6 +5,7 @@ import URIUtil from '../../utils/URIUtil';
 import { Header, Table } from 'semantic-ui-react';
 import BasicAggregateMapView from '../../object/viewer/aggregate/BasicAggregateMapView';
 import classNames from 'classnames/bind';
+import ObjectIViewer from '../../object/ObjectIViewer';
 
 class BasicResourceList extends React.Component {
     componentDidMount() {}
@@ -97,11 +98,8 @@ class BasicResourceList extends React.Component {
     checkAnalysisProps(){
         let out = 0;
         if(this.props.resources.length){
-            if(this.props.resources[0].propsForAnalysis){
-                for(let prop in this.props.resources[0].propsForAnalysis){
-                    out = 1;
-                    return out;
-                }
+            if(Object.keys(this.props.resources[0].propsForAnalysis).length){
+                out = 1;
                 return out;
             }else{
                 return 0
@@ -109,8 +107,43 @@ class BasicResourceList extends React.Component {
         }else{
             return 0 ;
         }
+        return out;
+    }
+    getAnalysisPropsConfgis(facetConfigs){
+        let out = {};
+        let index, tmp = [];
+        if(!Object.keys(facetConfigs).length){
+            return out;
+        }
+        if(this.props.resources.length){
+            if(this.props.resources[0].propsForAnalysis){
+                for(let prop in this.props.resources[0].propsForAnalysis){
+                    tmp = prop.split('_');
+                    if(tmp.length > 1){
+                        index = tmp[1];
+                        //hanlde multiple _
+                        if(tmp.length > 2){
+                            tmp.shift();
+                            index = tmp.join('_');
+                        }
+                        if(facetConfigs){
+                            for(let prop2 in facetConfigs){
+                                if(prop2.indexOf(index) !== -1){
+                                    out[prop] = facetConfigs[prop2];
+                                }
+                            }
+                        }
+                    }
+                    return out;
+                }
+            }
+        }
+        return out;
     }
     render() {
+        //to apply the same config in result list
+        let analysisPropsConfgis = this.getAnalysisPropsConfgis(this.props.facetConfigs);
+        //console.log(analysisPropsConfgis);
         let self = this;
         let user = this.context.getUser();
         let datasetURI = this.props.datasetURI;
@@ -182,7 +215,7 @@ class BasicResourceList extends React.Component {
                 dtableCells = [];
                 if(self.checkAnalysisProps()){
                     for(let prop in node.propsForAnalysis){
-                        dtableCells.push(<Table.Cell key={'c'+prop} title={node.propsForAnalysis[prop]}>{URIUtil.getURILabel(node.propsForAnalysis[prop])}</Table.Cell>);
+                        dtableCells.push(<Table.Cell key={'c'+prop} title={node.propsForAnalysis[prop]}>{Object.keys(analysisPropsConfgis).length && analysisPropsConfgis[prop] ? <ObjectIViewer datasetURI={this.props.datasetURI} property={prop} spec={{value: node.propsForAnalysis[prop]}} config={analysisPropsConfgis[prop]}/> : URIUtil.getURILabel(node.propsForAnalysis[prop])}</Table.Cell>);
                     }
                     resourceDIV =
                         <Table.Row key={index}>
