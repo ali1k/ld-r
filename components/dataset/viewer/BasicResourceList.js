@@ -98,7 +98,7 @@ class BasicResourceList extends React.Component {
     checkAnalysisProps(){
         let out = 0;
         if(this.props.resources.length){
-            if(Object.keys(this.props.resources[0].propsForAnalysis).length){
+            if(this.props.resources[0].propsForAnalysis && Object.keys(this.props.resources[0].propsForAnalysis).length){
                 out = 1;
                 return out;
             }else{
