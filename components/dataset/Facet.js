@@ -5,6 +5,7 @@ import SearchInput from 'react-search-input';
 import URIUtil from '../utils/URIUtil';
 import YASQEViewer from '../object/viewer/individual/YASQEViewer';
 import {Dropdown, Icon} from 'semantic-ui-react';
+import json2csv from 'json2csv';
 
 /**
  * Shuffles array in place. ES6 version
@@ -21,6 +22,16 @@ class Facet extends React.Component {
     constructor(props){
         super(props);
         this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0, rangeChanged: 0, range: {min: '', max: ''}, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : '', addedAsVar: this.props.analysisProps[this.props.spec.propertyURI] ? 1 : 0};
+    }
+    handleExport(){
+        let values =[];
+        this.props.spec.instances.forEach((instance)=>{
+            values.push({item: instance.value, resourceNo: instance.total})
+        })
+        let csv = json2csv({ data: values, fields: ['item', 'resourceNo'] });
+        //console.log(csv);
+        let uriContent = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+        window.open(uriContent, 'dataF.csv');
     }
     checkItem(status, value) {
         this.props.onCheck(status, value, this.props.spec.propertyURI);
@@ -84,6 +95,8 @@ class Facet extends React.Component {
             this.props.onAnalyzeProp();
         }else if(data.value==='shuffle'){
             this.setState({shuffled: !this.state.shuffled});
+        }else if(data.value==='download'){
+            this.handleExport();
         }
     }
     handleDropDown2Click(e, data){
@@ -166,7 +179,8 @@ class Facet extends React.Component {
         let addedAsVarStat = !this.props.analysisProps[this.props.spec.propertyURI] ? 'Analyze property' : 'Remove from analysis';
         let d_options = [
             { key: 2, text: addedAsVarStat , value: 'asVariable' },
-            { key: 3, text: shuffleStat + ' the list', value: 'shuffle' }
+            { key: 3, text: shuffleStat + ' the list', value: 'shuffle' },
+            { key: 4, text: 'Download the list', value: 'download' }
         ]
         if(this.props.selection && this.props.selection[this.props.spec.propertyURI] && this.props.selection[this.props.spec.propertyURI].length){
             d_options.unshift({ key: 1, text: invertStat + ' the selection', value: 'invert' });
