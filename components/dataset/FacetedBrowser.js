@@ -337,6 +337,23 @@ class FacetedBrowser extends React.Component {
         property = property.charAt(0).toUpperCase() + property.slice(1);
         return property;
     }
+    getPropertyLabel(uri) {
+        let property = '';
+        let tmp = uri;
+        let self = this;
+        //handle the prop path case
+        if(uri.indexOf('->') !==-1){
+            let tmp12 = uri.split('->');
+            let tmp2 = [];
+            tmp12.forEach((el)=> {
+                tmp2.push(self.extractNameFromPropertyURI(el.trim()));
+            });
+            property = tmp2.join('/');
+        }else{
+            property = self.extractNameFromPropertyURI(uri);
+        }
+        return property;
+    }
     render() {
         //check erros first
         if(this.props.FacetedBrowserStore.error){
