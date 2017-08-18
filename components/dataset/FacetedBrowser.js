@@ -308,18 +308,33 @@ class FacetedBrowser extends React.Component {
     getPropertyLabel(uri) {
         let property = '';
         let tmp = uri;
-        let self = this;
-        //handle the prop path case
-        if(uri.indexOf('->') !==-1){
-            let tmp12 = uri.split('->');
-            let tmp2 = [];
-            tmp12.forEach((el)=> {
-                tmp2.push(self.extractNameFromPropertyURI(el.trim()));
-            });
-            property = tmp2.join('/');
-        }else{
-            property = self.extractNameFromPropertyURI(uri);
+        //todo: handle multigraph labels
+        let tmp001, tmp01 = tmp.split('->[');
+        if(tmp01.length > 1){
+            tmp001 = tmp.split(']');
+            tmp = tmp001[tmp001.length -1];
         }
+        let tmp02 = tmp.split('>>');
+        if(tmp02.length > 1){
+            tmp001 = tmp.split(']');
+            tmp = tmp001[tmp001.length -1];
+        }
+        let tmp03 = tmp.split('->');
+        if(tmp03.length > 1){
+            tmp = tmp03[tmp03.length -1];
+        }
+        //---------
+        let tmp2 = tmp.split('#');
+        if (tmp2.length > 1) {
+            property = tmp2[1];
+        } else {
+            tmp2 = tmp.split('/');
+            property = tmp2[tmp2.length - 1];
+            tmp2 = property.split(':');
+            property = tmp2[tmp2.length - 1];
+        }
+        //make first letter capital case
+        property = property.charAt(0).toUpperCase() + property.slice(1);
         return property;
     }
     render() {
