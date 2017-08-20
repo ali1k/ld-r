@@ -164,8 +164,8 @@ class DatasetPager extends React.Component {
         }
         return (
             <div>
-                <div className="ui bottom attached compact secondary menu" ref="datasetPager">
-                    <div className="left menu">
+                <div className="ui bottom attached compact secondary stackable menu" ref="datasetPager">
+                    <div className="left menu stackable">
                         <div className='item'>
                             {this.props.showAllResources ?
                                 ''
@@ -181,13 +181,11 @@ class DatasetPager extends React.Component {
                             }
                         </div>
                     </div>
-                    <div className="right menu">
+                    <div className="right menu stackable">
                         {this.props.total ?
                             <a title="Download" className='ui icon mini basic button right floated item' onClick={this.props.handleExport}><i className='icon download'></i></a>
                             : ''}
-                        <div className="item" title="actions">
-                            <Dropdown selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={v_trigger} options={v_options} icon={null} floating />
-                        </div>
+                        <Dropdown className="item" title="actions" selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={v_trigger} options={v_options} icon={null} floating />
                         <a className='ui icon mini basic button right floated item ' onClick={this.onSearchClick.bind(this)} title="search">
                             <i className='ui icon orange search'></i>
                         </a>

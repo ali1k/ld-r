@@ -344,7 +344,7 @@ class Facet extends React.Component {
                 {this.state.verticalResized ?
                     ''
                     :
-                    <div className="ui bottom attached compact menu">
+                    <div className="ui bottom attached compact stackable menu">
                         <div className="left menu">
                             <div className="ui left aligned category search item">
                                 <div className="ui transparent icon input">
@@ -353,23 +353,17 @@ class Facet extends React.Component {
                                 <div className="results"></div>
                             </div>
                         </div>
-                        <div className="right menu">
+                        <div className="right stackable menu">
                             {this.props.spec.property ?
-                                <div className="item" title="actions">
-                                    <Dropdown selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={d_trigger} options={d_options} icon={null} floating />
-                                </div>
+                                <Dropdown className="item" title="actions" selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={d_trigger} options={d_options} icon={null} floating />
                                 : ''
                             }
                             {this.props.spec.property ?
-                                <div className="item" title="change the browser">
-                                    {this.state.config && this.state.config.freezeBrowser ?
-                                        ''
-                                        :
-                                        <Dropdown selectOnBlur={false} onChange={this.handleDropDown2Click.bind(this)} trigger={b_trigger} options={b_options} icon={null} floating />
-                                    }
-                                </div>
-                                : ''
-                            }
+                                this.state.config && this.state.config.freezeBrowser ? '' :
+                                    <Dropdown className="item" title="change the browser" selectOnBlur={false} onChange={this.handleDropDown2Click.bind(this)} trigger={b_trigger} options={b_options} icon={null} floating />
+                                :
+                                ''}
+
                             {this.props.spec.property ?
                                 <a title="vertical collapse" className='ui icon item' onClick={this.handleToggleVerticalResize.bind(this)}>
                                     <i className='ui icon resize vertical'></i>
