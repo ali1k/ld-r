@@ -151,6 +151,7 @@ class FacetQuery{
         let pgEnd = [];
         let psStart = [];
         let psEnd = [];
+        let intermediateArr = [];
         if(Array.isArray(graphsSt)){
             graphs = graphsSt;
         }else{
@@ -162,11 +163,12 @@ class FacetQuery{
             pgEnd[i] ='';
             psStart[i] ='';
             psEnd[i] ='';
+            intermediateArr[i] = 0;
         }
         /*
         prop1->[g]prop2 go from the value of prop1 to graph g and show the value of prop2
         //need to distinguish between two following cases when property comes from  another graph than origin
-        [g]->prop i.e. re-base to graph g where resource is mentioned and get the value of prop
+        [g]prop or [g]->prop in the begining i.e. re-base to graph g where resource is mentioned and get the value of prop
         [g]prop0->prop2->[g2]prop3 re-base to graph g where property path prop0->prop2 has resource as value and then go to graph g2 and get the prop3: this is useful for intermediate linksets
         */
         let parts ={};
@@ -181,12 +183,13 @@ class FacetQuery{
             if(!parts.property){
                 //error: should not happen!
                 noProp = 1;
+                return qs;
             }else{
-                let tmp = parts.property.split('->');
-                if(tmp.length){
+                let tmp = parts.property.split('->'); //->p
+                if(tmp.length > 1){
+                    //[g]->empty
                     if(!tmp[0].trim()){
                         //this is the case where re-base to resource is required
-                        noProp = 1;
                         tmp.shift();
                         parts.property = tmp.join('->');
                     }
@@ -201,31 +204,29 @@ class FacetQuery{
                     psEnd[0] = ' }';
                 }
                 if(parts.graph){
+                    //it means rebase  current resources to another graph
                     if(parts.graph !== 'default'){
                         pgStart[0]= ` GRAPH <${parts.graph}> { `;
                         pgEnd[0]= ' }';
                     }
-                    if(noProp){
-                        //[g]->prop
-                        //handle cases when props for analysis are added
+                    let itemp = parts.property.split('||');
+                    if(itemp.length > 1){
+                        //this is the bridge situation where an intermediate resource with source and target property is given
+                        //[g]source||target
+                        intermediateArr[0] = 1;
+                        pgStart[0] = pgStart[0] + `
+                        #source property
+                        ?osp0 ${self.filterPropertyPath(itemp[0])} ?s .
+                        #target property
+                        ?osp0 ${self.filterPropertyPath(itemp[1])} ?si0 .
+                        `;
+                    }else{
+                        //this is normal rebase
                         if(withPropAnalysis){
                             pgStart[0] = pgStart[0] + ` ?s ${self.filterPropertyPath(parts.property)} ?${(counter === graphs.length ? withPropAnalysis : 'vg' + withPropAnalysis + counter)} . `;
                         }else{
                             pgStart[0] = pgStart[0] + ` ?s ${self.filterPropertyPath(parts.property)} ?v${(counter === graphs.length ? tindex : 'g' + tindex + counter)} . `;
                         }
-                    }else{
-                        //[g]prop1->prop2||prop3->[g2]prop4
-                        //just re-base the resource
-                        //source and target properties are separated by ||
-                        //console.log(parts);
-                        isIntermediate = 1;
-                        let itemp = parts.property.split('||');
-                        pgStart[0] = pgStart[0] + `
-                        #source property
-                        ?osp ${self.filterPropertyPath(itemp[0])} ?s .
-                        #target property
-                        ?osp ${self.filterPropertyPath(itemp[1])} ?s2 .
-                        `;
                     }
                 }else{
                     if(withPropAnalysis){
@@ -264,24 +265,46 @@ class FacetQuery{
                         pgEnd[index] = gStart + filterSt + gEnd + pgEnd[index];
                     }
                 }
-                if(withPropAnalysis){
-                    if(isIntermediate && counter === 2){
-                        //this is an exception to enable refering to a resource which is property in another graph
+                //check bridge situations which would come with an intermediate property
+                let itempp = parts.property.split('||');
+                if(itempp.length > 1){
+                    intermediateArr[index] = 1;
+                    if(withPropAnalysis){
                         pgStart[index] = pgStart[index] + `
-                        ?s2 ${self.filterPropertyPath(parts.property)} ?${(counter === graphs.length ? withPropAnalysis : 'vg' + withPropAnalysis + counter)} .
+                        #source property
+                        ?osp${index} ${self.filterPropertyPath(itempp[0])} ?${(counter === graphs.length ? withPropAnalysis : 'vg' + withPropAnalysis + (counter-1))} .
+                        #target property
+                        ?osp${index} ${self.filterPropertyPath(itempp[1])} ?si${index} .
                         `;
                     }else{
                         pgStart[index] = pgStart[index] + `
-                        ?vg${withPropAnalysis}${counter-1} ${self.filterPropertyPath(parts.property)} ?${(counter === graphs.length ? withPropAnalysis : 'vg' + withPropAnalysis + counter)} .
+                        #source property
+                        ?osp${index} ${self.filterPropertyPath(itempp[0])} ?v${(counter === graphs.length ? tindex : 'g' + tindex + (counter-1))} .
+                        #target property
+                        ?osp${index} ${self.filterPropertyPath(itempp[1])} ?si${index} .
                         `;
                     }
                 }else{
-                    if(isIntermediate && counter === 2){
-                        pgStart[index] = pgStart[index] + ` ?s2 ${self.filterPropertyPath(parts.property)} ?v${(counter === graphs.length ? tindex : 'g' + tindex + counter)} . `;
+                    if(withPropAnalysis){
+                        if(intermediateArr[index-1]){
+                            //this is an exception to enable refering to a resource which is property in another graph
+                            pgStart[index] = pgStart[index] + `
+                            ?si${index-1} ${self.filterPropertyPath(parts.property)} ?${(counter === graphs.length ? withPropAnalysis : 'vg' + withPropAnalysis + counter)} .
+                            `;
+                        }else{
+                            pgStart[index] = pgStart[index] + `
+                            ?vg${withPropAnalysis}${counter-1} ${self.filterPropertyPath(parts.property)} ?${(counter === graphs.length ? withPropAnalysis : 'vg' + withPropAnalysis + counter)} .
+                            `;
+                        }
                     }else{
-                        pgStart[index] = pgStart[index] + ` ?vg${tindex}${counter-1} ${self.filterPropertyPath(parts.property)} ?v${(counter === graphs.length ? tindex : 'g' + tindex + counter)} . `;
+                        if(intermediateArr[index-1]){
+                            pgStart[index] = pgStart[index] + ` ?si${index-1} ${self.filterPropertyPath(parts.property)} ?v${(counter === graphs.length ? tindex : 'g' + tindex + counter)} . `;
+                        }else{
+                            pgStart[index] = pgStart[index] + ` ?vg${tindex}${counter-1} ${self.filterPropertyPath(parts.property)} ?v${(counter === graphs.length ? tindex : 'g' + tindex + counter)} . `;
+                        }
                     }
                 }
+
             }
         });
         for (let i = 0; i < graphs.length; i++) {
@@ -291,7 +314,7 @@ class FacetQuery{
         for (let i = graphs.length; i > 0; i--) {
             qs = qs + `${pgEnd[i-1]} ${psEnd[i-1]}`;
         }
-        // console.log(qs);
+        //console.log(qs);
         return qs;
     }
     //gets the total number of items on a facet when a property is selected from master level
