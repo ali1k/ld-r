@@ -172,7 +172,7 @@ class Facet extends React.Component {
                 }
             }
         }else{
-            this.setState({searchTerm: term}); // needed to force re-render    
+            this.setState({searchTerm: term}); // needed to force re-render
         }
     }
     createSelecedList(){
@@ -324,8 +324,40 @@ class Facet extends React.Component {
         }
         newSpec.instances = cloneInstances;
         let filterdInstances = [];
-        if(this.state.trange.min && this.state.trange.max){
+        if(this.state.range.min && this.state.range.max){
             cloneInstances = this.props.spec.instances.slice(0);
+            cloneInstances.forEach((instance)=>{
+                if(Number(instance.value) < Number(this.state.range.max) && Number(instance.value) > Number(this.state.range.min)){
+                    filterdInstances.push(instance);
+                }
+            })
+            newSpec.instances = filterdInstances;
+        }else{
+            if(this.state.range.max){
+                cloneInstances = this.props.spec.instances.slice(0);
+                cloneInstances.forEach((instance)=>{
+                    if(Number(instance.value) < Number(this.state.range.max)){
+                        filterdInstances.push(instance);
+                    }
+                })
+                newSpec.instances = filterdInstances;
+            }else if(this.state.range.min){
+                cloneInstances = this.props.spec.instances.slice(0);
+                cloneInstances.forEach((instance)=>{
+                    if(Number(instance.value) > Number(this.state.range.min)){
+                        filterdInstances.push(instance);
+                    }
+                })
+                newSpec.instances = filterdInstances;
+            }
+        }
+        if(this.state.trange.min && this.state.trange.max){
+            if(filterdInstances.length){
+                cloneInstances = filterdInstances.slice(0);
+                filterdInstances= [];
+            }else{
+                cloneInstances = this.props.spec.instances.slice(0);
+            }
             cloneInstances.forEach((instance)=>{
                 if(Number(instance.total) < Number(this.state.trange.max) && Number(instance.total) > Number(this.state.trange.min)){
                     filterdInstances.push(instance);
@@ -334,7 +366,12 @@ class Facet extends React.Component {
             newSpec.instances = filterdInstances;
         }else{
             if(this.state.trange.max){
-                cloneInstances = this.props.spec.instances.slice(0);
+                if(filterdInstances.length){
+                    cloneInstances = filterdInstances.slice(0);
+                    filterdInstances= [];
+                }else{
+                    cloneInstances = this.props.spec.instances.slice(0);
+                }
                 cloneInstances.forEach((instance)=>{
                     if(Number(instance.total) < Number(this.state.trange.max)){
                         filterdInstances.push(instance);
@@ -342,7 +379,12 @@ class Facet extends React.Component {
                 })
                 newSpec.instances = filterdInstances;
             }else if(this.state.trange.min){
-                cloneInstances = this.props.spec.instances.slice(0);
+                if(filterdInstances.length){
+                    cloneInstances = filterdInstances.slice(0);
+                    filterdInstances= [];
+                }else{
+                    cloneInstances = this.props.spec.instances.slice(0);
+                }
                 cloneInstances.forEach((instance)=>{
                     if(Number(instance.total) > Number(this.state.trange.min)){
                         filterdInstances.push(instance);
