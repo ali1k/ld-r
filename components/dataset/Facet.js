@@ -21,7 +21,7 @@ function shuffle(a) {
 class Facet extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0, rangeChanged: 0, range: {min: '', max: ''}, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : '', addedAsVar: this.props.analysisProps[this.props.spec.propertyURI] ? 1 : 0};
+        this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0, rangeChanged: 0, range: {min: '', max: ''}, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : '', addedAsVar: this.props.analysisProps[this.props.spec.propertyURI] ? 1 : 0, rangeEnabled: this.props.config && this.props.config.allowRangeOfValues ? 1 :0};
     }
     handleExport(){
         let values =[];
@@ -97,6 +97,8 @@ class Facet extends React.Component {
             this.setState({shuffled: !this.state.shuffled});
         }else if(data.value==='download'){
             this.handleExport();
+        }else if(data.value==='range'){
+            this.setState({rangeEnabled: !this.state.rangeEnabled});
         }
     }
     handleDropDown2Click(e, data){
@@ -176,11 +178,13 @@ class Facet extends React.Component {
         //dropdown setting
         let invertStat = this.props.invert[this.props.spec.propertyURI] ? 'Revert' : 'Invert';
         let shuffleStat = !this.state.shuffled ? 'Shuffle' : 'Reset';
+        let rangeStat = !this.state.rangeEnabled ? 'Show' : 'Hide';
         let addedAsVarStat = !this.props.analysisProps[this.props.spec.propertyURI] ? 'Analyze property' : 'Remove from analysis';
         let d_options = [
             { key: 2, text: addedAsVarStat , value: 'asVariable' },
             { key: 3, text: shuffleStat + ' the list', value: 'shuffle' },
-            { key: 4, text: 'Download the list', value: 'download' }
+            { key: 4, text: rangeStat + ' range options', value: 'range' },
+            { key: 5, text: 'Download the list', value: 'download' }
         ]
         if(this.props.selection && this.props.selection[this.props.spec.propertyURI] && this.props.selection[this.props.spec.propertyURI].length){
             d_options.unshift({ key: 1, text: invertStat + ' the selection', value: 'invert' });
@@ -314,7 +318,7 @@ class Facet extends React.Component {
                         </div>
                     </div>
 
-                    {this.state.config && this.state.config.allowRangeOfValues ?
+                    {this.state.rangeEnabled ?
                         <div className={rangeClasses}>
                             <div className="ui form">
                                 <div className="three fields">
