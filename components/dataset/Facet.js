@@ -21,7 +21,7 @@ function shuffle(a) {
 class Facet extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0, rangeChanged: 0, range: {min: '', max: ''}, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : '', addedAsVar: this.props.analysisProps[this.props.spec.propertyURI] ? 1 : 0, rangeEnabled: this.props.config && this.props.config.allowRangeOfValues ? 1 :0};
+        this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0, rangeChanged: 0, trange: {min: '', max: ''}, range: {min: '', max: ''}, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : '', addedAsVar: this.props.analysisProps[this.props.spec.propertyURI] ? 1 : 0, rangeEnabled: this.props.config && this.props.config.allowRangeOfValues ? 1 :0};
     }
     handleExport(){
         let values =[];
@@ -122,7 +122,58 @@ class Facet extends React.Component {
     }
     //filter content
     searchUpdated(term) {
-        this.setState({searchTerm: term}); // needed to force re-render
+        if(term.indexOf('filter:') !== -1){
+            //handle expressions in searchTerm
+            let tmp = term.trim().split('filter:');
+            if(tmp.length > 1){
+                //support for > < <> on values and total resources
+                if(tmp[1].indexOf('v') !== -1){
+                    //values
+                    if(tmp[1].indexOf('<v<') !== -1){
+                        let tmp2 = tmp[1].split('<v<');
+                        this.setState({range: {min: tmp2[0], max: tmp2[1]}, rangeEnabled: 1});
+                    }else if(tmp[1].indexOf('>v>') !== -1){
+                        let tmp2 = tmp[1].split('>v>');
+                        this.setState({range: {min: tmp2[1], max: tmp2[0]}, rangeEnabled: 1});
+                    }else if(tmp[1].indexOf('v<') !== -1){
+                        let tmp2 = tmp[1].split('<');
+                        this.setState({range: {min: '', max: tmp2[1]}, rangeEnabled: 1});
+                    }else if(tmp[1].indexOf('<v') !== -1){
+                        let tmp2 = tmp[1].split('<');
+                        this.setState({range: {max: '', min: tmp2[0]}, rangeEnabled: 1});
+                    }else if(tmp[1].indexOf('>v') !== -1){
+                        let tmp2 = tmp[1].split('>');
+                        this.setState({range: {max: tmp2[0], min: ''}, rangeEnabled: 1});
+                    }else if(tmp[1].indexOf('v>') !== -1){
+                        let tmp2 = tmp[1].split('>');
+                        this.setState({range: {max: '', min: tmp2[1]}, rangeEnabled: 1});
+                    }
+                }else if(tmp[1].indexOf('t') !== -1){
+                    //total e.g. filter:50<t<100
+                    if(tmp[1].indexOf('<t<') !== -1){
+                        let tmp2 = tmp[1].split('<t<');
+                        this.setState({trange: {min: tmp2[0], max: tmp2[1]}});
+                    }else if(tmp[1].indexOf('>t>') !== -1){
+                        let tmp2 = tmp[1].split('>t>');
+                        this.setState({trange: {min: tmp2[1], max: tmp2[0]}});
+                    }else if(tmp[1].indexOf('t<') !== -1){
+                        let tmp2 = tmp[1].split('<');
+                        this.setState({trange: {min: '', max: tmp2[1]}});
+                    }else if(tmp[1].indexOf('<t') !== -1){
+                        let tmp2 = tmp[1].split('<');
+                        this.setState({trange: {max: '', min: tmp2[0]}});
+                    }else if(tmp[1].indexOf('>t') !== -1){
+                        let tmp2 = tmp[1].split('>');
+                        this.setState({trange: {max: tmp2[0], min: ''}});
+                    }else if(tmp[1].indexOf('t>') !== -1){
+                        let tmp2 = tmp[1].split('>');
+                        this.setState({trange: {max: '', min: tmp2[1]}});
+                    }
+                }
+            }
+        }else{
+            this.setState({searchTerm: term}); // needed to force re-render    
+        }
     }
     createSelecedList(){
         let out = '';
@@ -272,6 +323,34 @@ class Facet extends React.Component {
             cloneInstances = cloneInstances.filter(this.refs.search.filter(filters));
         }
         newSpec.instances = cloneInstances;
+        let filterdInstances = [];
+        if(this.state.trange.min && this.state.trange.max){
+            cloneInstances = this.props.spec.instances.slice(0);
+            cloneInstances.forEach((instance)=>{
+                if(Number(instance.total) < Number(this.state.trange.max) && Number(instance.total) > Number(this.state.trange.min)){
+                    filterdInstances.push(instance);
+                }
+            })
+            newSpec.instances = filterdInstances;
+        }else{
+            if(this.state.trange.max){
+                cloneInstances = this.props.spec.instances.slice(0);
+                cloneInstances.forEach((instance)=>{
+                    if(Number(instance.total) < Number(this.state.trange.max)){
+                        filterdInstances.push(instance);
+                    }
+                })
+                newSpec.instances = filterdInstances;
+            }else if(this.state.trange.min){
+                cloneInstances = this.props.spec.instances.slice(0);
+                cloneInstances.forEach((instance)=>{
+                    if(Number(instance.total) > Number(this.state.trange.min)){
+                        filterdInstances.push(instance);
+                    }
+                })
+                newSpec.instances = filterdInstances;
+            }
+        }
         //console.log(this.props.spec.query);
         return (
             <div ref="facet" style={{'wordBreak': 'break-all', 'wordWrap': 'break-word'}}>
