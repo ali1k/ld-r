@@ -172,7 +172,11 @@ class Facet extends React.Component {
                 }
             }
         }else{
-            this.setState({searchTerm: term}); // needed to force re-render
+            if(!term.trim()){
+                this.setState({searchTerm: term, trange: {max: '', min: ''}}); // needed to force re-render
+            }else{
+                this.setState({searchTerm: term}); // needed to force re-render
+            }
         }
     }
     createSelecedList(){
