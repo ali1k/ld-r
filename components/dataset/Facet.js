@@ -190,7 +190,8 @@ class Facet extends React.Component {
             { key: 2, text:  'Tag List', value: 'TagListBrowser' },
             { key: 3, text:  'Bar Chart', value: 'BarChartBrowser' },
             { key: 4, text:  'Pie Chart', value: 'PieChartBrowser' },
-            { key: 5, text:  'Tree Map', value: 'TreeMapBrowser' }
+            { key: 5, text:  'Tree Map', value: 'TreeMapBrowser' },
+            { key: 6, text:  'Tag Cloud', value: 'TagCloudBrowser' }
         ]
         let check = this.checkGeoFeatures();
         if(check){
@@ -205,6 +206,7 @@ class Facet extends React.Component {
         const browserIcons = {
             'CheckListBrowser': 'list layout',
             'TagListBrowser': 'block layout',
+            'TagCloudBrowser': 'cloud',
             'BarChartBrowser': 'bar chart',
             'PieChartBrowser': 'pie chart',
             'TreeMapBrowser': 'grid layout',

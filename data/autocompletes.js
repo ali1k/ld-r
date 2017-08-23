@@ -126,7 +126,8 @@ module.exports = {
             {title: 'GeoListBrowser'},
             {title: 'CheckListBrowser'},
             {title: 'TaxonomyBrowser'},
-            {title: 'BarChartBrowser'}
+            {title: 'BarChartBrowser'},
+            {title: 'TagCloudBrowser'}
         ],
         classes: [
             {title: 'skos:Concept'},
