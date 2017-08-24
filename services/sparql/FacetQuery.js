@@ -674,6 +674,20 @@ class FacetQuery{
         //console.log(this.query);
         return this.prefixes + this.query;
     }
+    //maps unnamed variables used in the query to named variables for analysis
+    createMappingForAnalysisProps(prevSelection, options){
+        let out = {};
+        let self = this;
+        let i = 0, aCounter = 0;
+        for(let prop in prevSelection){
+            i++;
+            if(options && options.analysisProps && options.analysisProps[prop]){
+                aCounter++;
+                out['?v'+i] = '?ldr_ap'+aCounter+'_' + self.getPropertyLabel(prop);
+            }
+        }
+        return out;
+    }
     handleAnalysisProps(options, endpointParameters, graphName, type){
         let self = this;
         let apLabel = '', analysisSelector = '', analysisPhrase = '', aCounter = 0;
@@ -771,6 +785,17 @@ class FacetQuery{
         if(searchPhase){
             limitOffsetPharse ='';
         }
+        //if analysisProps are chosen, we duplicate the filters statement
+        let avmapping ={};
+        let ast = st;
+        if(analysisPhrase){
+            let avmapping = this.createMappingForAnalysisProps(prevSelection, options);
+            for(let prop in avmapping){
+                //need to escape question mark with \\
+                //todo: need to remove duplicats and also variables which are not required
+                ast = ast.replace(new RegExp('\\'+prop, 'g'), avmapping[prop]);
+            }
+        }
         this.query = `
         SELECT DISTINCT ?s ${selectStr} ${analysisSelector} WHERE {
             ${gStart}
@@ -783,12 +808,13 @@ class FacetQuery{
                     }
                     ${limitOffsetPharse}
                 }
+                ${ast}
+                ${analysisPhrase}
+                ${searchPhase}
                 ${titleStr}
                 ${imageStr}
                 ${geoStr}
-                ${analysisPhrase}
                 ${bindPhase}
-                ${searchPhase}
             ${gEnd}
         }
         `;

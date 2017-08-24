@@ -33,7 +33,7 @@ class RadarChartView extends React.Component {
         if (!this.props.resources.length) {
             out = <div className="ui warning message">
                 <div className="header">
-                    There was no resource in the selected dataset! This might be due to the connection problems. Please check the connection parameters of your dataset&apos;s Sparql endpoint or add resources to your dataset...</div>
+                    There was no resource in the selected dataset! This might be due to the connection problems or because the estimated query execution time exceeds the configured limit. Please check the connection parameters of your dataset&apos;s Sparql endpoint or add resources to your dataset...</div>
             </div>;
             return <div>{out}</div>;
         } else {
