@@ -68,7 +68,7 @@ class FacetedBrowser extends React.Component {
     //here we can determine the configs which should be considered in the query
     getNecessaryFaccetsConfig(){
         let facetConfigs = {};
-        let cnf = this.props.FacetedBrowserStore.config.config;
+        let cnf = JSON.parse(JSON.stringify(this.props.FacetedBrowserStore.config.config));
         for(let prop in cnf){
             if(cnf[prop].objectIViewer && cnf[prop].objectIViewer.length){
                 facetConfigs[prop] = cnf[prop];
@@ -76,6 +76,13 @@ class FacetedBrowser extends React.Component {
             if(cnf[prop].dataType && cnf[prop].dataType.length){
                 if(!facetConfigs[prop]){
                     facetConfigs[prop] = {dataType: cnf[prop].dataType[0]};
+                }
+            }
+            if(cnf[prop].restrictAnalysisToSelected){
+                if(!facetConfigs[prop]){
+                    facetConfigs[prop] = {restrictAnalysisToSelected: cnf[prop].restrictAnalysisToSelected};
+                }else{
+                    facetConfigs[prop].restrictAnalysisToSelected = cnf[prop].restrictAnalysisToSelected;
                 }
             }
         }

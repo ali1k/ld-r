@@ -543,7 +543,6 @@ class FacetQuery{
                 st = '';
             }
         }
-
         return st_extra + ' ' + st;
     }
     addDataTypeToFilter(el){
@@ -686,7 +685,19 @@ class FacetQuery{
                 out['?v'+i] = '?ldr_ap'+aCounter+'_' + self.getPropertyLabel(prop);
             }
         }
-        return out;
+        return Object.keys(out).length ? out : 0;
+    }
+    createSelectionForAnalysisProps(prevSelection, options){
+        let out = {};
+        for(let prop in prevSelection){
+            if(options && options.analysisProps && options.analysisProps[prop]){
+                //check the config
+                if(options.facetConfigs && options.facetConfigs[prop] && options.facetConfigs[prop].restrictAnalysisToSelected){
+                    out[prop] = prevSelection[prop]
+                }
+            }
+        }
+        return Object.keys(out).length ? out : 0;
     }
     handleAnalysisProps(options, endpointParameters, graphName, type){
         let self = this;
@@ -762,7 +773,7 @@ class FacetQuery{
                     titleStr = titleStr + 'OPTIONAL { ?s ' + self.filterPropertyPath(prop) + ' ?vp'+index+' .} ';
                     tmpA.push('?vp' + index);
                 });
-                bindPhase = ' BIND(CONCAT('+tmpA.join(',"-",')+') AS ?title) '
+                bindPhase = ' BIND(CONCAT('+tmpA.join(',"-",')+') AS ?title) ';
             }
         }else{
             selectStr = ' ?title ';
@@ -788,17 +799,22 @@ class FacetQuery{
         //if analysisProps are chosen, we duplicate the filters statement
         let avmapping ={};
         let ast = '';
-        /*
+        let aSelection ={};
         if(analysisPhrase){
-            ast = st;
-            let avmapping = this.createMappingForAnalysisProps(prevSelection, options);
-            for(let prop in avmapping){
-                //need to escape question mark with \\
-                //todo: need to remove duplicats and also variables which are not required
-                ast = ast.replace(new RegExp('\\'+prop, 'g'), avmapping[prop]);
+            options.facetConfigs
+            aSelection = this.createSelectionForAnalysisProps(prevSelection, options);
+            if(aSelection){
+                avmapping = this.createMappingForAnalysisProps(aSelection, options);
+                //generates filters only for analysis props
+                ast = this.getMultipleFilters(endpointParameters, graphName, aSelection, rtconfig, options);
+                for(let prop in avmapping){
+                    //need to escape question mark with \\
+                    //todo: need to remove duplicats and also variables which are not required
+                    ast = ast.replace(new RegExp('\\'+prop, 'g'), avmapping[prop]);
+                }
             }
         }
-        */
+
         this.query = `
         SELECT DISTINCT ?s ${selectStr} ${analysisSelector} WHERE {
             ${gStart}

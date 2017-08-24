@@ -93,6 +93,7 @@ module.exports = {
             {title: 'ldr:containerDatasetURI'},
             {title: 'ldr:hasLinkedValue'},
             {title: 'ldr:constraint'},
+            {title: 'ldr:restrictAnalysisToSelected'},
             {title: 'ldr:enabled'}
         ],
         ldrLiterals: [
