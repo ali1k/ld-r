@@ -397,6 +397,7 @@ class Facet extends React.Component {
                 newSpec.instances = filterdInstances;
             }
         }
+        cloneInstances = newSpec.instances;
         //console.log(this.props.spec.query);
         return (
             <div ref="facet" style={{'wordBreak': 'break-all', 'wordWrap': 'break-word'}}>
@@ -418,7 +419,7 @@ class Facet extends React.Component {
                     }
                     <div className={contentClasses}>
                         {!this.props.spec.propertyURI ? '' :
-                            <span className="ui teal ribbon label" title="number of items listed in this facet" onDoubleClick={this.handleToggleShowQuery.bind(this)}>{this.state.searchTerm ? cloneInstances.length : this.addCommas(itemsCount)}{(!this.state.searchTerm && this.props.spec.propertyURI && parseInt(itemsCount) > cloneInstances.length) ? '*' : ''}</span>
+                            <span className="ui teal ribbon label" title="number of items listed in this facet" onDoubleClick={this.handleToggleShowQuery.bind(this)}>{this.state.searchTerm || this.state.range.min || this.state.range.max || this.state.trange.min || this.state.trange.max ? cloneInstances.length : this.addCommas(itemsCount)}{(!this.state.searchTerm && !this.state.range.min && !this.state.range.max && !this.state.trange.min && !this.state.trange.max && this.props.spec.propertyURI && parseInt(itemsCount) > cloneInstances.length) ? '*' : ''}</span>
                         }
                         <div className="ui horizontal list">
                             <div className="item">
@@ -437,7 +438,7 @@ class Facet extends React.Component {
                             <div className="ui form" style={descStyle}>
                                 <ObjectBrowser expanded={this.state.expanded} selection={this.props.selection} shortenURI={true} spec={newSpec} config={this.state.config} onSelect={this.checkItem.bind(this)} datasetURI={this.props.datasetURI}/>
                                 {
-                                    (!this.state.searchTerm && this.props.spec.propertyURI && parseInt(itemsCount) > cloneInstances.length) ? <a onClick={this.handleShowMore.bind(this)} className="ui orange fluid label">{(itemsCount-cloneInstances.length) + ' items left. Show more...'}</a> : ''
+                                    (!this.state.searchTerm && !this.state.range.min && !this.state.range.max && !this.state.trange.min && !this.state.trange.max && this.props.spec.propertyURI && parseInt(itemsCount) > cloneInstances.length) ? <a onClick={this.handleShowMore.bind(this)} className="ui orange fluid label">{(itemsCount-cloneInstances.length) + ' items left. Show more...'}</a> : ''
                                 }
                             </div>
                         </div>

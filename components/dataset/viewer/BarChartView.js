@@ -90,10 +90,10 @@ class BarChartView extends React.Component {
             instances = data2;
         }
         //console.log(xType, yType);
-        let height = 500;
+        const minHeight = this.props.expanded ? 700 : 500;
         return (
             <div ref="barChartView" style={{overflow: 'auto'}}>
-                <ResponsiveContainer width="97%" height={height}>
+                <ResponsiveContainer width="97%" height={minHeight}>
                     <BarChart data={instances}
                         margin={{top: 0, right: 10, left: 0, bottom: 0}}>
                         <XAxis dataKey="x"/>

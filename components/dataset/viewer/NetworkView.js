@@ -139,10 +139,10 @@ class NetworkView extends React.Component {
             });
             network = {nodes: nodes, edges: edges};
         }
-        const height = 500;
+        const minHeight = this.props.expanded ? 700 : 500;
         return (
-            <div ref="networkView" style={{overflow: 'auto'}}>
-                <Sigma graph={network} settings={{drawEdges: true, clone: true}} key={Math.round(+new Date() / 1000)}>
+            <div ref="networkView" style={{overflow: 'auto', minHeight: minHeight+'px'}}>
+                <Sigma graph={network} settings={{drawEdges: true, clone: true}} key={Math.round(+new Date() / 1000)} style={{overflow: 'auto', minHeight: minHeight+'px'}}>
                     <ForceAtlas2 barnesHutOptimize barnesHutTheta={0.8} iterationsPerRender={2}/>
                     <RelativeSize initialSize={50}/>
                     <RandomizeNodePositions/>

@@ -126,10 +126,10 @@ class ScatterChartView extends React.Component {
             //console.log(instances);
         }
         //console.log(xType, yType);
-        let height = 400;
+        const minHeight = this.props.expanded ? 700 : 500;
         return (
             <div ref="scatterChartView" style={{overflow: 'auto'}}>
-                <ResponsiveContainer width="100%" height={height}>
+                <ResponsiveContainer width="100%" height={minHeight}>
                     <ScatterChart margin={{top: 0, right: 10, left: 0, bottom: 0}}>
                       	<XAxis dataKey={'x'} name={xLabel} type={xType} />
                       	<YAxis dataKey={'y'} name={yLabel} type={yType} />

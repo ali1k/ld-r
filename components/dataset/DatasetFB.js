@@ -99,7 +99,7 @@ class DatasetFB extends React.Component {
                 <DatasetHeader config={dcnf} total={this.props.total}  datasetURI={this.props.datasetURI} searchMode={this.state.searchMode} resourcesLength={this.props.resourcesLength}/>
                 <div className="ui segments">
                     <div className="ui segment">
-                        <DatasetViewer enableAuthentication={enableAuthentication} cloneable={0} resources={this.props.resources} datasetURI={this.props.datasetURI} OpenInNewTab={true} isBig={this.props.isBig} config={dcnf} facetConfigs={facetConfigs}/>
+                        <DatasetViewer expanded={this.props.expanded} enableAuthentication={enableAuthentication} cloneable={0} resources={this.props.resources} datasetURI={this.props.datasetURI} OpenInNewTab={true} isBig={this.props.isBig} config={dcnf} facetConfigs={facetConfigs}/>
                     </div>
                     <DatasetPager config={dcnf} showAllResources={this.props.showAllResources} onShowAllResources={this.props.onShowAllResources} onSearchMode={this.handleSearchMode.bind(this)} selection={this.props.selection} onExpandCollapse={this.props.onExpandCollapse} handleClick={this.props.handleClick} datasetURI={this.props.datasetURI} total={this.props.total} threshold={this.props.pagerSize} currentPage={this.props.currentPage} noOfAnalysisProps={this.getNoOfPropsForAnalysis()} handleViewerChange={this.handleViewerChange.bind(this)} handleToggleShowQuery={this.handleToggleShowQuery.bind(this)} handleExport={this.handleExport.bind(this)}/>
                     {dcnf.displayQueries ?

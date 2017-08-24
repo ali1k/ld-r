@@ -90,10 +90,10 @@ class RadarChartView extends React.Component {
             instances = data2;
         }
         //console.log(xType, yType);
-        let height = 500;
+        const minHeight = this.props.expanded ? 700 : 500;
         return (
             <div ref="radarChartView" style={{overflow: 'auto'}}>
-                <ResponsiveContainer width="100%" height={height}>
+                <ResponsiveContainer width="100%" height={minHeight}>
                     <RadarChart cx={300} cy={250} outerRadius={200} data={instances}>
                         <Radar name={yLabel} dataKey="y" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6}/>
                         {zLabel ?

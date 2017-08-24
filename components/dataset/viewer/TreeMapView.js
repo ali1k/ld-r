@@ -137,10 +137,10 @@ class TreeMapView extends React.Component {
             }
         }
         //console.log(xType, yType);
-        let height = 500;
+        const minHeight = this.props.expanded ? 700 : 500;
         return (
             <div ref="treeMapView" style={{overflow: 'auto'}}>
-                <ResponsiveContainer width="100%" height={height}>
+                <ResponsiveContainer width="100%" height={minHeight}>
                     <Treemap data={data} dataKey="size" nameKey="name" ratio={4/3} stroke="#fff"  content={this.renderCustomizedLabel}>
                         <Tooltip content={this.renderTooltip.bind(this, xLabel, yLabel)}/>
                     </Treemap>
