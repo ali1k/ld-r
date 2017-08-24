@@ -787,8 +787,10 @@ class FacetQuery{
         }
         //if analysisProps are chosen, we duplicate the filters statement
         let avmapping ={};
-        let ast = st;
+        let ast = '';
+        /*
         if(analysisPhrase){
+            ast = st;
             let avmapping = this.createMappingForAnalysisProps(prevSelection, options);
             for(let prop in avmapping){
                 //need to escape question mark with \\
@@ -796,6 +798,7 @@ class FacetQuery{
                 ast = ast.replace(new RegExp('\\'+prop, 'g'), avmapping[prop]);
             }
         }
+        */
         this.query = `
         SELECT DISTINCT ?s ${selectStr} ${analysisSelector} WHERE {
             ${gStart}
