@@ -21,11 +21,18 @@ function shuffle(a) {
 class Facet extends React.Component {
     constructor(props){
         super(props);
+        this.filteredInstances = [];
         this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0, rangeChanged: 0, trange: {min: '', max: ''}, range: {min: '', max: ''}, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : '', addedAsVar: this.props.analysisProps[this.props.spec.propertyURI] ? 1 : 0, rangeEnabled: this.props.config && this.props.config.allowRangeOfValues ? 1 :0};
     }
     handleExport(){
         let values =[];
-        this.props.spec.instances.forEach((instance)=>{
+        let source = [];
+        if(this.state.searchTerm || this.state.range.min || this.state.range.max || this.state.trange.min || this.state.trange.max){
+            source = this.filteredInstances;
+        }else{
+            source = this.props.spec.instances;
+        }
+        source.forEach((instance)=>{
             values.push({item: instance.value, resourceNo: instance.total})
         })
         let csv = json2csv({ data: values, fields: ['item', 'resourceNo'] });
@@ -327,74 +334,74 @@ class Facet extends React.Component {
             cloneInstances = cloneInstances.filter(this.refs.search.filter(filters));
         }
         newSpec.instances = cloneInstances;
-        let filterdInstances = [];
+        this.filteredInstances = [];
         if(this.state.range.min && this.state.range.max){
             cloneInstances = this.props.spec.instances.slice(0);
             cloneInstances.forEach((instance)=>{
                 if(Number(instance.value) < Number(this.state.range.max) && Number(instance.value) > Number(this.state.range.min)){
-                    filterdInstances.push(instance);
+                    this.filteredInstances.push(instance);
                 }
             })
-            newSpec.instances = filterdInstances;
+            newSpec.instances = this.filteredInstances;
         }else{
             if(this.state.range.max){
                 cloneInstances = this.props.spec.instances.slice(0);
                 cloneInstances.forEach((instance)=>{
                     if(Number(instance.value) < Number(this.state.range.max)){
-                        filterdInstances.push(instance);
+                        this.filteredInstances.push(instance);
                     }
                 })
-                newSpec.instances = filterdInstances;
+                newSpec.instances = this.filteredInstances;
             }else if(this.state.range.min){
                 cloneInstances = this.props.spec.instances.slice(0);
                 cloneInstances.forEach((instance)=>{
                     if(Number(instance.value) > Number(this.state.range.min)){
-                        filterdInstances.push(instance);
+                        this.filteredInstances.push(instance);
                     }
                 })
-                newSpec.instances = filterdInstances;
+                newSpec.instances = this.filteredInstances;
             }
         }
         if(this.state.trange.min && this.state.trange.max){
-            if(filterdInstances.length){
-                cloneInstances = filterdInstances.slice(0);
-                filterdInstances= [];
+            if(this.filteredInstances.length){
+                cloneInstances = this.filteredInstances.slice(0);
+                this.filteredInstances= [];
             }else{
                 cloneInstances = this.props.spec.instances.slice(0);
             }
             cloneInstances.forEach((instance)=>{
                 if(Number(instance.total) < Number(this.state.trange.max) && Number(instance.total) > Number(this.state.trange.min)){
-                    filterdInstances.push(instance);
+                    this.filteredInstances.push(instance);
                 }
             })
-            newSpec.instances = filterdInstances;
+            newSpec.instances = this.filteredInstances;
         }else{
             if(this.state.trange.max){
-                if(filterdInstances.length){
-                    cloneInstances = filterdInstances.slice(0);
-                    filterdInstances= [];
+                if(this.filteredInstances.length){
+                    cloneInstances = this.filteredInstances.slice(0);
+                    this.filteredInstances= [];
                 }else{
                     cloneInstances = this.props.spec.instances.slice(0);
                 }
                 cloneInstances.forEach((instance)=>{
                     if(Number(instance.total) < Number(this.state.trange.max)){
-                        filterdInstances.push(instance);
+                        this.filteredInstances.push(instance);
                     }
                 })
-                newSpec.instances = filterdInstances;
+                newSpec.instances = this.filteredInstances;
             }else if(this.state.trange.min){
-                if(filterdInstances.length){
-                    cloneInstances = filterdInstances.slice(0);
-                    filterdInstances= [];
+                if(this.filteredInstances.length){
+                    cloneInstances = this.filteredInstances.slice(0);
+                    this.filteredInstances= [];
                 }else{
                     cloneInstances = this.props.spec.instances.slice(0);
                 }
                 cloneInstances.forEach((instance)=>{
                     if(Number(instance.total) > Number(this.state.trange.min)){
-                        filterdInstances.push(instance);
+                        this.filteredInstances.push(instance);
                     }
                 })
-                newSpec.instances = filterdInstances;
+                newSpec.instances = this.filteredInstances;
             }
         }
         cloneInstances = newSpec.instances;
