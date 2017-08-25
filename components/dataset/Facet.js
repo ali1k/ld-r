@@ -243,95 +243,6 @@ class Facet extends React.Component {
     }
     render() {
         let self = this;
-        //dropdown setting
-        let invertStat = this.props.invert[this.props.spec.propertyURI] ? 'Revert' : 'Invert';
-        let shuffleStat = !this.state.shuffled ? 'Shuffle' : 'Reset';
-        let rangeStat = !this.state.rangeEnabled ? 'Show' : 'Hide';
-        let addedAsVarStat = !this.props.analysisProps[this.props.spec.propertyURI] ? 'Analyze property' : 'Remove from analysis';
-        let d_options = [
-            { key: 5, text: addedAsVarStat , value: 'asVariable' },
-            { key: 6, text: shuffleStat + ' the list', value: 'shuffle' },
-            { key: 7, text: rangeStat + ' range options', value: 'range' },
-            { key: 8, text: 'Download the list', value: 'download' }
-        ];
-        let selectAllFlag = 0;
-        if(this.props.selection && this.props.selection[this.props.spec.propertyURI] && this.props.selection[this.props.spec.propertyURI].length){
-            d_options.unshift({ key: 4, text:  'Deselect All', value: 'deselectAll' });
-            selectAllFlag = 1;
-        }
-        //can select maximum 100 items
-        if(!selectAllFlag && this.filteredInstances.length && this.filteredInstances.length <100){
-            d_options.unshift({ key: 4, text:  'Select All', value: 'selectAll' });
-        }
-        if(this.props.selection && this.props.selection[this.props.spec.propertyURI] && this.props.selection[this.props.spec.propertyURI].length){
-            d_options.unshift({ key: 3, text: invertStat + ' the selection', value: 'invert' });
-        }
-        let b_options = [
-            { key: 1, text:  'Check List', value: 'CheckListBrowser' },
-            { key: 2, text:  'Tag List', value: 'TagListBrowser' },
-            { key: 3, text:  'Bar Chart', value: 'BarChartBrowser' },
-            { key: 4, text:  'Pie Chart', value: 'PieChartBrowser' },
-            { key: 5, text:  'Tree Map', value: 'TreeMapBrowser' },
-            { key: 6, text:  'Tag Cloud', value: 'TagCloudBrowser' }
-        ]
-        let check = this.checkGeoFeatures();
-        if(check){
-            b_options.push({ key: 6, text:  'Map', value: 'GeoListBrowser' });
-        }
-        b_options.push({ key: 30, text:  'Default', value: 'Default' });
-        const d_trigger = (
-            <span>
-                <Icon name='lab' className="orange"/>
-            </span>
-        );
-        const browserIcons = {
-            'CheckListBrowser': 'list layout',
-            'TagListBrowser': 'block layout',
-            'TagCloudBrowser': 'cloud',
-            'BarChartBrowser': 'bar chart',
-            'PieChartBrowser': 'pie chart',
-            'TreeMapBrowser': 'grid layout',
-            'GeoListBrowser': 'map'
-
-        };
-        const defaultBrowseIcon = 'list layout';
-        let iconC =  (this.state.config && this.state.config.objectBrowser) ? (browserIcons[this.state.config.objectBrowser] ? browserIcons[this.state.config.objectBrowser] : defaultBrowseIcon) : defaultBrowseIcon;
-        const b_trigger = (
-            <span>
-                <Icon name={iconC} className="olive" />
-            </span>
-        );
-        //change header color of facet: Violet -> for property chains , Purple -> multigraphs
-        let defaultColor = 'blue';
-        let defaultEmphasis = '';
-        if(this.props.spec.propertyURI.indexOf('->') !== -1){
-            defaultColor = 'violet';
-        }
-        if(this.props.spec.propertyURI.indexOf('->[') !== -1){
-            defaultColor = 'purple';
-        }
-        if(this.props.invert[this.props.spec.propertyURI]){
-            defaultColor = 'red';
-        }
-        if(this.state.addedAsVar){
-            defaultEmphasis = ' tertiary';
-        }
-        //-----------------------
-        let contentClasses = 'content', extraContentClasses='extra content', cardClasses = 'ui top attached segment ' + (this.props.color ? this.props.color : defaultColor) + defaultEmphasis;
-        let queryClasses = 'ui tertiary segment';
-        let rangeClasses = 'ui secondary inverted blue segment';
-        if(this.state.verticalResized){
-            contentClasses = contentClasses + ' hide-element';
-            extraContentClasses = extraContentClasses + ' hide-element';
-            queryClasses = queryClasses + ' hide-element';
-            rangeClasses = rangeClasses + ' hide-element';
-        }
-        let descStyle = {
-            minHeight: this.props.minHeight ? this.props.minHeight : 80,
-            maxHeight: this.props.maxHeight ? this.props.maxHeight : this.props.spec.property ? 200: 1200,
-            position: 'relative',
-            overflow: 'auto'
-        };
         //order by total count: for performance is done on client-side
         if(self.props.spec.propertyURI){
             this.props.spec.instances.sort(this.compare);
@@ -422,6 +333,95 @@ class Facet extends React.Component {
         }
         cloneInstances = newSpec.instances;
         //console.log(this.props.spec.query);
+        //dropdown setting
+        let invertStat = this.props.invert[this.props.spec.propertyURI] ? 'Revert' : 'Invert';
+        let shuffleStat = !this.state.shuffled ? 'Shuffle' : 'Reset';
+        let rangeStat = !this.state.rangeEnabled ? 'Show' : 'Hide';
+        let addedAsVarStat = !this.props.analysisProps[this.props.spec.propertyURI] ? 'Analyze property' : 'Remove from analysis';
+        let d_options = [
+            { key: 5, text: addedAsVarStat , value: 'asVariable' },
+            { key: 6, text: shuffleStat + ' the list', value: 'shuffle' },
+            { key: 7, text: rangeStat + ' range options', value: 'range' },
+            { key: 8, text: 'Download the list', value: 'download' }
+        ];
+        let selectAllFlag = 0;
+        if(this.props.selection && this.props.selection[this.props.spec.propertyURI] && this.props.selection[this.props.spec.propertyURI].length){
+            d_options.unshift({ key: 4, text:  'Deselect All', value: 'deselectAll' });
+            selectAllFlag = 1;
+        }
+        //can select maximum 100 items
+        if(!selectAllFlag && this.filteredInstances.length && this.filteredInstances.length <100){
+            d_options.unshift({ key: 4, text:  'Select All', value: 'selectAll' });
+        }
+        if(this.props.selection && this.props.selection[this.props.spec.propertyURI] && this.props.selection[this.props.spec.propertyURI].length){
+            d_options.unshift({ key: 3, text: invertStat + ' the selection', value: 'invert' });
+        }
+        let b_options = [
+            { key: 1, text:  'Check List', value: 'CheckListBrowser' },
+            { key: 2, text:  'Tag List', value: 'TagListBrowser' },
+            { key: 3, text:  'Bar Chart', value: 'BarChartBrowser' },
+            { key: 4, text:  'Pie Chart', value: 'PieChartBrowser' },
+            { key: 5, text:  'Tree Map', value: 'TreeMapBrowser' },
+            { key: 6, text:  'Tag Cloud', value: 'TagCloudBrowser' }
+        ]
+        let check = this.checkGeoFeatures();
+        if(check){
+            b_options.push({ key: 6, text:  'Map', value: 'GeoListBrowser' });
+        }
+        b_options.push({ key: 30, text:  'Default', value: 'Default' });
+        const d_trigger = (
+            <span>
+                <Icon name='lab' className="orange"/>
+            </span>
+        );
+        const browserIcons = {
+            'CheckListBrowser': 'list layout',
+            'TagListBrowser': 'block layout',
+            'TagCloudBrowser': 'cloud',
+            'BarChartBrowser': 'bar chart',
+            'PieChartBrowser': 'pie chart',
+            'TreeMapBrowser': 'grid layout',
+            'GeoListBrowser': 'map'
+
+        };
+        const defaultBrowseIcon = 'list layout';
+        let iconC =  (this.state.config && this.state.config.objectBrowser) ? (browserIcons[this.state.config.objectBrowser] ? browserIcons[this.state.config.objectBrowser] : defaultBrowseIcon) : defaultBrowseIcon;
+        const b_trigger = (
+            <span>
+                <Icon name={iconC} className="olive" />
+            </span>
+        );
+        //change header color of facet: Violet -> for property chains , Purple -> multigraphs
+        let defaultColor = 'blue';
+        let defaultEmphasis = '';
+        if(this.props.spec.propertyURI.indexOf('->') !== -1){
+            defaultColor = 'violet';
+        }
+        if(this.props.spec.propertyURI.indexOf('->[') !== -1){
+            defaultColor = 'purple';
+        }
+        if(this.props.invert[this.props.spec.propertyURI]){
+            defaultColor = 'red';
+        }
+        if(this.state.addedAsVar){
+            defaultEmphasis = ' tertiary';
+        }
+        //-----------------------
+        let contentClasses = 'content', extraContentClasses='extra content', cardClasses = 'ui top attached segment ' + (this.props.color ? this.props.color : defaultColor) + defaultEmphasis;
+        let queryClasses = 'ui tertiary segment';
+        let rangeClasses = 'ui secondary inverted blue segment';
+        if(this.state.verticalResized){
+            contentClasses = contentClasses + ' hide-element';
+            extraContentClasses = extraContentClasses + ' hide-element';
+            queryClasses = queryClasses + ' hide-element';
+            rangeClasses = rangeClasses + ' hide-element';
+        }
+        let descStyle = {
+            minHeight: this.props.minHeight ? this.props.minHeight : 80,
+            maxHeight: this.props.maxHeight ? this.props.maxHeight : this.props.spec.property ? 200: 1200,
+            position: 'relative',
+            overflow: 'auto'
+        };
         return (
             <div ref="facet" style={{'wordBreak': 'break-all', 'wordWrap': 'break-word'}}>
 
