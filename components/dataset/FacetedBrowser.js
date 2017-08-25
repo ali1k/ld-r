@@ -219,9 +219,21 @@ class FacetedBrowser extends React.Component {
                 if(!this.state.selection[propertyURI]){
                     this.state.selection[propertyURI] = [];
                 }
-                this.state.selection[propertyURI].push({value: value, valueType: valueType, dataType: dataType});
+                if(Array.isArray(value)){
+                    value.forEach((item)=>{
+                        self.state.selection[propertyURI].push({value: item, valueType: valueType, dataType: dataType});
+                    });
+                }else{
+                    this.state.selection[propertyURI].push({value: value, valueType: valueType, dataType: dataType});
+                }
             }else{
-                this.state.selection[propertyURI].splice(this.findIndexInSelection(this.state.selection[propertyURI], value), 1);
+                if(Array.isArray(value)){
+                    value.forEach((item)=>{
+                        this.state.selection[propertyURI].splice(this.findIndexInSelection(this.state.selection[propertyURI], item), 1);
+                    });
+                }else{
+                    this.state.selection[propertyURI].splice(this.findIndexInSelection(this.state.selection[propertyURI], value), 1);
+                }
             }
             //check if there are active facets to be updated as side effect
             sideEffectsArr = [];

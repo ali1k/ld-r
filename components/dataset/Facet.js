@@ -26,13 +26,7 @@ class Facet extends React.Component {
     }
     handleExport(){
         let values =[];
-        let source = [];
-        if(this.state.searchTerm || this.state.range.min || this.state.range.max || this.state.trange.min || this.state.trange.max){
-            source = this.filteredInstances;
-        }else{
-            source = this.props.spec.instances;
-        }
-        source.forEach((instance)=>{
+        this.filteredInstances.forEach((instance)=>{
             values.push({item: instance.value, resourceNo: instance.total})
         })
         let csv = json2csv({ data: values, fields: ['item', 'resourceNo'] });
@@ -106,6 +100,18 @@ class Facet extends React.Component {
             this.handleExport();
         }else if(data.value==='range'){
             this.setState({rangeEnabled: !this.state.rangeEnabled});
+        }else if(data.value==='selectAll'){
+            let values = [];
+            this.filteredInstances.forEach((item)=>{
+                values.push(item.value);
+            });
+            this.props.onCheck(1, values, this.props.spec.propertyURI);
+        }else if(data.value==='deselectAll'){
+            let values = [];
+            this.filteredInstances.forEach((item)=>{
+                values.push(item.value);
+            });
+            this.props.onCheck(0, values, this.props.spec.propertyURI);
         }
     }
     handleDropDown2Click(e, data){
@@ -243,13 +249,22 @@ class Facet extends React.Component {
         let rangeStat = !this.state.rangeEnabled ? 'Show' : 'Hide';
         let addedAsVarStat = !this.props.analysisProps[this.props.spec.propertyURI] ? 'Analyze property' : 'Remove from analysis';
         let d_options = [
-            { key: 2, text: addedAsVarStat , value: 'asVariable' },
-            { key: 3, text: shuffleStat + ' the list', value: 'shuffle' },
-            { key: 4, text: rangeStat + ' range options', value: 'range' },
-            { key: 5, text: 'Download the list', value: 'download' }
-        ]
+            { key: 5, text: addedAsVarStat , value: 'asVariable' },
+            { key: 6, text: shuffleStat + ' the list', value: 'shuffle' },
+            { key: 7, text: rangeStat + ' range options', value: 'range' },
+            { key: 8, text: 'Download the list', value: 'download' }
+        ];
+        let selectAllFlag = 0;
         if(this.props.selection && this.props.selection[this.props.spec.propertyURI] && this.props.selection[this.props.spec.propertyURI].length){
-            d_options.unshift({ key: 1, text: invertStat + ' the selection', value: 'invert' });
+            d_options.unshift({ key: 4, text:  'Deselect All', value: 'deselectAll' });
+            selectAllFlag = 1;
+        }
+        //can select maximum 100 items
+        if(!selectAllFlag && this.filteredInstances.length && this.filteredInstances.length <100){
+            d_options.unshift({ key: 4, text:  'Select All', value: 'selectAll' });
+        }
+        if(this.props.selection && this.props.selection[this.props.spec.propertyURI] && this.props.selection[this.props.spec.propertyURI].length){
+            d_options.unshift({ key: 3, text: invertStat + ' the selection', value: 'invert' });
         }
         let b_options = [
             { key: 1, text:  'Check List', value: 'CheckListBrowser' },
@@ -334,7 +349,8 @@ class Facet extends React.Component {
             cloneInstances = cloneInstances.filter(this.refs.search.filter(filters));
         }
         newSpec.instances = cloneInstances;
-        this.filteredInstances = [];
+        //search and filter cannot occur together:ToDO
+        this.filteredInstances = cloneInstances.slice(0);
         if(this.state.range.min && this.state.range.max){
             cloneInstances = this.props.spec.instances.slice(0);
             cloneInstances.forEach((instance)=>{
