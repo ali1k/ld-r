@@ -62,7 +62,7 @@ class TagCloudBrowser extends React.Component {
             }else if(this.props.shortenURI && !(this.props.config && this.props.config.shortenURI === 0)){
                 title = URIUtil.getURILabel(title);
             }
-            this.tags.push({weight: parseInt(node.total), text: title, html: {style: style, title: node.value}, handlers: {click: self.selectTag.bind(this, node.value)}});
+            this.tags.push({weight: parseInt(node.total), text: title , html: {style: style, title: node.value +' ('+node.total+')'}, handlers: {click: self.selectTag.bind(this, node.value)}});
         });
         return (
             <div className='ui segment' ref="tagCloudBrowser" >
