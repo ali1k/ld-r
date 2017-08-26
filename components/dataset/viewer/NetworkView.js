@@ -141,7 +141,7 @@ class NetworkView extends React.Component {
         }
         const minHeight = this.props.expanded ? 700 : 500;
         return (
-            <div ref="networkView" style={{overflow: 'auto', minHeight: minHeight+'px'}}>
+            <div ref="networkView" style={{overflow: 'auto', minHeight: minHeight+'px'}} key={Math.round(+new Date() / 1000)}>
                 <Sigma graph={network} settings={{drawEdges: true, clone: true}} key={Math.round(+new Date() / 1000)} style={{overflow: 'auto', minHeight: minHeight+'px'}}>
                     <ForceAtlas2 barnesHutOptimize barnesHutTheta={0.8} iterationsPerRender={2}/>
                     <RelativeSize initialSize={50}/>
