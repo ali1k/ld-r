@@ -5,11 +5,23 @@ import ObjectIViewer from './ObjectIViewer';
 import ObjectIEditor from './ObjectIEditor';
 import {navigateAction} from 'fluxible-router';
 import {Popup} from 'semantic-ui-react';
+import {list} from '../../data/languages';
 
 class IndividualObject extends React.Component {
     constructor(props) {
         super(props);
         this.state = {objectValue: this.props.spec.value, detailData: {}, inEditMode: this.props.inEditMode, isExtendedView: 0};
+    }
+    getLanguage(code) {
+        let o;
+        list.forEach(function(l) {
+            if(l.code === code){
+                //o = l.name +'-'+ l.nativeName;
+                o = l.name ;
+                return o;
+            }
+        });
+        return o;
     }
     componentDidMount() {
         let self = this;
@@ -236,6 +248,7 @@ class IndividualObject extends React.Component {
                                 {dataViewType}
                             </div>
                             <div className="four wide column field animated pulse">
+                                {this.props.spec.lang ? <span className='ui tag label mini'>{this.getLanguage(this.props.spec.lang)}</span>: null}
                                 {detailDIV}
                                 {editDIV}
                                 {deleteDIV}
