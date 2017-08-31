@@ -35,9 +35,9 @@ class BarChartBrowser extends React.Component {
         }
     }
     comparePropsFloat(a,b) {
-        if (parseFloat(a.title) < parseFloat(b.title))
+        if (Number(a.title) < Number(b.title))
             return -1;
-        if (parseFloat(a.title) > parseFloat(b.title))
+        if (Number(a.title) > Number(b.title))
             return 1;
         return 0;
     }
@@ -57,7 +57,7 @@ class BarChartBrowser extends React.Component {
             if(self.props.shortenURI && !(self.props.config && self.props.config.shortenURI === 0)){
                 title = URIUtil.getURILabel(title);
             }
-            data.push({ovalue: node.value, title: title, total: parseFloat(node.total), isSelected: self.doesExist(node.value)});
+            data.push({ovalue: node.value, title: title, total: Number(node.total), isSelected: self.doesExist(node.value)});
         })
         if(self.props.config && self.props.config.hasNumericValues){
             data.sort(this.comparePropsFloat);

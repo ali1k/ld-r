@@ -48,9 +48,9 @@ class FacetedBrowser extends React.Component {
         });
     }
     compareProps(a,b) {
-        if (parseFloat(a.position) < parseFloat(b.position))
+        if (Number(a.position) < Number(b.position))
             return -1;
-        if (parseFloat(a.position) > parseFloat(b.position))
+        if (Number(a.position) > Number(b.position))
             return 1;
         //sort by alphabet
         if(a.label < b.label){

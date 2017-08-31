@@ -69,7 +69,7 @@ class TreeMapBrowser extends React.Component {
             if(self.props.shortenURI && !(self.props.config && self.props.config.shortenURI === 0)){
                 title = URIUtil.getURILabel(title);
             }
-            data.push({ovalue: node.value, title: title, total: parseFloat(node.total), isSelected: self.doesExist(node.value)});
+            data.push({ovalue: node.value, title: title, total: Number(node.total), isSelected: self.doesExist(node.value)});
         })
         //todo: change width/height on expansion
         let width = 230;
