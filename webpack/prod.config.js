@@ -6,7 +6,10 @@ let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 let webpackConfig = {
     resolve: {
-        extensions: ['.js']
+        extensions: ['.js'],
+        alias: {
+            react: path.resolve('./node_modules/react'),
+        }
     },
     entry: {
         main: [
@@ -80,7 +83,7 @@ let webpackConfig = {
         }),
         new Visualizer()
     ],
-    devtool: 'source-map'
+    devtool: 'cheap-module-source-map'
 };
 
 module.exports = webpackConfig;
