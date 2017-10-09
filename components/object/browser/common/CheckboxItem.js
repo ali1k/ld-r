@@ -10,6 +10,12 @@ class CheckboxItem extends React.Component {
     checkBox(status) {
         this.props.onCheck(status, this.props.spec.value);
     }
+    reClick(e){
+        //prevent opening it in new window
+        e.preventDefault();
+        //like check box click
+        this.props.onCheck(status, this.props.spec.value);
+    }
     addCommas(n){
         let rx = /(\d+)(\d{3})/;
         return String(n).replace(/^\d+/, function(w){
@@ -39,7 +45,7 @@ class CheckboxItem extends React.Component {
                     }
                     title = <a className="ui label" href={'/dataset/' + encodeURIComponent(datasetURI) + '/resource/' + encodeURIComponent(this.props.spec.value)} target="_blank"> {title} </a>;
                 }else{
-                    title = <a href={this.props.spec.value} target="_blank"> {title} </a>;
+                    title = <a href={this.props.spec.value} target="_blank" onClick={this.reClick.bind(this)}> {title} </a>;
                 }
             }
         }
