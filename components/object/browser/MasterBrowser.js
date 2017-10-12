@@ -52,11 +52,20 @@ class MasterBrowser extends React.Component {
         });
         let checkDIV;
         let checkDIVc;
+        let keyI = 0;
         for(let prop in categoryObj){
             checkDIVc = categoryObj[prop].map((node, index)=>{
                 return (<CheckboxItem checked={self.doesExist(node.value)} key={index} datasetURI={self.props.datasetURI} shortenURI={self.props.shortenURI} key={index} spec={node} config={self.props.config} total={self.props.propertyURI ? node.total: 0} onCheck={self.handleSelect.bind(self)}/>);
             });
-            cpanels.push({title: prop, content: checkDIVc});
+            keyI++;
+            //cpanels.push({title: prop, content: checkDIVc});
+            cpanels.push({
+                content: {
+                    content: checkDIVc,
+                    key: prop + keyI
+                },
+                title: prop
+            });
         }
         //add others to the end
         if(cpanels.length){
@@ -64,7 +73,14 @@ class MasterBrowser extends React.Component {
                 checkDIVc = categoryOthers.map((node, index)=>{
                     return (<CheckboxItem checked={self.doesExist(node.value)} key={index} datasetURI={self.props.datasetURI} shortenURI={self.props.shortenURI} key={index} spec={node} config={self.props.config} total={self.props.propertyURI ? node.total: 0} onCheck={self.handleSelect.bind(self)}/>);
                 });
-                cpanels.push({title: 'Others', content: checkDIVc});
+                //cpanels.push({title: 'Others', content: checkDIVc});
+                cpanels.push({
+                    content: {
+                        content: checkDIVc,
+                        key: 'Others' + keyI
+                    },
+                    title: 'Others'
+                });
             }
             checkDIV= <Accordion panels={cpanels} styled exclusive={false} fluid />;
         }else{

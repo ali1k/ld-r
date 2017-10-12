@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
+//import ReactDOM from 'react-dom';
 import {navigateAction} from 'fluxible-router';
 import {enableAuthentication, enableAddingNewDatasets, baseResourceDomain} from '../configs/general';
 import { Button, Divider, Form } from 'semantic-ui-react';
