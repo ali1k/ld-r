@@ -45,7 +45,7 @@ class CheckboxItem extends React.Component {
                     }
                     title = <a className="ui label" href={'/dataset/' + encodeURIComponent(datasetURI) + '/resource/' + encodeURIComponent(this.props.spec.value)} target="_blank"> {title} </a>;
                 }else{
-                    title = <a href={this.props.spec.value} target="_blank" onClick={this.reClick.bind(this)}> {title} </a>;
+                    title = <a style={{color: '#000'}} href={this.props.spec.value} target="_blank" onClick={this.reClick.bind(this)}> {title} </a>;
                 }
             }
         }
