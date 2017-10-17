@@ -152,10 +152,10 @@ class DatasetAnnotation extends React.Component {
             if (!enableAuthentication || parseInt(user.isSuperUser)) {
                 allowChangingNewDataset = true;
             }
-
             let tmpOption = '';
             optionsList = dss.filter(function(option, index) {
                 //filter out datasets if no access is provided
+                tmpOption = '1';
                 if(enableAuthentication && option.features.hasLimitedAccess && parseInt(option.features.hasLimitedAccess)){
                     //need to handle access to the dataset
                     //if user is the editor by default he already has view access
