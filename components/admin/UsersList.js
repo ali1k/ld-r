@@ -1,16 +1,44 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import activateUser from '../../actions/activateUser';
+import sendEmailMsg from '../../actions/sendEmailMsg';
 import UserStore from '../../stores/UserStore';
 import {connectToStores} from 'fluxible-addons-react';
+import { Form } from 'semantic-ui-react'
 import {NavLink} from 'fluxible-router';
 
 class UsersList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            subject: '',
+            msg: ''
+        };
+    }
     activateUser(uri, email) {
         this.context.executeAction(activateUser, {
             resourceURI: uri,
             email: email
         });
+    }
+    sendEmailMsg(){
+        if(this.state.subject.trim() && this.state.msg.trim()){
+            this.context.executeAction(sendEmailMsg, {
+                subject: this.state.subject,
+                msg: this.state.msg
+            });
+        }
+    }
+    updateInputValue(target, evt) {
+        if(target=== 'subject'){
+            this.setState({
+                subject: evt.target.value
+            });
+        }else if(target=== 'msg'){
+            this.setState({
+                msg: evt.target.value
+            });
+        }
     }
     render() {
         let actBtn,
@@ -96,6 +124,20 @@ class UsersList extends React.Component {
                                     ? <div>* A notification email will be sent to the user after activation.</div>
                                     : ''}
                             </div>
+                            {this.props.UserStore.msgSent ?
+                                <div className="ui message info animated pulse">Your message was successfully sent to all users...</div>
+                                : parseInt(user.isSuperUser) ?
+                                    <div className="ui segment inverted blue">
+                                        <Form>
+                                            <Form.Group widths='equal'>
+                                                <Form.Input label='Subject' placeholder='Subject' onChange={evt => this.updateInputValue('subject', evt)}/>
+                                            </Form.Group>
+                                            <Form.TextArea label='Message' placeholder='Add your msg here' onChange={evt => this.updateInputValue('msg', evt)}/>
+                                            <Form.Button onClick={this.sendEmailMsg.bind(this)}>Send message as email to all users</Form.Button>
+                                        </Form>
+                                    </div>
+                                    : null
+                            }
                         </div>
                     </div>
                 </div>

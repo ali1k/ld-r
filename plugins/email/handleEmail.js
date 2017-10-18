@@ -32,6 +32,9 @@ module.exports = {
             default:
                 subject = subject;
                 text = text;
+                if (!from) {
+                    from = config.sender;
+                }
         }
         let transporter = nodemailer.createTransport(smtpTransport(config.emailConfig));
         // send mail
