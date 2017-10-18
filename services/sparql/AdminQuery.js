@@ -23,12 +23,15 @@ class AdminQuery{
         SELECT DISTINCT ?subject ?username ?isActive ?isSuperUser ?mbox WHERE {
             ${gStart}
                 ?subject a ldr:User ;
-                         foaf:accountName ?username ;
-                         ldr:isActive ?isActive ;
-                         ldr:isSuperUser ?isSuperUser ;
-                         foaf:mbox ?mbox .
+                    foaf:accountName ?username ;
+                    ldr:isActive ?isActive ;
+                    foaf:firstName ?firstName ;
+                    foaf:lastName ?lastName ;
+                    foaf:member ?member ;
+                    ldr:isSuperUser ?isSuperUser ;
+                    foaf:mbox ?mbox .
             ${gEnd}
-        } ORDER BY ASC(?username)
+        } ORDER BY ASC(?lastName)
         `;
         return this.prefixes + this.query;
     }
