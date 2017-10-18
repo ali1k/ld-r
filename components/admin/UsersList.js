@@ -91,7 +91,7 @@ class UsersList extends React.Component {
                                     <div className="content">
                                         <span className="ui blue circular label">{i}</span>
                                         <i className={dbClass}></i>
-                                        {node.title}
+                                        {node.lastName}, {node.firstName} ({node.username})
                                     </div>
                                 </NavLink>
                                 {actBtn}
