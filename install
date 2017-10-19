@@ -1,0 +1,19 @@
+#!/bin/bash
+echo "Installing configuration files..."
+if [ ! -e "configs/general.js" ]; then
+    cp configs/general.sample.js configs/general.js
+fi
+if [ ! -e "configs/server.js" ]; then
+    cp configs/server.sample.js configs/server.js
+fi
+if [ ! -e "configs/reactor.js" ]; then
+    cp configs/reactor.sample.js configs/reactor.js
+fi
+if [ ! -e "configs/facets.js" ]; then
+    cp configs/facets.sample.js configs/facets.js
+fi
+if [ ! -e "plugins/email/config.js" ]; then
+    cp plugins/email/config.sample.js plugins/email/config.js
+fi
+echo "Installing npm packages..."
+npm install

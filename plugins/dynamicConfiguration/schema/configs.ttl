@@ -1,0 +1,94 @@
+@prefix : <https://github.com/ali1k/ld-reactor/blob/master/plugins/dynamicConfiguration/schema/configs.ttl#> .
+@prefix ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dbp: <http://dbpedia.org/property/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+@prefix schema: <http://dbpedia.org/ontology/> .
+@prefix swrc: <http://swrc.ontoware.org/ontology#> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
+@prefix geovocab: <http://geovocab.org/geometry#> .
+@prefix gsp: <http://www.opengis.net/ont/geosparql#> .
+
+#Resource URI config
+<https://ld-r.org/config/r14a> a ldr:ReactorConfig;
+      ldr:scope "R" ;
+      rdfs:label """dbr:Frank_van_Harmelen to PersonResource""" ;
+      ldr:resource dbr:Frank_van_Harmelen ;
+      ldr:resourceReactor "PersonResource" .
+#Resource Type config
+<https://ld-r.org/config/r14b> a ldr:ReactorConfig;
+      ldr:scope "R" ;
+      rdfs:label """foaf:Person types to PersonResource""" ;
+      ldr:resource foaf:Person ;
+      ldr:treatAsResourceType "1" ;
+      ldr:resourceReactor "PersonResource" .
+<https://ld-r.org/config/r14c> a ldr:ReactorConfig;
+      ldr:scope "R" ;
+      rdfs:label """foaf/schema/dbo:Organisation types to OrgResource""" ;
+      ldr:resource foaf:Organization, dbo:Organisation, schema:Organization ;
+      ldr:treatAsResourceType "1" ;
+      ldr:resourceReactor "OrgResource" .
+#Property config
+<https://ld-r.org/config/r12a> a ldr:ReactorConfig;
+      ldr:scope "P" ;
+      rdfs:label """foaf:thumbnail/dbo:thumbnail to BasicImageView""" ;
+      ldr:property foaf:thumbnail, foaf:depiction ;
+      ldr:objectIViewer "BasicImageView" .
+<https://ld-r.org/config/r12b> a ldr:ReactorConfig;
+        ldr:scope "P" ;
+        rdfs:label """geo:geometry/gsp:asWKT to BasicMapView""" ;
+        ldr:property geo:geometry, gsp:asWKT, geovocab:asWKT ;
+        ldr:objectIViewer "BasicMapView" .
+#Dataset-Property config
+<https://ld-r.org/config/r11> a ldr:ReactorConfig;
+        ldr:scope "DP" ;
+        rdfs:label """DBpedia foaf:depiction to BasicImageView""" ;
+        ldr:dataset <http://live.dbpedia.org/sparql> ;
+        ldr:property dbo:thumbnail ;
+        ldr:objectIViewer "BasicImageView" .
+#Dataset config
+<https://ld-r.org/config/r15> a ldr:ReactorConfig;
+    ldr:scope "D" ;
+    rdfs:label """Config for Semantic Web Dog Food""" ;
+    ldr:dataset <http://data.semanticweb.org/sparql> ;
+    ldr:maxNumberOfResourcesOnPage "50" ;
+    ldr:datasetLabel """Semantic Web Dog Food Dataset""" ;
+    ldr:resourceFocusType swrc:InProceedings ;
+    ldr:resourceLabelProperty dc:title .
+#Server config
+<https://ld-r.org/config/s1> a ldr:ServerConfig;
+        rdfs:label """DBpedia SPARQL Endpoint""" ;
+        ldr:dataset <http://live.dbpedia.org/sparql> ;
+        ldr:host "dbpedia.org" ;
+        ldr:port "80" ;
+        ldr:path "/sparql" ;
+        ldr:endpointType "virtuoso" ;
+        ldr:graphName 'default' ;
+        ldr:useReasoning "0" .
+<https://ld-r.org/config/s2> a ldr:ServerConfig;
+        rdfs:label """Semantic Web Dog Food SPARQL Endpoint""" ;
+        ldr:dataset <http://data.semanticweb.org/sparql> ;
+        ldr:host "data.semanticweb.org" ;
+        ldr:port "80" ;
+        ldr:path "/sparql" ;
+        ldr:endpointType "sesame" ;
+        ldr:graphName 'default' ;
+        ldr:useReasoning "0" .
+#Facets property config
+<https://ld-r.org/config/fp1> a ldr:ReactorConfig, ldr:FacetsPropertyConfig;
+        ldr:property swrc:year ;
+        ldr:label """Year""" .
+#Facets config
+<https://ld-r.org/config/f1> a ldr:FacetsConfig;
+        rdfs:label """Browse Semantic Web Dog Food""" ;
+        ldr:dataset <http://data.semanticweb.org/sparql> ;
+        ldr:list rdf:type, swrc:author, swrc:year ;
+        ldr:config <https://ld-r.org/config/fp1> .

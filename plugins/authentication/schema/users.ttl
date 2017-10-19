@@ -1,0 +1,34 @@
+@prefix : <https://github.com/ali1k/ld-reactor/blob/master/plugins/authentication/schema/users.ttl#> .
+@prefix ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dbr: <http://dbpedia.org/resource/> .
+@prefix dbo: <http://dbpedia.org/ontology/> .
+
+<https://ld-r.org/user/admin> a foaf:Person, ldr:User ;
+      foaf:firstName "Admin" ;
+      foaf:lastName "User" ;
+      foaf:organization <http://dbpedia.org/resource/VU_University_Amsterdam>;
+      foaf:mbox <mailto:a.khalili@vu.nl> ;
+      foaf:homepage <http://ali1k.com> ;
+      foaf:accountName "admin" ;
+      foaf:member ldr:NormalUser ;
+      #password: demo1234
+      ldr:password "sha1$8b1159fb$1$c933edf77baaa6f6b7558b6b80178bfcb5a6c917";
+      ldr:isActive "1"^^xsd:Integer;
+      #this should be set only for the admin user who has access to all features
+      ldr:isSuperUser "1"^^xsd:Integer .
+
+#non-super users will have the following access level properties:
+
+#ldr:editorOf-> blank node      ldr:dataset
+#                               ldr:resource
+#                               ldr:property
+#                               ldr:scope
+#authorization starts from dataset level and finishes at property level. i.e. if you give user permission to edit a dataset, by default all resources and all property of the resources can be edited. If you restrict user permission to resource level, by default all the properties of the resource can be edited. If you restrict user permission to property level, you can also specify the dataset/resource under which the property can be edited.
+#caveat: superUser has access to all graphs, resources and properties!

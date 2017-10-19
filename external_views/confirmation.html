@@ -1,0 +1,43 @@
+<html>
+	<head>
+		<meta charSet="utf-8" />
+		<meta name="viewport" content="width=device-width, user-scalable=no" />
+		<link href="/semantic-ui/semantic.min.css" rel="stylesheet" type="text/css" />
+		<title>{{appFullTitle}} | Registration Confirmation</title>
+	</head>
+	<body>
+		<div>
+			<nav  class="ui blue menu inverted navbar page grid">
+				<div class="ui item brand">
+					<a href="/"><img class="ui mini image" style="height:20px; width:20px" src="/assets/img/ld-reactor.gif" alt="ld-reactor" /></a>
+				</div>
+				<div class="ui item active brand">
+					<a href="/">{{appShortTitle}}</a>
+				</div>
+				<div class="ui item">
+					<a href="http://ld-r.org">Documentation</a>
+				</div>
+			</nav>
+		</div>
+		<div class="ui page grid">
+			<div class="row">
+				<div class="ui cards wide column">
+					<br/>
+					<div class="ui segment">
+						<div class="ui big success message">
+						  <div class="header">
+						    Your initial registration was successful.
+						  </div>
+						{{#needsConfirmation}}
+						<p>You can log in to the {{appShortTitle}} <b>after</b> we activated your account.</p>
+						<p>Please be patient until we identify & activate your account!</p>
+						{{/needsConfirmation}}
+							<a href="/login" class="ui primary button"> Log-in</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</body>
+</html>
