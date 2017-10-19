@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import {navigateAction, NavLink} from 'fluxible-router';
+import {navigateAction} from 'fluxible-router';
 import {connectToStores} from 'fluxible-addons-react';
 import {enableAuthentication, defaultDatasetURI, enableAddingNewDatasets, enableDatasetAnnotation} from '../configs/general';
 import {checkViewAccess, checkEditAccess} from '../services/utils/accessManagement';
@@ -161,10 +161,6 @@ class Datasets extends React.Component {
                                 </select>
                                 <input ref="resourceURI" type="text" className="input" placeholder="Enter the URI of the resource e.g. http://dbpedia.org/resource/VU_University_Amsterdam"/>
                                 <button className="fluid ui primary button" onClick={this.displayResource.bind(this)}>Display resource in the selected dataset</button>
-                                <br/>
-                                <div className="ui">
-                                    + <NavLink routeName="wysiwyq" className="item" href="/wysiwyq">Try the experimental WYSIWYQ tool</NavLink>
-                                </div>
                             </div>
                             : ''}
                     </div>
