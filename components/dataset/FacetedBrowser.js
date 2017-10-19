@@ -9,9 +9,24 @@ import loadFacets from '../../actions/loadFacets';
 import DatasetFB from './DatasetFB';
 
 class FacetedBrowser extends React.Component {
+    componentDidMount() {
+        //check if it is loaded from an API
+        //then: set the state and generate the UI
+        if(this.props.FacetedBrowserStore.loadedFromAPI){
+            //clone states
+            this.setState({selection: JSON.parse(JSON.stringify(this.props.FacetedBrowserStore.facets))});
+            this.context.executeAction(loadFacets, {mode: 'master', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, selection: {prevSelection: this.props.FacetedBrowserStore.facets, options: {invert: this.state.invert, range: this.state.range, facetConfigs: {}}}});
+            this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: 1, selection: { prevSelection: this.props.FacetedBrowserStore.facets, options: {invert: this.state.invert, range: this.state.range, facetConfigs: {}}}});
+        }
+
+    }
     constructor(props) {
         super(props);
-        this.state = {selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}};
+        this.dynamicSelection = {};
+        this.state = {searchMode: 0, selection: {}, expandedFacet: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}};
+    }
+    handleSearchMode(searchMode) {
+        this.setState({searchMode: searchMode});
     }
     toggleFirstCol(){
         this.setState({hideFirstCol: !this.state.hideFirstCol})
@@ -31,6 +46,7 @@ class FacetedBrowser extends React.Component {
         }
 
     }
+
     gotoPage(page) {
         let facetConfigs = this.getNecessaryFaccetsConfig();
         this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: page, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}});
@@ -390,7 +406,7 @@ class FacetedBrowser extends React.Component {
         let self = this;
         let showFactes = 0;
         let configDiv = '';
-        let properties = this. buildMasterFacet(this.props.FacetedBrowserStore.datasetURI);
+        let properties = this.buildMasterFacet(this.props.FacetedBrowserStore.datasetURI);
         //console.log(self.props.FacetedBrowserStore.facets);
         //if no default graph is selected, show all the graph names
         if(this.props.FacetedBrowserStore.datasetURI){
@@ -431,6 +447,44 @@ class FacetedBrowser extends React.Component {
             let facetConfigs = this.getNecessaryFaccetsConfig();
             if(dcnf.allowInlineConfig){
                 configDiv = <a onClick={this.createFConfig.bind(this, this.props.FacetedBrowserStore.datasetURI)} className="ui icon mini black circular button"><i className="ui settings icon"></i> </a>;
+            }
+            let typeSt, typesLink = [];
+            if(dcnf.resourceFocusType){
+                if(!dcnf.resourceFocusType.length || (dcnf.resourceFocusType.length && !dcnf.resourceFocusType[0]) ){
+                    typeSt = '';
+                }else{
+                    dcnf.resourceFocusType.forEach(function(uri) {
+                        typesLink.push(<a key={uri} className="ui black label" target="_blank" href={uri}> {URIUtil.getURILabel(uri)} </a>);
+                    });
+                    typeSt = typesLink;
+                }
+            }
+            let constraintSt, constraints = [];
+            if(dcnf.constraint){
+                for (let prop in dcnf.constraint){
+                    constraints.push(self.getPropertyLabel(prop) + ': ' + dcnf.constraint[prop].join(','));
+                }
+                constraintSt = constraints.join(' && ');
+            }
+            if(this.props.FacetedBrowserStore.total){
+                resourceDIV = <div className="ui">
+                    <h3 className="ui header">
+                        {this.props.FacetedBrowserStore.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.FacetedBrowserStore.datasetURI)}><span className="ui blue circular label">{this.state.searchMode ? this.addCommas(this.props.FacetedBrowserStore.resources.length) + '/' :''}{this.addCommas(this.props.FacetedBrowserStore.total)}</span></a> : ''} Resources {typeSt ? <span>of type{typeSt}</span>: ''} from {datasetTitle} {dcnf.constraint ? <span><Popup trigger={<i className="ui orange filter icon link "> </i>} content={constraintSt} wide position='bottom center' /></span>: ''}
+                    </h3>
+                    <div className="ui segments">
+                        <div className="ui segment">
+                            <ResourceList resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} OpenInNewTab={true} isBig={!showFactes} config={dcnf}/>
+                        </div>
+                        <div className= "ui secondary segment ">
+                            <ResourceListPager onSearchMode={this.handleSearchMode.bind(this)} visibleResourcesTotal={this.props.FacetedBrowserStore.resources.length} selection={{prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs}}} onExpandCollapse={this.toggleResourceCol.bind(this)} handleClick={this.gotoPage.bind(this)} datasetURI={this.props.FacetedBrowserStore.datasetURI} total={this.props.FacetedBrowserStore.total} threshold={pagerSize} currentPage={this.props.FacetedBrowserStore.page} maxNumberOfResourcesOnPage={dcnf.maxNumberOfResourcesOnPage}/>
+                        </div>
+                        {this.props.FacetedBrowserStore.loadedFromAPI || dcnf.displayQueries ?
+                            <div className= "ui tertiary segment">
+                                <YASQEViewer spec={{value: this.props.FacetedBrowserStore.resourceQuery}} />
+                            </div>
+                            : ''}
+                    </div>
+                </div>;
             }
             return (
                 <div className="ui fluid container ldr-padding" ref="facetedBrowser">
