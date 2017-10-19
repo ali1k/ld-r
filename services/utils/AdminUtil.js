@@ -6,7 +6,7 @@ class AdminUtil{
         let output=[];
         if(parsed.results.bindings.length){
             parsed.results.bindings.forEach(function(el) {
-                output.push({title: el.username.value, v: el.subject.value, isActive: el.isActive.value, isSuperUser: el.isSuperUser.value, mbox: el.mbox.value});
+                output.push({username: el.username.value, v: el.subject.value, isActive: el.isActive.value, isSuperUser: el.isSuperUser.value, mbox: el.mbox.value, firstName: el.firstName.value, lastName: el.lastName.value, membership: el.membership.value});
             });
             return output;
         }

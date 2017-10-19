@@ -1,9 +1,10 @@
 import React from 'react';
 import URIUtil from '../../utils/URIUtil';
+//import chroma from 'chroma-js';
 //import TagListBrowser from './TagListBrowser';
-import {BarChart, Bar, XAxis, YAxis, Tooltip, Legend, Cell, ResponsiveContainer} from 'recharts';
+import {Treemap, Tooltip, Legend, Cell, ResponsiveContainer} from 'recharts';
 
-class BarChartBrowser extends React.Component {
+class TreeMapBrowser extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -34,19 +35,30 @@ class BarChartBrowser extends React.Component {
             this.props.onCheck(1, data.ovalue);
         }
     }
-    comparePropsFloat(a,b) {
-        if (Number(a.title) < Number(b.title))
-            return -1;
-        if (Number(a.title) > Number(b.title))
-            return 1;
-        return 0;
+    renderCustomizedLabel({ root, depth, x, y, width, height, index, payload, colors, rank, title })  {
+        return  (
+            <g>
+                <rect x={x} y={y} width={width} height={height} />
+                <text x={x + width / 2} y={y + height / 2 + 7} textAnchor="middle" fill="#fff" >
+                    {title}
+                </text>
+            </g>
+        );
     }
-    comparePropsString(a,b) {
-        if (a.title < b.title)
-            return -1;
-        if (a.title > b.title)
-            return 1;
-        return 0;
+    renderCustomizedLabel({ root, depth, x, y, width, height, index, payload, colors, rank, title, isSelected})  {
+        let expanded = this.props.expanded ? 1 : 0;
+        return  (
+            <g>
+                <rect x={x} y={y} width={width} height={height} style={{ opacity: depth < 2 ? 1 : 0.85, fill: isSelected ? '#82ca9d' : '#1a75ff', stroke: '#fff', strokeWidth:  2 / (1 + 1e-10), strokeOpacity: 1 / (1 + 1e-10),}} />
+                {
+                    expanded === 1 ?
+                        <text x={x + width / 2} y={y + height / 2 + 7} textAnchor="middle" fill="#fff" fontSize={14} >
+                            {title}
+                        </text>
+                        : null
+                }
+            </g>
+        );
     }
     render() {
         let self = this;
@@ -59,11 +71,6 @@ class BarChartBrowser extends React.Component {
             }
             data.push({ovalue: node.value, title: title, total: Number(node.total), isSelected: self.doesExist(node.value)});
         })
-        if(self.props.config && self.props.config.hasNumericValues){
-            data.sort(this.comparePropsFloat);
-        }else{
-            data.sort(this.comparePropsString);
-        }
         //todo: change width/height on expansion
         let width = 230;
         let height = 180;
@@ -74,19 +81,9 @@ class BarChartBrowser extends React.Component {
         return (
             <div>
                 <ResponsiveContainer width="97%" height={height}>
-                    <BarChart data={data}
-                        margin={{top: 0, right: 10, left: 0, bottom: 0}}>
-                        <XAxis dataKey="title"/>
-                        <YAxis/>
-                        <Tooltip/>
-                        <Bar dataKey="total" fill="#1a75ff" onClick={this.selectItem.bind(this)}>
-                            {
-                                data.map((entry, index) => (
-                                    <Cell cursor="pointer" fill={entry.isSelected ? '#82ca9d' : '#1a75ff' } key={`cell-${index}`}/>
-                                ))
-                            }
-                        </Bar>
-                    </BarChart>
+                    <Treemap data={data} dataKey="total" nameKey="title" ratio={4/3} stroke="#fff"  fill="#1a75ff" content={this.renderCustomizedLabel.bind(this)} onClick={this.selectItem.bind(this)}>
+                        <Tooltip />
+                    </Treemap>
                 </ResponsiveContainer>
                 {/*<TagListBrowser selection={this.props.selection} expanded={this.props.expanded} datasetURI={this.props.datasetURI} propertyURI={this.props.propertyURI} shortenURI={this.props.shortenURI}  config={this.props.config} instances={this.props.instances} onCheck={this.props.onCheck.bind(this)}/>*/}
             </div>
@@ -94,4 +91,4 @@ class BarChartBrowser extends React.Component {
     }
 }
 
-export default BarChartBrowser;
+export default TreeMapBrowser;

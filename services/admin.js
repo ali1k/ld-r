@@ -52,6 +52,44 @@ export default {
                 });
             });
 
+        }else if(resource === 'admin.sendEmailMsg'){
+            //SPARQL QUERY
+            datasetURI = (params.id ? params.id : authDatasetURI[0]);
+            let subject = params.subject;
+            let msg = params.msg;
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {});
+                }else{
+                    user = req.user;
+                    //only super users have access to admin services
+                    if(!parseInt(user.isSuperUser)){
+                        callback(null, {});
+                    }
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            //build http uri
+            let userList = [];
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+                query = queryObject.getUsers(endpointParameters, graphName);
+                //send request
+                rp.get({uri: getHTTPGetURL(getHTTPQuery('read', query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                    userList = utilObject.parseUsers(res);
+                    userList.forEach((node)=>{
+                        if(!parseInt(node.isSuperUser)){
+                            sendMail('msg', '', node.mbox.replace('mailto:',''), subject, 'Dear '+node.firstName+', \n' + msg , '');
+                        }
+                    });
+                    callback(null, {});
+                }).catch(function (err) {
+                    console.log(err);
+                    callback(null, {});
+                });
+            });
+
         }else if(resource === 'admin.others'){
             console.log('other services');
         }

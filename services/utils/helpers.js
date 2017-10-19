@@ -223,18 +223,35 @@ export default {
                     case 'http://www.w3.org/2001/XMLSchema#integer':
                         dtype = 'xsd:integer';
                         newValue='"'+objectValue+'"^^' + dtype;
+                        //to handle inconsistency in data, switch to string
+                        if(isNaN(objectValue)){
+                            newValue='"""'+objectValue+'"""';
+                            dtype = 'str';
+                        }
                         break;
                     case 'http://www.w3.org/2001/XMLSchema#decimal':
                         dtype = 'xsd:decimal';
                         newValue='"'+objectValue+'"^^' + dtype;
+                        if(isNaN(objectValue)){
+                            newValue='"""'+objectValue+'"""';
+                            dtype = 'str';
+                        }
                         break;
                     case 'http://www.w3.org/2001/XMLSchema#float':
                         dtype = 'xsd:float';
                         newValue='"'+objectValue+'"^^' + dtype;
+                        if(isNaN(objectValue)){
+                            newValue='"""'+objectValue+'"""';
+                            dtype = 'str';
+                        }
                         break;
                     case 'http://www.w3.org/2001/XMLSchema#double':
                         dtype = 'xsd:double';
                         newValue='"'+objectValue+'"^^' + dtype;
+                        if(isNaN(objectValue)){
+                            newValue='"""'+objectValue+'"""';
+                            dtype = 'str';
+                        }
                         break;
                     case 'http://www.w3.org/2001/XMLSchema#dateTime':
                         dtype = 'xsd:dateTime';
@@ -251,6 +268,10 @@ export default {
                     case 'http://www.w3.org/2001/XMLSchema#boolean':
                         dtype = 'xsd:boolean';
                         newValue='"'+objectValue+'"^^' + dtype;
+                        if(isNaN(objectValue)){
+                            newValue='"""'+objectValue+'"""';
+                            dtype = 'str';
+                        }
                         break;
                     default:
                         newValue='"""'+objectValue+'"""';

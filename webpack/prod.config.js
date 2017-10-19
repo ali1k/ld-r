@@ -6,14 +6,17 @@ let ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 let webpackConfig = {
     resolve: {
-        extensions: ['.js']
+        extensions: ['.js'],
+        alias: {
+            react: path.resolve('./node_modules/react'),
+        }
     },
     entry: {
         main: [
             './client.js'
         ],
         vendor: [
-            'react', 'react-dom', 'async', 'fluxible', 'fluxible-addons-react', 'wicket/wicket', 'fluxible-plugin-fetchr', 'fluxible-router', 'moment', 'rc-calendar', 'semantic-ui-react', 'react-leaflet', 'lodash/collection', 'lodash/string', 'react-search-input', 'classnames/bind', 'chroma-js', 'password-hash', 'recharts'
+            'react', 'react-dom', 'async', 'fluxible', 'fluxible-addons-react', 'wicket/wicket', 'fluxible-plugin-fetchr', 'fluxible-router', 'moment', 'rc-calendar', 'semantic-ui-react', 'react-leaflet', 'react-sigma', 'lodash/collection', 'lodash/string', 'react-search-input', 'classnames/bind', 'chroma-js', 'password-hash', 'recharts'
         ]
     },
     output: {
@@ -25,7 +28,7 @@ let webpackConfig = {
         rules: [
             {
                 test: /\.(js|jsx)$/,
-                exclude: /node_modules/,
+                exclude: /node_modules\/(?!react-sigma)/ ,
                 loader: 'babel-loader',
                 options: {
                     presets: [
@@ -80,7 +83,7 @@ let webpackConfig = {
         }),
         new Visualizer()
     ],
-    devtool: 'source-map'
+    devtool: 'cheap-module-source-map'
 };
 
 module.exports = webpackConfig;

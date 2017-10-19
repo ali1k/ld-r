@@ -35,12 +35,25 @@ class PrefixBasedView extends React.Component {
                 if(tmp2.length > 1){
                     let tmp3 = tmp2[0].replace('[', ''), tmp4 = tmp2[1];
                     tmp22 = tmp3.split('>>');
-                    //federeated facets
-                    if(tmp22.length > 1){
-                        out.push('['+this.makeShorten(tmp22[0], this.getPrefix(tmp22[0]))+'>>'+this.makeShorten(tmp22[1], this.getPrefix(tmp22[1]))+']'+this.makeShorten(tmp4, this.getPrefix(tmp4)));
+
+                    //for intermediate links
+                    let tmp4i = tmp4.split('||');
+                    if(tmp4i.length > 1){
+                        //federeated facets
+                        if(tmp22.length > 1){
+                            out.push('['+this.makeShorten(tmp22[0], this.getPrefix(tmp22[0]))+'>>'+this.makeShorten(tmp22[1], this.getPrefix(tmp22[1]))+']'+this.makeShorten(tmp4i[0], this.getPrefix(tmp4i[0]))+'||'+this.makeShorten(tmp4i[1], this.getPrefix(tmp4i[1])));
+                        }else{
+                            out.push('['+this.makeShorten(tmp3, this.getPrefix(tmp3))+']'+this.makeShorten(tmp4i[0], this.getPrefix(tmp4i[0]))+'||'+this.makeShorten(tmp4i[1], this.getPrefix(tmp4i[1])));
+                        }
                     }else{
-                        out.push('['+this.makeShorten(tmp3, this.getPrefix(tmp3))+']'+this.makeShorten(tmp4, this.getPrefix(tmp4)));
+                        //federeated facets
+                        if(tmp22.length > 1){
+                            out.push('['+this.makeShorten(tmp22[0], this.getPrefix(tmp22[0]))+'>>'+this.makeShorten(tmp22[1], this.getPrefix(tmp22[1]))+']'+this.makeShorten(tmp4, this.getPrefix(tmp4)));
+                        }else{
+                            out.push('['+this.makeShorten(tmp3, this.getPrefix(tmp3))+']'+this.makeShorten(tmp4, this.getPrefix(tmp4)));
+                        }
                     }
+
                 }else{
                     out.push(this.makeShorten(v, this.getPrefix(v)))
                 }

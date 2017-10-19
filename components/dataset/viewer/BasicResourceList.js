@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {NavLink} from 'fluxible-router';
-import URIUtil from '../utils/URIUtil';
-import BasicAggregateMapView from '../object/viewer/aggregate/BasicAggregateMapView';
+import URIUtil from '../../utils/URIUtil';
+import { Header, Table } from 'semantic-ui-react';
+import BasicAggregateMapView from '../../object/viewer/aggregate/BasicAggregateMapView';
 import classNames from 'classnames/bind';
+import ObjectIViewer from '../../object/ObjectIViewer';
 
-class ResourceList extends React.Component {
+class BasicResourceList extends React.Component {
     componentDidMount() {}
     buildLink(useA, v, g, title, image, icon, cloneable) {
         let self = this;
@@ -93,7 +95,55 @@ class ResourceList extends React.Component {
         this.props.onCloneResource(datasetURI, resourceURI);
         e.stopPropagation();
     }
+    checkAnalysisProps(){
+        let out = 0;
+        if(this.props.resources.length){
+            if(this.props.resources[0].propsForAnalysis && Object.keys(this.props.resources[0].propsForAnalysis).length){
+                out = 1;
+                return out;
+            }else{
+                return 0
+            }
+        }else{
+            return 0 ;
+        }
+        return out;
+    }
+    getAnalysisPropsConfgis(facetConfigs){
+        let out = {};
+        let index, tmp = [];
+        if(!facetConfigs || !Object.keys(facetConfigs).length){
+            return out;
+        }
+        if(this.props.resources.length){
+            if(this.props.resources[0].propsForAnalysis){
+                for(let prop in this.props.resources[0].propsForAnalysis){
+                    tmp = prop.split('_');
+                    if(tmp.length > 1){
+                        index = tmp[1];
+                        //hanlde multiple _
+                        if(tmp.length > 2){
+                            tmp.shift();
+                            index = tmp.join('_');
+                        }
+                        if(facetConfigs){
+                            for(let prop2 in facetConfigs){
+                                if(prop2.indexOf(index) !== -1){
+                                    out[prop] = facetConfigs[prop2];
+                                }
+                            }
+                        }
+                    }
+                    return out;
+                }
+            }
+        }
+        return out;
+    }
     render() {
+        //to apply the same config in result list
+        let analysisPropsConfgis = this.getAnalysisPropsConfgis(this.props.facetConfigs);
+        //console.log(analysisPropsConfgis);
         let self = this;
         let user = this.context.getUser();
         let datasetURI = this.props.datasetURI;
@@ -105,17 +155,33 @@ class ResourceList extends React.Component {
             instances =[],
             list,
             dbClass = 'black cube icon';
+        let theaderDIV, dtableHeaders = [], dtableCells = [];
         let cloneable = 0;
         if (self.props.config && typeof self.props.config.allowResourceClone !== 'undefined' && parseInt(self.props.config.allowResourceClone)) {
             cloneable = 1;
         }
+        if(!self.props.cloneable){
+            cloneable = 0;
+        }
         if (!this.props.resources.length) {
             list = <div className="ui warning message">
                 <div className="header">
-                    There was no resource in the selected dataset! This might be due to the connection problems. Please check the connection parameters of your dataset's Sparql endpoint or add resources to your dataset...</div>
+                    There was no resource in the selected dataset! This might be due to the connection problems or because the estimated query execution time exceeds the configured limit. Please check the connection parameters of your dataset&apos;s Sparql endpoint or add resources to your dataset...</div>
             </div>;
         } else {
-
+            if(this.checkAnalysisProps()){
+                for(let prop in this.props.resources[0].propsForAnalysis){
+                    dtableHeaders.push(<Table.HeaderCell key={prop}>{prop}</Table.HeaderCell>);
+                }
+                theaderDIV =
+                <Table.Header>
+                    <Table.Row>
+                        <Table.HeaderCell singleLine>Title</Table.HeaderCell>
+                        {dtableHeaders}
+                    </Table.Row>
+                </Table.Header>
+                ;
+            }
             list = this.props.resources.map((node, index) => {
                 title = node.title
                     ? node.title
@@ -146,10 +212,22 @@ class ResourceList extends React.Component {
                         dbClass = 'black cube icon';
                     }
                 }
-                resourceDIV =
-                    <div className={itemClass} key={index}>
-                        {self.buildLink(0, encodeURIComponent(node.v), encodeURIComponent(node.d), title, image, dbClass, cloneable)}
-                    </div>;
+                dtableCells = [];
+                if(self.checkAnalysisProps()){
+                    for(let prop in node.propsForAnalysis){
+                        dtableCells.push(<Table.Cell key={'c'+prop} title={node.propsForAnalysis[prop]}>{Object.keys(analysisPropsConfgis).length && analysisPropsConfgis[prop] ? <ObjectIViewer datasetURI={this.props.datasetURI} property={prop} spec={{value: node.propsForAnalysis[prop]}} config={analysisPropsConfgis[prop]}/> : URIUtil.getURILabel(node.propsForAnalysis[prop])}</Table.Cell>);
+                    }
+                    resourceDIV =
+                        <Table.Row key={index}>
+                            <Table.Cell>{self.buildLink(0, encodeURIComponent(node.v), encodeURIComponent(node.d), title, image, dbClass, cloneable)}</Table.Cell>
+                            {dtableCells}
+                        </Table.Row>;
+                }else{
+                    resourceDIV =
+                        <div className={itemClass} key={index}>
+                            {self.buildLink(0, encodeURIComponent(node.v), encodeURIComponent(node.d), title, image, dbClass, cloneable)}
+                        </div>;
+                }
                 if(self.props.config && self.props.config.resourceGeoProperty && geo) {
                     instances.push({value: geo, hint: self.buildLink(1, encodeURIComponent(node.v), encodeURIComponent(node.d), title, image, dbClass, cloneable)});
                 }
@@ -164,17 +242,30 @@ class ResourceList extends React.Component {
             'divided list': this.props.config && !this.props.config.resourceImageProperty,
             'cards': this.props.config && this.props.config.resourceImageProperty
         });
+
+        let finalOutDIV = list;
+        if(self.checkAnalysisProps()){
+            finalOutDIV =
+            <Table celled padded striped selectable compact>
+                {theaderDIV}
+                <Table.Body>
+                    {list}
+                </Table.Body>
+            </Table>
+            ;
+        }
+
         return (
             <div className={listClasses} ref="resourceList" style={{overflow: 'auto'}}>
                 {this.props.config && this.props.config.resourceGeoProperty ?
                     <BasicAggregateMapView  mapWidth={950} mapHeight={620} zoomLevel={2} spec={{instances: instances}} config={this.props.config}/>
-                    : list}
+                    : finalOutDIV}
             </div>
         );
     }
 }
-ResourceList.contextTypes = {
+BasicResourceList.contextTypes = {
     executeAction: PropTypes.func.isRequired,
     getUser: PropTypes.func
 };
-export default ResourceList;
+export default BasicResourceList;

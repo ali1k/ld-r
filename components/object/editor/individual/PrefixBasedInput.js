@@ -128,16 +128,47 @@ class PrefixBasedInput extends React.Component {
                         if(tmp6.split(':')[0]!=='http' && tmp6.split(':')[0]!=='https'){
                             tmp6 = tmp6.replace(tmp6.split(':')[0] + ':', list[tmp6.split(':')[0]]);
                         }
-                        if(tmp4.split(':')[0]!=='http' && tmp4.split(':')[0]!=='https'){
-                            tmp4 = tmp4.replace(tmp4.split(':')[0] + ':', list[tmp4.split(':')[0]]);
+                        //for intermediate links
+                        let tmp4i = tmp4.split('||');
+                        let tmp_i;
+                        if(tmp4i.length > 1){
+                            if(tmp4i[0].split(':')[0]!=='http' && tmp4i[0].split(':')[0]!=='https'){
+                                tmp_i = tmp4i[0].replace(tmp4i[0].split(':')[0] + ':', list[tmp4i[0].split(':')[0]]);
+                            }
+                            if(tmp4i[1].split(':')[1]!=='http' && tmp4i[1].split(':')[0]!=='https'){
+                                tmp_i = tmp_i + '||' + tmp4i[1].replace(tmp4i[1].split(':')[0] + ':', list[tmp4i[1].split(':')[0]]);
+                            }
+                            tmp4 = tmp_i ;
+                        }else{
+                            if(tmp4.split(':')[0]!=='http' && tmp4.split(':')[0]!=='https'){
+                                tmp4 = tmp4.replace(tmp4.split(':')[0] + ':', list[tmp4.split(':')[0]]);
+                            }
                         }
+
                         out.push('['+tmp5+'>>'+tmp6+']'+tmp4);
                     }else{
                         if(tmp3.split(':')[0]!=='http' && tmp3.split(':')[0]!=='https'){
                             tmp3 = tmp3.replace(tmp3.split(':')[0] + ':', list[tmp3.split(':')[0]]);
                         }
-                        if(tmp4.split(':')[0]!=='http' && tmp4.split(':')[0]!=='https'){
-                            tmp4 = tmp4.replace(tmp4.split(':')[0] + ':', list[tmp4.split(':')[0]]);
+                        //for intermediate links
+                        let tmp4i = tmp4.split('||');
+                        let tmp_i;
+                        if(tmp4i.length > 1){
+                            if(tmp4i[0].split(':')[0]!=='http' && tmp4i[0].split(':')[0]!=='https'){
+                                tmp_i = tmp4i[0].replace(tmp4i[0].split(':')[0] + ':', list[tmp4i[0].split(':')[0]]);
+                            }else{
+                                tmp_i = tmp4i[0];
+                            }
+                            if(tmp4i[1].split(':')[0]!=='http' && tmp4i[1].split(':')[0]!=='https'){
+                                tmp_i = tmp_i + '||' + tmp4i[1].replace(tmp4i[1].split(':')[0] + ':', list[tmp4i[1].split(':')[0]]);
+                            }else{
+                                tmp_i = tmp_i + '||' + tmp4i[1];
+                            }
+                            tmp4 = tmp_i ;
+                        }else{
+                            if(tmp4.split(':')[0]!=='http' && tmp4.split(':')[0]!=='https'){
+                                tmp4 = tmp4.replace(tmp4.split(':')[0] + ':', list[tmp4.split(':')[0]]);
+                            }
                         }
                         out.push('['+tmp3+']'+tmp4);
                     }
@@ -162,26 +193,19 @@ class PrefixBasedInput extends React.Component {
     }
     applyPrefix(value) {
         let valueD = value;
-        let preg = '';
-        let parts = value.split('<-');
-        if(parts.length > 1){
-            valueD = parts[1];
-            preg = parts[0] + '<-';
-        }
-
         let tmp = valueD.split('->');
         if(tmp.length > 1){
-            return preg + this.removePrefix(valueD);
+            return this.removePrefix(valueD);
         }else{
             let tmp2 = valueD.split(':');
             if (tmp2.length && valueD.indexOf('http://') === -1) {
                 if (list[tmp2[0]]) {
-                    return preg + valueD.replace(tmp2[0] + ':', list[tmp2[0]]);
+                    return valueD.replace(tmp2[0] + ':', list[tmp2[0]]);
                 } else {
-                    return preg + valueD;
+                    return valueD;
                 }
             } else {
-                return preg + valueD;
+                return valueD;
             }
         }
 

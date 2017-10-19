@@ -14,6 +14,38 @@ class FacetQuery{
         `;
         this.query='';
     }
+    getPropertyLabel(uri) {
+        let property = '';
+        let tmp = uri;
+        //todo: handle multigraph labels
+        let tmp001, tmp01 = tmp.split('->[');
+        if(tmp01.length > 1){
+            tmp001 = tmp.split(']');
+            tmp = tmp001[tmp001.length -1];
+        }
+        let tmp02 = tmp.split('>>');
+        if(tmp02.length > 1){
+            tmp001 = tmp.split(']');
+            tmp = tmp001[tmp001.length -1];
+        }
+        let tmp03 = tmp.split('->');
+        if(tmp03.length > 1){
+            tmp = tmp03[tmp03.length -1];
+        }
+        //---------
+        let tmp2 = tmp.split('#');
+        if (tmp2.length > 1) {
+            property = tmp2[1];
+        } else {
+            tmp2 = tmp.split('/');
+            property = tmp2[tmp2.length - 1];
+            tmp2 = property.split(':');
+            property = tmp2[tmp2.length - 1];
+        }
+        //make first letter capital case
+        property = property.charAt(0).toUpperCase() + property.slice(1);
+        return property;
+    }
     prepareGraphName(graphName){
         let gStart = 'GRAPH <'+ graphName +'> { ';
         let gEnd = ' } ';
@@ -24,14 +56,10 @@ class FacetQuery{
         return {gStart: gStart, gEnd: gEnd}
     }
     isMultiGraphFacet(propertyURI){
-        //recognized by []
-        let tmp0 = propertyURI.split('->[');
-        //in case the subject itslef is on another graph e.g. http://asda1233.com<-rdfs:label
-        let tmp1 = propertyURI.split('<-');
-        if(tmp0.length > 1 || tmp1.length > 1){
-            return true;
-        }else{
+        if(propertyURI.indexOf('[') === -1){
             return false;
+        }else{
+            return true;
         }
     }
     isFederatedFacet(propertyURI){
@@ -54,81 +82,239 @@ class FacetQuery{
         }
         return out;
     }
-    prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, tindex, filterSt){
+    removeLeftBracket(st){
+        let tmp = st.split('[');
+        if(tmp.length > 1){
+            return tmp [1];
+        }else{
+            return tmp [0];
+        }
+    }
+    removeRightBracket(st){
+        let tmp = st.split(']');
+        if(tmp.length > 1){
+            return tmp [0];
+        }else{
+            return tmp [0];
+        }
+    }
+    hasSingleGraph(input) {
+        if(input.indexOf('->[') === -1){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    parseGraphPath(input) {
+        let self = this;
+        let out = {service: '', graph: '', property: ''};
+        let tmp = input.split(']');
+        if(tmp.length > 1){
+            if(tmp[1].trim()){
+                //has property
+                out.property = tmp[1].trim();
+            }else{
+                //no property-> it is an error after [g]-> should be always a property
+            }
+            let tmp2 = self.returnServiceGraph(self.removeLeftBracket(tmp[0]));
+            out.service = tmp2.service;
+            out.graph = tmp2.graph;
+        }else{
+            out.property = input;
+        }
+        return out;
+    }
+    parseMultiGraphAsArray(input){
+        let self = this;
+        let out = [];
+        if(self.hasSingleGraph(input)){
+            //console.log(input);
+            return input;
+        }else{
+            let parts = input.split('->[');
+            parts.forEach((part, index)=>{
+                let children = self.parseMultiGraphAsArray(part.indexOf(']')!== -1 && part.charAt(0)!=='[' ? '['+part : part);
+                if(children.length){
+                    out.push(children);
+                }
+            });
+        }
+        return out;
+    }
+    prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, tindex, filterSt, withPropAnalysis){
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let self = this;
-        let counter=0, qs='', tmp2, tmp1, tmp0 = propertyURI.split('->[');
-        tmp0.forEach((part, index)=>{
-            counter++;
-            tmp1 = part.split(']');
-            if(tmp1.length > 1){
-                //it has named graph
-                //todo: use dataset instead of graph: needs loading dunamic config
-                //parse the SPARQL service URI separated by >>
-                //notice: >> is not well tested because of the performance issues!
-                let tmp2 = this.returnServiceGraph(tmp1[0]);
-                if(tmp2.service){
-                    if(tmp2.graph !== 'default'){
-                        qs = qs + `
-                        ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt : '')}
-                        SERVICE <${tmp2.service}> {
-                            GRAPH <${tmp2.graph}> {
-                                ?vg${tindex}${counter-1} ${self.filterPropertyPath(tmp1[1])} ?v${(counter === tmp0.length ? tindex : 'g' + tindex + counter)} .
-
-                            }
-                        }
-                        ${(counter !== tmp0.length ? '' : filterSt ?  gEnd : '')}
-                        ` ;
-                    }else{
-                        qs = qs + `
-                        ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt : '')}
-                        SERVICE <${tmp2.service}> {
-                            ?vg${tindex}${counter-1} ${self.filterPropertyPath(tmp1[1])} ?v${(counter === tmp0.length ? tindex : 'g' + tindex + counter)} .
-
-                        }
-                        ${(counter !== tmp0.length ? '' : filterSt ?  gEnd : '')}
-                        ` ;
-                    }
-                //use case without federated query
-                }else{
-                    qs = qs + `
-                    GRAPH <${tmp1[0]}> {
-                        ?vg${tindex}${counter-1} ${self.filterPropertyPath(tmp1[1])} ?v${(counter === tmp0.length ? tindex : 'g' + tindex + counter)} .
-                        ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
-                    }
-                    ` ;
-                }
-
+        let qs = '';
+        let graphsSt = self.parseMultiGraphAsArray(propertyURI);
+        let graphs = [];
+        let pgStart = [];
+        let pgEnd = [];
+        let psStart = [];
+        let psEnd = [];
+        let intermediateArr = [];
+        if(Array.isArray(graphsSt)){
+            graphs = graphsSt;
+        }else{
+            graphs = [graphsSt];
+        }
+        //console.log(graphs);
+        for (let i = 0; i < graphs.length; i++) {
+            pgStart[i] ='';
+            pgEnd[i] ='';
+            psStart[i] ='';
+            psEnd[i] ='';
+            intermediateArr[i] = 0;
+        }
+        /*
+        prop1->[g]prop2 go from the value of prop1 to graph g and show the value of prop2
+        //need to distinguish between two following cases when property comes from  another graph than origin
+        [g]prop or [g]->prop in the begining i.e. re-base to graph g where resource is mentioned and get the value of prop
+        [g]prop0->prop2->[g2]prop3 re-base to graph g where property path prop0->prop2 has resource as value and then go to graph g2 and get the prop3: this is useful for intermediate linksets
+        */
+        let parts ={};
+        let counter=0;
+        let isIntermediate = 0;
+        //start making the nested graphs
+        graphs.forEach((graph, index)=>{
+            parts = self.parseGraphPath(graph);
+            //detect cases where we need to rebase to an intermediate graph property
+            let noProp = 0;
+            //[g]->
+            if(!parts.property){
+                //error: should not happen!
+                noProp = 1;
+                return qs;
             }else{
-                //first one
-                if(counter === 1){
-                    tmp2 = part.split('<-');
-                    if(tmp2.length>1){
-                        qs = `
-                            GRAPH <${tmp2[0]}> {
-                                ?s ${self.filterPropertyPath(tmp2[1])} ?v${(counter === tmp0.length ? tindex : 'g'+tindex+counter)} .
-                                ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
-                            }
-                        ` ;
-                    }else{
-                    //we assume it starts from the original graph
-                    //use the default graph name
-                        let st_extra = self.makeExtraTypeFilters(endpointParameters, {type: type});
-                        qs = `
-                            ${st_extra}
-                            ?s ${self.filterPropertyPath(part)} ?v${(counter === tmp0.length ? tindex : 'g'+tindex+counter)} .
-                            ${(counter !== tmp0.length ? '' : filterSt ? gStart + filterSt + gEnd : '')}
-                        ` ;
+                let tmp = parts.property.split('->'); //->p
+                if(tmp.length > 1){
+                    //[g]->empty
+                    if(!tmp[0].trim()){
+                        //this is the case where re-base to resource is required
+                        tmp.shift();
+                        parts.property = tmp.join('->');
                     }
-                }else{
-                    qs = qs + `
-                    ${gStart}
-                        ?vg${tindex}${counter-1} ${self.filterPropertyPath(part)} ?v${(counter === tmp0.length ? tindex : 'g'+tindex+counter)} .
-                    ${gEnd}
-                    ` ;
                 }
             }
+            counter++;
+            if(index === 0){
+                //----parse first graph---
+                //console.log(parts);
+                if(parts.service){
+                    psStart[0] = ` SERVICE <${parts.service}> { `;
+                    psEnd[0] = ' }';
+                }
+                if(parts.graph){
+                    //it means rebase  current resources to another graph
+                    if(parts.graph !== 'default'){
+                        pgStart[0]= ` GRAPH <${parts.graph}> { `;
+                        pgEnd[0]= ' }';
+                    }
+                    let itemp = parts.property.split('||');
+                    if(itemp.length > 1){
+                        //this is the bridge situation where an intermediate resource with source and target property is given
+                        //[g]source||target
+                        intermediateArr[0] = 1;
+                        pgStart[0] = pgStart[0] + `
+                        #source property
+                        ?osp0 ${self.filterPropertyPath(itemp[0])} ?s .
+                        #target property
+                        ?osp0 ${self.filterPropertyPath(itemp[1])} ?si0 .
+                        `;
+                    }else{
+                        //this is normal rebase
+                        if(withPropAnalysis){
+                            pgStart[0] = pgStart[0] + ` ?s ${self.filterPropertyPath(parts.property)} ?${(counter === graphs.length ? withPropAnalysis : 'vg' + withPropAnalysis + counter)} . `;
+                        }else{
+                            pgStart[0] = pgStart[0] + ` ?s ${self.filterPropertyPath(parts.property)} ?v${(counter === graphs.length ? tindex : 'g' + tindex + counter)} . `;
+                        }
+                    }
+                }else{
+                    if(withPropAnalysis){
+                        pgStart[0] = pgStart[0] + ` ?s ${self.filterPropertyPath(parts.property)} ?${(counter === graphs.length ? withPropAnalysis : 'vg' + withPropAnalysis + counter)} . `;
+                    }else{
+                        pgStart[0] = pgStart[0] + ` ?s ${self.filterPropertyPath(parts.property)} ?v${(counter === graphs.length ? tindex : 'g' + tindex + counter)} . `;
+                    }
+                    //the types should be written only for the first graph if it is original
+                    //todo: remove duplicate instances of the following in query
+                    //pgStart[0] =  self.makeExtraTypeFilters(endpointParameters, {type: type}) + pgStart[0];
+                }
+                if(filterSt && (counter === graphs.length)) {
+                    //append filters if required
+                    pgEnd[0] = gStart + filterSt + gEnd + pgEnd[0];
+                }
+                //----end parsing first graph---
+            }else{
+                //----parse remaining graph---
+                if(parts.graph !== 'default'){
+                    pgStart[index]= ` GRAPH <${parts.graph}> { `;
+                    pgEnd[index]= ' }';
+                }
+                if(parts.service){
+                    psStart[index] = ` SERVICE <${parts.service}> { `;
+                    psEnd[index] = ' }';
+                    //after service
+                    if(filterSt && (counter === graphs.length)) {
+                        //append filters if required
+                        psStart[index] = gStart + filterSt + psStart[index];
+                        psEnd[index] = psEnd[index] + gEnd;
+                    }
+                }else{
+                    //filter in the graph
+                    if(filterSt && (counter === graphs.length)) {
+                        //append filters if required
+                        pgEnd[index] = gStart + filterSt + gEnd + pgEnd[index];
+                    }
+                }
+                //check bridge situations which would come with an intermediate property
+                let itempp = parts.property.split('||');
+                if(itempp.length > 1){
+                    intermediateArr[index] = 1;
+                    if(withPropAnalysis){
+                        pgStart[index] = pgStart[index] + `
+                        #source property
+                        ?osp${index} ${self.filterPropertyPath(itempp[0])} ?${(counter === graphs.length ? withPropAnalysis : 'vg' + withPropAnalysis + (counter-1))} .
+                        #target property
+                        ?osp${index} ${self.filterPropertyPath(itempp[1])} ?si${index} .
+                        `;
+                    }else{
+                        pgStart[index] = pgStart[index] + `
+                        #source property
+                        ?osp${index} ${self.filterPropertyPath(itempp[0])} ?v${(counter === graphs.length ? tindex : 'g' + tindex + (counter-1))} .
+                        #target property
+                        ?osp${index} ${self.filterPropertyPath(itempp[1])} ?si${index} .
+                        `;
+                    }
+                }else{
+                    if(withPropAnalysis){
+                        if(intermediateArr[index-1]){
+                            //this is an exception to enable refering to a resource which is property in another graph
+                            pgStart[index] = pgStart[index] + `
+                            ?si${index-1} ${self.filterPropertyPath(parts.property)} ?${(counter === graphs.length ? withPropAnalysis : 'vg' + withPropAnalysis + counter)} .
+                            `;
+                        }else{
+                            pgStart[index] = pgStart[index] + `
+                            ?vg${withPropAnalysis}${counter-1} ${self.filterPropertyPath(parts.property)} ?${(counter === graphs.length ? withPropAnalysis : 'vg' + withPropAnalysis + counter)} .
+                            `;
+                        }
+                    }else{
+                        if(intermediateArr[index-1]){
+                            pgStart[index] = pgStart[index] + ` ?si${index-1} ${self.filterPropertyPath(parts.property)} ?v${(counter === graphs.length ? tindex : 'g' + tindex + counter)} . `;
+                        }else{
+                            pgStart[index] = pgStart[index] + ` ?vg${tindex}${counter-1} ${self.filterPropertyPath(parts.property)} ?v${(counter === graphs.length ? tindex : 'g' + tindex + counter)} . `;
+                        }
+                    }
+                }
+
+            }
         });
+        for (let i = 0; i < graphs.length; i++) {
+            qs = qs + `${psStart[i]} ${pgStart[i]}`;
+        }
+        //add anything needed in the middle
+        for (let i = graphs.length; i > 0; i--) {
+            qs = qs + `${pgEnd[i-1]} ${psEnd[i-1]}`;
+        }
+        //console.log(qs);
         return qs;
     }
     //gets the total number of items on a facet when a property is selected from master level
@@ -136,17 +322,16 @@ class FacetQuery{
         let type = rconfig.type;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let queryheart = '';
+        //---to support resource focus types
+        let st_extra = this.makeExtraTypeFilters(endpointParameters, rconfig);
         if(this.isMultiGraphFacet(propertyURI)){
             //to support browsing mutiple graphs
-            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', '');
+            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', '', '');
         }else{
             let st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.';
-            //---to support resource focus types
-            let st_extra = this.makeExtraTypeFilters(endpointParameters, rconfig);
-            st = st_extra + ' ' + st;
             queryheart = st;
         }
-
+        queryheart = st_extra + ' ' + queryheart;
         this.query = `
         SELECT (count(DISTINCT ?v) AS ?total) WHERE {
             ${gStart}
@@ -161,16 +346,16 @@ class FacetQuery{
         let type = rconfig.type;
         let queryheart = '';
         let {gStart, gEnd} = this.prepareGraphName(graphName);
+        //---to support resource focus types
+        let st_extra = this.makeExtraTypeFilters(endpointParameters, rconfig);
         if(this.isMultiGraphFacet(propertyURI)){
             //to support browsing mutiple graphs
-            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', '');
+            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', '', '');
         }else{
             let st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.';
-            //---to support resource focus types
-            let st_extra = this.makeExtraTypeFilters(endpointParameters, rconfig);
-            st = st_extra + ' ' + st;
             queryheart = st;
         }
+        queryheart = st_extra + ' ' + queryheart;
         //notice: it limits results to first 500 items
         this.query = `
         SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
@@ -179,6 +364,7 @@ class FacetQuery{
             ${gEnd}
         } GROUP BY ?v ORDER BY DESC(?total) OFFSET ${page*500} LIMIT 500
         `;
+        // console.log(this.prefixes + this.query);
         return this.prefixes + this.query;
     }
     getMultipleFilters(endpointParameters, graphName, prevSelection, rconfig, options) {
@@ -339,7 +525,7 @@ class FacetQuery{
                 //---------
                 if(this.isMultiGraphFacet(key)){
                     //to support browsing mutiple graphs
-                    st = st + this.prepareMultiGraphQuery(endpointParameters, graphName, type, key, i, '');
+                    st = st + this.prepareMultiGraphQuery(endpointParameters, graphName, type, key, i, '', '');
                 }else{
                     st = st + '?s '+ this.filterPropertyPath(key) + ' ?v' + i + '. ';
                 }
@@ -357,7 +543,6 @@ class FacetQuery{
                 st = '';
             }
         }
-
         return st_extra + ' ' + st;
     }
     addDataTypeToFilter(el){
@@ -444,14 +629,16 @@ class FacetQuery{
         let queryheart = '';
         let type = rconfig.type;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
+        let st_extra = this.makeExtraTypeFilters(endpointParameters, rconfig);
         let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, rconfig, options);
         if(this.isMultiGraphFacet(propertyURI)){
             //to support browsing mutiple graphs
-            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', st);
+            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', st, '');
         }else{
             st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.' + st;
             queryheart = st;
         }
+        queryheart = st_extra + ' ' + queryheart;
         this.query = `
         SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
             ${gStart}
@@ -466,14 +653,16 @@ class FacetQuery{
         let queryheart = '';
         let type = rconfig.type;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
+        let st_extra = this.makeExtraTypeFilters(endpointParameters, rconfig);
         let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, rconfig, options);
         if(this.isMultiGraphFacet(propertyURI)){
             //to support browsing mutiple graphs
-            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', st);
+            queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', st, '');
         }else{
             st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.' + st;
             queryheart = st;
         }
+        queryheart = st_extra + ' ' + queryheart;
         this.query = `
         SELECT (count(DISTINCT ?v) AS ?total) WHERE {
             ${gStart}
@@ -484,14 +673,63 @@ class FacetQuery{
         //console.log(this.query);
         return this.prefixes + this.query;
     }
+    //maps unnamed variables used in the query to named variables for analysis
+    createMappingForAnalysisProps(prevSelection, options){
+        let out = {};
+        let self = this;
+        let i = 0, aCounter = 0;
+        for(let prop in prevSelection){
+            i++;
+            if(options && options.analysisProps && options.analysisProps[prop]){
+                aCounter++;
+                out['?v'+i] = '?ldr_ap'+aCounter+'_' + self.getPropertyLabel(prop);
+            }
+        }
+        return Object.keys(out).length ? out : 0;
+    }
+    createSelectionForAnalysisProps(prevSelection, options){
+        let out = {};
+        for(let prop in prevSelection){
+            if(options && options.analysisProps && options.analysisProps[prop]){
+                //check the config
+                if(options.facetConfigs && options.facetConfigs[prop] && options.facetConfigs[prop].restrictAnalysisToSelected){
+                    out[prop] = prevSelection[prop]
+                }
+            }
+        }
+        return Object.keys(out).length ? out : 0;
+    }
+    handleAnalysisProps(options, endpointParameters, graphName, type){
+        let self = this;
+        let apLabel = '', analysisSelector = '', analysisPhrase = '', aCounter = 0;
+        if(options && options.analysisProps){
+            for(let prop in options.analysisProps){
+                aCounter++;
+                apLabel = 'ldr_ap'+aCounter+'_' + self.getPropertyLabel(prop);
+                analysisSelector = analysisSelector + ' ?' + apLabel;
+                if(self.isMultiGraphFacet(prop)){
+                    //to support browsing mutiple graphs
+                    analysisPhrase = analysisPhrase + self.prepareMultiGraphQuery(endpointParameters, graphName, type, prop, '', '', apLabel);
+                }else{
+                    analysisPhrase = analysisPhrase + '?s ' + self.filterPropertyPath(prop) + ' ?' + apLabel + ' .';
+                }
+            }
+        }
+        //todo: OPTIONAL for missing values
+        return {analysisPhrase: analysisPhrase, analysisSelector: analysisSelector};
+    }
     countSecondLevelPropertyValues(endpointParameters, graphName, rconfig, prevSelection, options) {
         let type = rconfig.type;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, rconfig, options);
+        //handle analysis props
+        let {analysisPhrase} = this.handleAnalysisProps(options, endpointParameters, graphName, type);
+        //---------------------
         this.query = `
         SELECT (count(DISTINCT ?s) AS ?total) WHERE {
             ${gStart}
                 ${st}
+                ${analysisPhrase}
             ${gEnd}
         }
         `;
@@ -513,8 +751,16 @@ class FacetQuery{
         let noffset = (offset-1)*limit;
         let searchPhase='';
         if(searchTerm && searchTerm.length>2){
-            searchPhase = 'FILTER( regex(?title, "'+searchTerm+'", "i") || regex(STR(?s), "'+searchTerm+'", "i"))';
+            //we use a fixed searchTern for show all
+            if(searchTerm === 'ldr_showAll'){
+                searchPhase =' ';
+            }else{
+                searchPhase = 'FILTER( regex(?title, "'+searchTerm+'", "i") || regex(STR(?s), "'+searchTerm+'", "i"))';
+            }
         }
+        //handle analysis props
+        let {analysisSelector, analysisPhrase} = self.handleAnalysisProps(options, endpointParameters, graphName, type);
+        //---------------------
         //add labels for entities
         if(labelProperty && labelProperty.length){
             selectStr = ' ?title ';
@@ -527,7 +773,7 @@ class FacetQuery{
                     titleStr = titleStr + 'OPTIONAL { ?s ' + self.filterPropertyPath(prop) + ' ?vp'+index+' .} ';
                     tmpA.push('?vp' + index);
                 });
-                bindPhase = ' BIND(CONCAT('+tmpA.join(',"-",')+') AS ?title) '
+                bindPhase = ' BIND(CONCAT('+tmpA.join(',"-",')+') AS ?title) ';
             }
         }else{
             selectStr = ' ?title ';
@@ -550,18 +796,44 @@ class FacetQuery{
         if(searchPhase){
             limitOffsetPharse ='';
         }
+        //if analysisProps are chosen, we duplicate the filters statement
+        let avmapping ={};
+        let ast = '';
+        let aSelection ={};
+        if(analysisPhrase){
+            options.facetConfigs
+            aSelection = this.createSelectionForAnalysisProps(prevSelection, options);
+            if(aSelection){
+                avmapping = this.createMappingForAnalysisProps(aSelection, options);
+                //generates filters only for analysis props
+                ast = this.getMultipleFilters(endpointParameters, graphName, aSelection, rtconfig, options);
+                for(let prop in avmapping){
+                    //need to escape question mark with \\
+                    //todo: need to remove duplicats and also variables which are not required
+                    ast = ast.replace(new RegExp('\\'+prop, 'g'), avmapping[prop]);
+                }
+            }
+        }
+
         this.query = `
-        SELECT DISTINCT ?s ${selectStr} WHERE {
+        SELECT DISTINCT ?s ${selectStr} ${analysisSelector} WHERE {
             ${gStart}
                 {
                     SELECT DISTINCT ?s WHERE {
                         ${gStart}
                             ${st}
+                            ${analysisPhrase}
                         ${gEnd}
                     }
                     ${limitOffsetPharse}
                 }
-                ${titleStr} ${imageStr} ${geoStr} ${bindPhase} ${searchPhase}
+                ${ast}
+                ${analysisPhrase}
+                ${searchPhase}
+                ${titleStr}
+                ${imageStr}
+                ${geoStr}
+                ${bindPhase}
             ${gEnd}
         }
         `;

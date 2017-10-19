@@ -80,6 +80,7 @@ module.exports = {
             {title: 'ldr:hidePropertyName'},
             {title: 'ldr:objectAViewer'},
             {title: 'ldr:objectBrowser'},
+            {title: 'ldr:datasetViewer'},
             {title: 'ldr:extendedOViewer'},
             {title: 'ldr:shortenURI'},
             {title: 'ldr:asWikipedia'},
@@ -92,6 +93,7 @@ module.exports = {
             {title: 'ldr:containerDatasetURI'},
             {title: 'ldr:hasLinkedValue'},
             {title: 'ldr:constraint'},
+            {title: 'ldr:restrictAnalysisToSelected'},
             {title: 'ldr:enabled'}
         ],
         ldrLiterals: [
@@ -120,11 +122,13 @@ module.exports = {
             {title: 'PasswordInput'},
             {title: 'PrefixBasedInput'},
             {title: 'ToggleEdit'},
+            {title: 'BasicResourceList'},
             {title: 'TagListBrowser'},
             {title: 'GeoListBrowser'},
             {title: 'CheckListBrowser'},
             {title: 'TaxonomyBrowser'},
-            {title: 'BarChartBrowser'}
+            {title: 'BarChartBrowser'},
+            {title: 'TagCloudBrowser'}
         ],
         classes: [
             {title: 'skos:Concept'},
