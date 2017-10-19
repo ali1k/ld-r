@@ -20,7 +20,6 @@ class FacetedBrowserStore extends BaseStore {
         this.datasetConfig= {};
         this.config = {};
         this.error = '';
-        this.loadedFromAPI = 0;
     }
     clearFacets() {
         this.clearAll();
@@ -28,25 +27,6 @@ class FacetedBrowserStore extends BaseStore {
     }
     loadFacetConfigs(payload) {
         this.prepareFacetConfigs(payload.datasetURI, payload.dynamicConfig, payload.staticConfig, payload.dynamicDatasetConfig, payload.staticDatasetConfig);
-        this.emitChange();
-    }
-    loadFacetConfigsFromAPI(payload) {
-        this.loadedFromAPI = 1;
-        //todo: fix this
-        //for now we assume datasetURI and graphURI are the same
-        this.graphName = payload.graphName;
-        this.datasetURI = payload.graphName;
-        for(let prop in payload.selection){
-            this.facets[prop] = payload.selection[prop];
-            this.facetsCount[prop] = payload.selection[prop].length;
-            if(!this.config[payload.graphName]){
-                this.config[payload.graphName] ={list: [prop], config: {}};
-            }else{
-                if(this.config[payload.graphName].list.indexOf(prop) === -1){
-                    this.config[payload.graphName].list.push(prop);
-                }
-            }
-        }
         this.emitChange();
     }
     prepareFacetConfigs(datasetURI, dynamicConfig, staticConfig, dynamicDatasetConfig, staticDatasetConfig) {
@@ -153,8 +133,7 @@ class FacetedBrowserStore extends BaseStore {
             resourceQuery: this.resourceQuery,
             facetQuery: this.facetQuery,
             page: this.page,
-            error: this.error,
-            loadedFromAPI: this.loadedFromAPI
+            error: this.error
         };
     }
     dehydrate() {
@@ -173,7 +152,6 @@ class FacetedBrowserStore extends BaseStore {
         this.resourceQuery = state.resourceQuery;
         this.facetQuery = state.facetQuery;
         this.error = state.error;
-        this.loadedFromAPI = state.loadedFromAPI;
     }
 }
 
@@ -186,7 +164,6 @@ FacetedBrowserStore.handlers = {
     'LOAD_SIDE_EFFECTS_FACETS_SUCCESS': 'handleFacetSideEffects',
     'LOAD_SIDE_EFFECTS_COUNT_FACETS_SUCCESS': 'handleFacetSideEffectsCount',
     'LOAD_FACETS_CONFIG': 'loadFacetConfigs',
-    'LOAD_FACETS_CONFIG_FROM_API': 'loadFacetConfigsFromAPI',
     'CLEAR_FACETS_SUCCESS': 'clearFacets'
 };
 
