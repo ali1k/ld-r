@@ -65,6 +65,7 @@
     "react-leaflet": "^1.4.0",
     "react-search-input": "^0.11.2",
     "recharts": "^1.0.0-alpha.2",
+    "request": "^2.83.0",
     "request-promise": "^4.2.1",
     "semantic-ui-css": "^2.2.11",
     "semantic-ui-react": "^0.75.1",
