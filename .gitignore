@@ -11,3 +11,4 @@ plugins/email/config.js
 *.lock
 react-codemod
 .DS_Store
+package-lock.json

@@ -36,15 +36,12 @@ class FacetedBrowserStore extends BaseStore {
         //for now we assume datasetURI and graphURI are the same
         this.graphName = payload.graphName;
         this.datasetURI = payload.graphName;
+        this.config ={list: [], config: {}};
         for(let prop in payload.selection){
             this.facets[prop] = payload.selection[prop];
             this.facetsCount[prop] = payload.selection[prop].length;
-            if(!this.config[payload.graphName]){
-                this.config[payload.graphName] ={list: [prop], config: {}};
-            }else{
-                if(this.config[payload.graphName].list.indexOf(prop) === -1){
-                    this.config[payload.graphName].list.push(prop);
-                }
+            if(this.config.list.indexOf(prop) === -1){
+                this.config.list.push(prop);
             }
         }
         this.emitChange();
