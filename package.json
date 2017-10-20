@@ -73,6 +73,7 @@
     "serialize-javascript": "^1.4.0",
     "serve-favicon": "^2.4.3",
     "simplify-js": "^1.2.1",
+    "sparqljs": "^1.5.1",
     "valid-url": "^1.0.9",
     "wicket": "^1.3.2",
     "yasgui-yasqe": "^2.11.16"

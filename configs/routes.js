@@ -45,18 +45,32 @@ export default {
             context.executeAction(loadDatasets, {pageTitle: 'Annotate a dataset'}, done);
         }
     },
+    wysiwyq: {
+        path: '/wysiwyq',
+        method: 'get',
+        handler: require('../components/WYSIWYQ'),
+        label: 'WYSIWYQ',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | WYSIWYQ'});
+            done();
+        }
+    },
     facets: {
-        path: '/browse/:id?',
+        path: '/browse/:id?/:apiFlag?',
         method: 'get',
         handler: require('../components/dataset/FacetedBrowser'),
         label: 'Faceted Browser',
         action: (context, payload, done) => {
-            let datasetURI, page;
+            let datasetURI, page, apiFlag;
             datasetURI = payload.params.id;
+            apiFlag = payload.params.apiFlag;
             if (!datasetURI) {
                 datasetURI = 0;
             }
-            context.executeAction(loadFacets, {mode: 'init', id: decodeURIComponent(datasetURI), selection: 0, page: 1}, done);
+            if (!apiFlag) {
+                apiFlag = 0;
+            }
+            context.executeAction(loadFacets, {mode: 'init', id: decodeURIComponent(datasetURI), apiFlag: apiFlag, selection: 0, page: 1}, done);
         }
     },
     datasets: {

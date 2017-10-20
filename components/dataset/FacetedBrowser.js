@@ -13,6 +13,17 @@ class FacetedBrowser extends React.Component {
         super(props);
         this.state = {selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}};
     }
+    componentDidMount() {
+        //check if it is loaded from an API
+        //then: set the state and generate the UI
+        if(this.props.FacetedBrowserStore.loadedFromAPI){
+            //clone states
+            this.setState({selection: JSON.parse(JSON.stringify(this.props.FacetedBrowserStore.facets))});
+            this.context.executeAction(loadFacets, {mode: 'master', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, selection: {prevSelection: this.props.FacetedBrowserStore.facets, options: {invert: this.state.invert, range: this.state.range, facetConfigs: {}}}});
+            this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: 1, selection: { prevSelection: this.props.FacetedBrowserStore.facets, options: {invert: this.state.invert, range: this.state.range, facetConfigs: {}}}});
+        }
+
+    }
     toggleFirstCol(){
         this.setState({hideFirstCol: !this.state.hideFirstCol})
     }
@@ -68,7 +79,7 @@ class FacetedBrowser extends React.Component {
     //here we can determine the configs which should be considered in the query
     getNecessaryFaccetsConfig(){
         let facetConfigs = {};
-        let cnf = JSON.parse(JSON.stringify(this.props.FacetedBrowserStore.config.config));
+        let cnf = JSON.parse(JSON.stringify(this.props.FacetedBrowserStore.config));
         for(let prop in cnf){
             if(cnf[prop].objectIViewer && cnf[prop].objectIViewer.length){
                 facetConfigs[prop] = cnf[prop];

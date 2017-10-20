@@ -1,5 +1,6 @@
 import {appFullTitle} from '../configs/general';
 import loadDynamicFacetsConfig from './loadDynamicFacetsConfig';
+import prepareFacetsFromQueryAPI from './prepareFacetsFromQueryAPI';
 import async from 'async';
 
 export default function loadFacets(context, payload, done) {
@@ -14,6 +15,14 @@ export default function loadFacets(context, payload, done) {
             (cback) => {
                 //dynamic config
                 context.executeAction(loadDynamicFacetsConfig, payload, cback);
+            },
+            (cback) => {
+                if(payload.apiFlag){
+                    //prepare query and facets from a query API
+                    context.executeAction(prepareFacetsFromQueryAPI, payload, cback);
+                }else{
+                    cback();
+                }
             },
             (cback) => {
                 //clear facets
