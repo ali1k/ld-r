@@ -156,7 +156,7 @@ class Dataset3D extends React.Component {
             //Generate colours and
             this.props.Dataset3DStore.dataset.classes[i].color =  Math.random() * 0xffffff;
             this.props.Dataset3DStore.dataset.classes[i].x = Math.random();
-            this.props.Dataset3DStore.dataset.classes[i].z = Math.random();
+            this.props.Dataset3DStore.dataset.classes[i].z = this.props.Dataset3DStore.dataset.classes[i].x;
             //assign position based on maxrows
             if(rowX > this.maxrows){
                 rowX = -this.maxrows;
@@ -236,8 +236,8 @@ class Dataset3D extends React.Component {
     render() {
         //const width = window.innerWidth; // canvas width
         //const height = window.innerHeight; // canvas height
-        const width = 1050; // canvas width
-        const height = 700; // canvas height
+        const width = 640; // canvas width
+        const height = 480; // canvas height
 
         //let classname0, classname1, freq0, freq1;
         //, color0, color1;
@@ -259,10 +259,10 @@ class Dataset3D extends React.Component {
                 <div className="ui fluid container ldr-padding-more" ref="dataset#D">
                     <div className="ui grid">
                         <div className="ui column">
-                            <b>Dataset3D Component </b><br />
+                            <b>Linked Data City </b><br />
                             <b>Mouse controls:</b> Use your scroll-wheel to zoom-in and out. Click + mouve your mouse to pan up, down, left, and right <br />
                             <b>Key controls:</b> Press the 'p', 'q', or 'e'-key to stop auto-rotation. Press the arrow keys (up, down, left, right, or A,S,D,W) to move your view around, relative to what you are looking at. <br />
-                            <br />Tip: view the city from above and use the arrow-keys to move above to a building on which you can zoom in and inspect it.
+                            <b>Tip:</b> view the city from above and use the arrow-keys to move above to a building on which you can zoom in and inspect it.<br />
                             <React3
                                 ref="react3"
                                 mainCamera="mainCamera" // this points to the perspectiveCamera which has the name set to "camera" below
@@ -367,6 +367,9 @@ class Dataset3D extends React.Component {
                                     {this.allbuildings}
                                 </scene>
                             </React3>
+                            <br/>
+                            Resources in linked data repository loaded:
+                            <br/>
                             {JSON.stringify(this.props.Dataset3DStore.dataset.classes)}
                         </div>
                     </div>
