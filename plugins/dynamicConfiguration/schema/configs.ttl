@@ -51,7 +51,7 @@
 <https://ld-r.org/config/r11> a ldr:ReactorConfig;
         ldr:scope "DP" ;
         rdfs:label """DBpedia foaf:depiction to BasicImageView""" ;
-        ldr:dataset <http://live.dbpedia.org/sparql> ;
+        ldr:dataset <http://dbpedia.org/sparql> ;
         ldr:property dbo:thumbnail ;
         ldr:objectIViewer "BasicImageView" .
 #Dataset config
@@ -66,7 +66,7 @@
 #Server config
 <https://ld-r.org/config/s1> a ldr:ServerConfig;
         rdfs:label """DBpedia SPARQL Endpoint""" ;
-        ldr:dataset <http://live.dbpedia.org/sparql> ;
+        ldr:dataset <http://dbpedia.org/sparql> ;
         ldr:host "dbpedia.org" ;
         ldr:port "80" ;
         ldr:path "/sparql" ;

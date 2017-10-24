@@ -32,9 +32,9 @@ export default {
                 resourceLabelProperty: ['http://www.w3.org/2000/01/rdf-schema#label']
             },
             //example reactor config
-            'http://live.dbpedia.org/sparql': {
+            'http://dbpedia.org/sparql': {
                 readOnly: 1,
-                allowInlineConfig: 1,
+                allowInlineConfig: 0,
                 resourceFocusType: ['http://dbpedia.org/ontology/University'],
                 datasetLabel: ['DBpedia Universities']
             }

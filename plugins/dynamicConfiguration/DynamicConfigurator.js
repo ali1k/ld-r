@@ -2,6 +2,7 @@ import {enableDynamicReactorConfiguration, enableDynamicServerConfiguration, ena
 import {getStaticEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
 import rp from 'request-promise';
 const ldr_prefix = 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#';
+const sparql_endpoint_error = '**Please also check if the configuration SPARQL endpoint is running and is updateable**';
 
 class DynamicConfigurator {
     getDynamicDatasets(user, callback) {
@@ -155,6 +156,7 @@ class DynamicConfigurator {
                 callback(tmp.dynamicReactorDS, tmp.dynamicFacetsDS);
             }).catch(function (err) {
                 console.log('Error in dynamic datasets list query:', prefixes + query);
+                console.log(sparql_endpoint_error);
                 console.log('---------------------------------------------------------');
                 callback(dynamicReactorDS, dynamicFacetsDS);
             });
@@ -250,6 +252,7 @@ class DynamicConfigurator {
                 callback(config);
             }).catch(function (err) {
                 console.log('Error in server config query:', prefixes + query);
+                console.log(sparql_endpoint_error);
                 console.log('---------------------------------------------------------');
                 callback(config);
             });
@@ -349,6 +352,7 @@ class DynamicConfigurator {
                 callback(config);
             }).catch(function (err) {
                 console.log('Error in facets config query:', prefixes + query);
+                console.log(sparql_endpoint_error);
                 console.log('---------------------------------------------------------');
                 callback(config);
             });
@@ -463,6 +467,7 @@ class DynamicConfigurator {
                 callback(config);
             }).catch(function (err) {
                 console.log('Error in dataset config query:', prefixes + query);
+                console.log(sparql_endpoint_error);
                 console.log('---------------------------------------------------------');
                 callback(config);
             });
@@ -584,6 +589,7 @@ class DynamicConfigurator {
                 callback(rnc);
             }).catch(function (err) {
                 console.log('Error in dataset config creation update query:', prefixes + query);
+                console.log(sparql_endpoint_error);
                 console.log('---------------------------------------------------------');
                 callback(0);
             });
@@ -647,6 +653,7 @@ class DynamicConfigurator {
                 callback(rnc);
             }).catch(function (err) {
                 console.log('Error in server config creation update query:', prefixes + query);
+                console.log(sparql_endpoint_error);
                 console.log('---------------------------------------------------------');
                 callback(0);
             });
@@ -796,6 +803,7 @@ class DynamicConfigurator {
                 callback(config);
             }).catch(function (err) {
                 console.log('Error in resource config query:', prefixes + query);
+                console.log(sparql_endpoint_error);
                 console.log('---------------------------------------------------------');
                 callback(config);
             });
@@ -892,6 +900,7 @@ class DynamicConfigurator {
             }).catch(function (err) {
                 //console.log(err);
                 console.log('Error in property config query:', prefixes + query);
+                console.log(sparql_endpoint_error);
                 console.log('---------------------------------------------------------');
                 callback(config);
             });
@@ -961,6 +970,7 @@ class DynamicConfigurator {
                 callback(1);
             }).catch(function (err) {
                 console.log('Error in sample facet config creation update query:', prefixes + query);
+                console.log(sparql_endpoint_error);
                 console.log('---------------------------------------------------------');
                 callback(0);
             });

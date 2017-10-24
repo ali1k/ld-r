@@ -30,14 +30,14 @@ export default {
     googleAnalyticsID: '',
 
     //if set, will use the configs stored in a triple store
-    enableDynamicServerConfiguration: 0,
-    enableDynamicReactorConfiguration: 0,
-    enableDynamicFacetsConfiguration: 0,
+    enableDynamicServerConfiguration: 1,
+    enableDynamicReactorConfiguration: 1,
+    enableDynamicFacetsConfiguration: 1,
     //if set, wil allow users to create new datasets
     //only works if enableDynamicReactorConfiguration is set to 1 and triple store allows update qureies
-    enableAddingNewDatasets: 0,
+    enableAddingNewDatasets: 1,
     //allows users to annotate datasets using NLP APIs
-    enableDatasetAnnotation: 0,
+    enableDatasetAnnotation: 1,
     //graph that stores your configurations
     configDatasetURI: ['http://ld-r.org/configurations'],
     //will enable/disable auto config
