@@ -119,7 +119,7 @@ class FacetedBrowser extends React.Component {
                         properties.push({label: (propConfig ? (propConfig.label ? propConfig.label : self.getPropertyLabel(el)) : self.getPropertyLabel(el)), value: el, valueType: 'uri', position: (propConfig && propConfig.position) ? propConfig.position : 0, category: (propConfig && propConfig.category) ? propConfig.category : (propConfig && propConfig.pivotDataset) ? ['Linked Entities'] : ''});
                     }
                 }else{
-                    properties.push({label: (propConfig ? (propConfig.label ? propConfig.label : self.getPropertyLabel(el)) : self.getPropertyLabel(el)), value: el, valueType: 'uri', position: (propConfig && propConfig.position) ? propConfig.position : 0, category: (propConfig && propConfig.category) ? propConfig.category : ''});
+                    properties.push({label: (propConfig ? (propConfig.label ? propConfig.label : self.getPropertyLabel(el)) : self.getPropertyLabel(el)), value: el, valueType: 'uri', position: (propConfig && propConfig.position) ? propConfig.position : 0, category: (propConfig && propConfig.category) ? propConfig.category : (propConfig && propConfig.pivotDataset) ? ['Linked Entities'] : ''});
                 }
             });
             //apply ordering if in config
