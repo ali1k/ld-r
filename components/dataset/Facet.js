@@ -450,7 +450,7 @@ class Facet extends React.Component {
                         }
                         {!this.props.spec.propertyURI ? '' :
                             this.state.config && this.state.config.pivotDataset ?
-                                <a className="ui top right attached violet label" onClick={this.handlePivotChange.bind(this)}><i className="ui icon level down"></i>Dive into this facet</a>
+                                <a className="ui top right attached blue label" onClick={this.handlePivotChange.bind(this)}><i className="ui icon level down"></i>Dive in</a>
                                 : null
                         }
                         <div className="ui horizontal list">
