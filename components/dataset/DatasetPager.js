@@ -60,6 +60,7 @@ class DatasetPager extends React.Component {
         this.context.executeAction(searchInDataset, {
             id: this.props.datasetURI,
             selection: this.props.selection,
+            pivotConstraint: this.props.pivotConstraint,
             searchTerm: term
         });
     }
