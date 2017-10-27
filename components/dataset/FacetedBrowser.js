@@ -11,7 +11,13 @@ import DatasetFB from './DatasetFB';
 class FacetedBrowser extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}};
+        this.state = {selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}, pivotConstraint: ''};
+    }
+    handlePivotChange(queryConstraints, config) {
+        let datasetURI = config.pivotDataset[0];
+        //reset the state
+        this.setState({selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}, pivotConstraint: queryConstraints});
+        this.context.executeAction(loadFacets, {mode: 'init', id: datasetURI, page: 1, selection: { }, pivotConstraint: queryConstraints});
     }
     toggleFirstCol(){
         this.setState({hideFirstCol: !this.state.hideFirstCol})
@@ -33,7 +39,7 @@ class FacetedBrowser extends React.Component {
     }
     gotoPage(page) {
         let facetConfigs = this.getNecessaryFaccetsConfig();
-        this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: page, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}});
+        this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: page, pivotConstraint: this.state.pivotConstraint, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}});
     }
     createFConfig(datasetURI) {
         this.context.executeAction(createASampleFacetsConfig, {dataset: datasetURI, redirect: 1});
@@ -90,6 +96,13 @@ class FacetedBrowser extends React.Component {
                     facetConfigs[prop].restrictAnalysisToSelected = cnf[prop].restrictAnalysisToSelected;
                 }
             }
+            if(cnf[prop].pivotDataset){
+                if(!facetConfigs[prop]){
+                    facetConfigs[prop] = {pivotDataset: cnf[prop].pivotDataset};
+                }else{
+                    facetConfigs[prop].pivotDataset = cnf[prop].pivotDataset;
+                }
+            }
         }
         return facetConfigs;
     }
@@ -124,7 +137,7 @@ class FacetedBrowser extends React.Component {
         return i;
     }
     handleShowMoreFacet(propertyURI, fpage){
-        this.context.executeAction(loadFacets, {mode: 'masterMore', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, selection: {propertyURI: propertyURI, value: propertyURI, status: 1, prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range}}, fpage: fpage});
+        this.context.executeAction(loadFacets, {mode: 'masterMore', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, pivotConstraint: this.state.pivotConstraint, selection: {propertyURI: propertyURI, value: propertyURI, status: 1, prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range}}, fpage: fpage});
     }
     handleAnalysisProps(propertyURI){
         //revert showAll on facet interactions
@@ -136,7 +149,7 @@ class FacetedBrowser extends React.Component {
         }else{
             delete this.state.analysisProps[propertyURI];
         }
-        this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: 1, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}});
+        this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: 1, pivotConstraint: this.state.pivotConstraint, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}});
         /*
         //apply side effects
         let sideEffectsArr = [];
@@ -162,7 +175,7 @@ class FacetedBrowser extends React.Component {
         }else{
             delete this.state.invert[propertyURI];
         }
-        this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: 1, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}});
+        this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: 1, pivotConstraint: this.state.pivotConstraint, selection: { prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}});
         //apply side effects
         let sideEffectsArr = [];
         //allow refreshing the facet itself
@@ -174,7 +187,7 @@ class FacetedBrowser extends React.Component {
             }
         }
         sideEffectsArr.forEach(function(el){
-            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: self.props.FacetedBrowserStore.datasetURI, page: self.props.FacetedBrowserStore.page, selection: {status: 0, propertyURI: el, prevSelection: self.state.selection, options: {invert: self.state.invert, range: self.state.range, facetConfigs: facetConfigs}}});
+            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: self.props.FacetedBrowserStore.datasetURI, page: self.props.FacetedBrowserStore.page, pivotConstraint: self.state.pivotConstraint, selection: {status: 0, propertyURI: el, prevSelection: self.state.selection, options: {invert: self.state.invert, range: self.state.range, facetConfigs: facetConfigs}}});
         });
     }
     handleToggleRange(propertyURI, rangeObj){
@@ -203,7 +216,7 @@ class FacetedBrowser extends React.Component {
             }
         }
         sideEffectsArr.forEach(function(el){
-            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: self.props.FacetedBrowserStore.datasetURI, page: self.props.FacetedBrowserStore.page, selection: {status: 0, propertyURI: el, prevSelection: self.state.selection, options: {invert: self.state.invert, range: self.state.range, facetConfigs: facetConfigs}}});
+            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: self.props.FacetedBrowserStore.datasetURI, page: self.props.FacetedBrowserStore.page, pivotConstraint: self.state.pivotConstraint, selection: {status: 0, propertyURI: el, prevSelection: self.state.selection, options: {invert: self.state.invert, range: self.state.range, facetConfigs: facetConfigs}}});
         });
     }
     handleOnCheck(level, valueType, dataType, status, value, propertyURI) {
@@ -252,7 +265,7 @@ class FacetedBrowser extends React.Component {
                     atLeastOne = 1;
                 }
             }
-            this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, selection: {propertyURI: propertyURI, value: value, status: status, prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}});
+            this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, pivotConstraint: this.state.pivotConstraint, selection: {propertyURI: propertyURI, value: value, status: status, prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}});
         }else{
             //for master level
             if(this.state.selection[value] && this.state.selection[value].length){
@@ -289,11 +302,11 @@ class FacetedBrowser extends React.Component {
             }
             //should not run if there is a side effect -> prevents duplicate runs
             if(sideEffectsArr.indexOf(value) === -1){
-                this.context.executeAction(loadFacets, {mode: 'master', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, selection: {propertyURI: propertyURI, value: value, status: status, prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs}}});
+                this.context.executeAction(loadFacets, {mode: 'master', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, pivotConstraint: this.state.pivotConstraint, selection: {propertyURI: propertyURI, value: value, status: status, prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs}}});
             }
             //on uncheck update list of resources
             if(!status && hadAnySelected){
-                this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, selection: {propertyURI: value, value: value, status: status, prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}});
+                this.context.executeAction(loadFacets, {mode: 'second', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, pivotConstraint: this.state.pivotConstraint, selection: {propertyURI: value, value: value, status: status, prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}});
                 //add new type of side effect on uncheck
                 for (let key in this.state.selection) {
                     sideEffectsArr.push(key);
@@ -303,7 +316,7 @@ class FacetedBrowser extends React.Component {
         // console.log(sideEffectsArr);
         //apply side effects
         sideEffectsArr.forEach(function(el){
-            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: self.props.FacetedBrowserStore.datasetURI, page: self.props.FacetedBrowserStore.page, selection: {status: status, propertyURI: el, prevSelection: self.state.selection, options: {invert: self.state.invert, range: self.state.range, facetConfigs: facetConfigs}}});
+            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: self.props.FacetedBrowserStore.datasetURI, page: self.props.FacetedBrowserStore.page, pivotConstraint: self.state.pivotConstraint, selection: {status: status, propertyURI: el, prevSelection: self.state.selection, options: {invert: self.state.invert, range: self.state.range, facetConfigs: facetConfigs}}});
         });
     }
     //used to fix the key of component in dynamic cases
@@ -407,12 +420,12 @@ class FacetedBrowser extends React.Component {
                     if(self.state.expandedFacet){
                         if(self.state.expandedFacet===node.value){
                             return (
-                                <Facet selection={self.state.selection} invert={self.state.invert} analysisProps={self.state.analysisProps} range={self.state.range} minHeight={550} maxHeight={700} onCheck={self.handleOnCheck.bind(self, 2, self.props.FacetedBrowserStore.facets[node.value][0].valueType, self.props.FacetedBrowserStore.facets[node.value][0].dataType)} onInvert={self.handleToggleInvert.bind(self, node.value)} onAnalyzeProp={self.handleAnalysisProps.bind(self, node.value)} onRange={self.handleToggleRange.bind(self, node.value)} onShowMore={self.handleShowMoreFacet.bind(self, node.value)} key={self.findIndexInProperties(properties, node.value)} spec={{propertyURI: node.value, property: self.getPropertyLabel(node.value), instances: self.props.FacetedBrowserStore.facets[node.value], total: self.props.FacetedBrowserStore.facetsCount[node.value], query: self.props.FacetedBrowserStore.facetQuery[node.value]}} config={self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, node.value)} datasetURI={self.props.FacetedBrowserStore.datasetURI} toggleExpandFacet={self.toggleExpandFacet.bind(self)}/>
+                                <Facet selection={self.state.selection} invert={self.state.invert} analysisProps={self.state.analysisProps} range={self.state.range} minHeight={550} maxHeight={700} onCheck={self.handleOnCheck.bind(self, 2, self.props.FacetedBrowserStore.facets[node.value][0].valueType, self.props.FacetedBrowserStore.facets[node.value][0].dataType)} onInvert={self.handleToggleInvert.bind(self, node.value)} onAnalyzeProp={self.handleAnalysisProps.bind(self, node.value)} onRange={self.handleToggleRange.bind(self, node.value)} onShowMore={self.handleShowMoreFacet.bind(self, node.value)} key={self.findIndexInProperties(properties, node.value)} spec={{propertyURI: node.value, property: self.getPropertyLabel(node.value), instances: self.props.FacetedBrowserStore.facets[node.value], total: self.props.FacetedBrowserStore.facetsCount[node.value], query: self.props.FacetedBrowserStore.facetQuery[node.value], queryConstraints: self.props.FacetedBrowserStore.facetQueryConstraints[node.value]}} config={self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, node.value)} datasetURI={self.props.FacetedBrowserStore.datasetURI} toggleExpandFacet={self.toggleExpandFacet.bind(self)} onPivotChange={self.handlePivotChange.bind(self, self.props.FacetedBrowserStore.facetQueryConstraints[node.value], self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, node.value))}/>
                             );
                         }
                     }else{
                         return (
-                            <Facet selection={self.state.selection} invert={self.state.invert} analysisProps={self.state.analysisProps} range={self.state.range} onCheck={self.handleOnCheck.bind(self, 2, self.props.FacetedBrowserStore.facets[node.value][0].valueType, self.props.FacetedBrowserStore.facets[node.value][0].dataType)} onInvert={self.handleToggleInvert.bind(self, node.value)} onAnalyzeProp={self.handleAnalysisProps.bind(self, node.value)} onRange={self.handleToggleRange.bind(self, node.value)} onShowMore={self.handleShowMoreFacet.bind(self, node.value)} key={self.findIndexInProperties(properties, node.value)} spec={{propertyURI: node.value, property: self.getPropertyLabel(node.value), instances: self.props.FacetedBrowserStore.facets[node.value], total: self.props.FacetedBrowserStore.facetsCount[node.value], query: self.props.FacetedBrowserStore.facetQuery[node.value]}} config={self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, node.value)} datasetURI={self.props.FacetedBrowserStore.datasetURI} toggleExpandFacet={self.toggleExpandFacet.bind(self)}/>
+                            <Facet selection={self.state.selection} invert={self.state.invert} analysisProps={self.state.analysisProps} range={self.state.range} onCheck={self.handleOnCheck.bind(self, 2, self.props.FacetedBrowserStore.facets[node.value][0].valueType, self.props.FacetedBrowserStore.facets[node.value][0].dataType)} onInvert={self.handleToggleInvert.bind(self, node.value)} onAnalyzeProp={self.handleAnalysisProps.bind(self, node.value)} onRange={self.handleToggleRange.bind(self, node.value)} onShowMore={self.handleShowMoreFacet.bind(self, node.value)} key={self.findIndexInProperties(properties, node.value)} spec={{propertyURI: node.value, property: self.getPropertyLabel(node.value), instances: self.props.FacetedBrowserStore.facets[node.value], total: self.props.FacetedBrowserStore.facetsCount[node.value], query: self.props.FacetedBrowserStore.facetQuery[node.value], queryConstraints: self.props.FacetedBrowserStore.facetQueryConstraints[node.value]}} config={self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, node.value)} datasetURI={self.props.FacetedBrowserStore.datasetURI} toggleExpandFacet={self.toggleExpandFacet.bind(self)} onPivotChange={self.handlePivotChange.bind(self, self.props.FacetedBrowserStore.facetQueryConstraints[node.value], self.getPropertyConfig(self.props.FacetedBrowserStore.datasetURI, node.value))}/>
                         );
                     }
                 }else{

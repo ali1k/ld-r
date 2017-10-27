@@ -24,6 +24,10 @@ class Facet extends React.Component {
         this.filteredInstances = [];
         this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0, rangeChanged: 0, trange: {min: '', max: ''}, range: {min: '', max: ''}, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : '', addedAsVar: this.props.analysisProps[this.props.spec.propertyURI] ? 1 : 0, rangeEnabled: this.props.config && this.props.config.allowRangeOfValues ? 1 :0};
     }
+    handlePivotChange() {
+        //handle by parent
+        this.props.onPivotChange();
+    }
     handleExport(){
         let values =[];
         this.filteredInstances.forEach((instance)=>{
@@ -443,6 +447,11 @@ class Facet extends React.Component {
                     <div className={contentClasses}>
                         {!this.props.spec.propertyURI ? '' :
                             <span className="ui teal ribbon label" title="number of items listed in this facet" onDoubleClick={this.handleToggleShowQuery.bind(this)}>{this.state.searchTerm || this.state.range.min || this.state.range.max || this.state.trange.min || this.state.trange.max ? cloneInstances.length : this.addCommas(itemsCount)}{(!this.state.searchTerm && !this.state.range.min && !this.state.range.max && !this.state.trange.min && !this.state.trange.max && this.props.spec.propertyURI && parseInt(itemsCount) > cloneInstances.length) ? '*' : ''}</span>
+                        }
+                        {!this.props.spec.propertyURI ? '' :
+                            this.state.config && this.state.config.pivotDataset ?
+                                <a className="ui top right attached violet label" onClick={this.handlePivotChange.bind(this)}><i className="ui icon level down"></i>Dive into this facet</a>
+                                : null
                         }
                         <div className="ui horizontal list">
                             <div className="item">

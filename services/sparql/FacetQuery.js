@@ -357,15 +357,26 @@ class FacetQuery{
         }
         queryheart = st_extra + ' ' + queryheart;
         //notice: it limits results to first 500 items
+        let queryConstraint = `
+          ${gStart}
+              ${queryheart}
+          ${gEnd}
+        `;
+        //need to change the ?s and ?v to a random variable to not overlap with the new pivot
+        let rnd = Math.floor(Date.now() / 1000);
+        queryConstraint = queryConstraint.replace(/\?s/g, '?pvs'+rnd);
+        queryConstraint = queryConstraint.replace(/\?v\./, '?s\.');
+        queryConstraint = queryConstraint.replace(/\?v/g, '?pv'+rnd);
+
         this.query = `
         SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
-            ${gStart}
-                ${queryheart}
-            ${gEnd}
+          ${gStart}
+              ${queryheart}
+          ${gEnd}
         } GROUP BY ?v ORDER BY DESC(?total) OFFSET ${page*500} LIMIT 500
         `;
         // console.log(this.prefixes + this.query);
-        return this.prefixes + this.query;
+        return {query: this.prefixes + this.query, queryConstraints: queryConstraint};
     }
     getMultipleFilters(endpointParameters, graphName, prevSelection, rconfig, options) {
         let self = this;
@@ -612,6 +623,9 @@ class FacetQuery{
             }
             st_extra = constraintPhrase + st_extra;
         }
+        if(rconfig.pivotConstraint){
+            st_extra = st_extra + rconfig.pivotConstraint;
+        }
         return st_extra;
     }
     filterPropertyPath(propertyURI){
@@ -639,15 +653,29 @@ class FacetQuery{
             queryheart = st;
         }
         queryheart = st_extra + ' ' + queryheart;
+        let queryConstraint = '';
+        if(options.facetConfigs && options.facetConfigs[propertyURI] && options.facetConfigs[propertyURI].pivotDataset){
+            if(options.facetConfigs[propertyURI]){
+                queryConstraint = `
+                  ${gStart}
+                      ${queryheart}
+                  ${gEnd}
+                `;
+                //need to change the ?s and ?v to a random variable to not overlap with the new pivot
+                let rnd = Math.floor(Date.now() / 1000);
+                queryConstraint = queryConstraint.replace(/\?s/g, '?pvs'+rnd);
+                queryConstraint = queryConstraint.replace(/\?v\./, '?s\.');
+                queryConstraint = queryConstraint.replace(/\?v/g, '?pv'+rnd);
+            }
+        }
         this.query = `
         SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
-            ${gStart}
-                ${queryheart}
-            ${gEnd}
+          ${gStart}
+              ${queryheart}
+          ${gEnd}
         } GROUP BY ?v ORDER BY DESC(?total) LIMIT 500
         `;
-        //console.log(this.query);
-        return this.prefixes + this.query;
+        return {query: this.prefixes + this.query, queryConstraints: queryConstraint};
     }
     getSideEffectsCount(endpointParameters, graphName, rconfig, propertyURI, prevSelection, options) {
         let queryheart = '';

@@ -45,6 +45,10 @@ export default {
                     if(rconfig.constraint){
                         rftconfig['constraint'] = rconfig.constraint;
                     }
+                    let pivotConstraint = params.pivotConstraint ? params.pivotConstraint : '';
+                    if(pivotConstraint){
+                        rftconfig['pivotConstraint'] = pivotConstraint;
+                    }
                     query = queryObject.getSideEffectsCount(endpointParameters, graphName, rftconfig, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, params.selection.options);
                     //build http uri
                     //send request
@@ -83,16 +87,21 @@ export default {
                     if(rconfig.constraint){
                         rftconfig['constraint'] = rconfig.constraint;
                     }
-                    query = queryObject.getSideEffects(endpointParameters, graphName, rftconfig, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, params.selection.options);
+                    let pivotConstraint = params.pivotConstraint ? params.pivotConstraint : '';
+                    if(pivotConstraint){
+                        rftconfig['pivotConstraint'] = pivotConstraint;
+                    }
+                    let fullQueries = queryObject.getSideEffects(endpointParameters, graphName, rftconfig, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, params.selection.options);
                     //build http uri
+                    //console.log(fullQueries);
                     //send request
-                    let tmp = getHTTPQuery('read', query, endpointParameters, outputFormat);
+                    let tmp = getHTTPQuery('read', fullQueries.query, endpointParameters, outputFormat);
                     rp.post({uri: tmp.uri, form: tmp.params, headers: headers}).then(function(res){
                         callback(null, {
                             datasetURI: datasetURI,
                             graphName: graphName,
                             page: 1,
-                            facets: {propertyURI: decodeURIComponent(params.selection.propertyURI), items: utilObject.parseMasterPropertyValues(res), facetQuery: query}
+                            facets: {propertyURI: decodeURIComponent(params.selection.propertyURI), items: utilObject.parseMasterPropertyValues(res), facetQuery: fullQueries.query, facetQueryConstraints: fullQueries.queryConstraints}
                         });
                     }).catch(function (err) {
                         console.log(err);
@@ -131,6 +140,10 @@ export default {
                     let rftconfig = configurator.getResourceFocusType(rconfig, datasetURI);
                     if(rconfig.constraint){
                         rftconfig['constraint'] = rconfig.constraint;
+                    }
+                    let pivotConstraint = params.pivotConstraint ? params.pivotConstraint : '';
+                    if(pivotConstraint){
+                        rftconfig['pivotConstraint'] = pivotConstraint;
                     }
                     query = queryObject.getMasterPropertyValuesCount(endpointParameters, graphName, rftconfig, decodeURIComponent(params.selection.value));
                     //console.log(query);
@@ -181,18 +194,23 @@ export default {
                     if(rconfig.constraint){
                         rftconfig['constraint'] = rconfig.constraint;
                     }
-                    query = queryObject.getMasterPropertyValues(endpointParameters, graphName,
+                    let pivotConstraint = params.pivotConstraint ? params.pivotConstraint : '';
+                    if(pivotConstraint){
+                        rftconfig['pivotConstraint'] = pivotConstraint;
+                    }
+                    let fullQueries = queryObject.getMasterPropertyValues(endpointParameters, graphName,
                         rftconfig, decodeURIComponent(params.selection.value), params.fpage ? params.fpage : 0);
+                    //query = fullQueries.query;
                     //console.log(query);
                     //build http uri
                     //send request
-                    let tmp = getHTTPQuery('read', query, endpointParameters, outputFormat);
+                    let tmp = getHTTPQuery('read', fullQueries.query, endpointParameters, outputFormat);
                     rp.post({uri: tmp.uri, form: tmp.params, headers: headers}).then(function(res){
                         callback(null, {
                             datasetURI: datasetURI,
                             graphName: graphName,
                             page: 1,
-                            facets: {status: Boolean(params.selection.status), propertyURI: decodeURIComponent(params.selection.value), items: utilObject.parseMasterPropertyValues(res), facetQuery: query}
+                            facets: {status: Boolean(params.selection.status), propertyURI: decodeURIComponent(params.selection.value), items: utilObject.parseMasterPropertyValues(res), facetQuery: fullQueries.query, facetQueryConstraints: fullQueries.queryConstraints}
                         });
                     }).catch(function (err) {
                         console.log(err);
@@ -237,6 +255,10 @@ export default {
                         rftconfig['constraint'] = rconfig.constraint;
                     }
                     let page = params.page ? params.page : 1;
+                    let pivotConstraint = params.pivotConstraint ? params.pivotConstraint : '';
+                    if(pivotConstraint){
+                        rftconfig['pivotConstraint'] = pivotConstraint;
+                    }
                     let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
                     if(!maxOnPage){
                         maxOnPage = 20;
