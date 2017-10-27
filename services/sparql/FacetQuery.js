@@ -366,6 +366,7 @@ class FacetQuery{
         let rnd = Math.floor(Date.now() / 1000);
         queryConstraint = queryConstraint.replace(/\?s/g, '?pvs'+rnd);
         queryConstraint = queryConstraint.replace(/\?v\./, '?s\.');
+        queryConstraint = queryConstraint.replace(/\?v \./, '?s\.');
         queryConstraint = queryConstraint.replace(/\?v/g, '?pv'+rnd);
 
         this.query = `
@@ -665,6 +666,7 @@ class FacetQuery{
                 let rnd = Math.floor(Date.now() / 1000);
                 queryConstraint = queryConstraint.replace(/\?s/g, '?pvs'+rnd);
                 queryConstraint = queryConstraint.replace(/\?v\./, '?s\.');
+                queryConstraint = queryConstraint.replace(/\?v \./, '?s\.');
                 queryConstraint = queryConstraint.replace(/\?v/g, '?pv'+rnd);
             }
         }
