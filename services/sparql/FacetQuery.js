@@ -273,16 +273,16 @@ class FacetQuery{
                     if(withPropAnalysis){
                         pgStart[index] = pgStart[index] + `
                         #source property
-                        ?osp${index} ${self.filterPropertyPath(itempp[0])} ?${(counter === graphs.length ? withPropAnalysis : 'vg' + withPropAnalysis + (counter-1))} .
+                        ?osp${index} ${self.filterPropertyPath(itempp[0])} ?${'vg' + withPropAnalysis + (counter-1)} .
                         #target property
-                        ?osp${index} ${self.filterPropertyPath(itempp[1])} ?${(counter === graphs.length) ? (withPropAnalysis ? withPropAnalysis : 'v'+tindex) : 'si'+index} .
+                        ?osp${index} ${self.filterPropertyPath(itempp[1])} ?${(counter === graphs.length) ? withPropAnalysis : 'si'+index} .
                         `;
                     }else{
                         pgStart[index] = pgStart[index] + `
                         #source property
-                        ?osp${index} ${self.filterPropertyPath(itempp[0])} ?v${(counter === graphs.length ? tindex : 'g' + tindex + (counter-1))} .
+                        ?osp${index} ${self.filterPropertyPath(itempp[0])} ?v${'g' + tindex + (counter-1)} .
                         #target property
-                        ?osp${index} ${self.filterPropertyPath(itempp[1])} ?si${index} .
+                        ?osp${index} ${self.filterPropertyPath(itempp[1])} ?${(counter === graphs.length) ?  'v'+tindex : 'si'+index} .
                         `;
                     }
                 }else{
