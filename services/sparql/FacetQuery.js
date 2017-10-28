@@ -214,11 +214,12 @@ class FacetQuery{
                         //this is the bridge situation where an intermediate resource with source and target property is given
                         //[g]source||target
                         intermediateArr[0] = 1;
+                        //if intermediate is not followed by any graph property, we should make it terminal
                         pgStart[0] = pgStart[0] + `
                         #source property
                         ?osp0 ${self.filterPropertyPath(itemp[0])} ?s .
                         #target property
-                        ?osp0 ${self.filterPropertyPath(itemp[1])} ?si0 .
+                        ?osp0 ${self.filterPropertyPath(itemp[1])} ?${(counter === graphs.length) ? (withPropAnalysis ? withPropAnalysis : 'v'+tindex) : 'si0'} .
                         `;
                     }else{
                         //this is normal rebase
@@ -274,7 +275,7 @@ class FacetQuery{
                         #source property
                         ?osp${index} ${self.filterPropertyPath(itempp[0])} ?${(counter === graphs.length ? withPropAnalysis : 'vg' + withPropAnalysis + (counter-1))} .
                         #target property
-                        ?osp${index} ${self.filterPropertyPath(itempp[1])} ?si${index} .
+                        ?osp${index} ${self.filterPropertyPath(itempp[1])} ?${(counter === graphs.length) ? (withPropAnalysis ? withPropAnalysis : 'v'+tindex) : 'si'+index} .
                         `;
                     }else{
                         pgStart[index] = pgStart[index] + `
