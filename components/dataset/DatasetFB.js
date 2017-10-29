@@ -96,7 +96,7 @@ class DatasetFB extends React.Component {
 
         return (
             <div className="ui" ref="datasetFB">
-                <DatasetHeader config={dcnf} total={this.props.total}  datasetURI={this.props.datasetURI} searchMode={this.state.searchMode} resourcesLength={this.props.resourcesLength}/>
+                <DatasetHeader config={dcnf} total={this.props.total}  datasetURI={this.props.datasetURI} searchMode={this.state.searchMode} resourcesLength={this.props.resourcesLength} pivotConstraint={this.props.pivotConstraint}/>
                 <div className="ui segments">
                     <div className="ui segment">
                         <DatasetViewer expanded={this.props.expanded} enableAuthentication={enableAuthentication} cloneable={0} resources={this.props.resources} datasetURI={this.props.datasetURI} OpenInNewTab={true} isBig={this.props.isBig} config={dcnf} facetConfigs={facetConfigs}/>
