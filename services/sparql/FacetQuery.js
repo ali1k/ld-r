@@ -832,7 +832,6 @@ class FacetQuery{
         let ast = '';
         let aSelection ={};
         if(analysisPhrase){
-            options.facetConfigs
             aSelection = this.createSelectionForAnalysisProps(prevSelection, options);
             if(aSelection){
                 avmapping = this.createMappingForAnalysisProps(aSelection, options);
