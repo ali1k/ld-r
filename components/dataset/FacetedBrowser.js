@@ -33,7 +33,7 @@ class FacetedBrowser extends React.Component {
         this.setState({selection: selection, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: env.invert, range: env.range, analysisProps: env.analysisProps, pivotConstraint: env.pivotConstraint});
         this.context.executeAction(loadFacets, {mode: 'init', id: env.id, page: 1, selection: {}, pivotConstraint: env.pivotConstraint});
         this.context.executeAction(loadFacets, {mode: 'masterFromState', id: env.id, page: 1, pivotConstraint: env.pivotConstraint, selection: selection});
-        this.context.executeAction(loadFacets, {mode: 'second', id: env.id, page: 1, pivotConstraint: env.pivotConstraint, selection: { prevSelection: selection, options: {invert: env.invert, range: env.range, facetConfigs: {}}}});
+        this.context.executeAction(loadFacets, {mode: 'second', id: env.id, page: 1, pivotConstraint: env.pivotConstraint, selection: { prevSelection: selection, options: {invert: env.invert, range: env.range, analysisProps: env.analysisProps, facetConfigs: {}}}});
     }
     handleBackToPrevPivotState(){
         //find the env
