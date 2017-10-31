@@ -17,7 +17,6 @@ class FacetedBrowserStore extends BaseStore {
         //all the filters and constraints applied to the facet: used for pivot change
         this.facetQueryConstraints = {};
         this.page = 1;
-        this.graphName = '';
         this.datasetURI = '';
         this.datasetConfig= {};
         this.config = {};
@@ -80,7 +79,6 @@ class FacetedBrowserStore extends BaseStore {
         this.resources = payload.facets.items;
         this.total = payload.total;
         this.page = payload.page;
-        this.graphName = payload.graphName;
         this.datasetURI = payload.datasetURI;
         this.resourceQuery = payload.resourceQuery;
         this.error = payload.error;
@@ -98,7 +96,6 @@ class FacetedBrowserStore extends BaseStore {
             delete this.facetQueryConstraints[payload.facets.propertyURI];
         }
         this.page = payload.page;
-        this.graphName = payload.graphName;
         this.datasetURI = payload.datasetURI;
         this.emitChange();
     }
@@ -121,7 +118,6 @@ class FacetedBrowserStore extends BaseStore {
         this.facetQuery[payload.facets.propertyURI] = payload.facets.facetQuery;
         this.facetQueryConstraints[payload.facets.propertyURI] = payload.facets.facetQueryConstraints;
         this.page = payload.page;
-        this.graphName = payload.graphName;
         this.datasetURI = payload.datasetURI;
         this.emitChange();
     }
@@ -130,7 +126,6 @@ class FacetedBrowserStore extends BaseStore {
         return {
             facets: this.facets,
             facetsCount: this.facetsCount,
-            graphName: this.graphName,
             datasetURI: this.datasetURI,
             datasetConfig: this.datasetConfig,
             config: this.config,
@@ -149,7 +144,6 @@ class FacetedBrowserStore extends BaseStore {
     rehydrate(state) {
         this.facets = state.facets;
         this.facetsCount = state.facetsCount;
-        this.graphName = state.graphName;
         this.datasetURI = state.datasetURI;
         this.datasetConfig = state.datasetConfig;
         this.config = state.config;
