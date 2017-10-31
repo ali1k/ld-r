@@ -90,6 +90,10 @@ export default function loadFacets(context, payload, done) {
             }
             done();
         });
+    }else if(payload.mode === 'masterFromState'){
+        // gets the selection from envState and tries to regenerate the facets
+        context.dispatch('LOAD_MASTER_FROM_STATE_SUCCESS', payload);
+        done();
     }else if(payload.mode === 'sideEffect'){
         //used for loading progress indicator
         context.dispatch('LOADING_DATA', {});

@@ -109,6 +109,18 @@ class FacetedBrowserStore extends BaseStore {
         this.facetsCount[payload.propertyURI] = payload.total;
         this.emitChange();
     }
+    loadMasterFacetsFromState(payload) {
+        this.datasetURI = payload.id;
+        this.config ={list: [], config: {}};
+        for(let prop in payload.selection){
+            this.facets[prop] = payload.selection[prop];
+            this.facetsCount[prop] = payload.selection[prop].length;
+            if(this.config.list.indexOf(prop) === -1){
+                this.config.list.push(prop);
+            }
+        }
+        this.emitChange();
+    }
     handleFacetSideEffectsCount(payload) {
         this.facetsCount[payload.propertyURI] = payload.total;
         this.emitChange();
@@ -163,6 +175,7 @@ FacetedBrowserStore.handlers = {
     'LOAD_MASTER_FACETS_SUCCESS': 'updateMasterFacets',
     'LOAD_MASTER_MORE_FACETS_SUCCESS': 'updateMoreMasterFacets',
     'LOAD_MASTER_FACETS_COUNT_SUCCESS': 'updateMasterFacetsCount',
+    'LOAD_MASTER_FROM_STATE_SUCCESS': 'loadMasterFacetsFromState',
     'LOAD_SIDE_EFFECTS_FACETS_SUCCESS': 'handleFacetSideEffects',
     'LOAD_SIDE_EFFECTS_COUNT_FACETS_SUCCESS': 'handleFacetSideEffectsCount',
     'LOAD_FACETS_CONFIG': 'loadFacetConfigs',

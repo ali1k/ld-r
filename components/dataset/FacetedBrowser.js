@@ -11,13 +11,35 @@ import DatasetFB from './DatasetFB';
 class FacetedBrowser extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}, pivotConstraint: ''};
+        this.state = {selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}, pivotConstraint: '', envState: []};
     }
     handlePivotChange(queryConstraints, config) {
         let datasetURI = config.pivotDataset[0];
+        //save the previous state for the back button
+        this.state.envState.push({selection: this.state.selection, pivotConstraint: this.state.pivotConstraint, id: this.props.FacetedBrowserStore.datasetURI,  invert: this.state.invert, range: this.state.range, analysisProps: this.state.analysisProps});
         //reset the state
         this.setState({selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}, pivotConstraint: queryConstraints});
         this.context.executeAction(loadFacets, {mode: 'init', id: datasetURI, page: 1, selection: { }, pivotConstraint: queryConstraints});
+    }
+    loadAnEnvState(env){
+        //console.log(env);
+        let selection = {};
+        //remove facets with no slected values
+        for(let prop in env.selection){
+            if(env.selection[prop].length){
+                selection[prop] = env.selection[prop];
+            }
+        }
+        this.setState({selection: selection, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: env.invert, range: env.range, analysisProps: env.analysisProps, pivotConstraint: env.pivotConstraint});
+        this.context.executeAction(loadFacets, {mode: 'init', id: env.id, page: 1, selection: {}, pivotConstraint: env.pivotConstraint});
+        this.context.executeAction(loadFacets, {mode: 'masterFromState', id: env.id, page: 1, pivotConstraint: env.pivotConstraint, selection: selection});
+        this.context.executeAction(loadFacets, {mode: 'second', id: env.id, page: 1, pivotConstraint: env.pivotConstraint, selection: { prevSelection: selection, options: {invert: env.invert, range: env.range, facetConfigs: {}}}});
+    }
+    handleBackToPrevPivotState(){
+        //find the env
+        let env = this.state.envState[this.state.envState.length-1];
+        this.state.envState.splice(-1,1);
+        this.loadAnEnvState(env);
     }
     toggleFirstCol(){
         this.setState({hideFirstCol: !this.state.hideFirstCol})
@@ -461,7 +483,7 @@ class FacetedBrowser extends React.Component {
                         }
                         {facetsDIV}
                         <div className={'ui stackable ' + resSize + ' wide column'}>
-                            <DatasetFB expanded={this.state.expandedResources} showAllResources={this.state.showAllResources} resourceQuery={this.props.FacetedBrowserStore.resourceQuery} config={dcnf} total={this.props.FacetedBrowserStore.total} pagerSize={pagerSize} currentPage={this.props.FacetedBrowserStore.page} resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} searchMode={this.state.searchMode} resourcesLength={this.props.FacetedBrowserStore.resources.length} isBig={!showFactes} pivotConstraint={this.state.pivotConstraint} selection={{prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}} onExpandCollapse={this.toggleResourceCol.bind(this)} onShowAllResources={this.toggleShowAllResources.bind(this)} handleClick={this.gotoPage.bind(this)}/>
+                            <DatasetFB expanded={this.state.expandedResources} showAllResources={this.state.showAllResources} resourceQuery={this.props.FacetedBrowserStore.resourceQuery} config={dcnf} total={this.props.FacetedBrowserStore.total} pagerSize={pagerSize} currentPage={this.props.FacetedBrowserStore.page} resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} searchMode={this.state.searchMode} resourcesLength={this.props.FacetedBrowserStore.resources.length} isBig={!showFactes} prevEnvState={this.state.envState.length ? this.state.envState[this.state.envState.length-1] : ''} pivotConstraint={this.state.pivotConstraint} selection={{prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}} onExpandCollapse={this.toggleResourceCol.bind(this)} onShowAllResources={this.toggleShowAllResources.bind(this)} handleClick={this.gotoPage.bind(this)} handleBackToPrevPivotState={this.handleBackToPrevPivotState.bind(this)}/>
                         </div>
                     </div>
                 </div>

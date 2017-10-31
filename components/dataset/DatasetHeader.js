@@ -53,7 +53,7 @@ class DatasetHeader extends React.Component {
             <div className="ui" ref="datasetHeader">
                 <h3 className="ui header">
                     {this.props.total ? <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI)}><span className="ui big blue circular label">{this.props.searchMode ? this.addCommas(this.props.resourcesLength) + '/' :''}{this.addCommas(this.props.total)}</span></a> : ''} Resources of type {typeSt} in {datasetTitle ? datasetTitle : ' all local datasets'} {dcnf.constraint ? <span><Popup trigger={<i className="ui orange filter icon link "> </i>} content={constraintSt} wide position='bottom center' /></span>: null}
-                    {this.props.pivotConstraint ? <span><Popup trigger={<i className="ui violet filter icon link "> </i>} content={this.props.pivotConstraint} wide position='bottom center' /></span> : null}
+                    {this.props.pivotConstraint ? <span onClick={this.props.handleBackToPrevPivotState}><Popup trigger={<div className="ui labeled mini button"><div className="ui mini blue button"><i className="ui zoom out icon"> </i> Zoom out</div><a className="ui basic left pointing label"><i className="ui violet filter icon link "> </i></a></div>} content={this.props.pivotConstraint} wide position='bottom center' /></span> : null}
                 </h3>
             </div>
         );
