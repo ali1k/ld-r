@@ -16,6 +16,18 @@ class FacetedBrowser extends React.Component {
     handlePivotChange(queryConstraints, config) {
         let datasetURI = config.pivotDataset[0];
         //save the previous state for the back button
+        //get the total resources of selections form facets
+        //do not get all facet items for performace reasons, only the selected ones
+        //todo: add also configs for the selected props
+        for(let prop in this.state.selection){
+            this.state.selection[prop].forEach((s)=>{
+                this.props.FacetedBrowserStore.facets[prop].forEach((facet)=>{
+                    if(facet.value === s.value){
+                        s.total = facet.total;
+                    }
+                });
+            });
+        }
         this.state.envState.push({selection: this.state.selection, pivotConstraint: this.state.pivotConstraint, id: this.props.FacetedBrowserStore.datasetURI,  invert: this.state.invert, range: this.state.range, analysisProps: this.state.analysisProps});
         //reset the state
         this.setState({selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}, pivotConstraint: queryConstraints});
