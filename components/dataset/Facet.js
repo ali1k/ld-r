@@ -426,8 +426,15 @@ class Facet extends React.Component {
             position: 'relative',
             overflow: 'auto'
         };
+        let animatedClass= '';
+        if(this.props.spec.property){
+            animatedClass = 'animated fadeIn'
+        }
+        if(this.state.config && this.state.config.pivotDataset){
+            animatedClass = 'animated zoomIn'
+        }
         return (
-            <div ref="facet" style={{'wordBreak': 'break-all', 'wordWrap': 'break-word'}}>
+            <div ref="facet" className={animatedClass} style={{'wordBreak': 'break-all', 'wordWrap': 'break-word'}}>
 
                 <div className={cardClasses}>
                     {this.state.verticalResized ?
