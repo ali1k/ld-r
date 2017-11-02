@@ -14,7 +14,7 @@ class HelpModal extends React.Component {
                             <div className="item">
                                 <i className="big circle info icon"></i>
                                 <div className="content">
-                                  ``<a className="header">More information on properties</a>
+                                    <a className="header">More information on properties</a>
                                     <div className="description">Mouseover on this icon allows you to see what values are expected for the property.</div>
                                 </div>
                             </div>
