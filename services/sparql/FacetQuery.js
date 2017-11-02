@@ -732,12 +732,13 @@ class FacetQuery{
     }
     handleAnalysisProps(options, endpointParameters, graphName, type){
         let self = this;
-        let apLabel = '', analysisSelector = '', analysisPhrase = '', aCounter = 0;
+        let apLabel = '', analysisSelector = '', analysisPhrase = '', analysisPropsList= [], aCounter = 0;
         if(options && options.analysisProps){
             for(let prop in options.analysisProps){
                 aCounter++;
                 apLabel = 'ldr_ap'+aCounter+'_' + self.getPropertyLabel(prop);
                 analysisSelector = analysisSelector + ' ?' + apLabel;
+                analysisPropsList.push(apLabel);
                 if(self.isMultiGraphFacet(prop)){
                     //to support browsing mutiple graphs
                     analysisPhrase = analysisPhrase + self.prepareMultiGraphQuery(endpointParameters, graphName, type, prop, '', '', apLabel);
@@ -747,7 +748,7 @@ class FacetQuery{
             }
         }
         //todo: OPTIONAL for missing values
-        return {analysisPhrase: analysisPhrase, analysisSelector: analysisSelector};
+        return {analysisPhrase: analysisPhrase, analysisSelector: analysisSelector, analysisPropsList: analysisPropsList};
     }
     countSecondLevelPropertyValues(endpointParameters, graphName, rconfig, prevSelection, options) {
         let type = rconfig.type;
@@ -780,18 +781,27 @@ class FacetQuery{
         let geoStr = '';
         let bindPhase = '';
         let noffset = (offset-1)*limit;
+        //handle analysis props
+        let {analysisSelector, analysisPhrase, analysisPropsList} = self.handleAnalysisProps(options, endpointParameters, graphName, type);
+        //---------------------
         let searchPhase='';
+        let searchFiltersSt = '';
         if(searchTerm && searchTerm.length>2){
             //we use a fixed searchTern for show all
             if(searchTerm === 'ldr_showAll'){
-                searchPhase =' ';
+                searchPhase = ' ';
             }else{
-                searchPhase = 'FILTER( regex(?title, "'+searchTerm+'", "i") || regex(STR(?s), "'+searchTerm+'", "i"))';
+                searchFiltersSt = 'regex(?title, "'+searchTerm+'", "i") || regex(STR(?s), "'+searchTerm+'", "i")';
+                if(analysisPhrase){
+                    let tmpAP = [];
+                    analysisPropsList.forEach((apItem)=>{
+                        tmpAP.push('regex(?'+apItem+', "'+searchTerm+'", "i")');
+                    });
+                    searchFiltersSt = searchFiltersSt + ' || ' + tmpAP.join(' || ');
+                }
+                searchPhase = 'FILTER( ' + searchFiltersSt+  ')';
             }
         }
-        //handle analysis props
-        let {analysisSelector, analysisPhrase} = self.handleAnalysisProps(options, endpointParameters, graphName, type);
-        //---------------------
         //add labels for entities
         if(labelProperty && labelProperty.length){
             selectStr = ' ?title ';
