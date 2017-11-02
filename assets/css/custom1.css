@@ -25,3 +25,5 @@
     padding-left: 20px;
     padding-right: 20px;
 }
+
+.animated{-webkit-animation-duration:1s;animation-duration:1s;-webkit-animation-fill-mode:none!important;animation-fill-mode:none!important}

@@ -24,6 +24,9 @@ class Facet extends React.Component {
         this.filteredInstances = [];
         this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0, rangeChanged: 0, trange: {min: '', max: ''}, range: {min: '', max: ''}, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : '', addedAsVar: this.props.analysisProps[this.props.spec.propertyURI] ? 1 : 0, rangeEnabled: this.props.config && this.props.config.allowRangeOfValues ? 1 :0};
     }
+    componentDidMount(){
+        //$('.animated').removeClass('animated');
+    }
     handlePivotChange() {
         //handle by parent
         this.props.onPivotChange();
@@ -427,14 +430,12 @@ class Facet extends React.Component {
             overflow: 'auto'
         };
         let animatedClass= '';
-        /*
         if(this.props.spec.property){
             animatedClass = 'animated fadeIn'
         }
         if(this.state.config && this.state.config.pivotDataset){
             animatedClass = 'animated zoomIn'
         }
-        */
         return (
             <div ref="facet" className={animatedClass} style={{'wordBreak': 'break-all', 'wordWrap': 'break-word'}}>
 
