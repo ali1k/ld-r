@@ -19,9 +19,7 @@ class BasicIndividualView extends React.Component {
             outputDIV = <a href={this.props.spec.value} target="_blank" itemProp={this.props.property}> {val} </a>;
         }else{
             if(this.props.config){
-                console.log(this.props.config);
                 if(this.props.config.decodeURIComponent || this.props.decodeURIComponent){
-                    console.log(val);
                     val = decodeURIComponent(val);
                 }else if (this.props.config.encodeURIComponent || this.props.encodeURIComponent) {
                     val = encodeURIComponent(val);
