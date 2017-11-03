@@ -87,13 +87,14 @@ class DatasetPager extends React.Component {
     saveEnvState(desc) {
         if(desc.trim()){
             this.context.executeAction(saveFacetsEnvState, {
-                id: this.props.datasetURI,
+                datasetURI: this.props.datasetURI,
                 selection: this.props.selection,
                 pivotConstraint: this.props.pivotConstraint,
                 resourceQuery: this.props.resourceQuery,
                 page: this.props.currentPage,
                 description: desc
             });
+            this.setState({saveText: '', saveMode: 0});
         }
     }
     handleSearchKeyDown(evt) {

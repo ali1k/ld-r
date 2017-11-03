@@ -1,7 +1,7 @@
 'use strict';
 import {getHTTPQuery, getHTTPGetURL, prepareDG} from './utils/helpers';
 import {checkViewAccess, checkEditAccess} from './utils/accessManagement';
-import {getDynamicEndpointParameters, createASampleReactorConfig, createASampleFacetsConfig, createASampleServerConfig} from './utils/dynamicHelpers';
+import {getDynamicEndpointParameters, createASampleReactorConfig, createASampleFacetsConfig, createASampleServerConfig, createAnEnvState} from './utils/dynamicHelpers';
 import {enableLogs, enableAuthentication, authDatasetURI, configDatasetURI} from '../configs/general';
 import ResourceQuery from './sparql/ResourceQuery';
 import ResourceUtil from './utils/ResourceUtil';
@@ -412,6 +412,11 @@ export default {
             let sresourceURI = configDatasetURI[0] + '/fcf' + Math.round(+new Date() / 1000);
             createASampleFacetsConfig(req.user, sresourceURI, params.dataset, params.options, (res)=>{
                 callback(null, {datasetURI: configDatasetURI[0], resourceURI: sresourceURI, redirect: params.redirect});
+            });
+        }else if (resource === 'resource.newEnvState') {
+            let sresourceURI = configDatasetURI[0] + '/state' + Math.round(+new Date() / 1000);
+            createAnEnvState(req.user, sresourceURI, params, (res)=>{
+                callback(null, {});
             });
         }
 

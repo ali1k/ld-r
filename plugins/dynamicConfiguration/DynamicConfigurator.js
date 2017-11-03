@@ -977,6 +977,66 @@ class DynamicConfigurator {
         }
 
     }
+    createAnEnvState(user, configURI, options, callback) {
+        //do not config if disabled
+        if(!enableDynamicReactorConfiguration){
+            callback(1);
+        }else{
+            let userSt = '';
+            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
+                userSt=` ldr:createdBy <${user.id}> ;`;
+            }
+            const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
+            const graphName = endpointParameters.graphName;
+            const headers = {'Accept': 'application/sparql-results+json'};
+            const outputFormat = 'application/sparql-results+json';
+            //query the triple store for property configs
+            const prefixes = `
+                PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
+                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                PREFIX owl: <http://www.w3.org/2002/07/owl#>
+            `;
+            let graph = ' GRAPH <'+ graphName +'> {';
+            let graphEnd = ' }';
+            if(!graphName || graphName === 'default'){
+                graph ='';
+                graphEnd = '';
+            }
+            let date = new Date();
+            let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
+            let rnc = Math.round(+new Date() / 1000);
+            let labelSt = ` rdfs:label """${options.description}""" .`;
+            const query = `
+            INSERT DATA {
+            ${graph}
+                <${configURI}> a ldr:EnvState ;
+                         ldr:dataset <${options.datasetURI}> ;
+                         ldr:selection """${encodeURIComponent(JSON.stringify(options.selection))}""" ;
+                         ldr:pivotConstraint """${options.pivotConstraint? encodeURIComponent(options.pivotConstraint): ' '}""" ;
+                         ldr:resourceQuery """${encodeURIComponent(options.resourceQuery)}""" ;
+                         ldr:page "${options.page}" ;
+                         ldr:createdOn "${currentDate}"^^xsd:dateTime;
+                         ${userSt}
+                         ${labelSt}
+            ${graphEnd}
+            }
+            `;
+            //send request
+            //console.log(prefixes + query);
+            let self = this;
+            let HTTPQueryObject = getHTTPQuery('update', prefixes + query, endpointParameters, outputFormat);
+            rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                callback(1);
+            }).catch(function (err) {
+                console.log('Error in new env state creation update query:', prefixes + query);
+                console.log(sparql_endpoint_error);
+                console.log('---------------------------------------------------------');
+                callback(0);
+            });
+        }
+
+    }
     parsePropertyConfigs(config, propertyURI, body) {
         let output = config;
         let parsed = JSON.parse(body);
