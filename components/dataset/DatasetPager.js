@@ -8,7 +8,7 @@ import {Dropdown, Icon} from 'semantic-ui-react';
 class DatasetPager extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchTerm: '', searchMode: 0, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : ''};
+        this.state = {searchTerm: '', searchMode: 0, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : '', saveMode: 0, saveText: ''};
     }
     componentDidMount() {
     }
@@ -39,8 +39,11 @@ class DatasetPager extends React.Component {
     handleActionDropDownClick(e, data){
         if(data.value === 'downloadResults'){
             this.props.handleExport();
-        }else{
-            //todo
+        }else if(data.value === 'saveQuery'){
+            this.props.onSearchMode(0);
+            this.setState({searchMode: 0, saveMode: !this.state.saveMode});
+        }else if(data.value === 'searchInResults'){
+            this.onSearchClick();
         }
 
     }
@@ -55,7 +58,10 @@ class DatasetPager extends React.Component {
     }
     onSearchClick(){
         this.props.onSearchMode(!this.state.searchMode);
-        this.setState({searchMode: !this.state.searchMode});
+        this.setState({searchMode: !this.state.searchMode, saveMode: 0});
+    }
+    onSaveClick(){
+
     }
     handleSearchChange(evt) {
         this.setState({searchTerm: evt.target.value});
@@ -63,6 +69,9 @@ class DatasetPager extends React.Component {
             //in case of empty, restore results
             this.searchOnDataset('');
         }
+    }
+    handleSaveTextChange(evt) {
+        this.setState({saveText: evt.target.value});
     }
     searchOnDataset(term) {
         this.context.executeAction(searchInDataset, {
@@ -125,8 +134,9 @@ class DatasetPager extends React.Component {
         }
         //action menu
         let a_options = [
-            { key: 1, icon: 'download', text:  'Download Results', value: 'downloadResults' },
-            { key: 2, icon: 'save', text:  'Save Query', value: 'saveQuery' }
+            { key: 1, icon: 'search', text:  'Search in Results', value: 'searchInResults' },
+            { key: 2, icon: 'download', text:  'Download Results', value: 'downloadResults' },
+            { key: 3, icon: 'save', text:  'Save Query', value: 'saveQuery' }
         ];
         let iconC =  (this.state.config && this.state.config.datasetViewer) ? (v_icons[this.state.config.datasetViewer] ? v_icons[this.state.config.datasetViewer] : defaultViewIcon) : defaultViewIcon;
         const v_trigger = (
@@ -205,9 +215,6 @@ class DatasetPager extends React.Component {
                             <Dropdown className="item" title="actions" selectOnBlur={false} onChange={this.handleActionDropDownClick.bind(this)} trigger={a_trigger} options={a_options} icon={null} floating />
                             : ''}
                         <Dropdown className="item" title="views" selectOnBlur={false} onChange={this.handleViewsDropDownClick.bind(this)} trigger={v_trigger} options={v_options} icon={null} floating />
-                        <a className='ui icon mini basic button right floated item ' onClick={this.onSearchClick.bind(this)} title="search">
-                            <i className='ui icon orange search'></i>
-                        </a>
                         {this.props.onExpandCollapse ?
                             <a className='ui icon mini basic button right floated item ' onClick={this.props.onExpandCollapse.bind(this)} title="expand/collapse">
                                 <i className='ui icon expand'></i>
@@ -215,10 +222,18 @@ class DatasetPager extends React.Component {
                             : ''}
                     </div>
                 </div>
+                {!this.state.saveMode ? '' :
+                    <div className="ui secondary segment bottom attached animated slideInDown">
+                        <div className="ui icon input fluid">
+                            <input ref="saveInput" type="text" placeholder="Write a description for your query and press enter to save..." value={this.state.saveText} onChange={this.handleSaveTextChange.bind(this)}/>
+                            <i className="save icon"></i>
+                        </div>
+                    </div>
+                }
                 {!this.state.searchMode ? '' :
                     <div className="ui secondary segment bottom attached animated slideInDown">
                         <div className="ui icon input fluid">
-                            <input ref="searchInput" type="text" placeholder="Search in resources..." value={this.state.searchTerm} onChange={this.handleSearchChange.bind(this)} onKeyDown={this.handleSearchKeyDown.bind(this)}/>
+                            <input ref="searchInput" type="text" placeholder="Type your search keywords and press enter to search..." value={this.state.searchTerm} onChange={this.handleSearchChange.bind(this)} onKeyDown={this.handleSearchKeyDown.bind(this)}/>
                             <i className="search icon"></i>
                         </div>
                     </div>
