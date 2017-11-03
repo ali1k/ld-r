@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 //import ReactDOM from 'react-dom';
 import {NavLink} from 'fluxible-router';
 import searchInDataset from '../../actions/searchInDataset';
+import saveFacetsEnvState from '../../actions/saveFacetsEnvState';
 import {Dropdown, Icon} from 'semantic-ui-react';
 
 class DatasetPager extends React.Component {
@@ -57,11 +58,13 @@ class DatasetPager extends React.Component {
 
     }
     onSearchClick(){
+        //reset the search
+        if(this.state.searchMode && this.state.searchTerm){
+            this.searchOnDataset('');
+            this.setState({searchTerm: ''});
+        }
         this.props.onSearchMode(!this.state.searchMode);
         this.setState({searchMode: !this.state.searchMode, saveMode: 0});
-    }
-    onSaveClick(){
-
     }
     handleSearchChange(evt) {
         this.setState({searchTerm: evt.target.value});
@@ -81,11 +84,31 @@ class DatasetPager extends React.Component {
             searchTerm: term
         });
     }
+    saveEnvState(desc) {
+        if(desc.trim()){
+            this.context.executeAction(saveFacetsEnvState, {
+                id: this.props.datasetURI,
+                selection: this.props.selection,
+                pivotConstraint: this.props.pivotConstraint,
+                resourceQuery: this.props.resourceQuery,
+                page: this.props.currentPage,
+                description: desc
+            });
+        }
+    }
     handleSearchKeyDown(evt) {
         switch (evt.keyCode) {
             //case 9: // Tab
             case 13: // Enter
                 this.searchOnDataset(this.state.searchTerm);
+                break;
+        }
+    }
+    handleSaveKeyDown(evt) {
+        switch (evt.keyCode) {
+            //case 9: // Tab
+            case 13: // Enter
+                this.saveEnvState(this.state.saveText);
                 break;
         }
     }
@@ -225,7 +248,7 @@ class DatasetPager extends React.Component {
                 {!this.state.saveMode ? '' :
                     <div className="ui secondary segment bottom attached animated slideInDown">
                         <div className="ui icon input fluid">
-                            <input ref="saveInput" type="text" placeholder="Write a description for your query and press enter to save..." value={this.state.saveText} onChange={this.handleSaveTextChange.bind(this)}/>
+                            <input ref="saveInput" type="text" placeholder="Write a description for your query and press enter to save..." value={this.state.saveText} onChange={this.handleSaveTextChange.bind(this)} onKeyDown={this.handleSaveKeyDown.bind(this)}/>
                             <i className="save icon"></i>
                         </div>
                     </div>
