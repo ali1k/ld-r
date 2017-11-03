@@ -20,6 +20,9 @@ class WYSIWYQ extends React.Component {
     componentDidUpdate() {
 
     }
+    handleWYSIWYQ() {
+
+    }
     handleChange(element, e){
         if(element=== 'stateURI'){
             if(e.target.value){
@@ -66,6 +69,9 @@ class WYSIWYQ extends React.Component {
                                 {optionsList}
                             </select>
                             {queryDIV}
+                            <Divider hidden />
+                            {this.state.stateURI ? <div className='ui big blue button' onClick={this.handleWYSIWYQ.bind(this)}>Turn Query to UI</div> : null}
+                            <Divider hidden />
                         </Form>
                     </div>
                 </div>
