@@ -23,7 +23,7 @@ class DatasetPager extends React.Component {
             );
         }
     }
-    handleDropDownClick(e, data){
+    handleViewsDropDownClick(e, data){
         let tmp = this.state.config;
         if(!this.state.config){
             tmp ={};
@@ -35,6 +35,14 @@ class DatasetPager extends React.Component {
         }
         this.setState({config: tmp});
         this.props.handleViewerChange(data.value);
+    }
+    handleActionDropDownClick(e, data){
+        if(data.value === 'downloadResults'){
+            this.props.handleExport();
+        }else{
+            //todo
+        }
+
     }
     onShowAllClick(){
         if(this.props.showAllResources){
@@ -80,12 +88,12 @@ class DatasetPager extends React.Component {
         //menu is customized if there are props for analysis
         if(this.props.noOfAnalysisProps && this.props.noOfAnalysisProps > 1){
             v_options = [
-                { key: 1, text:  'Table', value: 'BasicResourceList' },
-                { key: 2, text:  'Tree Map', value: 'TreeMapView' },
-                { key: 3, text:  'Scatter Chart', value: 'ScatterChartView' },
-                { key: 4, text:  'Bar Chart', value: 'BarChartView' },
-                { key: 5, text:  'Radar Chart', value: 'RadarChartView' },
-                { key: 6, text:  'Network Diagram', value: 'NetworkView' }
+                { key: 1, icon: 'table', text:  'Table', value: 'BasicResourceList' },
+                { key: 2, icon: 'grid layout', text:  'Tree Map', value: 'TreeMapView' },
+                { key: 3, icon: 'line chart', text:  'Scatter Chart', value: 'ScatterChartView' },
+                { key: 4, icon: 'bar chart', text:  'Bar Chart', value: 'BarChartView' },
+                { key: 5, icon: 'bullseye', text:  'Radar Chart', value: 'RadarChartView' },
+                { key: 6, icon: 'share alternate', text:  'Network Diagram', value: 'NetworkView' }
             ]
             v_icons = {
                 'BasicResourceList': 'table',
@@ -99,26 +107,36 @@ class DatasetPager extends React.Component {
         }else{
             if(this.props.noOfAnalysisProps && this.props.noOfAnalysisProps === 1){
                 v_options = [
-                    { key: 1, text:  'List', value: 'BasicResourceList' },
-                    { key: 2, text:  'Network Diagram', value: 'NetworkView' }
+                    { key: 1, icon: 'table', text:  'Table', value: 'BasicResourceList' },
+                    { key: 2, icon: 'share alternate', text:  'Network Diagram', value: 'NetworkView' }
                 ];
                 v_icons = {
-                    'BasicResourceList': 'list layout',
+                    'BasicResourceList': 'table',
                     'NetworkView': 'share alternate'
                 };
             }else{
                 v_options = [
-                    { key: 1, text:  'List', value: 'BasicResourceList' }
+                    { key: 1, icon: 'list layout', text:  'List', value: 'BasicResourceList' }
                 ];
                 v_icons = {
                     'BasicResourceList': 'list layout'
                 };
             }
         }
+        //action menu
+        let a_options = [
+            { key: 1, icon: 'download', text:  'Download Results', value: 'downloadResults' },
+            { key: 2, icon: 'save', text:  'Save Query', value: 'saveQuery' }
+        ];
         let iconC =  (this.state.config && this.state.config.datasetViewer) ? (v_icons[this.state.config.datasetViewer] ? v_icons[this.state.config.datasetViewer] : defaultViewIcon) : defaultViewIcon;
         const v_trigger = (
             <span>
                 <Icon name={iconC} className="olive" />
+            </span>
+        );
+        const a_trigger = (
+            <span>
+                <Icon name='lab' className="orange"/>
             </span>
         );
         let maxOnPage = this.state.config.maxNumberOfResourcesOnPage;
@@ -184,9 +202,9 @@ class DatasetPager extends React.Component {
                     </div>
                     <div className="right menu stackable">
                         {this.props.total ?
-                            <a title="Download" className='ui icon mini basic button right floated item' onClick={this.props.handleExport}><i className='icon download'></i></a>
+                            <Dropdown className="item" title="actions" selectOnBlur={false} onChange={this.handleActionDropDownClick.bind(this)} trigger={a_trigger} options={a_options} icon={null} floating />
                             : ''}
-                        <Dropdown className="item" title="actions" selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={v_trigger} options={v_options} icon={null} floating />
+                        <Dropdown className="item" title="views" selectOnBlur={false} onChange={this.handleViewsDropDownClick.bind(this)} trigger={v_trigger} options={v_options} icon={null} floating />
                         <a className='ui icon mini basic button right floated item ' onClick={this.onSearchClick.bind(this)} title="search">
                             <i className='ui icon orange search'></i>
                         </a>

@@ -25,7 +25,7 @@ class Facet extends React.Component {
         this.state = {searchTerm: '', expanded: 0, verticalResized: 0, shuffled: 0, page: 0, rangeChanged: 0, trange: {min: '', max: ''}, range: {min: '', max: ''}, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : '', addedAsVar: this.props.analysisProps[this.props.spec.propertyURI] ? 1 : 0, rangeEnabled: this.props.config && this.props.config.allowRangeOfValues ? 1 :0};
     }
     ComponentDidMount(){
-        
+
     }
     handlePivotChange() {
         //handle by parent
@@ -364,18 +364,18 @@ class Facet extends React.Component {
             d_options.unshift({ key: 3, text: invertStat + ' the selection', value: 'invert' });
         }
         let b_options = [
-            { key: 1, text:  'Check List', value: 'CheckListBrowser' },
-            { key: 2, text:  'Tag List', value: 'TagListBrowser' },
-            { key: 3, text:  'Bar Chart', value: 'BarChartBrowser' },
-            { key: 4, text:  'Pie Chart', value: 'PieChartBrowser' },
-            { key: 5, text:  'Tree Map', value: 'TreeMapBrowser' },
-            { key: 6, text:  'Tag Cloud', value: 'TagCloudBrowser' }
+            { key: 1, icon: 'list layout', text:  'Check List', value: 'CheckListBrowser' },
+            { key: 2, icon: 'block layout', text:  'Tag List', value: 'TagListBrowser' },
+            { key: 3, icon: 'bar chart', text:  'Bar Chart', value: 'BarChartBrowser' },
+            { key: 4, icon: 'pie chart', text:  'Pie Chart', value: 'PieChartBrowser' },
+            { key: 5, icon: 'grid layout', text:  'Tree Map', value: 'TreeMapBrowser' },
+            { key: 6, icon: 'cloud', text:  'Tag Cloud', value: 'TagCloudBrowser' }
         ]
         let check = this.checkGeoFeatures();
         if(check){
-            b_options.push({ key: 6, text:  'Map', value: 'GeoListBrowser' });
+            b_options.push({ key: 7, icon: 'map', text:  'Map', value: 'GeoListBrowser' });
         }
-        b_options.push({ key: 30, text:  'Default', value: 'Default' });
+        b_options.push({ key: 30, text:  'Default Browser', value: 'Default' });
         const d_trigger = (
             <span>
                 <Icon name='lab' className="orange"/>
