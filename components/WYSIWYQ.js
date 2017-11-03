@@ -21,6 +21,17 @@ class WYSIWYQ extends React.Component {
 
     }
     handleWYSIWYQ() {
+        let id = this.state.stateURI;
+        let page = this.props.QueryImportStore.queries[id].page;
+        let selection = this.props.QueryImportStore.queries[id].selection[0];
+        let dataset = this.props.QueryImportStore.queries[id].dataset[0];
+        if(selection === 'undefined'){
+            this.context.executeAction(navigateAction, {
+                url: '/dataset/'+page+'/'+encodeURIComponent(dataset)
+            });
+        }else{
+
+        }
 
     }
     compare(a, b) {
