@@ -23,6 +23,16 @@ class WYSIWYQ extends React.Component {
     handleWYSIWYQ() {
 
     }
+    compare(a, b) {
+        if (a.label < b.label) {
+            return -1;
+        }
+        if (a.label > b.label) {
+            return 1;
+        }
+        // names must be equal
+        return 0;
+    }
     handleChange(element, e){
         if(element=== 'stateURI'){
             if(e.target.value){
@@ -49,6 +59,7 @@ class WYSIWYQ extends React.Component {
         let self = this, errorDIV='', formDIV='';
         let user;
         let allowChangingNewDataset= false;
+        dss.sort(this.compare);
         optionsList = dss.map(function(option, index) {
             return <option key={index} value={(option.id)}> {option.label} </option>;
         });
