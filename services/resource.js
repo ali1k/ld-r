@@ -1,7 +1,7 @@
 'use strict';
 import {getHTTPQuery, getHTTPGetURL, prepareDG} from './utils/helpers';
 import {checkViewAccess, checkEditAccess} from './utils/accessManagement';
-import {getDynamicEndpointParameters, createASampleReactorConfig, createASampleFacetsConfig, createASampleServerConfig, createAnEnvState} from './utils/dynamicHelpers';
+import {getDynamicEndpointParameters, createASampleReactorConfig, createASampleFacetsConfig, createASampleServerConfig, createAnEnvState, getSavedQueries} from './utils/dynamicHelpers';
 import {enableLogs, enableAuthentication, authDatasetURI, configDatasetURI} from '../configs/general';
 import ResourceQuery from './sparql/ResourceQuery';
 import ResourceUtil from './utils/ResourceUtil';
@@ -113,6 +113,10 @@ export default {
                 });
             });
 
+        } else if (resource === 'resource.envStates') {
+            getSavedQueries(req.user, (res)=>{
+                callback(null, {states: res});
+            });
         } else if (resource === 'resource.objectProperties') {
             objectURI = params.objectURI;
             propertyURI = params.propertyURI;

@@ -102,5 +102,10 @@ export default {
         dynamicConfigurator.createAnEnvState(user, configURI, options, (res)=> {
             callback(res);
         });
+    },
+    getSavedQueries: function(user, callback) {
+        dynamicConfigurator.getSavedQueries(user, (res)=> {
+            callback(res);
+        });
     }
 }

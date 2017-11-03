@@ -159,9 +159,11 @@ class DatasetPager extends React.Component {
         //action menu
         let a_options = [
             { key: 1, icon: 'search', text:  'Search in Results', value: 'searchInResults' },
-            { key: 2, icon: 'download', text:  'Download Results', value: 'downloadResults' },
-            { key: 3, icon: 'save', text:  'Save Query', value: 'saveQuery' }
+            { key: 2, icon: 'download', text:  'Download Results', value: 'downloadResults' }
         ];
+        if(this.props.enableQuerySaveImport){
+            a_options.push({ key: 3, icon: 'save', text:  'Save Query', value: 'saveQuery' });
+        }
         let iconC =  (this.state.config && this.state.config.datasetViewer) ? (v_icons[this.state.config.datasetViewer] ? v_icons[this.state.config.datasetViewer] : defaultViewIcon) : defaultViewIcon;
         const v_trigger = (
             <span>

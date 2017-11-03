@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {navigateAction} from 'fluxible-router';
 import {connectToStores} from 'fluxible-addons-react';
-import {enableAuthentication, defaultDatasetURI, enableAddingNewDatasets, enableDatasetAnnotation} from '../configs/general';
+import {enableAuthentication, defaultDatasetURI, enableAddingNewDatasets, enableDatasetAnnotation, enableQuerySaveImport} from '../configs/general';
 import {checkViewAccess, checkEditAccess} from '../services/utils/accessManagement';
 import DatasetsStore from '../stores/DatasetsStore';
 import URIUtil from './utils/URIUtil';
@@ -42,6 +42,7 @@ class Datasets extends React.Component {
         let createDatasetDIV = '';
         let annotateDatasetDIV = '';
         let datasetActionsDIV = '';
+        let queryImportDIV = '';
         let info = <div className="ui blue message">
                         The list contains only the datasets for which at least one <b>config scope</b> is found!
         </div>;
@@ -63,8 +64,15 @@ class Datasets extends React.Component {
                     </a>
                 </div>;
             }
+            if(enableQuerySaveImport){
+                queryImportDIV = <div className="item">
+                    <a  className="medium ui basic icon labeled button" href="/wysiwyq">
+                        <i className="large blue level down icon"></i>Import a Query
+                    </a>
+                </div>;
+            }
             datasetActionsDIV = <div className="ui horizontal divided list">
-                {createDatasetDIV} {annotateDatasetDIV}
+                {createDatasetDIV} {annotateDatasetDIV} {queryImportDIV}
                 <br/>
             </div>;
             if(!dss.length){

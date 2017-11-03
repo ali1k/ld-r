@@ -1,4 +1,4 @@
-import {enableDynamicReactorConfiguration, enableDynamicServerConfiguration, enableDynamicFacetsConfiguration, configDatasetURI, enableAutomaticConfiguration, authDatasetURI} from '../../configs/general';
+import {enableDynamicReactorConfiguration, enableDynamicServerConfiguration, enableDynamicFacetsConfiguration, configDatasetURI, enableAutomaticConfiguration, authDatasetURI, enableQuerySaveImport} from '../../configs/general';
 import {getStaticEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
 import rp from 'request-promise';
 const ldr_prefix = 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#';
@@ -255,6 +255,82 @@ class DynamicConfigurator {
                 console.log(sparql_endpoint_error);
                 console.log('---------------------------------------------------------');
                 callback(config);
+            });
+        }
+
+    }
+    getSavedQueries(user, callback) {
+        let states = {};
+        //do not get if disabled
+        if(!enableQuerySaveImport){
+            callback(config);
+        }else{
+            let userSt = '';
+            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
+                userSt=` ldr:createdBy <${user.id}> ;`;
+            }
+            //start config
+            const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
+            const graphName = endpointParameters.graphName;
+            const headers = {'Accept': 'application/sparql-results+json'};
+            const outputFormat = 'application/sparql-results+json';
+            //query the triple store for server configs
+            const prefixes = `
+                PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
+                PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+                PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+                PREFIX owl: <http://www.w3.org/2002/07/owl#>
+            `;
+            let graph = ' GRAPH <'+ graphName +'> {';
+            let graphEnd = ' }';
+            if(!graphName || graphName === 'default'){
+                graph ='';
+                graphEnd = '';
+            }
+            let query;
+            if(userSt){
+                query = `
+                SELECT DISTINCT ?state ?setting ?settingValue WHERE {
+                    ${graph}
+                    {
+                        ?state a ldr:EnvState ;
+                                ${userSt}
+                                ?setting ?settingValue .
+                                FILTER (?setting !=rdf:type)
+                    }
+                    UNION
+                    {
+                        ?state a ldr:EnvState ;
+                                ?setting ?settingValue .
+                                FILTER (?setting !=rdf:type)
+                                filter not exists {
+                                    ?state ldr:createdBy ?user.
+                                }
+                    }
+                    ${graphEnd}
+                }
+                `;
+            }else{
+                query = `
+                SELECT DISTINCT ?state ?setting ?settingValue WHERE {
+                    ${graph}
+                        ?state a ldr:EnvState ;
+                                ?setting ?settingValue .
+                                FILTER (?setting !=rdf:type)
+                    ${graphEnd}
+                }
+                `;
+            }
+            //send request
+            let self = this;
+            rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                states = self.parseEnvStateConfigs(res);
+                callback(states);
+            }).catch(function (err) {
+                console.log('Error in state config query:', prefixes + query);
+                console.log(sparql_endpoint_error);
+                console.log('---------------------------------------------------------');
+                callback(states);
             });
         }
 
@@ -1325,6 +1401,33 @@ class DynamicConfigurator {
             }
 
         });
+        return output;
+    }
+    parseEnvStateConfigs(body) {
+        let output = {};
+        let parsed = JSON.parse(body);
+        let settingProp = '';
+        parsed.results.bindings.forEach(function(el) {
+            settingProp = el.setting.value.replace(ldr_prefix, '').trim();
+            settingProp = settingProp.replace('http://www.w3.org/2000/01/rdf-schema#', '').trim();
+            if(!output[el.state.value]){
+                output[el.state.value]= {};
+            }
+            if(!isNaN(el.settingValue.value)){
+                output[el.state.value][settingProp]= parseInt(el.settingValue.value);
+            }else{
+                if(!output[el.state.value][settingProp]){
+                    output[el.state.value][settingProp] = []
+                }
+                output[el.state.value][settingProp].push(el.settingValue.value);
+            }
+        });
+        /*
+        for(let prop in output){
+            output[prop].id = prop;
+            states.push(output[prop]);
+        }
+        */
         return output;
     }
     parseDynamicDatasets(body) {

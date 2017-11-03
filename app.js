@@ -13,6 +13,7 @@ import DBpediaGMapStore from './stores/DBpediaGMapStore';
 import FacetedBrowserStore from './stores/FacetedBrowserStore';
 import DatasetsStore from './stores/DatasetsStore';
 import DatasetAnnotationStore from './stores/DatasetAnnotationStore';
+import QueryImportStore from './stores/QueryImportStore';
 
 let app = new Fluxible({
     component: Application,
@@ -27,7 +28,8 @@ let app = new Fluxible({
         DBpediaStore,
         DBpediaGMapStore,
         FacetedBrowserStore,
-        DatasetAnnotationStore
+        DatasetAnnotationStore,
+        QueryImportStore
     ]
 });
 

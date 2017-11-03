@@ -3,7 +3,7 @@ import DatasetHeader from './DatasetHeader';
 import DatasetViewer from './DatasetViewer';
 import DatasetPager from './DatasetPager';
 import YASQEViewer from '../object/viewer/individual/YASQEViewer';
-import {enableAuthentication} from '../../configs/general';
+import {enableAuthentication, enableQuerySaveImport} from '../../configs/general';
 import json2csv from 'json2csv';
 
 class Dataset extends React.Component {
@@ -99,7 +99,7 @@ class Dataset extends React.Component {
                             <div className="ui segment">
                                 <DatasetViewer enableAuthentication={enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={true} config={dcnf} cloneable={1} onCloneResource={this.props.onCloneResource}/>
                             </div>
-                            <DatasetPager config={dcnf} showAllResources={this.state.showAllResources} handleToggleShowQuery={this.handleToggleShowQuery.bind(this)} onShowAllResources={this.toggleShowAllResources.bind(this)} onSearchMode={this.handleSearchMode.bind(this)} datasetURI={this.props.datasetURI} visibleResourcesTotal={this.props.resources.length} total={this.props.total} threshold={10} currentPage={this.props.page}  handleViewerChange={this.handleViewerChange.bind(this)} handleExport={this.handleExport.bind(this)}/>
+                            <DatasetPager config={dcnf} enableQuerySaveImport={enableQuerySaveImport} showAllResources={this.state.showAllResources} handleToggleShowQuery={this.handleToggleShowQuery.bind(this)} onShowAllResources={this.toggleShowAllResources.bind(this)} onSearchMode={this.handleSearchMode.bind(this)} datasetURI={this.props.datasetURI} visibleResourcesTotal={this.props.resources.length} total={this.props.total} threshold={10} currentPage={this.props.page}  handleViewerChange={this.handleViewerChange.bind(this)} handleExport={this.handleExport.bind(this)}/>
                             {dcnf && dcnf.displayQueries ?
                                 <div className= "ui tertiary segment">
                                     <YASQEViewer spec={{value: this.props.resourceQuery}} />

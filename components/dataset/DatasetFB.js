@@ -3,7 +3,7 @@ import DatasetHeader from './DatasetHeader';
 import DatasetViewer from './DatasetViewer';
 import DatasetPager from './DatasetPager';
 import YASQEViewer from '../object/viewer/individual/YASQEViewer';
-import {enableAuthentication} from '../../configs/general';
+import {enableAuthentication, enableQuerySaveImport} from '../../configs/general';
 import json2csv from 'json2csv';
 
 class DatasetFB extends React.Component {
@@ -103,7 +103,7 @@ class DatasetFB extends React.Component {
                     <div className="ui segment">
                         <DatasetViewer expanded={this.props.expanded} enableAuthentication={enableAuthentication} cloneable={0} resources={this.props.resources} datasetURI={this.props.datasetURI} OpenInNewTab={true} isBig={this.props.isBig} config={dcnf} facetConfigs={facetConfigs}/>
                     </div>
-                    <DatasetPager config={dcnf} resourceQuery={this.props.resourceQuery} showAllResources={this.props.showAllResources} onShowAllResources={this.props.onShowAllResources} onSearchMode={this.handleSearchMode.bind(this)} selection={this.props.selection} pivotConstraint={this.props.pivotConstraint} onExpandCollapse={this.props.onExpandCollapse} handleClick={this.props.handleClick} datasetURI={this.props.datasetURI} total={this.props.total} threshold={this.props.pagerSize} currentPage={this.props.currentPage} noOfAnalysisProps={this.getNoOfPropsForAnalysis()} handleViewerChange={this.handleViewerChange.bind(this)} handleToggleShowQuery={this.handleToggleShowQuery.bind(this)} handleExport={this.handleExport.bind(this)}/>
+                    <DatasetPager config={dcnf} enableQuerySaveImport={enableQuerySaveImport} resourceQuery={this.props.resourceQuery} showAllResources={this.props.showAllResources} onShowAllResources={this.props.onShowAllResources} onSearchMode={this.handleSearchMode.bind(this)} selection={this.props.selection} pivotConstraint={this.props.pivotConstraint} onExpandCollapse={this.props.onExpandCollapse} handleClick={this.props.handleClick} datasetURI={this.props.datasetURI} total={this.props.total} threshold={this.props.pagerSize} currentPage={this.props.currentPage} noOfAnalysisProps={this.getNoOfPropsForAnalysis()} handleViewerChange={this.handleViewerChange.bind(this)} handleToggleShowQuery={this.handleToggleShowQuery.bind(this)} handleExport={this.handleExport.bind(this)}/>
                     {dcnf.displayQueries ?
                         <div className= "ui tertiary segment">
                             <YASQEViewer spec={{value: this.props.resourceQuery}} />

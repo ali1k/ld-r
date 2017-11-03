@@ -3,6 +3,7 @@ import loadDataset from '../actions/loadDataset';
 import loadResource from '../actions/loadResource';
 import loadUsersList from '../actions/loadUsersList';
 import loadFacets from '../actions/loadFacets';
+import loadEnvStates from '../actions/loadEnvStates';
 import {appFullTitle, appShortTitle, authDatasetURI, baseResourceDomain} from '../configs/general';
 
 export default {
@@ -43,6 +44,15 @@ export default {
         label: 'DatasetAnnotation',
         action: (context, payload, done) => {
             context.executeAction(loadDatasets, {pageTitle: 'Annotate a dataset'}, done);
+        }
+    },
+    wysiwyq: {
+        path: '/wysiwyq',
+        method: 'get',
+        handler: require('../components/WYSIWYQ'),
+        label: 'ImportQuery',
+        action: (context, payload, done) => {
+            context.executeAction(loadEnvStates, {pageTitle: 'Import a Query | WYSIWYQ mode'}, done);
         }
     },
     facets: {
