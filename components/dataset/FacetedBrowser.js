@@ -6,12 +6,30 @@ import FacetedBrowserStore from '../../stores/FacetedBrowserStore';
 import {connectToStores} from 'fluxible-addons-react';
 import createASampleFacetsConfig from '../../actions/createASampleFacetsConfig';
 import loadFacets from '../../actions/loadFacets';
+import getEnvState from '../../actions/getEnvState';
 import DatasetFB from './DatasetFB';
 
 class FacetedBrowser extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}, pivotConstraint: '', envState: []};
+        this.state = {selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}, pivotConstraint: '', envState: [], importedEnvState: 0, importedMode: 0};
+    }
+    componentDidMount() {
+        if(this.props.FacetedBrowserStore.importedEnvState){
+            this.context.executeAction(getEnvState, { stateURI: this.props.FacetedBrowserStore.importedEnvState});
+            this.setState({importedEnvState: this.props.FacetedBrowserStore.importedEnvState, importedMode: 1});
+        }
+    }
+    componentDidUpdate() {
+        //check if it is loaded from an address
+        //then: set the state and generate the UI
+        let vars = this.props.FacetedBrowserStore;
+        if(this.state.importedMode){
+            if(vars.envState.length){
+                this.state.envState.push(vars.envState[0]);
+                this.loadAnEnvState(vars.envState[0]);
+            }
+        }
     }
     handlePivotChange(queryConstraints, config) {
         let datasetURI = config.pivotDataset[0];
@@ -28,7 +46,7 @@ class FacetedBrowser extends React.Component {
                 });
             });
         }
-        this.state.envState.push({selection: this.state.selection, pivotConstraint: this.state.pivotConstraint, id: this.props.FacetedBrowserStore.datasetURI,  invert: this.state.invert, range: this.state.range, analysisProps: this.state.analysisProps});
+        this.state.envState.push({selection: this.state.selection, pivotConstraint: this.state.pivotConstraint, id: this.props.FacetedBrowserStore.datasetURI,  invert: this.state.invert, range: this.state.range, analysisProps: this.state.analysisProps, page: 1});
         //reset the state
         this.setState({selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}, pivotConstraint: queryConstraints});
         this.context.executeAction(loadFacets, {mode: 'init', id: datasetURI, page: 1, selection: { }, pivotConstraint: queryConstraints});
@@ -42,16 +60,19 @@ class FacetedBrowser extends React.Component {
                 selection[prop] = env.selection[prop];
             }
         }
-        this.setState({selection: selection, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: env.invert, range: env.range, analysisProps: env.analysisProps, pivotConstraint: env.pivotConstraint});
+        this.setState({importedMode: 0, selection: selection, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: env.invert, range: env.range, analysisProps: env.analysisProps, pivotConstraint: env.pivotConstraint});
         this.context.executeAction(loadFacets, {mode: 'init', id: env.id, page: 1, selection: {}, pivotConstraint: env.pivotConstraint});
         this.context.executeAction(loadFacets, {mode: 'masterFromState', id: env.id, page: 1, pivotConstraint: env.pivotConstraint, selection: selection});
-        this.context.executeAction(loadFacets, {mode: 'second', id: env.id, page: 1, pivotConstraint: env.pivotConstraint, selection: { prevSelection: selection, options: {invert: env.invert, range: env.range, analysisProps: env.analysisProps, facetConfigs: {}}}});
+        this.context.executeAction(loadFacets, {mode: 'second', id: env.id, page: env.page, pivotConstraint: env.pivotConstraint, selection: { prevSelection: selection, options: {invert: env.invert, range: env.range, analysisProps: env.analysisProps, facetConfigs: {}}}});
     }
     handleBackToPrevPivotState(){
         //find the env
         let env = this.state.envState[this.state.envState.length-1];
         this.state.envState.splice(-1,1);
         this.loadAnEnvState(env);
+    }
+    closeEnvDesc(){
+        this.setState({envState: []});
     }
     toggleFirstCol(){
         this.setState({hideFirstCol: !this.state.hideFirstCol})
@@ -171,9 +192,11 @@ class FacetedBrowser extends React.Component {
         return i;
     }
     handleShowMoreFacet(propertyURI, fpage){
+        this.exitFromImportMode();
         this.context.executeAction(loadFacets, {mode: 'masterMore', id: this.props.FacetedBrowserStore.datasetURI, page: this.props.FacetedBrowserStore.page, pivotConstraint: this.state.pivotConstraint, selection: {propertyURI: propertyURI, value: propertyURI, status: 1, prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range}}, fpage: fpage});
     }
     handleAnalysisProps(propertyURI){
+        this.exitFromImportMode();
         //revert showAll on facet interactions
         this.state.showAllResources = 0;
         let self = this;
@@ -199,6 +222,7 @@ class FacetedBrowser extends React.Component {
         */
     }
     handleToggleInvert(propertyURI){
+        this.exitFromImportMode();
         //revert showAll on facet interactions
         this.state.showAllResources = 0;
         //todo: only if an item is selected inversion works
@@ -225,6 +249,7 @@ class FacetedBrowser extends React.Component {
         });
     }
     handleToggleRange(propertyURI, rangeObj){
+        this.exitFromImportMode();
         //revert showAll on facet interactions
         this.state.showAllResources = 0;
         let self = this;
@@ -253,7 +278,14 @@ class FacetedBrowser extends React.Component {
             self.context.executeAction(loadFacets, {mode: 'sideEffect', id: self.props.FacetedBrowserStore.datasetURI, page: self.props.FacetedBrowserStore.page, pivotConstraint: self.state.pivotConstraint, selection: {status: 0, propertyURI: el, prevSelection: self.state.selection, options: {invert: self.state.invert, range: self.state.range, facetConfigs: facetConfigs}}});
         });
     }
+    exitFromImportMode(){
+        //exit form the imported query mode after first user interactions
+        if(this.state.importedEnvState){
+            this.setState({importedEnvState: 0, envState: []});
+        }
+    }
     handleOnCheck(level, valueType, dataType, status, value, propertyURI) {
+        this.exitFromImportMode();
         //revert showAll on facet interactions
         this.state.showAllResources = 0;
         // console.log(level, valueType, dataType, status, value, propertyURI);
@@ -478,14 +510,16 @@ class FacetedBrowser extends React.Component {
             if(this.state.expandedResources){
                 facetsDIV = '';
             }
-            let dcnf = this.props.FacetedBrowserStore.datasetConfig;
-            let cnf = this.props.FacetedBrowserStore.config;
+            let storeObj = this.props.FacetedBrowserStore;
+            let dcnf = storeObj.datasetConfig;
+            let cnf = storeObj.config;
             let facetConfigs = this.getNecessaryFaccetsConfig();
             if(dcnf.allowInlineConfig){
-                configDiv = <a onClick={this.createFConfig.bind(this, this.props.FacetedBrowserStore.datasetURI)} className="ui icon mini black circular button"><i className="ui settings icon"></i> </a>;
+                configDiv = <a onClick={this.createFConfig.bind(this, storeObj.datasetURI)} className="ui icon mini black circular button"><i className="ui settings icon"></i> </a>;
             }
             return (
                 <div className="ui fluid container ldr-padding" ref="facetedBrowser">
+                    {this.state.envState.length && this.state.envState[this.state.envState.length-1].desc ? <div className="ui info message"><i className="close link icon" onClick={this.closeEnvDesc.bind(this)}></i><NavLink className="ui mini blue icon button" href="/wysiwyq"><i className="chevron circle left icon"></i> Back to Queries</NavLink> <b>Query:</b> {this.state.envState[this.state.envState.length-1].desc}</div>: null}
                     <div className="ui vertically padded stackable grid">
                         {this.state.hideFirstCol ? '' :
                             <div className="ui stackable four wide column">
@@ -506,10 +540,16 @@ class FacetedBrowser extends React.Component {
                     <div className="ui vertically padded stackable grid">
                         <div className="ui column">
                             <div className="ui segment">
-                                <h2>List of available datasets to browse</h2>
-                                <div className="ui big divided animated list">
-                                    No Dataset is selected to browse!
-                                </div>
+                                {this.state.envState.length ?
+                                    <h2>Wait a moment until the new environemnt is loaded... Refresh the page if you are not redirected in a minute.</h2>
+                                    :
+                                    <div>
+                                        <h2>List of available datasets to browse</h2>
+                                        <div className="ui big divided animated list">
+                                            No Dataset is selected to browse!
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>

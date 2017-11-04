@@ -1422,12 +1422,6 @@ class DynamicConfigurator {
                 output[el.state.value][settingProp].push(el.settingValue.value);
             }
         });
-        /*
-        for(let prop in output){
-            output[prop].id = prop;
-            states.push(output[prop]);
-        }
-        */
         return output;
     }
     parseDynamicDatasets(body) {

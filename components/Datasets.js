@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import {navigateAction} from 'fluxible-router';
+import {navigateAction, NavLink} from 'fluxible-router';
 import {connectToStores} from 'fluxible-addons-react';
 import {enableAuthentication, defaultDatasetURI, enableAddingNewDatasets, enableDatasetAnnotation, enableQuerySaveImport} from '../configs/general';
 import {checkViewAccess, checkEditAccess} from '../services/utils/accessManagement';
@@ -66,9 +66,9 @@ class Datasets extends React.Component {
             }
             if(enableQuerySaveImport){
                 queryImportDIV = <div className="item">
-                    <a  className="medium ui basic icon labeled button" href="/wysiwyq">
+                    <NavLink  className="medium ui basic icon labeled button" href="/wysiwyq">
                         <i className="large blue level down icon"></i>Import a Query
-                    </a>
+                    </NavLink>
                 </div>;
             }
             datasetActionsDIV = <div className="ui horizontal divided list">

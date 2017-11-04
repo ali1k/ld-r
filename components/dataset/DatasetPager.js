@@ -9,7 +9,7 @@ import {Dropdown, Icon} from 'semantic-ui-react';
 class DatasetPager extends React.Component {
     constructor(props){
         super(props);
-        this.state = {searchTerm: '', searchMode: 0, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : '', saveMode: 0, saveText: ''};
+        this.state = {searchTerm: '', searchMode: 0, config: this.props.config ? JSON.parse(JSON.stringify(this.props.config)) : '', saveMode: 0, saveText: '', querySaved: 0};
     }
     componentDidMount() {
     }
@@ -42,7 +42,7 @@ class DatasetPager extends React.Component {
             this.props.handleExport();
         }else if(data.value === 'saveQuery'){
             this.props.onSearchMode(0);
-            this.setState({searchMode: 0, saveMode: !this.state.saveMode});
+            this.setState({searchMode: 0, saveMode: !this.state.saveMode, querySaved: 0});
         }else if(data.value === 'searchInResults'){
             this.onSearchClick();
         }
@@ -64,7 +64,7 @@ class DatasetPager extends React.Component {
             this.setState({searchTerm: ''});
         }
         this.props.onSearchMode(!this.state.searchMode);
-        this.setState({searchMode: !this.state.searchMode, saveMode: 0});
+        this.setState({searchMode: !this.state.searchMode, saveMode: 0, querySaved: 0});
     }
     handleSearchChange(evt) {
         this.setState({searchTerm: evt.target.value});
@@ -94,7 +94,7 @@ class DatasetPager extends React.Component {
                 page: this.props.currentPage,
                 description: desc
             });
-            this.setState({saveText: '', saveMode: 0});
+            this.setState({saveText: '', saveMode: 0, querySaved: 1});
         }
     }
     handleSearchKeyDown(evt) {
@@ -248,6 +248,11 @@ class DatasetPager extends React.Component {
                             : ''}
                     </div>
                 </div>
+                {!this.state.querySaved ? '' :
+                    <div className="ui info message">
+                      Your query was saved. <a className="ui primary mini button" href="/wysiwyq" target="_blank"> See stored queries</a>
+                    </div>
+                }
                 {!this.state.saveMode ? '' :
                     <div className="ui secondary segment bottom attached animated slideInDown">
                         <div className="ui icon input fluid">

@@ -56,17 +56,21 @@ export default {
         }
     },
     facets: {
-        path: '/browse/:id?',
+        path: '/browse/:id?/:stateURI?',
         method: 'get',
         handler: require('../components/dataset/FacetedBrowser'),
         label: 'Faceted Browser',
         action: (context, payload, done) => {
-            let datasetURI, page;
+            let datasetURI, page, stateURI;
             datasetURI = payload.params.id;
+            stateURI = payload.params.stateURI;
             if (!datasetURI) {
                 datasetURI = 0;
             }
-            context.executeAction(loadFacets, {mode: 'init', id: decodeURIComponent(datasetURI), selection: 0, page: 1}, done);
+            if (!stateURI) {
+                stateURI = 0;
+            }
+            context.executeAction(loadFacets, {mode: 'init', id: decodeURIComponent(datasetURI), stateURI: stateURI, selection: 0, page: 1}, done);
         }
     },
     datasets: {

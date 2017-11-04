@@ -6,7 +6,7 @@ import QueryImportStore from '../stores/QueryImportStore';
 import {navigateAction} from 'fluxible-router';
 import {enableAuthentication, enableQuerySaveImport} from '../configs/general';
 import {checkViewAccess, checkEditAccess} from '../services/utils/accessManagement';
-import { Button, Divider, Form, Progress } from 'semantic-ui-react';
+import { Dropdown, Button, Divider, Form, Progress } from 'semantic-ui-react';
 import YASQEViewer from '../components/object/viewer/individual/YASQEViewer';
 
 class WYSIWYQ extends React.Component {
@@ -30,28 +30,29 @@ class WYSIWYQ extends React.Component {
                 url: '/dataset/'+page+'/'+encodeURIComponent(dataset)
             });
         }else{
-
+            window.location = '/browse/'+encodeURIComponent(dataset)+'/'+encodeURIComponent(id);
+            /* the following code doesn't run the preparation action before component mount
+            this.context.executeAction(navigateAction, {
+                url: '/browse/'+encodeURIComponent(dataset)+'/'+encodeURIComponent(id)
+            });
+            */
         }
 
     }
     compare(a, b) {
-        if (a.label < b.label) {
+        let aD = new Date(a.createdOn[0]);
+        let bD = new Date(b.createdOn[0]);
+        if (aD > bD) {
             return -1;
         }
-        if (a.label > b.label) {
+        if (aD < bD) {
             return 1;
         }
         // names must be equal
         return 0;
     }
-    handleChange(element, e){
-        if(element=== 'stateURI'){
-            if(e.target.value){
-                this.setState({stateURI: e.target.value.trim()});
-            }else{
-                this.setState({stateURI: ''});
-            }
-        }
+    handleChange(e, {value}){
+        this.setState({stateURI: value});
     }
     render() {
         let dss = [];
@@ -71,8 +72,9 @@ class WYSIWYQ extends React.Component {
         let user;
         let allowChangingNewDataset= false;
         dss.sort(this.compare);
-        optionsList = dss.map(function(option, index) {
-            return <option key={index} value={(option.id)}> {option.label} </option>;
+        let dss_options = [];
+        dss.forEach((option, index)=> {
+            dss_options.push({ key: index, value: option.id, text: '['+option.createdOn[0].split('.')[0].replace('T', ' ')+'] '+ option.label[0]});
         });
         let queryDIV = '';
         if(this.state.stateURI){
@@ -85,16 +87,17 @@ class WYSIWYQ extends React.Component {
                 <div className="ui grid">
                     <div className="ui column">
                         <h2>Import an Existing Query</h2>
-                        <Form size='big'>
-                            <select ref="stateURI" className="ui search dropdown" onChange={this.handleChange.bind(this, 'stateURI')}>
-                                <option value={''}> Select a Query </option>
-                                {optionsList}
-                            </select>
-                            {queryDIV}
-                            <Divider hidden />
-                            {this.state.stateURI ? <div className='ui big blue button' onClick={this.handleWYSIWYQ.bind(this)}>Turn Query to UI</div> : null}
-                            <Divider hidden />
-                        </Form>
+                        {dss.length ?
+                            <Form size='big'>
+                                <Dropdown onChange={this.handleChange.bind(this)} placeholder='Select a Query' fluid search selection options={dss_options} />
+                                {queryDIV}
+                                <Divider hidden />
+                                {this.state.stateURI ? <div className='ui big blue button' onClick={this.handleWYSIWYQ.bind(this)}>Turn Query to UI</div> : null}
+                                <Divider hidden />
+                            </Form>
+                            :
+                            <div className="ui warning message">No query was found!</div>
+                        }
                     </div>
                 </div>
             </div>

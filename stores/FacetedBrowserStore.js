@@ -16,11 +16,13 @@ class FacetedBrowserStore extends BaseStore {
         this.facetQuery = {};
         //all the filters and constraints applied to the facet: used for pivot change
         this.facetQueryConstraints = {};
+        this.envState = [];
         this.page = 1;
         this.datasetURI = '';
         this.datasetConfig= {};
         this.config = {};
         this.error = '';
+        this.importedEnvState = 0;
     }
     clearFacets() {
         this.clearAll();
@@ -31,7 +33,6 @@ class FacetedBrowserStore extends BaseStore {
         this.emitChange();
     }
     prepareFacetConfigs(datasetURI, dynamicConfig, staticConfig, dynamicDatasetConfig, staticDatasetConfig) {
-
         this.datasetConfig = staticDatasetConfig.dataset.generic;
         if(staticDatasetConfig.dataset[datasetURI]){
             for(let p in staticDatasetConfig.dataset[datasetURI]){
@@ -84,6 +85,10 @@ class FacetedBrowserStore extends BaseStore {
         this.error = payload.error;
         this.emitChange();
     }
+    switchToEnvState(payload){
+        this.importedEnvState = payload.stateURI;
+        this.emitChange();
+    }
     updateMasterFacets(payload) {
         //for master facet
         if(payload.facets.status){
@@ -121,6 +126,20 @@ class FacetedBrowserStore extends BaseStore {
         }
         this.emitChange();
     }
+    updateEnvState(payload){
+        let stateObj ={};
+        const ldr_prefix = 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#';
+        let settingProp = '';
+        payload.properties.forEach((item)=>{
+            settingProp = item.propertyURI.replace(ldr_prefix, '').replace('http://www.w3.org/2000/01/rdf-schema#', '').trim();
+            stateObj[settingProp]= decodeURIComponent(item.instances[0].value);
+        });
+        let selection = JSON.parse(stateObj.selection);
+        let options = selection.options;
+        this.page = stateObj.page;
+        this.envState.push({desc: stateObj.label, selection: selection.prevSelection, pivotConstraint: stateObj.pivotConstraint, id: this.datasetURI,  invert: options.invert, range: options.range, analysisProps: options.analysisProps, page: stateObj.page});
+        this.emitChange();
+    }
     handleFacetSideEffectsCount(payload) {
         this.facetsCount[payload.propertyURI] = payload.total;
         this.emitChange();
@@ -133,7 +152,6 @@ class FacetedBrowserStore extends BaseStore {
         this.datasetURI = payload.datasetURI;
         this.emitChange();
     }
-
     getState() {
         return {
             facets: this.facets,
@@ -147,6 +165,8 @@ class FacetedBrowserStore extends BaseStore {
             facetQuery: this.facetQuery,
             facetQueryConstraints: this.facetQueryConstraints,
             page: this.page,
+            importedEnvState: this.importedEnvState,
+            envState: this.envState,
             error: this.error
         };
     }
@@ -166,6 +186,8 @@ class FacetedBrowserStore extends BaseStore {
         this.facetQuery = state.facetQuery;
         this.facetQueryConstraints = state.facetQueryConstraints;
         this.error = state.error;
+        this.importedEnvState = state.importedEnvState;
+        this.envState = state.envState;
     }
 }
 
@@ -176,6 +198,8 @@ FacetedBrowserStore.handlers = {
     'LOAD_MASTER_MORE_FACETS_SUCCESS': 'updateMoreMasterFacets',
     'LOAD_MASTER_FACETS_COUNT_SUCCESS': 'updateMasterFacetsCount',
     'LOAD_MASTER_FROM_STATE_SUCCESS': 'loadMasterFacetsFromState',
+    'SWITCH_TO_ENV_STATE': 'switchToEnvState',
+    'UPDATE_ENV_STATE': 'updateEnvState',
     'LOAD_SIDE_EFFECTS_FACETS_SUCCESS': 'handleFacetSideEffects',
     'LOAD_SIDE_EFFECTS_COUNT_FACETS_SUCCESS': 'handleFacetSideEffectsCount',
     'LOAD_FACETS_CONFIG': 'loadFacetConfigs',
