@@ -1089,7 +1089,8 @@ class DynamicConfigurator {
                 <${configURI}> a ldr:EnvState ;
                          ldr:dataset <${options.datasetURI}> ;
                          ldr:selection """${encodeURIComponent(JSON.stringify(options.selection))}""" ;
-                         ldr:pivotConstraint """${options.pivotConstraint? encodeURIComponent(options.pivotConstraint): ' '}""" ;
+                         ${options.pivotConstraint? 'ldr:pivotConstraint """'+encodeURIComponent(options.pivotConstraint)+'""" ;': ''}
+                         ${options.searchTerm? 'ldr:searchTerm """'+options.searchTerm+'""" ;': ''}
                          ldr:resourceQuery """${encodeURIComponent(options.resourceQuery)}""" ;
                          ldr:page "${options.page}" ;
                          ldr:createdOn "${currentDate}"^^xsd:dateTime;

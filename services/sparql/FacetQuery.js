@@ -869,10 +869,10 @@ class FacetQuery{
                 }
                 ${ast}
                 ${analysisPhrase}
-                ${searchPhase}
                 ${titleStr}
                 ${imageStr}
                 ${geoStr}
+                ${searchPhase}
                 ${bindPhase}
             ${gEnd}
         }
