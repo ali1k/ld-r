@@ -78,32 +78,38 @@ Config: General
     <tr >
       <td class="positive">enableDynamicServerConfiguration</td>
       <td>if set to '1', will use the server configs stored in a triple store.</td>
-      <td>0</td>
+      <td>1</td>
     </tr>
     <tr >
       <td class="positive">enableDynamicReactorConfiguration</td>
       <td>if set to '1', will use the reactor configs stored in a triple store.</td>
-      <td>0</td>
+      <td>1</td>
     </tr>
     <tr >
       <td class="positive">enableDynamicFacetsConfiguration</td>
       <td>if set to '1', will use the facets configs stored in a triple store.</td>
-      <td>0</td>
+      <td>1</td>
     </tr>
     <tr >
       <td class="positive">enableAddingNewDatasets</td>
       <td>if set to '1', wil allow users to create new datasets.</td>
-      <td>0</td>
+      <td>1</td>
     </tr>
     <tr >
       <td class="positive">enableDatasetAnnotation</td>
       <td>if set to '1', wil allow users to annotate existing datasets using NLP APIs.</td>
-      <td>0</td>
+      <td>1</td>
     </tr>
+    <tr >
+      <td class="positive">enableQuerySaveImport</td>
+      <td>if set to '1', wil allow users to store their queries and import them later on to reproduce their browsing experience.</td>
+      <td>1</td>
+    </tr>      
     <tr >
       <td class="positive">configDatasetURI</td>
       <td>dataset/graphName that stores your dynamic configurations</td>
       <td>['http://ld-r.org/configurations']</td>
     </tr>
+      
   </tbody>
 </table>
