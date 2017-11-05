@@ -116,7 +116,11 @@ class FacetedBrowserStore extends BaseStore {
     }
     loadMasterFacetsFromState(payload) {
         this.datasetURI = payload.id;
-        this.config ={list: [], config: {}};
+        if(payload.stateURI){
+            //distinguish it from pivot change
+            this.importedEnvState = payload.stateURI;
+        }
+        //this.config ={list: [], config: {}};
         for(let prop in payload.selection){
             this.facets[prop] = payload.selection[prop];
             this.facetsCount[prop] = payload.selection[prop].length;

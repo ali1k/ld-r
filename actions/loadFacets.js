@@ -35,8 +35,9 @@ export default function loadFacets(context, payload, done) {
         ],
         // final callback
         (err, results) => {
-            if(payload.stateURI){
-                context.dispatch('SWITCH_TO_ENV_STATE', {stateURI: payload.stateURI});
+            if(payload.stateURI || payload.isPivotChange){
+                //context.dispatch('SWITCH_TO_ENV_STATE', {stateURI: payload.stateURI});
+                context.dispatch('LOAD_MASTER_FROM_STATE_SUCCESS', {stateURI: payload.stateURI, id: payload.id, selection: payload.selection.prevSelection});
             }
             context.dispatch('LOADED_DATA', {});
             done();

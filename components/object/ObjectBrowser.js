@@ -52,6 +52,11 @@ class ObjectBrowser extends React.Component {
         //treat master facet different than normal ones
         if(!self.props.spec.propertyURI){
             browser = <MasterBrowser selection={self.props.selection} expanded={self.props.expanded} datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;
+        }else{
+            //in case no total value is defined, charts make no sense: e.g. when regenerating UI
+            if(self.props.spec.instances.length && !self.props.spec.instances[0].total){
+                browser = <CheckListBrowser selection={self.props.selection} expanded={self.props.expanded} datasetURI={self.props.datasetURI} propertyURI={self.props.spec.propertyURI} shortenURI={self.props.shortenURI}  config={self.props.config} instances={self.props.spec.instances} onCheck={self.handleSelect.bind(self)}/>;
+            }
         }
         output = browser;
         return (

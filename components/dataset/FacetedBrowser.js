@@ -46,7 +46,7 @@ class FacetedBrowser extends React.Component {
                 });
             });
         }
-        this.state.envState.push({selection: this.state.selection, pivotConstraint: this.state.pivotConstraint, id: this.props.FacetedBrowserStore.datasetURI,  invert: this.state.invert, range: this.state.range, analysisProps: this.state.analysisProps, page: 1});
+        this.state.envState.push({isPivotChange: 1, selection: this.state.selection, pivotConstraint: this.state.pivotConstraint, id: this.props.FacetedBrowserStore.datasetURI,  invert: this.state.invert, range: this.state.range, analysisProps: this.state.analysisProps, page: 1});
         //reset the state
         this.setState({selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}, pivotConstraint: queryConstraints});
         this.context.executeAction(loadFacets, {mode: 'init', id: datasetURI, page: 1, selection: { }, pivotConstraint: queryConstraints});
@@ -61,8 +61,8 @@ class FacetedBrowser extends React.Component {
             }
         }
         this.setState({importedMode: 0, selection: selection, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: env.invert, range: env.range, analysisProps: env.analysisProps, pivotConstraint: env.pivotConstraint});
-        this.context.executeAction(loadFacets, {mode: 'init', stateURI: env.stateURI, id: env.id, searchTerm: env.searchTerm, page: env.page, pivotConstraint: env.pivotConstraint, selection: { prevSelection: selection, options: {invert: env.invert, range: env.range, analysisProps: env.analysisProps, facetConfigs: {}}}});
-        this.context.executeAction(loadFacets, {mode: 'masterFromState', id: env.id, page: env.page, pivotConstraint: env.pivotConstraint, selection: selection});
+        this.context.executeAction(loadFacets, {mode: 'init', isPivotChange: env.isPivotChange, stateURI: env.stateURI, id: env.id, searchTerm: env.searchTerm, page: env.page, pivotConstraint: env.pivotConstraint, selection: { prevSelection: selection, options: {invert: env.invert, range: env.range, analysisProps: env.analysisProps, facetConfigs: {}}}});
+        //this.context.executeAction(loadFacets, {mode: 'masterFromState', id: env.id, page: env.page, pivotConstraint: env.pivotConstraint, selection: selection});
         //this.context.executeAction(loadFacets, {mode: 'second', id: env.id, searchTerm: env.searchTerm, page: env.page, pivotConstraint: env.pivotConstraint, selection: { prevSelection: selection, options: {invert: env.invert, range: env.range, analysisProps: env.analysisProps, facetConfigs: {}}}});
     }
     handleBackToPrevPivotState(){
@@ -541,7 +541,7 @@ class FacetedBrowser extends React.Component {
                         <div className="ui column">
                             <div className="ui segment">
                                 {this.state.envState.length ?
-                                    <h2>Wait a moment until the new environemnt is loaded... Refresh the page if you are not redirected in a minute.</h2>
+                                    <h2>Wait a moment until the new environemnt is generated...</h2>
                                     :
                                     <div>
                                         <h2>List of available datasets to browse</h2>
