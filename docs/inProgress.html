@@ -43,11 +43,11 @@ Tasks in Progress...
 <script>
 var urlToGetAllOpenBugs = "https://api.github.com/repos/ali1k/ld-r/issues?state=open";
 
-$(document).ready(function () {
-    $.getJSON(urlToGetAllOpenBugs, function (allIssues) {
-        $("#issues").append("found " + allIssues.length + " issues</br>");
-        $.each(allIssues, function (i, issue) {
-            $("div")
+$jQuery(document).ready(function () {
+    $jQuery.getJSON(urlToGetAllOpenBugs, function (allIssues) {
+        $jQuery("#issues").append("found " + allIssues.length + " issues</br>");
+        $jQuery.each(allIssues, function (i, issue) {
+            $jQuery("div")
                 .append("<b>" + issue.number + " - " + issue.title + "</b></br>")
                 .append("created at: " + issue.created_at + "</br>")
                 .append(issue.body + "</br></br></br>");
