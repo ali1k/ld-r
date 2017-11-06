@@ -135,7 +135,7 @@
             $.getJSON(urlToGetAllOpenBugs, function (allIssues) {
             $("#issues").append('<div class="ui divided list"> ' + allIssues.length + ' issues</div>');
             $.each(allIssues, function (i, issue) {
-                $("#issues.list")
+                $("#issues .list")
                     .append('<div class="item"><i class="orange wait icon"></i> [' +  issue.created_at + ']'+ issue.title + '</div>')
             });
             });
