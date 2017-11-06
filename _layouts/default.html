@@ -135,7 +135,7 @@
             $.getJSON(urlToGetAllOpenBugs, function (allIssues) {
             $("#issues").append("found " + allIssues.length + " issues</br>");
             $.each(allIssues, function (i, issue) {
-                $("div")
+                $("#issues")
                     .append("<b>" + issue.number + " - " + issue.title + "</b></br>")
                     .append("created at: " + issue.created_at + "</br>")
                     .append(issue.body + "</br></br></br>");
