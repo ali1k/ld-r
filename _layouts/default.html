@@ -128,6 +128,7 @@
       $('#menu [data-section="{{page.section}}"]').addClass('blue active');
       $('#topmenu [data-section="{{page.section}}"]').addClass('active');
       var page = "{{page.section}}";
+      console.log(page);
       var urlToGetAllOpenBugs = "https://api.github.com/repos/ali1k/ld-r/issues?state=open";
       if(page.section=='inProgress'){
       
