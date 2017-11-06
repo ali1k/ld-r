@@ -133,12 +133,10 @@
       if(page=='inProgress'){
       
             $.getJSON(urlToGetAllOpenBugs, function (allIssues) {
-            $("#issues").append("found " + allIssues.length + " issues</br>");
+            $("#issues").append('<div class="ui divided list"> ' + allIssues.length + ' issues</div>');
             $.each(allIssues, function (i, issue) {
-                $("#issues")
-                    .append("<b>" + issue.number + " - " + issue.title + "</b></br>")
-                    .append("created at: " + issue.created_at + "</br>")
-                    .append(issue.body + "</br></br></br>");
+                $("#issues.list")
+                    .append('<div class="item"><i class="orange wait icon"></i> [' +  issue.created_at + '] issue.title + "</div>")
             });
             });
          
