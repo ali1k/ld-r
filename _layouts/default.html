@@ -133,7 +133,7 @@
       if(page=='inProgress'){
       
             $.getJSON(urlToGetAllOpenBugs, function (allIssues) {
-            $("#issues").append('<div class="ui divided list"> <b>' + allIssues.length + '</b><a href="https://github.com/ali1k/ld-r/issues"> issue(s)</a> found:</div>');
+            $("#issues").append('<div class="ui divided list"> <b>' + allIssues.length + '</b><a href="https://github.com/ali1k/ld-r/issues"> open task(s)</a> on Github:</div>');
             $.each(allIssues, function (i, issue) {
                 $("#issues .list")
                     .append('<div class="item"><a href="'+issue.html_url+'"><i class="orange wait icon"></i> [' +  issue.created_at + '] '+ issue.title + '</a></div>')
