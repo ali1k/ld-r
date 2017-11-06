@@ -135,8 +135,12 @@
             $.getJSON(urlToGetAllOpenBugs, function (allIssues) {
             $("#issues").append('<div class="ui divided list"> <b>' + allIssues.length + '</b><a href="https://github.com/ali1k/ld-r/issues"> open task(s)</a> on Github:</div>');
             $.each(allIssues, function (i, issue) {
+              var labels = [];
+              $,each(issuelabels,function (ii, lbs) {
+                labels.push(lbs.name);
+              });
                 $("#issues .list")
-                    .append('<div class="item"><a href="'+issue.html_url+'"><i class="orange wait icon"></i> [' +  issue.created_at + '] '+ issue.title + '</a></div>')
+                    .append('<div class="item"><a href="'+issue.html_url+'"><i class="orange wait icon"></i> [' +  issue.created_at + '] '+ issue.title + '</a><span class="uni mini tag label">'+labelsStr = labels.join(', ')+'</span></div>')
             });
             });
          
