@@ -137,6 +137,21 @@
       ga('create', 'UA-64104530-1', 'auto');
       ga('send', 'pageview');
 
+      var urlToGetAllOpenBugs = "https://api.github.com/repos/ali1k/ld-r/issues?state=open";
+      if(page.section=='inProgress'){
+      
+        $.getJSON(urlToGetAllOpenBugs, function (allIssues) {
+        $("#issues").append("found " + allIssues.length + " issues</br>");
+        $.each(allIssues, function (i, issue) {
+            $("div")
+                .append("<b>" + issue.number + " - " + issue.title + "</b></br>")
+                .append("created at: " + issue.created_at + "</br>")
+                .append(issue.body + "</br></br></br>");
+        });
+    });
+         
+         }
+
     </script>
   </body>
 </html>
