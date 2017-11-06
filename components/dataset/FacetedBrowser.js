@@ -36,7 +36,6 @@ class FacetedBrowser extends React.Component {
         //save the previous state for the back button
         //get the total resources of selections form facets
         //do not get all facet items for performace reasons, only the selected ones
-        //todo: add also configs for the selected props
         for(let prop in this.state.selection){
             this.state.selection[prop].forEach((s)=>{
                 this.props.FacetedBrowserStore.facets[prop].forEach((facet)=>{

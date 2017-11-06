@@ -263,7 +263,7 @@ export default {
                     if(!maxOnPage){
                         maxOnPage = 20;
                     }
-                    if(params.mode === 'init' && !params.stateURI){
+                    if(params.mode === 'init' && !params.stateURI && !params.isPivotChange){
                         //get all resources
                         query = queryObject.countSecondLevelPropertyValues(endpointParameters, graphName, rftconfig, {});
                     }else{
