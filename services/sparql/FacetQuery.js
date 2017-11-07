@@ -270,20 +270,39 @@ class FacetQuery{
                 let itempp = parts.property.split('||');
                 if(itempp.length > 1){
                     intermediateArr[index] = 1;
-                    if(withPropAnalysis){
-                        pgStart[index] = pgStart[index] + `
-                        #source property
-                        ?osp${index} ${self.filterPropertyPath(itempp[0])} ?${'vg' + withPropAnalysis + (counter-1)} .
-                        #target property
-                        ?osp${index} ${self.filterPropertyPath(itempp[1])} ?${(counter === graphs.length) ? withPropAnalysis : 'si'+index} .
-                        `;
+                    //we should aslo check if the previous one was intermediate.
+                    if(intermediateArr[index-1]){
+                        if(withPropAnalysis){
+                            pgStart[index] = pgStart[index] + `
+                            #source property
+                            ?osp${index} ${self.filterPropertyPath(itempp[0])} ?si${index-1} .
+                            #target property
+                            ?osp${index} ${self.filterPropertyPath(itempp[1])} ?${(counter === graphs.length) ? withPropAnalysis : 'si'+index} .
+                            `;
+                        }else{
+                            pgStart[index] = pgStart[index] + `
+                            #source property
+                            ?osp${index} ${self.filterPropertyPath(itempp[0])} ?si${index-1} .
+                            #target property
+                            ?osp${index} ${self.filterPropertyPath(itempp[1])} ?${(counter === graphs.length) ?  'v'+tindex : 'si'+index} .
+                            `;
+                        }
                     }else{
-                        pgStart[index] = pgStart[index] + `
-                        #source property
-                        ?osp${index} ${self.filterPropertyPath(itempp[0])} ?v${'g' + tindex + (counter-1)} .
-                        #target property
-                        ?osp${index} ${self.filterPropertyPath(itempp[1])} ?${(counter === graphs.length) ?  'v'+tindex : 'si'+index} .
-                        `;
+                        if(withPropAnalysis){
+                            pgStart[index] = pgStart[index] + `
+                            #source property
+                            ?osp${index} ${self.filterPropertyPath(itempp[0])} ?${'vg' + withPropAnalysis + (counter-1)} .
+                            #target property
+                            ?osp${index} ${self.filterPropertyPath(itempp[1])} ?${(counter === graphs.length) ? withPropAnalysis : 'si'+index} .
+                            `;
+                        }else{
+                            pgStart[index] = pgStart[index] + `
+                            #source property
+                            ?osp${index} ${self.filterPropertyPath(itempp[0])} ?v${'g' + tindex + (counter-1)} .
+                            #target property
+                            ?osp${index} ${self.filterPropertyPath(itempp[1])} ?${(counter === graphs.length) ?  'v'+tindex : 'si'+index} .
+                            `;
+                        }
                     }
                 }else{
                     if(withPropAnalysis){
