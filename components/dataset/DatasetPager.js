@@ -239,9 +239,9 @@ class DatasetPager extends React.Component {
                     </div>
                     <div className="right menu stackable">
                         {this.props.total ?
-                            <Dropdown className="item" title="actions" selectOnBlur={false} onChange={this.handleActionDropDownClick.bind(this)} trigger={a_trigger} options={a_options} icon={null} floating />
+                            <Dropdown className="item" title="actions" selectOnBlur={false} onChange={this.handleActionDropDownClick.bind(this)} trigger={a_trigger} options={a_options} icon={null} pointing="top right" floating />
                             : ''}
-                        <Dropdown className="item" title="views" selectOnBlur={false} onChange={this.handleViewsDropDownClick.bind(this)} trigger={v_trigger} options={v_options} icon={null} floating />
+                        <Dropdown className="item" title="views" selectOnBlur={false} onChange={this.handleViewsDropDownClick.bind(this)} trigger={v_trigger} options={v_options} icon={null} pointing="top right" floating />
                         {this.props.onExpandCollapse ?
                             <a className='ui icon mini basic button right floated item ' onClick={this.props.onExpandCollapse.bind(this)} title="expand/collapse">
                                 <i className='ui icon expand'></i>

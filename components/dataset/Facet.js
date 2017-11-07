@@ -529,12 +529,12 @@ class Facet extends React.Component {
                         </div>
                         <div className="right stackable menu">
                             {this.props.spec.property ?
-                                <Dropdown className="item" title="actions" selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={d_trigger} options={d_options} icon={null} floating />
+                                <Dropdown className="item" title="actions" selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={d_trigger} options={d_options} icon={null} pointing="top left" floating />
                                 : ''
                             }
                             {this.props.spec.property ?
                                 this.state.config && this.state.config.freezeBrowser ? '' :
-                                    <Dropdown className="item" title="change the browser" selectOnBlur={false} onChange={this.handleDropDown2Click.bind(this)} trigger={b_trigger} options={b_options} icon={null} floating />
+                                    <Dropdown className="item" title="change the browser" selectOnBlur={false} onChange={this.handleDropDown2Click.bind(this)} trigger={b_trigger} options={b_options} icon={null} pointing="top left" floating />
                                 :
                                 ''}
 
