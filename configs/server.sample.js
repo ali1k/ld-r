@@ -8,6 +8,7 @@ export default {
         },
         //Note: if graphName is not specified, the identifer used for configuration will be used as graphName
         //Example config for connecting to a Stardog triple store
+        //Stardog note: sometimes you need to use a path like '/annex/testDB/sparql/query' for update queries
         'http://localhost:5820/testDB/query': {
             host: 'localhost', port: 5820, path: '/testDB/query', graphName: 'default', endpointType: 'stardog', useReasoning: 1
         },
