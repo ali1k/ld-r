@@ -12,7 +12,7 @@ class DBpediaUtil {
         //trimming
         if(tmp.length){
             tmp.forEach((w)=>{
-                stopWordsArr.push(w.trim());
+                stopWordsArr.push(w.trim().toLowerCase());
             });
         }
         let output = [];
@@ -29,7 +29,7 @@ class DBpediaUtil {
                     types = 'DBpedia:Misc';
                 }
                 //do not add stop words
-                if(stopWordsArr.length && stopWordsArr.indexOf(el['@surfaceForm']) !== -1){
+                if(stopWordsArr.length && stopWordsArr.indexOf(el['@surfaceForm'].toLowerCase()) !== -1){
                     //do nothing
                 }else{
                     output.push({
