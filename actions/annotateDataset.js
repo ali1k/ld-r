@@ -28,7 +28,9 @@ let processData = (page, maxPerPage, totalPages, payload, done)=> {
                     progressCounter++;
                     context.executeAction(annotateText, {
                         query: resource.ov,
-                        id: resource.r
+                        id: resource.r,
+                        confidence: payload.confidence,
+                        stopWords: payload.stopWords
                     }, (err3, res3)=>{
                         //console.log('annotateText', resource.ov, res3);
                         //create a queue for enrichment

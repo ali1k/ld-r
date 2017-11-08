@@ -3,7 +3,18 @@ class DBpediaUtil {
     constructor() {
 
     }
-    parseDBpediaSpotlight(body) {
+    parseDBpediaSpotlight(body, stopWords) {
+        let tmp = [];
+        let stopWordsArr = [];
+        if(stopWords){
+            tmp = stopWords.split(',');
+        }
+        //trimming
+        if(tmp.length){
+            tmp.forEach((w)=>{
+                stopWordsArr.push(w.trim());
+            });
+        }
         let output = [];
         let desc = '',
             parsed = JSON.parse(body);
@@ -17,14 +28,19 @@ class DBpediaUtil {
                 if (!types) {
                     types = 'DBpedia:Misc';
                 }
-                output.push({
-                    uri: el['@URI'],
-                    types: types.split(','),
-                    surfaceForm: el['@surfaceForm'],
-                    offset: el['@offset'],
-                    similarityScore: el['@similarityScore'],
-                    percentageOfSecondRank: el['@percentageOfSecondRank']
-                });
+                //do not add stop words
+                if(stopWordsArr.length && stopWordsArr.indexOf(el['@surfaceForm']) !== -1){
+                    //do nothing
+                }else{
+                    output.push({
+                        uri: el['@URI'],
+                        types: types.split(','),
+                        surfaceForm: el['@surfaceForm'],
+                        offset: el['@offset'],
+                        similarityScore: el['@similarityScore'],
+                        percentageOfSecondRank: el['@percentageOfSecondRank']
+                    });
+                }
             });
         }
         return output;

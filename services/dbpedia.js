@@ -48,6 +48,9 @@ export default {
             /////////////////////////////////////////////
         } else if (resource === 'dbpedia.spotlight') {
             query = params.query;
+            //handle confidence and stopWords
+            let confidence = params.confidence ? params.confidence : '0.5';
+            let stopWords = params.stopWords;
             //handle empty text
             if(!query || !query.trim()){
                 callback(null, {
@@ -58,9 +61,10 @@ export default {
                 return 0;
             }else{
                 //send request
+                //todo: add confidence here to the query
                 rp.post({headers: {'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'}, accept: 'application/json', uri: 'http://' + dbpediaSpotlightService[0].host + ':' + dbpediaSpotlightService[0].port + dbpediaSpotlightService[0].path, form: {'text': query}}).then(function(res){
                     callback(null, {
-                        tags: utilObject.parseDBpediaSpotlight(res),
+                        tags: utilObject.parseDBpediaSpotlight(res, stopWords),
                         id: params.id,
                         query: params.query
                     });
