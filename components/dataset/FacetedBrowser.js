@@ -53,16 +53,21 @@ class FacetedBrowser extends React.Component {
     loadAnEnvState(env){
         //console.log(env);
         let selection = {};
-        //remove facets with no slected values
+        let self = this;
+        let zeroLengthSelection = [];
         for(let prop in env.selection){
             if(env.selection[prop].length){
                 selection[prop] = env.selection[prop];
+            }else{
+                zeroLengthSelection.push(prop);
             }
         }
-        this.setState({importedMode: 0, selection: selection, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: env.invert, range: env.range, analysisProps: env.analysisProps, pivotConstraint: env.pivotConstraint});
+        this.setState({importedMode: 0, selection: env.selection, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: env.invert, range: env.range, analysisProps: env.analysisProps, pivotConstraint: env.pivotConstraint});
         this.context.executeAction(loadFacets, {mode: 'init', isPivotChange: env.isPivotChange, stateURI: env.stateURI, id: env.id, searchTerm: env.searchTerm, page: env.page, pivotConstraint: env.pivotConstraint, selection: { prevSelection: selection, options: {invert: env.invert, range: env.range, analysisProps: env.analysisProps, facetConfigs: {}}}});
-        //this.context.executeAction(loadFacets, {mode: 'masterFromState', id: env.id, page: env.page, pivotConstraint: env.pivotConstraint, selection: selection});
-        //this.context.executeAction(loadFacets, {mode: 'second', id: env.id, searchTerm: env.searchTerm, page: env.page, pivotConstraint: env.pivotConstraint, selection: { prevSelection: selection, options: {invert: env.invert, range: env.range, analysisProps: env.analysisProps, facetConfigs: {}}}});
+        //full load facets with no slected values
+        zeroLengthSelection.forEach(function(el){
+            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: env.id, page: env.page, selection: {status: 0, propertyURI: el, prevSelection: selection, options: {invert: env.invert, range: env.range, analysisProps: env.analysisProps, facetConfigs: {}}}});
+        });
     }
     handleBackToPrevPivotState(){
         //find the env
