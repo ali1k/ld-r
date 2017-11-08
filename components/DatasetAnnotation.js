@@ -16,7 +16,7 @@ import countAnnotatedResourcesWithProp from '../actions/countAnnotatedResourcesW
 class DatasetAnnotation extends React.Component {
     constructor(props){
         super(props);
-        this.state = {storingDataset: '', datasetURI: '', resourceType: '', propertyURI: '', annotationMode: 0, storeInNewDataset : false, noDynamicConfig: 0};
+        this.state = {advancedMode: 0, storingDataset: '', datasetURI: '', resourceType: '', propertyURI: '', annotationMode: 0, storeInNewDataset : false, noDynamicConfig: 0};
     }
     componentDidMount() {
 
@@ -135,7 +135,9 @@ class DatasetAnnotation extends React.Component {
         });
         return label;
     }
-
+    showHideAdvanceOptions(){
+        this.setState({advancedMode: ! this.state.advancedMode});
+    }
     handleNewDatasetChange(event) {
         //in this case, do not create a dynamic config, admin should handle it manually
         this.setState({storingDataset: event.target.value, noDynamicConfig: 1});
@@ -215,6 +217,23 @@ class DatasetAnnotation extends React.Component {
                 {allowChangingNewDataset && this.state.storeInNewDataset ?
                     <input ref="newDatasetInput" type="text" value={this.state.storingDataset} placeholder="Add URI of the new dataset" onChange={this.handleNewDatasetChange.bind(this)} />
                     : ''}
+                <a className="ui basic icon button" onClick={this.showHideAdvanceOptions.bind(this)}><i className="blue icon setting"></i> Advanced Options</a>
+                {this.state.advancedMode ?
+                    <div className="ui list">
+                        <div className="item">
+                            <b>Annotator API</b>
+                            <select ref="language" className="ui disabled search dropdown">
+                                <option value="en"> DBpedia Spotlight </option>
+                            </select>
+                        </div>
+                        <div className="item">
+                            <b>Language</b>
+                            <select ref="language" className="ui disabled search dropdown">
+                                <option value="en"> English </option>
+                            </select>
+                        </div>
+                    </div>
+                    : null}
                 <Divider hidden />
                 <div className='ui big blue button' onClick={this.handleAnnotateDataset.bind(this)}>Annotate  Dataset</div>
                 <Divider hidden />
