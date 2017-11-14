@@ -12,7 +12,7 @@ import DatasetFB from './DatasetFB';
 class FacetedBrowser extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}, pivotConstraint: '', envState: [], importedEnvState: 0, importedMode: 0};
+        this.state = {selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, datasetConfig: {}, analysisProps: {}, pivotConstraint: '', envState: [], importedEnvState: 0, importedMode: 0};
     }
     componentDidMount() {
         if(this.props.FacetedBrowserStore.importedEnvState){
@@ -62,7 +62,11 @@ class FacetedBrowser extends React.Component {
                 zeroLengthSelection.push(prop);
             }
         }
-        this.setState({importedMode: 0, selection: env.selection, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: env.invert, range: env.range, analysisProps: env.analysisProps, pivotConstraint: env.pivotConstraint});
+        let showAllResource = 0;
+        if(env.searchTerm && env.searchTerm === 'ldr_showAll'){
+            showAllResource = 1;
+        }
+        this.setState({importedMode: 0, selection: env.selection, expandedFacet: 0, showAllResources: showAllResource, expandedResources: 0, hideFirstCol: false, invert: env.invert, range: env.range, datasetConfig: env.datasetConfig, analysisProps: env.analysisProps, pivotConstraint: env.pivotConstraint});
         this.context.executeAction(loadFacets, {mode: 'init', isPivotChange: env.isPivotChange, stateURI: env.stateURI, id: env.id, searchTerm: env.searchTerm, page: env.page, pivotConstraint: env.pivotConstraint, selection: { prevSelection: selection, options: {invert: env.invert, range: env.range, analysisProps: env.analysisProps, facetConfigs: {}}}});
         //full load facets with no slected values
         zeroLengthSelection.forEach(function(el){
@@ -516,6 +520,10 @@ class FacetedBrowser extends React.Component {
             }
             let storeObj = this.props.FacetedBrowserStore;
             let dcnf = storeObj.datasetConfig;
+            //to update the dataset view if it is stored as a state
+            if(this.state.datasetConfig.datasetViewer){
+                dcnf.datasetViewer = this.state.datasetConfig.datasetViewer;
+            }
             let cnf = storeObj.config;
             let facetConfigs = this.getNecessaryFaccetsConfig();
             if(dcnf.allowInlineConfig){

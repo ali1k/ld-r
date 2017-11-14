@@ -86,11 +86,17 @@ class DatasetPager extends React.Component {
     }
     saveEnvState(desc) {
         if(desc.trim()){
+            let selection = JSON.parse(JSON.stringify(this.props.selection));
+            //to store the component used to view the results and empty the default facets config
+            if(this.props.config && this.props.config.datasetViewer){
+                selection.options.datasetConfig = {datasetViewer: this.props.config.datasetViewer};
+                selection.options.facetConfigs = {};
+            }
             this.context.executeAction(saveFacetsEnvState, {
                 datasetURI: this.props.datasetURI,
-                selection: this.props.selection,
+                selection: selection,
                 pivotConstraint: this.props.pivotConstraint,
-                searchTerm: this.state.searchMode ? this.state.searchTerm : '',
+                searchTerm: this.state.searchMode ? this.state.searchTerm : this.props.showAllResources ? 'ldr_showAll' : '',
                 resourceQuery: this.props.resourceQuery,
                 page: this.props.currentPage,
                 description: desc
