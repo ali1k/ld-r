@@ -62,7 +62,8 @@
                   <div class="item icon">
                     <i class="ui brown student icon"></i> Tutorials
                     <div class="menu">
-                        <a class="item" href="/docs/basicTutorial.html" data-section="basicTutorial">Basic Tutorial</a>
+                        <a class="item" href="/docs/basicTutorial.html" data-section="basicTutorial">Basic Tutorial 1</a>
+                        <a class="item" href="/docs/basicTutorial2.html" data-section="basicTutorial2">Basic Tutorial 2</a>
                         <a class="item" href="/docs/videoTutorials.html" data-section="videoTutorials">Video Tutorials</a>
                         <a class="item" href="/docs/herokuTutorial.html" data-section="herokuTutorial">Deploy LD-R on Heroku</a>
                     </div>
@@ -128,10 +129,10 @@
       $('#menu [data-section="{{page.section}}"]').addClass('blue active');
       $('#topmenu [data-section="{{page.section}}"]').addClass('active');
       var page = "{{page.section}}";
-      
+
       var urlToGetAllOpenBugs = "https://api.github.com/repos/ali1k/ld-r/issues?state=open";
       if(page=='inProgress'){
-      
+
             $.getJSON(urlToGetAllOpenBugs, function (allIssues) {
             $("#issues").append('<div class="ui divided list"> <h2><b>' + allIssues.length + '</b><a href="https://github.com/ali1k/ld-r/issues"> open task(s)</a> on Github:</h2></div>');
             $.each(allIssues, function (i, issue) {
@@ -143,7 +144,7 @@
                     .append('<div class="item"><a href="'+issue.html_url+'"><i class="orange wait icon"></i> [' +  issue.created_at + '] '+ issue.title + '</a> <span class="ui mini tag label">'+labels.join(', ')+'</span></div>')
             });
             });
-         
+
          }
     </script>
     <script>

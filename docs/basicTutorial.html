@@ -1,31 +1,31 @@
---- 
+---
 layout: default
-title: Basic Tutorial
-section: basicTutorial 
-path: docs/basicTutorial.html 
+title: Basic Tutorial 1
+section: basicTutorial
+path: docs/basicTutorial.html
 ---
 
 <h1 class="ui dividing header">
-Basic Tutorial
+Basic Tutorial -- part 1: static configurations
 </h1>
 
 <h2>Before you start...</h2>
-<p> 
+<p>
 Before you start this tutorial, please make sure that you have followed the instructions on our <a href="quickstart.html"> Quick Start</a> page and have installed everything which is required for this tutorial.
 </p>
 
 <h2>What is it about?</h2>
-<p> 
-In this tutorial, we will build a LD-R application on top of the <a href="http://wiki.dbpedia.org/">DBpedia</a> knowledge graph -- extracted structred information from Wikipedia. 
+<p>
+In this tutorial, we will build a LD-R application on top of the <a href="http://wiki.dbpedia.org/">DBpedia</a> knowledge graph -- extracted structred information from Wikipedia.
 The tutorial will show how the basic configurations in LD-R can be applied to view, edit and browse Linked Data.
 </p>
 
 <h2>Let's start!</h2>
 Go to the directoy where you have installed your LD-R instance and open your favorite code editor (I usually use <a href="https://atom.io/">Atom editor</a> which brings a set of nice features for Web development and it per se is built with React technology. To launch the Atom editor, I simply run <code class="ui label">atom .</code> on my project directory.).
 <p>
-  In order to develop and see the results in parallel, run the <code class="ui label">npm run dev</code> command. 
+  In order to develop and see the results in parallel, run the <code class="ui label">npm run dev</code> command.
   * If you are a windows user, you might need to try <code class="ui label">npm run dev:windows</code> instead!
-  This command will start the Node server and will watch your code for possible changes. It will thereby refresh the pages/components automatically without re-running the command or refrshing the browser page. 
+  This command will start the Node server and will watch your code for possible changes. It will thereby refresh the pages/components automatically without re-running the command or refrshing the browser page.
 </p>
 <p>
   Once the Node server is on, If you now go to the <a href="http://localhost:3000">http://localhost:3000</a> in your browser you should see the home page of the LD-R:
@@ -34,13 +34,13 @@ Go to the directoy where you have installed your LD-R instance and open your fav
     <img class="ui centered image" src="/assets/img/basicTutorial/t1.png" alt="t1" />
 </div>
 <p>
-  If you click on the <span class="ui primary label">Datasets</span>, you should see the following message: 
+  If you click on the <span class="ui primary label">Datasets</span>, you should see the following message:
 </p>
 <div>
     <img class="ui centered image" src="/assets/img/basicTutorial/t2.png" alt="t2" />
 </div>
 <p>
-  This means you still haven't defined any datasets to view, edit or browse. OK, it is time now to add some configs in there! 
+  This means you still haven't defined any datasets to view, edit or browse. OK, it is time now to add some configs in there!
   The first config you need to set is in the <code class="ui label">configs/server.js</code> in order to be able to connect to a SPARQL endpoint.
   The default server configuration looks like this:
 </p>
@@ -117,7 +117,7 @@ Go to the directoy where you have installed your LD-R instance and open your fav
         },
 </pre>
 <p>
-  LD-R supports configurations in different levels. With the above lines, we set the configs for datasets. 
+  LD-R supports configurations in different levels. With the above lines, we set the configs for datasets.
   Now, if you visit <a href="http://localhost:3000/datasets">http://localhost:3000/datasets</a>, you should already see the DBpedia graph listed there:
 </p>
 <div>
@@ -301,7 +301,7 @@ Go to the directoy where you have installed your LD-R instance and open your fav
 </div>
 <div class="ui info message">
   <i class="ui big yellow info icon"></i>
-  The configurations in this tutorial, only address the depth 1. 
+  The configurations in this tutorial, only address the depth 1.
   LD-R also allows you to create more specific configuration e.g. customize a certain property appearing in a certain resource of a certain dataset.
   To know more about these advanced features, have a look at <a href="configReactors.html">reactors config page</a>.
 </div>
@@ -370,5 +370,5 @@ Let me show you a quick example:
 </p>
 <div class="ui info message">
   <i class="ui big yellow info icon"></i>
-   The new version of LD-R allows dynamic configuration of apps using the LD-R UIs (i.e. you don't need anymore to statically change the content of reactor.js and facets.js and server.js files!). Please watch our video tutorials to understand how this feature works.
+   The new version of LD-R allows dynamic configuration of apps using the LD-R UIs (i.e. you don't need anymore to statically change the content of reactor.js and facets.js and server.js files!). Please follow the <a href="http://ld-r.org/docs/basicTutorial2.html">basic tutorial 2</a> to understand how this feature works.
 </div>

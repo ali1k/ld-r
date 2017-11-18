@@ -1,0 +1,96 @@
+---
+layout: default
+title: Basic Tutorial 2
+section: basicTutorial2
+path: docs/basicTutorial2.html
+---
+
+<h1 class="ui dividing header">
+Basic Tutorial -- part 2: dynamic configurations
+</h1>
+
+In this tutorial, we learn how to install and configure an LD-R application.
+In order to install your LD-R instance, you first need to clone the LD-R Github repository:
+
+<code class="ui label">git clone https://github.com/ali1k/ld-r.git</code>
+
+the next step is to install the required npm packages by simply running the install script:
+
+<code class="ui label">./install</code>
+
+You need to wait for a minute (or more!) until all the npm packages are downloaded. Fortunately you only need to do this step once (unless you want to upgrade a package!).
+
+
+<div class="ui info message">
+  <i class="ui big yellow info icon"></i>
+  For an in-depth installation of the LD-R (also discussing the requirements for non-Unix systems), you can follow the instructions available <a href="http://ld-r.org/docs/quickstart.html">here</a>.
+</div>
+
+
+There are four main configuration files in the `configs` folder you need to pay attention to:
+
+- `general.js`: this file includes the general information of your app and is the main place to turn on/off the supported features of your app.
+- `server.js`: includes data about the port on which your app will be running and more importantly the data about the SPARQL endpoints you are interacting with.
+- `reactor.js`: includes data about the different reactor scopes [link to scopes] and configurations which can be used in your app.
+- `facets.js`: includes configuration data for the faceted browser apps you want to create.
+
+LD-R supports two ways to configure a linked data application:
+
+- *Static Configuration*: For this option, you don't need to provide a read/write SPARQL endpoint for your configurations and can enter and store all your configurations statically in `server.js`, `reactor.js` and `facets.js`. This options is very fast and more secure (particularly for server configs) but the cost of this option is that you need to restart your server (or build your app again) anytime you modify your configurations. You can follow this [link to static] tutorial to learn how this option works.
+
+- *Dynamic Configurations*: This option uses a SPARQL endpoint to store your configurations dynamically as RDF. This is a very flexible approach which allows updating your configurations on-the-fly without the need to restart/rebuild your app. It also facilitates sharing and querying of your configs. In order to enable this option you need to change the `general.js` file and set 'enableDynamicServerConfiguration', 'enableDynamicReactorConfiguration' and 'enableDynamicFacetsConfiguration' to 1 depending on what type of configs you want to store dynamically. It is important to mention that static configs always have a higher priority than the dynamic configs. This means if you have both static and dynamic configs, the static ones will overwrite the dynamic ones.
+
+In this tutorial we mainly focus on the dynamic configurations.
+For this option you need to specify a SPARQL endpoint together with a graph name on which you store your configs.
+You can set the 'configDatasetURI' value in `general.js` file to change the graph name of your configurations.
+And for the SPARQL endpoint used for the configuration, you need to add the specifications of your endpoint in `server.js` file. The 'generic' configuration in `server.js` is used as default endpoint for the LD-R app but you can also add dataset-specific endpoints there, for example the following setting identifies an endpoint for the configurations stored on a graph called 'http://ld-r.org/configurations' which is the default graph name for configurations in LD-R:
+
+```
+'http://ld-r.org/configurations': {
+    host: 'localhost', port: 3020, path: '/sparql/', endpointType: 'ClioPatria'
+},
+```
+
+In this case I use a locally installed ClioPatria [link] triple store to store my dynamic configs. You can change it to your preferable triple store e.g. Virtuoso, Stardog, Blazegraph, etc. There is a sample config available in `server.js` for other triple stores which might slightly differ.
+
+* In LD-R there is a subtle difference between graph names and dataset URIs. By default these two are the same but in some situations where you want to create multiple datasets with different configurations on the same graph name, these values can be different.
+
+In order to bootstrap the configurations, I import some basic configs from `./plugins/dynamicConfiguration/schema/configs.ttl` to the specified configuration graph in my triple store. These sample configs make it easy to clone and create new configs.
+
+Now that I have setup my LD-R app and connected it to an updatable triple store, I can build the app and enjoy working with dynamic configurations:
+
+`npm run build`
+
+The above command will build your app (after a few seconds or minutes to minify/optimise all your js files for the production mode). As a result your app will run on port 4000 (or any port you specified in your `server.js` file).
+
+<div>
+    <img class="ui centered image" src="/assets/img/basicTutorial2/t1.png" alt="t1" />
+</div>
+
+Go to <a href="http://localhost:4000">http://localhost:4000</a> to check your app.
+
+<div>
+    <img class="ui centered image" src="/assets/img/basicTutorial2/t2.png" alt="t2" />
+</div>
+
+If everything works well, by clicking on the config icon (as shown above), you should go to the following page where you see the imported configs:
+
+<div>
+    <img class="ui centered image" src="/assets/img/basicTutorial2/t3.png" alt="t3" />
+</div>
+
+As you can see, the main resource types we are dealing with for configuration are ReactorConfig, FacetsConfig and ServerConfig. You can use the faceted browser to browse the existing configurations based on their scopes and types. By clicking on a resource you will see its corresponding configurations:
+
+<div>
+    <img class="ui centered image" src="/assets/img/basicTutorial2/t4.png" alt="t4" />
+</div>
+
+Here you can clone a resource to change and customize it. You can also edit and delete property values of a resource. There is also the possibility to add new and arbitrary properties to a resource:
+
+<div>
+    <img class="ui centered image" src="/assets/img/basicTutorial2/t5.png" alt="t5" />
+</div>
+
+The above tool is supported by a recommender which allows you to select fromt the existing property values in LD-R.
+
+In the rest of this tutorial, we demonstrate how to add a new dataset to LD-R and how to configura it dynamically.
