@@ -49,10 +49,16 @@ There are four main configuration files in the `configs` folder you need to pay 
 </p>
 <p>
 LD-R supports two ways to configure a linked data application:
+<div class="ui list">
+  <div class="item">
+    - *Static Configuration*: For this option, you don't need to provide a read/write SPARQL endpoint for your configurations and can enter and store all your configurations statically in `server.js`, `reactor.js` and `facets.js`. This options is very fast and more secure (particularly for server configs) but the cost of this option is that you need to restart your server (or build your app again) anytime you modify your configurations. You can follow this [link to static] tutorial to learn how this option works.
+  </div>
+  <div class="item">
+    - *Dynamic Configurations*: This option uses a SPARQL endpoint to store your configurations dynamically as RDF. This is a very flexible approach which allows updating your configurations on-the-fly without the need to restart/rebuild your app. It also facilitates sharing and querying of your configs. In order to enable this option you need to change the `general.js` file and set 'enableDynamicServerConfiguration', 'enableDynamicReactorConfiguration' and 'enableDynamicFacetsConfiguration' to 1 depending on what type of configs you want to store dynamically. It is important to mention that static configs always have a higher priority than the dynamic configs. This means if you have both static and dynamic configs, the static ones will overwrite the dynamic ones.
+  </div>
+</div>
 
-- *Static Configuration*: For this option, you don't need to provide a read/write SPARQL endpoint for your configurations and can enter and store all your configurations statically in `server.js`, `reactor.js` and `facets.js`. This options is very fast and more secure (particularly for server configs) but the cost of this option is that you need to restart your server (or build your app again) anytime you modify your configurations. You can follow this [link to static] tutorial to learn how this option works.
 
-- *Dynamic Configurations*: This option uses a SPARQL endpoint to store your configurations dynamically as RDF. This is a very flexible approach which allows updating your configurations on-the-fly without the need to restart/rebuild your app. It also facilitates sharing and querying of your configs. In order to enable this option you need to change the `general.js` file and set 'enableDynamicServerConfiguration', 'enableDynamicReactorConfiguration' and 'enableDynamicFacetsConfiguration' to 1 depending on what type of configs you want to store dynamically. It is important to mention that static configs always have a higher priority than the dynamic configs. This means if you have both static and dynamic configs, the static ones will overwrite the dynamic ones.
 </p>
 <p>
 In this tutorial we mainly focus on the dynamic configurations.
