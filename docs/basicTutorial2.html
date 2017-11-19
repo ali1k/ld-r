@@ -9,8 +9,8 @@ path: docs/basicTutorial2.html
 Basic Tutorial -- part 2: dynamic configurations
 </h1>
 <p>
-In this tutorial, we learn how to install and configure an LD-R application.
-In order to install your LD-R instance, you first need to clone the LD-R Github repository:
+In this tutorial, we learn how to install and dynalically configure an LD-R application.
+In order to install your LD-R instance, you first need to clone the <a href="https://github.com/ali1k/ld-r">LD-R Github repository</a>:
 </p>
 <pre>
 <code class="ui label">git clone https://github.com/ali1k/ld-r.git</code>
@@ -27,23 +27,23 @@ You need to wait for a minute (or more!) until all the npm packages are download
 
 <div class="ui info message">
   <i class="ui big yellow info icon"></i>
-  For an in-depth installation of the LD-R (also discussing the requirements for non-Unix systems), you can follow the instructions available <a href="http://ld-r.org/docs/quickstart.html">here</a>.
+  For an in-depth installation of the LD-R (also discussing the requirements for non-Unix systems), you can follow the instructions available <a href="http://ld-r.org/docs/quickstart.html"><b>here</b></a>.
 </div>
 
 <p>
 There are four main configuration files in the `configs` folder you need to pay attention to:
 <div class="ui list">
   <div class="item">
-    - `general.js`: this file includes the general information of your app and is the main place to turn on/off the supported features of your app.
+    - <b>general.js</b>: this file includes the general information of your app and is the main place to turn on/off the supported features of your app.
   </div>
   <div class="item">
-    - `server.js`: includes data about the port on which your app will be running and more importantly the data about the SPARQL endpoints you are interacting with.
+    - <b>server.js</b>: includes data about the port on which your app will be running and more importantly the data about the SPARQL endpoints you are interacting with.
   </div>
   <div class="item">
-    - `reactor.js`: includes data about the different reactor scopes [link to scopes] and configurations which can be used in your app.
+    - <b>reactor.js</b>: includes data about the different reactor scopes [link to scopes] and configurations which can be used in your app.
   </div>
   <div class="item">
-    - `facets.js`: includes configuration data for the faceted browser apps you want to create.
+    - <b>facets.js</b>: includes configuration data for the faceted browser apps you want to create.
   </div>
 </div>
 </p>
@@ -51,10 +51,10 @@ There are four main configuration files in the `configs` folder you need to pay 
 LD-R supports two ways to configure a linked data application:
 <div class="ui list">
   <div class="item">
-    - *Static Configuration*: For this option, you don't need to provide a read/write SPARQL endpoint for your configurations and can enter and store all your configurations statically in `server.js`, `reactor.js` and `facets.js`. This options is very fast and more secure (particularly for server configs) but the cost of this option is that you need to restart your server (or build your app again) anytime you modify your configurations. You can follow this [link to static] tutorial to learn how this option works.
+    - <b>Static Configuration</b>: For this option, you don't need to provide a read/write SPARQL endpoint for your configurations and can enter and store all your configurations statically in `server.js`, `reactor.js` and `facets.js`. This options is very fast and more secure (particularly for server configs) but the cost of this option is that you need to restart your server (or build your app again) anytime you modify your configurations. You can follow this [link to static] tutorial to learn how this option works.
   </div>
   <div class="item">
-    - *Dynamic Configurations*: This option uses a SPARQL endpoint to store your configurations dynamically as RDF. This is a very flexible approach which allows updating your configurations on-the-fly without the need to restart/rebuild your app. It also facilitates sharing and querying of your configs. In order to enable this option you need to change the `general.js` file and set 'enableDynamicServerConfiguration', 'enableDynamicReactorConfiguration' and 'enableDynamicFacetsConfiguration' to 1 depending on what type of configs you want to store dynamically. It is important to mention that static configs always have a higher priority than the dynamic configs. This means if you have both static and dynamic configs, the static ones will overwrite the dynamic ones.
+    - <b>Dynamic Configurations</b>: This option uses a SPARQL endpoint to store your configurations dynamically as RDF. This is a very flexible approach which allows updating your configurations on-the-fly without the need to restart/rebuild your app. It also facilitates sharing and querying of your configs. In order to enable this option you need to change the `general.js` file and set 'enableDynamicServerConfiguration', 'enableDynamicReactorConfiguration' and 'enableDynamicFacetsConfiguration' to 1 depending on what type of configs you want to store dynamically. It is important to mention that static configs always have a higher priority than the dynamic configs. This means if you have both static and dynamic configs, the static ones will overwrite the dynamic ones.
   </div>
 </div>
 
