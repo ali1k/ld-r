@@ -73,7 +73,7 @@ And for the SPARQL endpoint used for the configuration, you need to add the spec
 },
 </pre>
 <p>
-In this case I use a locally installed ClioPatria [link] triple store to store my dynamic configs. You can change it to your preferable triple store e.g. Virtuoso, Stardog, Blazegraph, etc. There is a sample config available in `server.js` for other triple stores which might slightly differ.
+In this case I use a locally installed <a href="https://cliopatria.swi-prolog.org/home">ClioPatria triple store</a> to store my dynamic configs. You can change it to your preferable triple store e.g. Virtuoso, Stardog, Blazegraph, etc. There is a sample config available in `server.js` for other triple stores which might slightly differ.
 </p>
 
 <div class="ui info message">
@@ -82,7 +82,7 @@ In this case I use a locally installed ClioPatria [link] triple store to store m
 </div>
 
 <p>
-In order to bootstrap the configurations, I import some basic configs from `./plugins/dynamicConfiguration/schema/configs.ttl` to the specified configuration graph in my triple store. These sample configs make it easy to clone and create new configs.
+In order to bootstrap the configurations, I import some basic configs from `<a href="https://github.com/ali1k/ld-r/blob/master/plugins/dynamicConfiguration/schema/configs.ttl">./plugins/dynamicConfiguration/schema/configs.ttl</a>` to the specified configuration graph in my triple store. These sample configs make it easy to clone and create new configs.
 </p>
 <p>
 Now that I have setup my LD-R app and connected it to an updatable triple store, I can build the app and enjoy working with dynamic configurations:
