@@ -193,6 +193,21 @@ class DynamicConfigurator {
                 graph ='';
                 graphEnd = '';
             }
+            const noAuthQuery  = `
+            SELECT DISTINCT ?config ?label ?host ?port ?path ?endpointType ?setting ?settingValue WHERE {
+                ${graph}
+                    ?config a ldr:ServerConfig ;
+                            ldr:dataset <${datasetURI}> ;
+                            ldr:host ?host ;
+                            ldr:port ?port ;
+                            ldr:path ?path ;
+                            ldr:endpointType ?endpointType ;
+                            ?setting ?settingValue .
+                            OPTIONAL { ?config rdfs:label ?label . }
+                            FILTER (?setting !=rdf:type && ?setting !=ldr:dataset && ?setting !=ldr:host && ?setting !=ldr:port && ?setting !=ldr:path && ?setting !=ldr:endpointType)
+                ${graphEnd}
+            }
+            `;
             let query;
             if(userSt){
                 query = `
@@ -229,27 +244,26 @@ class DynamicConfigurator {
                 }
                 `;
             }else{
-                query = `
-                SELECT DISTINCT ?config ?label ?host ?port ?path ?endpointType ?setting ?settingValue WHERE {
-                    ${graph}
-                        ?config a ldr:ServerConfig ;
-                                ldr:dataset <${datasetURI}> ;
-                                ldr:host ?host ;
-                                ldr:port ?port ;
-                                ldr:path ?path ;
-                                ldr:endpointType ?endpointType ;
-                                ?setting ?settingValue .
-                                OPTIONAL { ?config rdfs:label ?label . }
-                                FILTER (?setting !=rdf:type && ?setting !=ldr:dataset && ?setting !=ldr:host && ?setting !=ldr:port && ?setting !=ldr:path && ?setting !=ldr:endpointType)
-                    ${graphEnd}
-                }
-                `;
+                query = noAuthQuery;
             }
             //send request
             let self = this;
             rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                 config = self.parseServerConfigs(config, datasetURI, res);
-                callback(config);
+                if(userSt && !config.resultSetCount){
+                    //if no config was found for user in the auth mode, try to get a random config from other users
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + noAuthQuery, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                        config = self.parseServerConfigs(config, datasetURI, res);
+                        callback(config);
+                    }).catch(function (err) {
+                        console.log('Attempt 2: Error in server config query:', prefixes + query);
+                        console.log(sparql_endpoint_error);
+                        console.log('---------------------------------------------------------');
+                        callback(config);
+                    });
+                }else{
+                    callback(config);
+                }
             }).catch(function (err) {
                 console.log('Error in server config query:', prefixes + query);
                 console.log(sparql_endpoint_error);
@@ -365,6 +379,22 @@ class DynamicConfigurator {
                 graph ='';
                 graphEnd = '';
             }
+            let noAuthQuery = `
+            SELECT DISTINCT ?config ?label ?list ?configProperty ?setting ?settingValue WHERE {
+                ${graph}
+                    ?config a ldr:FacetsConfig ;
+                            ldr:dataset <${datasetURI}> ;
+                            ldr:list ?list ;
+                            ldr:config ?facetPConfig .
+                            OPTIONAL { ?config rdfs:label ?label . }
+                            OPTIONAL { ?facetPConfig a ldr:FacetsPropertyConfig ;
+                                          ldr:property ?configProperty ;
+                                          ?setting ?settingValue .
+                                      FILTER (?setting !=rdf:type && ?setting !=ldr:property)
+                            }
+                ${graphEnd}
+            }
+            `;
             let query;
             if(userSt){
                 query = `
@@ -403,29 +433,27 @@ class DynamicConfigurator {
                 }
                 `;
             }else{
-                query = `
-                SELECT DISTINCT ?config ?label ?list ?configProperty ?setting ?settingValue WHERE {
-                    ${graph}
-                        ?config a ldr:FacetsConfig ;
-                                ldr:dataset <${datasetURI}> ;
-                                ldr:list ?list ;
-                                ldr:config ?facetPConfig .
-                                OPTIONAL { ?config rdfs:label ?label . }
-                                OPTIONAL { ?facetPConfig a ldr:FacetsPropertyConfig ;
-                                              ldr:property ?configProperty ;
-                                              ?setting ?settingValue .
-                                          FILTER (?setting !=rdf:type && ?setting !=ldr:property)
-                                }
-                    ${graphEnd}
-                }
-                `;
+                query = noAuthQuery;
             }
             //send request
             //console.log(prefixes + query);
             let self = this;
             rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                 config = self.parseFacetsConfigs(config, datasetURI, res);
-                callback(config);
+                //if no config was found for user in the auth mode, try to get a random config from other users
+                if(userSt && !config.resultSetCount){
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + noAuthQuery, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                        config = self.parseFacetsConfigs(config, datasetURI, res);
+                        callback(config);
+                    }).catch(function (err) {
+                        console.log('Attempt2: Error in facets config query:', prefixes + query);
+                        console.log(sparql_endpoint_error);
+                        console.log('---------------------------------------------------------');
+                        callback(config);
+                    });
+                }else{
+                    callback(config);
+                }
             }).catch(function (err) {
                 console.log('Error in facets config query:', prefixes + query);
                 console.log(sparql_endpoint_error);
@@ -463,6 +491,27 @@ class DynamicConfigurator {
                 graph ='';
                 graphEnd = '';
             }
+            let noAuthQuery = `
+            SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue ?constraintProperty ?constraintObject ?constraintEnabled ?cSetting ?cValue  WHERE {
+                ${graph}
+                    ?config a ldr:ReactorConfig ;
+                            ldr:dataset <${datasetURI}> ;
+                            ldr:scope ?scope ;
+                            ?setting ?settingValue .
+                            OPTIONAL { ?config rdfs:label ?label . }
+                            FILTER (?setting !=rdf:type && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset && ?setting !=ldr:constraint)
+                            OPTIONAL {
+                                ?config ldr:constraint ?constraint .
+                                ?constraint a ldr:Constraint ;
+                                ldr:property ?constraintProperty ;
+                                ldr:object ?constraintObject ;
+                                ldr:enabled ?constraintEnabled .
+                                ?constraint ?cSetting ?cValue .
+                                FILTER (?cSetting !=ldr:property && ?cSetting !=ldr:object && ?cSetting !=ldr:enabled && ?cSetting !=rdfs:label)
+                            }
+                ${graphEnd}
+            }
+            `;
             let query;
             if(userSt){
                 query = `
@@ -511,27 +560,7 @@ class DynamicConfigurator {
                 }
                 `;
             }else{
-                query = `
-                SELECT DISTINCT ?config ?scope ?label ?setting ?settingValue ?constraintProperty ?constraintObject ?constraintEnabled ?cSetting ?cValue  WHERE {
-                    ${graph}
-                        ?config a ldr:ReactorConfig ;
-                                ldr:dataset <${datasetURI}> ;
-                                ldr:scope ?scope ;
-                                ?setting ?settingValue .
-                                OPTIONAL { ?config rdfs:label ?label . }
-                                FILTER (?setting !=rdf:type && ?setting !=ldr:scope && ?setting !=rdfs:label && ?setting !=ldr:dataset && ?setting !=ldr:constraint)
-                                OPTIONAL {
-                                    ?config ldr:constraint ?constraint .
-                                    ?constraint a ldr:Constraint ;
-                                    ldr:property ?constraintProperty ;
-                                    ldr:object ?constraintObject ;
-                                    ldr:enabled ?constraintEnabled .
-                                    ?constraint ?cSetting ?cValue .
-                                    FILTER (?cSetting !=ldr:property && ?cSetting !=ldr:object && ?cSetting !=ldr:enabled && ?cSetting !=rdfs:label)
-                                }
-                    ${graphEnd}
-                }
-                `;
+                query = noAuthQuery;
             }
 
             //send request
@@ -540,7 +569,21 @@ class DynamicConfigurator {
             rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
                 //console.log(res);
                 config = self.parseDatasetConfigs(config, datasetURI, res);
-                callback(config);
+                //if no config was found for user in the auth mode, try to get a random config from other users
+                if(userSt && !config.resultSetCount){
+                    rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + noAuthQuery, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+                        //console.log(res);
+                        config = self.parseDatasetConfigs(config, datasetURI, res);
+                        callback(config);
+                    }).catch(function (err) {
+                        console.log('Attempt2: Error in dataset config query:', prefixes + query);
+                        console.log(sparql_endpoint_error);
+                        console.log('---------------------------------------------------------');
+                        callback(config);
+                    });
+                }else{
+                    callback(config);
+                }
             }).catch(function (err) {
                 console.log('Error in dataset config query:', prefixes + query);
                 console.log(sparql_endpoint_error);
@@ -1254,6 +1297,8 @@ class DynamicConfigurator {
         let output = config;
         let parsed = JSON.parse(body);
         let settingProp = '';
+        let resultSetCount = parsed.results.bindings.length;
+        output.resultSetCount = resultSetCount;
         parsed.results.bindings.forEach(function(el) {
             settingProp = '';
             if(el.scope.value === 'D'){
@@ -1328,6 +1373,8 @@ class DynamicConfigurator {
         let output = config;
         let parsed = JSON.parse(body);
         let settingProp = '';
+        let resultSetCount = parsed.results.bindings.length;
+        output.resultSetCount = resultSetCount;
         parsed.results.bindings.forEach(function(el) {
             if(!output.facets[datasetURI]){
                 output.facets[datasetURI] = {};
@@ -1370,6 +1417,8 @@ class DynamicConfigurator {
         let output = config;
         let parsed = JSON.parse(body);
         let settingProp = '', host ='';
+        let resultSetCount = parsed.results.bindings.length;
+        output.resultSetCount = resultSetCount;
         parsed.results.bindings.forEach(function(el) {
             if(!output.sparqlEndpoint[datasetURI]){
                 output.sparqlEndpoint[datasetURI] = {};
