@@ -26,7 +26,7 @@ class Tree extends React.Component {
     render() {
         let self = this;
         let childNodes;
-        if(this.props.tree.children){
+        if(this.props.tree && this.props.tree.children){
             childNodes = this.props.tree.children.map((node, index) => {
                 if(node.children){
                     return (
@@ -43,17 +43,24 @@ class Tree extends React.Component {
                 }
 
             });
-        }
-        return (
-            <div className="item">
-                {this.makeNode(this.props.tree.selected, this.props.tree.value, this.props.tree.id, this.props.tree.count, this.props.tree.derived)}
-                <div className="content">
-                    <div className="compact list">
-                        {childNodes}
+            return (
+                <div className="item">
+                    {this.makeNode(this.props.tree.selected, this.props.tree.value, this.props.tree.id, this.props.tree.count, this.props.tree.derived)}
+                    <div className="content">
+                        <div className="compact list">
+                            {childNodes}
+                        </div>
                     </div>
                 </div>
-            </div>
-        );
+            );
+        }else{
+            return (
+                <div className="item">
+
+                </div>
+            );
+        }
+
     }
 }
 

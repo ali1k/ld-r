@@ -19,12 +19,22 @@ class TaxonomyBrowser extends React.Component {
             }
         });
         let continueFlag = 0;
+        const stackDepth = 10;
+        let depthCounter = 0;
+        let parents = [];
         while(continueFlag !== 1){
+            parents = [];
+            depthCounter++;
+            //prevent deadlock situation
+            if(depthCounter > stackDepth){
+                break;
+            }
             continueFlag = 0;
             //find immediate parents first
             for(let prop in tree){
                 continueFlag++;
                 parent = child_parent[prop];
+                parents.push(parent);
                 if(!parent){
                     parent = 'Thing';
                 }
@@ -42,26 +52,17 @@ class TaxonomyBrowser extends React.Component {
                     }
                 }
             }
-            if(continueFlag === 1){
+            let checkThings = 0;
+            //if there is only Thing as parent left, stop the loop
+            parents.forEach((p)=>{
+                if(p !== 'Thing'){
+                    checkThings++;
+                }
+            });
+            if(!checkThings || continueFlag === 1){
                 break;
             }
-            //merge duplicates
-            for(let prop in tree){
-                for(let prop2 in tree){
-                    if(prop!==prop2){
-                        if(tree[prop2].children){
-                            tree[prop2].children.forEach((child, index)=>{
-                                if(child.id === prop){
-                                    //found a match
-                                    //tree[prop].count = parseInt(tree[prop].count) + parseInt(child.count);
-                                    tree[prop2].children[index] = tree[prop];
-                                    tree[prop].active = 0;
-                                }
-                            });
-                        }
-                    }
-                }
-            }
+
             //delete inactive ones
             for(let prop in tree){
                 if(!tree[prop].active){
