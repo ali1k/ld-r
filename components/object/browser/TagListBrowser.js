@@ -29,7 +29,7 @@ class TagListBrowser extends React.Component {
     render() {
         let self = this;
         let title, cls, selected = 0;
-        let tagsDIV = self.props.instances.map((node)=>{
+        let tagsDIV = self.props.instances.map((node, index)=>{
             if(self.doesExist(node.value)){
                 selected = 1;
                 cls = 'ui label blue';
@@ -43,7 +43,7 @@ class TagListBrowser extends React.Component {
             }else if(this.props.shortenURI && !(this.props.config && this.props.config.shortenURI === 0)){
                 title = URIUtil.getURILabel(title);
             }
-            return (<a style={{marginTop: 1}} key={node.value} className={cls} onClick={self.selectTag.bind(this, node.value)}>{title} <span className="ui small blue circular label">{node.total}</span></a>);
+            return (<a style={{marginTop: 1}} key={index} className={cls} onClick={self.selectTag.bind(this, node.value)}>{title} <span className="ui small blue circular label">{node.total}</span></a>);
         });
         return (
             <div className="ui" ref="tagListBrowser">
