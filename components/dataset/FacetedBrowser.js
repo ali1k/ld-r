@@ -8,28 +8,25 @@ import createASampleFacetsConfig from '../../actions/createASampleFacetsConfig';
 import loadFacets from '../../actions/loadFacets';
 import getEnvState from '../../actions/getEnvState';
 import DatasetFB from './DatasetFB';
+import WaitAMoment from '../WaitAMoment';
 
 class FacetedBrowser extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, datasetConfig: {}, analysisProps: {}, pivotConstraint: '', envState: [], importedEnvState: 0, importedMode: 0};
+        this.state = {selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, datasetConfig: {}, analysisProps: {}, pivotConstraint: '', envState: this.props.FacetedBrowserStore.envState, importedEnvState: this.props.FacetedBrowserStore.importedEnvState};
     }
     componentDidMount() {
-        if(this.props.FacetedBrowserStore.importedEnvState){
-            this.context.executeAction(getEnvState, { stateURI: this.props.FacetedBrowserStore.importedEnvState});
-            this.setState({importedEnvState: this.props.FacetedBrowserStore.importedEnvState, importedMode: 1});
+        //check if it is loaded from an address
+        //then: set the state and generate the UI
+        if(this.state.importedEnvState){
+            //regenerate the UI from a given state
+            if(this.state.envState.length){
+                this.selectFacetsAndLoadEmptyFacets(this.state.envState[0]);
+            }
         }
     }
     componentDidUpdate() {
-        //check if it is loaded from an address
-        //then: set the state and generate the UI
-        let vars = this.props.FacetedBrowserStore;
-        if(this.state.importedMode){
-            if(vars.envState.length){
-                this.state.envState.push(vars.envState[0]);
-                this.loadAnEnvState(vars.envState[0]);
-            }
-        }
+
     }
     handlePivotChange(queryConstraints, config) {
         let datasetURI = config.pivotDataset[0];
@@ -50,8 +47,7 @@ class FacetedBrowser extends React.Component {
         this.setState({selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, analysisProps: {}, pivotConstraint: queryConstraints});
         this.context.executeAction(loadFacets, {mode: 'init', id: datasetURI, page: 1, selection: { }, pivotConstraint: queryConstraints});
     }
-    loadAnEnvState(env){
-        //console.log(env);
+    selectFacetsAndLoadEmptyFacets(env){
         let selection = {};
         let self = this;
         let zeroLengthSelection = [];
@@ -66,18 +62,22 @@ class FacetedBrowser extends React.Component {
         if(env.searchTerm && env.searchTerm === 'ldr_showAll'){
             showAllResource = 1;
         }
-        this.setState({importedMode: 0, selection: env.selection, expandedFacet: 0, showAllResources: showAllResource, expandedResources: 0, hideFirstCol: false, invert: env.invert, range: env.range, datasetConfig: env.datasetConfig, analysisProps: env.analysisProps, pivotConstraint: env.pivotConstraint});
-        this.context.executeAction(loadFacets, {mode: 'init', isPivotChange: env.isPivotChange, stateURI: env.stateURI, id: env.id, searchTerm: env.searchTerm, page: env.page, pivotConstraint: env.pivotConstraint, selection: { prevSelection: selection, options: {invert: env.invert, range: env.range, analysisProps: env.analysisProps, facetConfigs: {}}}});
+        this.setState({selection: env.selection, expandedFacet: 0, showAllResources: showAllResource, expandedResources: 0, hideFirstCol: false, invert: env.invert, range: env.range, datasetConfig: env.datasetConfig, analysisProps: env.analysisProps, pivotConstraint: env.pivotConstraint});
         //full load facets with no slected values
         zeroLengthSelection.forEach(function(el){
             self.context.executeAction(loadFacets, {mode: 'sideEffect', id: env.id, page: env.page, selection: {status: 0, propertyURI: el, prevSelection: selection, options: {invert: env.invert, range: env.range, analysisProps: env.analysisProps, facetConfigs: {}}}});
         });
+        return selection;
+    }
+    loadPivotDataset(env){
+        let selection = this.selectFacetsAndLoadEmptyFacets(env);
+        this.context.executeAction(loadFacets, {mode: 'init', isPivotChange: env.isPivotChange, stateURI: env.stateURI, id: env.id, searchTerm: env.searchTerm, page: env.page, pivotConstraint: env.pivotConstraint, selection: { prevSelection: selection, options: {invert: env.invert, range: env.range, analysisProps: env.analysisProps, facetConfigs: {}}}});
     }
     handleBackToPrevPivotState(){
         //find the env
         let env = this.state.envState[this.state.envState.length-1];
         this.state.envState.splice(-1,1);
-        this.loadAnEnvState(env);
+        this.loadPivotDataset(env);
     }
     closeEnvDesc(){
         this.setState({envState: []});
@@ -520,10 +520,6 @@ class FacetedBrowser extends React.Component {
             }
             let storeObj = this.props.FacetedBrowserStore;
             let dcnf = storeObj.datasetConfig;
-            //to update the dataset view if it is stored as a state
-            if(this.state.datasetConfig.datasetViewer){
-                dcnf.datasetViewer = this.state.datasetConfig.datasetViewer;
-            }
             let cnf = storeObj.config;
             let facetConfigs = this.getNecessaryFaccetsConfig();
             if(dcnf.allowInlineConfig){
@@ -551,18 +547,16 @@ class FacetedBrowser extends React.Component {
                 <div className="ui fluid container ldr-padding" ref="facetedBrowser">
                     <div className="ui vertically padded stackable grid">
                         <div className="ui column">
-                            <div className="ui segment">
-                                {this.state.envState.length ?
-                                    <h2>Wait a moment until the new environemnt is generated...</h2>
-                                    :
-                                    <div>
-                                        <h2>List of available datasets to browse</h2>
-                                        <div className="ui big divided animated list">
-                                            No Dataset is selected to browse!
-                                        </div>
+                            {this.state.pivotConstraint ?
+                                <WaitAMoment />
+                                :
+                                <div className="ui segment">
+                                    <h2>List of available datasets to browse</h2>
+                                    <div className="ui big divided animated list">
+                                        No Dataset is selected to browse!
                                     </div>
-                                }
-                            </div>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>

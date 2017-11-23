@@ -8,11 +8,12 @@ import {enableAuthentication, enableQuerySaveImport} from '../configs/general';
 import {checkViewAccess, checkEditAccess} from '../services/utils/accessManagement';
 import { Dropdown, Button, Divider, Form, Progress } from 'semantic-ui-react';
 import YASQEViewer from '../components/object/viewer/individual/YASQEViewer';
+import WaitAMoment from './WaitAMoment';
 
 class WYSIWYQ extends React.Component {
     constructor(props){
         super(props);
-        this.state = {stateURI: ''};
+        this.state = {stateURI: '', isGenerating: 0};
     }
     componentDidMount() {
 
@@ -25,6 +26,7 @@ class WYSIWYQ extends React.Component {
         let page = this.props.QueryImportStore.queries[id].page;
         let selection = this.props.QueryImportStore.queries[id].selection[0];
         let dataset = this.props.QueryImportStore.queries[id].dataset[0];
+        this.setState({isGenerating: 1});
         if(selection === 'undefined'){
             this.context.executeAction(navigateAction, {
                 url: '/dataset/'+page+'/'+encodeURIComponent(dataset)
@@ -85,20 +87,27 @@ class WYSIWYQ extends React.Component {
         return (
             <div className="ui fluid container ldr-padding-more" ref="WYSIWYQ">
                 <div className="ui grid">
-                    <div className="ui column">
-                        <h2>Import an Existing Query</h2>
-                        {dss.length ?
-                            <Form size='big'>
-                                <Dropdown onChange={this.handleChange.bind(this)} placeholder='Select a Query' fluid search selection options={dss_options} />
-                                {queryDIV}
-                                <Divider hidden />
-                                {this.state.stateURI ? <div className='ui big blue button' onClick={this.handleWYSIWYQ.bind(this)}>Turn Query to UI</div> : null}
-                                <Divider hidden />
-                            </Form>
-                            :
-                            <div className="ui warning message">No query was found!</div>
-                        }
-                    </div>
+                    {this.state.isGenerating ?
+                        <div className="ui column">
+                            <WaitAMoment msg='Wait a moment until the browsing environemnt is generated...'/>
+                        </div>
+                        :
+                        <div className="ui column">
+                            <h2>Import an Existing Query</h2>
+                            {dss.length ?
+                                <Form size='big'>
+                                    <Dropdown onChange={this.handleChange.bind(this)} placeholder='Select a Query' fluid search selection options={dss_options} />
+                                    {queryDIV}
+                                    <Divider hidden />
+                                    {this.state.stateURI ? <div className='ui big blue button' onClick={this.handleWYSIWYQ.bind(this)}>Turn Query to UI</div> : null}
+                                    <Divider hidden />
+                                </Form>
+                                :
+                                <div className="ui warning message">No query was found!</div>
+                            }
+                        </div>
+                    }
+
                 </div>
             </div>
         );

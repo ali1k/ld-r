@@ -44,7 +44,12 @@ class FacetedBrowserStore extends BaseStore {
                 this.datasetConfig[p] = dynamicDatasetConfig.dataset[datasetURI][p];
             }
         }
-
+        //add env state configs to default config
+        if(this.envState.length && this.envState[0].datasetConfig){
+            for(let prop in this.envState[0].datasetConfig){
+                this.datasetConfig[prop] = this.envState[0].datasetConfig[prop];
+            }
+        }
         this.config = staticConfig.facets.generic;
         if(staticConfig.facets[datasetURI]){
             for(let p in staticConfig.facets[datasetURI]){
@@ -125,7 +130,7 @@ class FacetedBrowserStore extends BaseStore {
             this.facets[prop] = payload.selection[prop];
             this.facetsCount[prop] = payload.selection[prop].length;
             if(this.config.list.indexOf(prop) === -1){
-                this.config.list.push(prop);
+                this.config.list.push(this.facets);
             }
         }
         this.emitChange();
@@ -145,7 +150,7 @@ class FacetedBrowserStore extends BaseStore {
         if(options.datasetConfig){
             datasetConfig = options.datasetConfig;
         }
-        this.envState.push({stateURI: payload.resourceURI, desc: stateObj.label, searchTerm: stateObj.searchTerm, selection: selection.prevSelection, pivotConstraint: stateObj.pivotConstraint, id: this.datasetURI,  invert: options.invert, range: options.range, datasetConfig: datasetConfig, analysisProps: options.analysisProps, page: stateObj.page});
+        this.envState.push({stateURI: payload.resourceURI, desc: stateObj.label, searchTerm: stateObj.searchTerm, selection: selection.prevSelection, pivotConstraint: stateObj.pivotConstraint, id: payload.id,  invert: options.invert, range: options.range, datasetConfig: datasetConfig, analysisProps: options.analysisProps, page: stateObj.page});
         this.emitChange();
     }
     handleFacetSideEffectsCount(payload) {

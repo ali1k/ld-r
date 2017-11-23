@@ -35,14 +35,43 @@ export default function loadFacets(context, payload, done) {
         ],
         // final callback
         (err, results) => {
-            if(payload.stateURI || payload.isPivotChange){
-                //context.dispatch('SWITCH_TO_ENV_STATE', {stateURI: payload.stateURI});
+            if(payload.isPivotChange){
                 context.dispatch('LOAD_MASTER_FROM_STATE_SUCCESS', {stateURI: payload.stateURI, id: payload.id, selection: payload.selection.prevSelection});
             }
             context.dispatch('LOADED_DATA', {});
             done();
         });
 
+    }else if(payload.mode === 'envState'){
+        //used for loading progress indicator
+        context.dispatch('LOADING_DATA', {});
+        async.parallel([
+            (cback) => {
+                //dynamic config
+                context.executeAction(loadDynamicFacetsConfig, payload, cback);
+            },
+            (cback) => {
+                context.service.read('facet.facetsSecondLevel', payload, {timeout: 50 * 1000}, function (err, res) {
+                    //end = new Date().getTime();
+                    //timeElapsed = end - start;
+                    if (err) {
+                        context.dispatch('LOAD_FACETS_FAILURE', err);
+                    } else {
+                        context.dispatch('LOAD_FACETS_RESOURCES_SUCCESS', res);
+                    }
+                    context.dispatch('UPDATE_PAGE_TITLE', {
+                        pageTitle: (appFullTitle + ' | Faceted Browser | ' + decodeURIComponent(payload.id)) || ''
+                    });
+                    cback();
+                });
+            }
+        ],
+        // final callback
+        (err, results) => {
+            context.dispatch('LOAD_MASTER_FROM_STATE_SUCCESS', {stateURI: payload.stateURI, id: payload.id, selection: payload.selection.prevSelection});
+            context.dispatch('LOADED_DATA', {});
+            done();
+        });
     }else if(payload.mode === 'master'){
         //used for loading progress indicator
         context.dispatch('LOADING_DATA', {});

@@ -16,7 +16,7 @@ class DatasetViewer extends React.Component {
         }
         switch(viewerConfig){
             case 'BasicResourceList':
-                viewer = <BasicResourceList expanded={this.props.expanded} enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={this.props.isBig} config={this.props.config} facetConfigs={this.props.facetConfigs} cloneable={this.props.cloneable} onCloneResource={this.props.onCloneResource} OpenInNewTab={this.props.OpenInNewTab}/>;
+                viewer = <BasicResourceList expanded={this.props.expanded} enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={this.props.isBig} config={this.props.config} facetConfigs={this.props.facetConfigs} cloneable={this.props.cloneable} onCloneResource={this.props.onCloneResource} OpenInNewTab={this.props.OpenInNewTab} pivotConstraint={this.props.pivotConstraint}/>;
                 break;
             case 'ScatterChartView':
                 viewer = <ScatterChartView expanded={this.props.expanded} enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={this.props.isBig} config={this.props.config} cloneable={this.props.cloneable} onCloneResource={this.props.onCloneResource} OpenInNewTab={this.props.OpenInNewTab}/>;

@@ -4,6 +4,7 @@ import loadResource from '../actions/loadResource';
 import loadUsersList from '../actions/loadUsersList';
 import loadFacets from '../actions/loadFacets';
 import loadEnvStates from '../actions/loadEnvStates';
+import getLoadEnvState from '../actions/getLoadEnvState';
 import {appFullTitle, appShortTitle, authDatasetURI, baseResourceDomain} from '../configs/general';
 
 export default {
@@ -68,9 +69,13 @@ export default {
                 datasetURI = 0;
             }
             if (!stateURI) {
+                //only init if no state is given
                 stateURI = 0;
+                context.executeAction(loadFacets, {mode: 'init', id: decodeURIComponent(datasetURI), stateURI: stateURI, selection: 0, page: 1}, done);
+            }else{
+                //get && load the given state
+                context.executeAction(getLoadEnvState, {mode: 'init', id: decodeURIComponent(datasetURI), stateURI: stateURI, selection: 0, page: 1}, done);
             }
-            context.executeAction(loadFacets, {mode: 'init', id: decodeURIComponent(datasetURI), stateURI: stateURI, selection: 0, page: 1}, done);
         }
     },
     datasets: {

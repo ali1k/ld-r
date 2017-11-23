@@ -6,9 +6,11 @@ export default function getEnvState(context, payload, done) {
         if (err) {
             context.dispatch('UPDATE_ENV_STATE_FAILURE', err);
         } else {
-            context.dispatch('UPDATE_ENV_STATE', res);
+            let res2 = res;
+            res2.id = payload.id;
+            context.dispatch('UPDATE_ENV_STATE', res2);
         }
         context.dispatch('LOADED_DATA', {});
-        done();
+        done(null, res);
     });
 }
