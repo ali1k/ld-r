@@ -24,7 +24,7 @@ export default function getLoadEnvState(context, payload, done) {
                 datasetConfig = options.datasetConfig;
             }
             let env = {stateURI: previousResult.resourceURI, desc: stateObj.label, searchTerm: stateObj.searchTerm, selection: selection.prevSelection, pivotConstraint: stateObj.pivotConstraint, id: payload.id,  invert: options.invert, range: options.range, datasetConfig: datasetConfig, analysisProps: options.analysisProps, page: stateObj.page};
-            context.executeAction(loadFacets, {mode: 'envState', isPivotChange: env.isPivotChange, stateURI: env.stateURI, id: payload.id, searchTerm: env.searchTerm, page: env.page, pivotConstraint: env.pivotConstraint, selection: { prevSelection: selection.prevSelection, options: {invert: env.invert, range: env.range, analysisProps: env.analysisProps, facetConfigs: {}}}}, cback);
+            context.executeAction(loadFacets, {mode: 'envState', isPivotChange: env.isPivotChange, stateURI: env.stateURI, id: payload.id, searchTerm: env.searchTerm, page: env.page, pivotConstraint: env.pivotConstraint, selection: { prevSelection: selection.prevSelection, options: {invert: env.invert, range: env.range, analysisProps: env.analysisProps, facetConfigs: options.facetConfigs}}}, cback);
         }
     ],
     // final callback
