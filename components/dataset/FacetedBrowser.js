@@ -65,7 +65,7 @@ class FacetedBrowser extends React.Component {
         this.setState({selection: env.selection, expandedFacet: 0, showAllResources: showAllResource, expandedResources: 0, hideFirstCol: false, invert: env.invert, range: env.range, datasetConfig: env.datasetConfig, analysisProps: env.analysisProps, pivotConstraint: env.pivotConstraint});
         //full load facets with no slected values
         zeroLengthSelection.forEach(function(el){
-            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: env.id, page: env.page, selection: {status: 0, propertyURI: el, prevSelection: selection, options: {invert: env.invert, range: env.range, analysisProps: env.analysisProps, facetConfigs: {}}}});
+            self.context.executeAction(loadFacets, {mode: 'sideEffect', id: env.id, page: env.page, selection: {status: 0, propertyURI: el, prevSelection: selection, options: {invert: env.invert, range: env.range, analysisProps: env.analysisProps, facetConfigs: env.facetConfigs}}});
         });
         return selection;
     }

@@ -150,7 +150,7 @@ class FacetedBrowserStore extends BaseStore {
         if(options.datasetConfig){
             datasetConfig = options.datasetConfig;
         }
-        this.envState.push({stateURI: payload.resourceURI, desc: stateObj.label, searchTerm: stateObj.searchTerm, selection: selection.prevSelection, pivotConstraint: stateObj.pivotConstraint, id: payload.id,  invert: options.invert, range: options.range, datasetConfig: datasetConfig, analysisProps: options.analysisProps, page: stateObj.page});
+        this.envState.push({stateURI: payload.resourceURI, desc: stateObj.label, searchTerm: stateObj.searchTerm, selection: selection.prevSelection, pivotConstraint: stateObj.pivotConstraint, id: payload.id,  invert: options.invert, range: options.range, datasetConfig: datasetConfig, analysisProps: options.analysisProps, page: stateObj.page, facetConfigs: options.facetConfigs});
         this.emitChange();
     }
     handleFacetSideEffectsCount(payload) {
