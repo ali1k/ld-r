@@ -140,15 +140,24 @@ class NetworkView extends React.Component {
             network = {nodes: nodes, edges: edges};
         }
         const minHeight = this.props.expanded ? 700 : 500;
-        return (
-            <div ref="networkView" style={{overflow: 'auto', minHeight: minHeight+'px'}} key={Math.round(+new Date() / 1000)}>
-                <Sigma graph={network} settings={{drawEdges: true, clone: true}} key={Math.round(+new Date() / 1000)} style={{overflow: 'auto', minHeight: minHeight+'px'}}>
-                    <ForceAtlas2 barnesHutOptimize barnesHutTheta={0.8} iterationsPerRender={2}/>
-                    <RelativeSize initialSize={50}/>
-                    <RandomizeNodePositions/>
-                </Sigma>
-            </div>
-        );
+        if (process.env.BROWSER) {
+            return (
+                <div ref="networkView" style={{overflow: 'auto', minHeight: minHeight+'px'}} key={Math.round(+new Date() / 1000)}>
+                    <Sigma graph={network} settings={{drawEdges: true, clone: true}} key={Math.round(+new Date() / 1000)} style={{overflow: 'auto', minHeight: minHeight+'px'}}>
+                        <ForceAtlas2 barnesHutOptimize barnesHutTheta={0.8} iterationsPerRender={2}/>
+                        <RelativeSize initialSize={50}/>
+                        <RandomizeNodePositions/>
+                    </Sigma>
+                </div>
+            );
+        }else{
+            return (
+                <div ref="networkView" style={{overflow: 'auto', minHeight: minHeight+'px'}} key={Math.round(+new Date() / 1000)}>
+                    Server-side rendering might not work for this visualization. Wait a few seconds to refresh the visualization. Otherwise, choose another viewer for the results.
+                </div>
+            );
+        }
+
     }
 }
 export default NetworkView;
