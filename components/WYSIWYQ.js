@@ -90,6 +90,8 @@ class WYSIWYQ extends React.Component {
                     {this.state.isGenerating ?
                         <div className="ui column">
                             <WaitAMoment msg='Wait a moment until the browsing environemnt is generated...'/>
+                            <div className="ui info message"><b>Query:</b> {this.props.QueryImportStore.queries[this.state.stateURI].label}</div>
+                            {queryDIV}
                         </div>
                         :
                         <div className="ui column">
