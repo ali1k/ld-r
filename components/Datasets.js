@@ -3,14 +3,25 @@ import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {navigateAction, NavLink} from 'fluxible-router';
 import {connectToStores} from 'fluxible-addons-react';
+import SearchInput, {createFilter} from 'react-search-input'
 import {enableAuthentication, defaultDatasetURI, enableAddingNewDatasets, enableDatasetAnnotation, enableQuerySaveImport} from '../configs/general';
 import {checkViewAccess, checkEditAccess} from '../services/utils/accessManagement';
 import DatasetsStore from '../stores/DatasetsStore';
 import URIUtil from './utils/URIUtil';
 
 class Datasets extends React.Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+            searchTerm: ''
+        }
+        this.searchUpdated = this.searchUpdated.bind(this)
+    }
     componentDidMount() {
 
+    }
+    searchUpdated (term) {
+        this.setState({searchTerm: term})
     }
     prepareFocusList(list) {
         let out = [];
@@ -106,6 +117,10 @@ class Datasets extends React.Component {
                 }).map(function(option, index) {
                     return <option key={index} value={(option.d)}> {(option.d && option.features.datasetLabel) ? option.features.datasetLabel : option.d} </option>;
                 });
+                //allow search in datasets list
+                const KEYS_TO_FILTERS = ['features.datasetLabel', 'features.resourceFocusType', 'd'];
+                dss = dss.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
+
                 let dsLink = '';
                 let dsIcon = '';
                 outputDSS = dss.map(function(ds, index) {
@@ -155,6 +170,16 @@ class Datasets extends React.Component {
                         {dss.length ? <div>{info}</div> : ''}
                         <div className="ui segment">
                             <h2><span className="ui big black circular label">{dss.length}</span> Datasets</h2>
+
+                            <div className="ui">
+                                <div className="ui fluid category search">
+                                    <div className="ui large icon input">
+                                        <SearchInput className="prompt circular" onChange={this.searchUpdated} placeholder="Search in datasets..." style={{width: 500}} />
+                                        <i className="search icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="ui big divided list">
                                 {output}{outputDSS}
                             </div>

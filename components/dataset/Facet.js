@@ -1,7 +1,7 @@
 import React from 'react';
 import PropertyHeader from '../property/PropertyHeader';
 import ObjectBrowser from '../object/ObjectBrowser';
-import SearchInput from 'react-search-input';
+import SearchInput, {createFilter} from 'react-search-input';
 import URIUtil from '../utils/URIUtil';
 import YASQEViewer from '../object/viewer/individual/YASQEViewer';
 import {Dropdown, Icon} from 'semantic-ui-react';
@@ -262,10 +262,10 @@ class Facet extends React.Component {
         let itemsCount = this.props.spec.total;
         newSpec.property = this.props.spec.property;
         newSpec.propertyURI = this.props.spec.propertyURI;
-        if (this.refs.search) {
-            let filters = ['label', 'value'];
-            cloneInstances = cloneInstances.filter(this.refs.search.filter(filters));
-        }
+
+        const KEYS_TO_FILTERS = ['label', 'value'];
+        cloneInstances = cloneInstances.filter(createFilter(this.state.searchTerm, KEYS_TO_FILTERS));
+
         newSpec.instances = cloneInstances;
         //search and filter cannot occur together:ToDO
         this.filteredInstances = cloneInstances.slice(0);
@@ -522,7 +522,7 @@ class Facet extends React.Component {
                         <div className="left menu">
                             <div className="ui left aligned category search item">
                                 <div className="ui transparent icon input">
-                                    <SearchInput className="ui mini search icon input" ref="search" onChange={this.searchUpdated.bind(this)} throttle={500}/>
+                                    <SearchInput className="ui mini search icon input" onChange={this.searchUpdated.bind(this)} throttle={500}/>
                                 </div>
                                 <div className="results"></div>
                             </div>
