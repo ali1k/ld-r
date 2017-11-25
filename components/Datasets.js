@@ -174,7 +174,7 @@ class Datasets extends React.Component {
                                 <div className="ui">
                                     <div className="ui fluid category search">
                                         <div className="ui large icon input">
-                                            <SearchInput className="prompt circular" onChange={this.searchUpdated} placeholder="Search in datasets..." style={{width: 500}} />
+                                            <SearchInput className="prompt circular" onChange={this.searchUpdated} placeholder="Search in datasets..." style={{width: 400}} />
                                             <i className="search icon"></i>
                                         </div>
                                     </div>
