@@ -170,7 +170,7 @@ class Datasets extends React.Component {
                         {dss.length ? <div>{info}</div> : null}
                         <div className="ui segment">
                             <h2><span className="ui big black circular label">{dss.length}</span> Datasets</h2>
-                            {dss.length > 7 ?
+                            {this.props.DatasetsStore.datasetsList.length > 7 ?
                                 <div className="ui">
                                     <div className="ui fluid category search">
                                         <div className="ui large icon input">
