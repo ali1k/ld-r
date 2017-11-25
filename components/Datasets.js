@@ -167,19 +167,19 @@ class Datasets extends React.Component {
             <div className="ui fluid container ldr-padding-more" ref="datasets">
                 <div className="ui grid">
                     <div className="ui column">
-                        {dss.length ? <div>{info}</div> : ''}
+                        {dss.length ? <div>{info}</div> : null}
                         <div className="ui segment">
                             <h2><span className="ui big black circular label">{dss.length}</span> Datasets</h2>
-
-                            <div className="ui">
-                                <div className="ui fluid category search">
-                                    <div className="ui large icon input">
-                                        <SearchInput className="prompt circular" onChange={this.searchUpdated} placeholder="Search in datasets..." style={{width: 500}} />
-                                        <i className="search icon"></i>
+                            {dss.length > 7 ?
+                                <div className="ui">
+                                    <div className="ui fluid category search">
+                                        <div className="ui large icon input">
+                                            <SearchInput className="prompt circular" onChange={this.searchUpdated} placeholder="Search in datasets..." style={{width: 500}} />
+                                            <i className="search icon"></i>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-
+                                : null}
                             <div className="ui big divided list">
                                 {output}{outputDSS}
                             </div>
