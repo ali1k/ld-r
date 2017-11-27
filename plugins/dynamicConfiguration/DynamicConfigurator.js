@@ -13,7 +13,7 @@ class DynamicConfigurator {
         }else{
             let userSt = '';
             //admin has full power on editing
-            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
+            if(user && user.accountName !== 'open' && !Number(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
@@ -172,7 +172,7 @@ class DynamicConfigurator {
             callback(config);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
+            if(user && user.accountName !== 'open' && !Number(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             //start config
@@ -280,7 +280,7 @@ class DynamicConfigurator {
             callback(config);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
+            if(user && user.accountName !== 'open' && !Number(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             //start config
@@ -358,7 +358,7 @@ class DynamicConfigurator {
             callback(config);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
+            if(user && user.accountName !== 'open' && !Number(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             //start config
@@ -470,7 +470,7 @@ class DynamicConfigurator {
             callback(config);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
+            if(user && user.accountName !== 'open' && !Number(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             //start config
@@ -600,7 +600,7 @@ class DynamicConfigurator {
             callback(0);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
+            if(user && user.accountName !== 'open' && !Number(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             //start config
@@ -722,7 +722,7 @@ class DynamicConfigurator {
             callback(0);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
+            if(user && user.accountName !== 'open' && !Number(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             //start config
@@ -787,7 +787,7 @@ class DynamicConfigurator {
             callback(config);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
+            if(user && user.accountName !== 'open' && !Number(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             let typeFilter = [];
@@ -938,7 +938,7 @@ class DynamicConfigurator {
             callback(config);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
+            if(user && user.accountName !== 'open' && !Number(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             //start config
@@ -1032,7 +1032,7 @@ class DynamicConfigurator {
             callback(1);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
+            if(user && user.accountName !== 'open' && !Number(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
@@ -1102,7 +1102,7 @@ class DynamicConfigurator {
             callback(1);
         }else{
             let userSt = '';
-            if(user && user.accountName !== 'open' && !parseInt(user.isSuperUser)){
+            if(user && user.accountName !== 'open' && !Number(user.isSuperUser)){
                 userSt=` ldr:createdBy <${user.id}> ;`;
             }
             const endpointParameters = getStaticEndpointParameters(configDatasetURI[0]);
@@ -1169,7 +1169,7 @@ class DynamicConfigurator {
                 }
                 //assume that all values will be stored in an array expect numbers: Not-a-Number
                 if(!isNaN(el.settingValue.value)){
-                    output.property[propertyURI][settingProp]= parseInt(el.settingValue.value);
+                    output.property[propertyURI][settingProp]= Number(el.settingValue.value);
                 }else{
                     if(!output.property[propertyURI][settingProp]){
                         output.property[propertyURI][settingProp] = []
@@ -1188,7 +1188,7 @@ class DynamicConfigurator {
                 }
                 //assume that all values will be stored in an array expect numbers: Not-a-Number
                 if(!isNaN(el.settingValue.value)){
-                    output.dataset_property[el.dataset.value][propertyURI][settingProp] = parseInt(el.settingValue.value);
+                    output.dataset_property[el.dataset.value][propertyURI][settingProp] = Number(el.settingValue.value);
                 }else{
                     if(!output.dataset_property[el.dataset.value][propertyURI][settingProp]){
                         output.dataset_property[el.dataset.value][propertyURI][settingProp] = [];
@@ -1208,7 +1208,7 @@ class DynamicConfigurator {
                 }
                 //assume that all values will be stored in an array expect numbers: Not-a-Number
                 if(!isNaN(el.settingValue.value)){
-                    output.resource_property[el.resource.value][propertyURI][settingProp] = parseInt( el.settingValue.value);
+                    output.resource_property[el.resource.value][propertyURI][settingProp] = Number( el.settingValue.value);
                 }else{
                     if(!output.resource_property[el.resource.value][propertyURI][settingProp]){
                         output.resource_property[el.resource.value][propertyURI][settingProp] = [];
@@ -1232,7 +1232,7 @@ class DynamicConfigurator {
                 }
                 //assume that all values will be stored in an array expect numbers: Not-a-Number
                 if(!isNaN(el.settingValue.value)){
-                    output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][settingProp]= parseInt(el.settingValue.value);
+                    output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][settingProp]= Number(el.settingValue.value);
                 }else{
                     if(!output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][settingProp]){
                         output.dataset_resource_property[el.dataset.value][el.resource.value][propertyURI][settingProp] = [];
@@ -1259,7 +1259,7 @@ class DynamicConfigurator {
                 }
                 //assume that all values will be stored in an array expect numbers: Not-a-Number
                 if(!isNaN(el.settingValue.value)){
-                    output.resource[resourceURI][settingProp]= parseInt(el.settingValue.value);
+                    output.resource[resourceURI][settingProp]= Number(el.settingValue.value);
                 }else{
                     if(!output.resource[resourceURI][settingProp]){
                         output.resource[resourceURI][settingProp] = []
@@ -1275,7 +1275,7 @@ class DynamicConfigurator {
                 }
                 //assume that all values will be stored in an array expect numbers: Not-a-Number
                 if(!isNaN(el.settingValue.value)){
-                    output.dataset_resource[el.dataset.value][resourceURI][settingProp] = parseInt(el.settingValue.value);
+                    output.dataset_resource[el.dataset.value][resourceURI][settingProp] = Number(el.settingValue.value);
                 }else{
                     if(!output.dataset_resource[el.dataset.value][resourceURI][settingProp]){
                         output.dataset_resource[el.dataset.value][resourceURI][settingProp] = [];
@@ -1306,7 +1306,7 @@ class DynamicConfigurator {
                     output.dataset[datasetURI] = {};
                 }
                 if(el.constraintProperty && el.constraintProperty.value){
-                    if(el.constraintEnabled && parseInt(el.constraintEnabled.value)){
+                    if(el.constraintEnabled && Number(el.constraintEnabled.value)){
                         //parse only if enabled
                         if(!output.dataset[datasetURI]['constraint']){
                             output.dataset[datasetURI]['constraint'] = {}
@@ -1341,20 +1341,20 @@ class DynamicConfigurator {
                 if(!isNaN(el.settingValue.value)){
                     if(viewProps.indexOf(settingProp) !== -1){
                         if(typeof output.dataset[datasetURI][settingProp] === 'undefined'){
-                            output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value);
+                            output.dataset[datasetURI][settingProp]= Number(el.settingValue.value);
                         }else{
                             //user cannot overwrite these properties if they have 1 as value
-                            output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value) || output.dataset[datasetURI][settingProp];
+                            output.dataset[datasetURI][settingProp]= Number(el.settingValue.value) || output.dataset[datasetURI][settingProp];
                         }
                     }else if(editProps.indexOf(settingProp) !== -1){
                         if(typeof output.dataset[datasetURI][settingProp] === 'undefined'){
-                            output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value);
+                            output.dataset[datasetURI][settingProp]= Number(el.settingValue.value);
                         }else{
                             //user cannot overwrite these properties if they have 0 as value
-                            output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value) && output.dataset[datasetURI][settingProp];
+                            output.dataset[datasetURI][settingProp]= Number(el.settingValue.value) && output.dataset[datasetURI][settingProp];
                         }
                     }else{
-                        output.dataset[datasetURI][settingProp]= parseInt(el.settingValue.value);
+                        output.dataset[datasetURI][settingProp]= Number(el.settingValue.value);
                     }
                 }else{
                     if(!output.dataset[datasetURI][settingProp]){
@@ -1398,7 +1398,7 @@ class DynamicConfigurator {
             if(el.setting){
                 settingProp = el.setting.value.replace(ldr_prefix, '').trim();
                 if(!isNaN(el.settingValue.value)){
-                    output.facets[datasetURI].config[el.configProperty.value][settingProp]= parseInt(el.settingValue.value);
+                    output.facets[datasetURI].config[el.configProperty.value][settingProp]= Number(el.settingValue.value);
                 }else{
                     if(!output.facets[datasetURI].config[el.configProperty.value][settingProp]){
                         output.facets[datasetURI].config[el.configProperty.value][settingProp] = []
@@ -1436,7 +1436,7 @@ class DynamicConfigurator {
             //assume that all values will be stored in an array expect numbers: Not-a-Number
             settingProp = el.setting.value.replace(ldr_prefix, '').trim();
             if(!isNaN(el.settingValue.value)){
-                output.sparqlEndpoint[datasetURI][settingProp]= parseInt(el.settingValue.value);
+                output.sparqlEndpoint[datasetURI][settingProp]= Number(el.settingValue.value);
             }else{
                 //exception for graphNameValue
                 if(settingProp==='graphName'){
@@ -1464,7 +1464,7 @@ class DynamicConfigurator {
                 output[el.state.value]= {};
             }
             if(!isNaN(el.settingValue.value)){
-                output[el.state.value][settingProp]= parseInt(el.settingValue.value);
+                output[el.state.value][settingProp]= Number(el.settingValue.value);
             }else{
                 if(!output[el.state.value][settingProp]){
                     output[el.state.value][settingProp] = []
@@ -1494,20 +1494,20 @@ class DynamicConfigurator {
                     settingProp = el.setting.value.replace(ldr_prefix, '').trim();
                     if(settingProp === 'readOnly'){
                         if(typeof dynamicReactorDS.dataset[el.dataset.value][settingProp] === 'undefined'){
-                            dynamicReactorDS.dataset[el.dataset.value][settingProp] = parseInt(el.settingValue.value);
+                            dynamicReactorDS.dataset[el.dataset.value][settingProp] = Number(el.settingValue.value);
                         }else{
                             //this is used to prevent people to switch access
-                            dynamicReactorDS.dataset[el.dataset.value][settingProp] = parseInt(el.settingValue.value) || dynamicReactorDS.dataset[el.dataset.value][settingProp];
+                            dynamicReactorDS.dataset[el.dataset.value][settingProp] = Number(el.settingValue.value) || dynamicReactorDS.dataset[el.dataset.value][settingProp];
                         }
                     }else if(settingProp === 'hasLimitedAccess'){
                         if(typeof dynamicReactorDS.dataset[el.dataset.value][settingProp] === 'undefined'){
-                            dynamicReactorDS.dataset[el.dataset.value][settingProp] = parseInt(el.settingValue.value);
+                            dynamicReactorDS.dataset[el.dataset.value][settingProp] = Number(el.settingValue.value);
                         }else{
                             //this is used to prevent people to switch access
-                            dynamicReactorDS.dataset[el.dataset.value][settingProp] = parseInt(el.settingValue.value) || dynamicReactorDS.dataset[el.dataset.value][settingProp];
+                            dynamicReactorDS.dataset[el.dataset.value][settingProp] = Number(el.settingValue.value) || dynamicReactorDS.dataset[el.dataset.value][settingProp];
                         }
                     }else if(settingProp === 'position' || settingProp === 'isHidden'){
-                        dynamicReactorDS.dataset[el.dataset.value][settingProp] = parseInt(el.settingValue.value);
+                        dynamicReactorDS.dataset[el.dataset.value][settingProp] = Number(el.settingValue.value);
                     }  else {
                         //list of relevant datasets attributes should be defined here:
                         let relatedProps = ['resourceFocusType', 'datasetLabel', 'metadata', 'datasetCategory'];
