@@ -25,8 +25,23 @@ class DBpediaUtil {
         if (parsed.Resources && parsed.Resources.length) {
             parsed.Resources.forEach(function(el) {
                 types = el['@types'];
+                let dtypes = [];
                 if (!types) {
                     types = 'DBpedia:Misc';
+                    dtypes = ['DBpedia:Misc'];
+                }else{
+                    //only get DBpedia ones
+                    types.split(',').forEach((t)=>{
+                        if(t.toLowerCase().indexOf('dbpedia') !== -1){
+                            //fix issue in DBpedia URIs
+                            if(t.split('DBpedia:')[1].indexOf(':') === -1){
+                                dtypes.push(t);
+                            }
+                        }
+                    });
+                    if(!dtypes.length){
+                        dtypes = ['DBpedia:Misc'];
+                    }
                 }
                 //do not add stop words
                 if(stopWordsArr.length && stopWordsArr.indexOf(el['@surfaceForm'].toLowerCase()) !== -1){
@@ -34,7 +49,7 @@ class DBpediaUtil {
                 }else{
                     output.push({
                         uri: el['@URI'],
-                        types: types.split(','),
+                        types: dtypes,
                         surfaceForm: el['@surfaceForm'],
                         offset: el['@offset'],
                         similarityScore: el['@similarityScore'],
