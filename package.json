@@ -45,6 +45,7 @@
     "fluxible-addons-react": "^0.2.14",
     "fluxible-plugin-fetchr": "^0.3.11",
     "fluxible-router": "^1.4.0",
+    "franc": "^3.1.1",
     "hogan-express": "^0.5.2",
     "jqcloud2": "^2.0.3",
     "jquery": "^3.2.1",
