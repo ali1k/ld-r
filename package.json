@@ -52,7 +52,7 @@
     "json3": "^3.3.2",
     "leaflet": "^1.1.0",
     "log": "^1.4.0",
-    "moment": "^2.19.1",
+    "moment": "^2.19.3",
     "nodemailer": "^4.2.0",
     "nodemailer-smtp-transport": "^2.7.4",
     "passport": "^0.4.0",
