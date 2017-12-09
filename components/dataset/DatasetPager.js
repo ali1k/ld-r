@@ -188,10 +188,14 @@ class DatasetPager extends React.Component {
         }
         let datasetURI = this.props.datasetURI;
         let i, startI, totalPages, threshold = this.props.threshold, currentPage, pageList = [];
-        if(this.props.total){
+        if(this.props.total || (this.props.hasResources && !this.props.total)){
             currentPage = parseInt(this.props.currentPage);
             //total number of pages
             totalPages = Math.ceil(this.props.total / maxOnPage);
+            //the situation when total number of pages is unknown
+            if(this.props.hasResources && !this.props.total){
+                totalPages = 100000000000;
+            }
             if(this.state.searchMode){
                 //totalPages = Math.ceil(this.props.resourcesLength / maxOnPage);
                 //todo: support paging for search, I disable it for now!
@@ -222,6 +226,9 @@ class DatasetPager extends React.Component {
                         pageList.push(self.buildLink(i, 'basic', 0));
                     }
                 }
+            }
+            if(this.props.hasResources && !this.props.total){
+                totalPages = ' ? ';
             }
         }
         return (

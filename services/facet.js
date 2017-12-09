@@ -272,12 +272,13 @@ export default {
                     //console.log(query);
                     let searchTerm = params.searchTerm ? params.searchTerm : '';
                     //build http uri
+                    let query2 = queryObject.getSecondLevelPropertyValues(endpointParameters, graphName, searchTerm, rftconfig, params.selection.prevSelection, params.selection.options, maxOnPage, page);
+                    let tmp2 = getHTTPQuery('read', query2, endpointParameters, outputFormat);
                     //send request
                     let tmp = getHTTPQuery('read', query, endpointParameters, outputFormat);
-                    rp.post({uri: tmp.uri, form: tmp.params, headers: headers}).then(function(res){
-                        let query2 = queryObject.getSecondLevelPropertyValues(endpointParameters, graphName, searchTerm, rftconfig, params.selection.prevSelection, params.selection.options, maxOnPage, page);
+                    const queryTimeout = 10000; //ms
+                    rp.post({uri: tmp.uri, form: tmp.params, headers: headers, timeout: queryTimeout}).then(function(res){
                         //console.log(query2);
-                        let tmp2 = getHTTPQuery('read', query2, endpointParameters, outputFormat);
                         rp.post({uri: tmp2.uri, form: tmp2.params, headers: headers}).then(function(res2){
                             callback(null, {
                                 datasetURI: datasetURI,
@@ -293,8 +294,27 @@ export default {
                             callback(null, {datasetURI: datasetURI, graphName: graphName, resourceFocusType: rftconfig.type, facets: {items: []}, total: 0, page: 1, resourceQuery: query2});
                         });
                     }).catch(function (err) {
-                        console.log(err);
-                        callback(null, {datasetURI: datasetURI, graphName: graphName, resourceFocusType: rftconfig.type, facets: {items: []}, total: 0, page: 1, resourceQuery: query2});
+                        //handle timeout error: start the other query
+                        if(err.message.indexOf('ESOCKETTIMEDOUT') !== -1){
+                            console.log('Error: query timeout on ' + datasetURI);
+                            rp.post({uri: tmp2.uri, form: tmp2.params, headers: headers}).then(function(res2){
+                                callback(null, {
+                                    datasetURI: datasetURI,
+                                    graphName: graphName,
+                                    resourceFocusType: rftconfig.type,
+                                    page: page,
+                                    facets: {items: utilObject.parseSecondLevelPropertyValues(user, datasetURI, res2, rconfig)},
+                                    total: 0,
+                                    resourceQuery: query2
+                                });
+                            }).catch(function (err2) {
+                                console.log(err2);
+                                callback(null, {datasetURI: datasetURI, graphName: graphName, resourceFocusType: rftconfig.type, facets: {items: []}, total: 0, page: 1, resourceQuery: query2});
+                            });
+                        }else{
+                            console.log(err);
+                            callback(null, {datasetURI: datasetURI, graphName: graphName, resourceFocusType: rftconfig.type, facets: {items: []}, total: 0, page: 1, resourceQuery: query2});
+                        }
                     });
                 });
             });
