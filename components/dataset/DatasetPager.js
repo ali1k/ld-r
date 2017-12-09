@@ -251,7 +251,7 @@ class DatasetPager extends React.Component {
                         </div>
                     </div>
                     <div className="right menu stackable">
-                        {this.props.total ?
+                        {this.props.total || (this.props.hasResources && !this.props.total) ?
                             <Dropdown className="item" title="actions" selectOnBlur={false} onChange={this.handleActionDropDownClick.bind(this)} trigger={a_trigger} options={a_options} icon={null} pointing="top right" floating />
                             : ''}
                         <Dropdown className="item" title="views" selectOnBlur={false} onChange={this.handleViewsDropDownClick.bind(this)} trigger={v_trigger} options={v_options} icon={null} pointing="top right" floating />
