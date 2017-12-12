@@ -27,3 +27,7 @@
 }
 
 .animated{-webkit-animation-duration:1s;animation-duration:1s;-webkit-animation-fill-mode:none!important;animation-fill-mode:none!important}
+
+.ui.small.image {
+    object-fit: contain;
+}
