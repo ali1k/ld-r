@@ -7,6 +7,7 @@ Default component to display object values
 class BasicIndividualView extends React.Component {
     render() {
         let val, outputDIV;
+        let cstyle={direction: 'ltr'};
         val = this.props.spec.value;
         if(this.props.spec.valueType === 'uri'){
             if(this.props.config){
@@ -24,11 +25,15 @@ class BasicIndividualView extends React.Component {
                 }else if (this.props.config.encodeURIComponent || this.props.encodeURIComponent) {
                     val = encodeURIComponent(val);
                 }
+                //allow view RightToLeft languages
+                if (this.props.config.rtl || this.props.rtl) {
+                    cstyle.direction= 'rtl';
+                }
             }
             outputDIV = <span itemProp={this.props.property}> {val} </span>;
         }
         return (
-            <div className="ui" ref="basicIndividualView">
+            <div style={cstyle} className="ui" ref="basicIndividualView">
                 {outputDIV}
             </div>
         );
