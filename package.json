@@ -30,7 +30,7 @@
     "body-parser": "^1.17.2",
     "chroma-js": "^1.3.4",
     "classnames": "^2.2.5",
-    "codemirror": "^5.29.0",
+    "codemirror": "^5.33.0",
     "compression": "^1.7.0",
     "continuation-local-storage": "^3.2.0",
     "cookie-parser": "^1.4.3",
@@ -66,7 +66,7 @@
     "react-leaflet": "^1.8.0",
     "react-search-input": "^0.11.2",
     "react-sigma": "^1.2.30",
-    "recharts": "^1.0.0-alpha.4",
+    "recharts": "^1.0.0-beta.9",
     "request-promise": "^4.2.1",
     "semantic-ui-css": "^2.2.12",
     "semantic-ui-react": "^0.77.2",
@@ -75,7 +75,7 @@
     "simplify-js": "^1.2.1",
     "valid-url": "^1.0.9",
     "wicket": "^1.3.2",
-    "yasgui-yasqe": "^2.11.16"
+    "yasgui-yasqe": "^2.11.18"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
