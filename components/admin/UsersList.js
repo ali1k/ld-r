@@ -66,6 +66,7 @@ class UsersList extends React.Component {
             )
         }
         let i = 0;
+        let CREATED;
         if (this.props.UserStore.users) {
             list = this.props.UserStore.users.map(function(node, index) {
                 if (parseInt(node.isActive)) {
@@ -81,6 +82,12 @@ class UsersList extends React.Component {
                     // put the flag
                     emailHint = 1;
                 }
+                //add creation date
+                if(node.created){
+                    CREATED = <span className="ui mini label">{node.created}</span>;
+                }else{
+                    CREATED = <span className="ui mini label">unknown date</span>;
+                }
                 //do not show current super user to edit himself
                 if (node.v !== user.id && !parseInt(node.isSuperUser)) {
                     i++;
@@ -91,7 +98,7 @@ class UsersList extends React.Component {
                                     <div className="content">
                                         <span className="ui blue circular label">{i}</span>
                                         <i className={dbClass}></i>
-                                        {node.lastName}, {node.firstName} ({node.username})
+                                        {node.lastName}, {node.firstName} ({node.username}) {CREATED}
                                     </div>
                                 </NavLink>
                                 {actBtn}
