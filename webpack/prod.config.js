@@ -28,7 +28,7 @@ let webpackConfig = {
         rules: [
             {
                 test: /\.(js|jsx)$/,
-                exclude: /node_modules\/(?!react-sigma)/ ,
+                exclude: /node_modules(?!(\/|\\)react-sigma)/ ,
                 loader: 'babel-loader',
                 options: {
                     presets: [
