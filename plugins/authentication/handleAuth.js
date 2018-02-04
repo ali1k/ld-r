@@ -14,7 +14,9 @@ let helpers = require('../../services/utils/helpers');
 let appShortTitle = generalConfig.appShortTitle;
 let appFullTitle = generalConfig.appFullTitle;
 
-let outputFormat = 'application/sparql-results+json';
+const outputFormat = 'application/sparql-results+json';
+const headers = {'Accept': outputFormat};
+
 module.exports = function handleAuthentication(server) {
     server.use(passport.initialize());
     server.use(passport.session());
@@ -142,7 +144,7 @@ let addUserQueries = (req, res, recaptchaSiteKey) => {
     `;
     let rpPath = helpers.getHTTPGetURL(helpers.getHTTPQuery('read', query, endpoint, outputFormat));
     //send request
-    rp.get({uri: rpPath}).then(function(resq){
+    rp.get({uri: rpPath, headers: headers}).then(function(resq){
         let parsed = JSON.parse(resq);
         if(parsed.results.bindings.length){
             if(parsed.results.bindings[0].exists.value ==='0'){

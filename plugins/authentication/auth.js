@@ -3,7 +3,8 @@ let rp = require('request-promise');
 let config = require('../../configs/server');
 let generalConfig = require('../../configs/general');
 let helpers = require('../../services/utils/helpers');
-let outputFormat = 'application/sparql-results+json';
+const outputFormat = 'application/sparql-results+json';
+const headers = {'Accept': outputFormat};
 //this is visible to the server-side
 module.exports = {
     getPropertyLabel: function(uri) {
@@ -35,7 +36,8 @@ module.exports = {
         //send request
         let rpPath = helpers.getHTTPGetURL(helpers.getHTTPQuery('read', query, endpoint, outputFormat));
         rp.get({
-            uri: rpPath
+            uri: rpPath,
+            headers: headers
         }).then(function(res) {
             let parsed = JSON.parse(res);
             let user = {};
@@ -102,7 +104,8 @@ module.exports = {
         let rpPath = helpers.getHTTPGetURL(helpers.getHTTPQuery('read', query, endpoint, outputFormat));
         //send request
         rp.get({
-            uri: rpPath
+            uri: rpPath,
+            headers: headers
         }).then(function(res) {
             let parsed = JSON.parse(res);
             let user = {};
