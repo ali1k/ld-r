@@ -32,7 +32,11 @@ class AdminQuery{
                     foaf:mbox ?mbox .
                  OPTIONAL {?subject dcterms:created ?created .}
             ${gEnd}
-        } ORDER BY DESC(?created)
+
+        } 
+        #to fix stardog group_concat bug
+        GROUP BY ?subject ?username ?isActive ?firstName ?lastName ?created ?isSuperUser ?mbox  
+        ORDER BY DESC(?created)
         `;
         return this.prefixes + this.query;
     }
