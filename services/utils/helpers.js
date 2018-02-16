@@ -153,10 +153,23 @@ export default {
 
                 break;
             case 'stardog':
-                outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
-                outputObject.params['query'] = query;
-                outputObject.params['Accept'] = outputFormat;
-
+                //to make it compatible with old Stardog API
+                if(endpointParameters.httpOptions.path.indexOf('annex') !== -1){
+                    outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                    outputObject.params['query'] = query;
+                    outputObject.params['Accept'] = outputFormat;
+                }else{
+                    //new Stardog API /query and /update
+                    if(mode === 'update'){
+                        outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '/update';
+                        outputObject.params['update'] = query;
+                        outputObject.params['query'] = query;
+                    }else{
+                        outputObject.params['query'] = query;
+                        outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path + '/query';
+                        outputObject.params['Accept'] = outputFormat;
+                    }
+                }
                 break;
             case 'cliopatria':
                 if(mode === 'update'){

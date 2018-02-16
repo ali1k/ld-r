@@ -8,8 +8,9 @@ export default {
         },
         //Note: if graphName is not specified, the identifer used for configuration will be used as graphName
         //Example config for connecting to a Stardog triple store, replace testDB with the name of your DB
-        'http://localhost:5820/annex/testDB/sparql/query': {
-            host: 'localhost', port: 5820, path: '/annex/testDB/sparql/query', graphName: 'default', endpointType: 'stardog', useReasoning: 1
+        // read more at https://www.stardog.com/docs/#_stardog_resources
+        'http://localhost:5820/testDB': {
+            host: 'localhost', port: 5820, path: '/testDB', graphName: 'default', endpointType: 'stardog', useReasoning: 1
         },
         //Example for connecting to a Virtuoso triple store
         'http://dbpedia.org/sparql': {
