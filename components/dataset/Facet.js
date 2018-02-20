@@ -522,7 +522,7 @@ class Facet extends React.Component {
                         <div className="left menu">
                             <div className="ui left aligned category search item">
                                 <div className="ui transparent icon input">
-                                    <SearchInput className="ui mini search icon input" onChange={this.searchUpdated.bind(this)} throttle={500}/>
+                                    <SearchInput placeholder={'Search in ' + cloneInstances.length + ' results' } className="ui mini search icon input" onChange={this.searchUpdated.bind(this)} throttle={500}/>
                                 </div>
                                 <div className="results"></div>
                             </div>
