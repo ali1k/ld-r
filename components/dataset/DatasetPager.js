@@ -116,7 +116,8 @@ class DatasetPager extends React.Component {
         switch (evt.keyCode) {
             //case 9: // Tab
             case 13: // Enter
-                this.saveEnvState(this.state.saveText);
+            //replace double quotes
+                this.saveEnvState(this.state.saveText.replace(/"/g, '\''));
                 break;
         }
     }
