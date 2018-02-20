@@ -21,7 +21,7 @@ class Timer extends React.Component {
         });
     }
     render() {
-        let msg = 'Wait a moment until the new environemnt is generated...';
+        let msg = 'Wait a moment until the new environment is generated...';
         if(this.props.msg){
             msg = this.props.msg;
         }
