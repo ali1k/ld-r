@@ -202,7 +202,7 @@ class IndividualObject extends React.Component {
             }
             if(this.props.config && this.props.config.allowNewValue && !this.props.isOnlyChild){
                 deleteDIV = <div ref="delete" title="delete" onClick={this.handleDelete.bind(this)} className="medium ui circular basic icon button">
-                    <i className="trash outline large red icon link "></i>
+                    <i className="trash alternate outline large red icon link "></i>
                 </div>;
             }
         }

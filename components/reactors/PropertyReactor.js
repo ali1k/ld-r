@@ -192,7 +192,7 @@ class PropertyReactor extends React.Component {
             propDeleteDIV = <div className="ui list">
                 <div className="item">
                     <div  className="medium ui basic icon labeled button" onClick={this.handleDeleteProperty.bind(this)}>
-                        <i className="trash square large red icon "></i> &nbsp; Delete <strong> {(propConfig && propConfig.label) ? propConfig.label : this.props.spec.property}</strong> property
+                        <i className="trash alternate outline large red icon "></i> &nbsp; Delete <strong> {(propConfig && propConfig.label) ? propConfig.label : this.props.spec.property}</strong> property
                     </div>
                 </div>
                 <br/>

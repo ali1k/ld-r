@@ -64,14 +64,14 @@ class Datasets extends React.Component {
             if(enableAddingNewDatasets){
                 createDatasetDIV = <div className="item">
                     <div  className="medium ui basic icon labeled button" onClick={this.handleCreateDataset.bind(this)}>
-                        <i className="cubes square large blue icon "></i> <i className="add black icon"></i>Add a New Dataset
+                        <i className="cubes large blue icon "></i> <i className="add black icon"></i>Add a New Dataset
                     </div>
                 </div>;
             }
             if(enableDatasetAnnotation){
                 annotateDatasetDIV = <div className="item">
                     <a  className="medium ui basic icon labeled button" href="/annotateDataset">
-                        <i className="cubes square large blue icon "></i> <i className="hashtag black icon"></i>Annotate a Dataset
+                        <i className="cubes large blue icon "></i> <i className="hashtag black icon"></i>Annotate a Dataset
                     </a>
                 </div>;
             }
@@ -172,9 +172,9 @@ class Datasets extends React.Component {
                             <h2><span className="ui big black circular label">{dss.length}</span> Datasets</h2>
                             {this.props.DatasetsStore.datasetsList.length > 7 ?
                                 <div className="ui">
-                                    <div className="ui fluid category search">
+                                    <div className="ui form fluid category search">
                                         <div className="ui large icon input">
-                                            <SearchInput className="prompt circular" onChange={this.searchUpdated} placeholder="Search in datasets..." style={{width: 400}} />
+                                            <SearchInput className="prompt circular ui fluid category search" onChange={this.searchUpdated} placeholder="Search in datasets..." style={{width: 400}} />
                                             <i className="search icon"></i>
                                         </div>
                                     </div>
