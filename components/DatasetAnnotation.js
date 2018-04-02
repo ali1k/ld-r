@@ -312,9 +312,9 @@ class DatasetAnnotation extends React.Component {
             if(remainingTime){
                 if(remainingTime >= 60){
                     if(remainingTime >= 3600){
-                        remainingTimeDIV = <span>Estimated Remaining Time: ~ <b>{Math.floor(remainingTime/3600)}</b> hour(s)</span>;
+                        remainingTimeDIV = <span>Estimated Remaining Time: ~ <b>{Math.round((remainingTime/3600) * 100) / 100}</b> hour(s)</span>;
                     }else{
-                        remainingTimeDIV = <span>Estimated Remaining Time: ~ <b>{Math.floor(remainingTime/60)}</b> minute(s)</span>;
+                        remainingTimeDIV = <span>Estimated Remaining Time: ~ <b>{Math.round((remainingTime/60) * 100) / 100}</b> minute(s)</span>;
                     }
                 }else{
                     remainingTimeDIV = <span>Estimated Remaining Time: ~ <b>{remainingTime}</b> second(s)</span>;
