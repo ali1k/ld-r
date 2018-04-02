@@ -3,13 +3,14 @@ import {BaseStore} from 'fluxible/addons';
 class DatasetAnnotationStore extends BaseStore {
     constructor(dispatcher) {
         super(dispatcher);
-        this.stats = {annotated: 0, total: 0};
+        this.stats = {annotated: 0, total: 0, prevAnnotated: 0};
         this.currentText = '';
         this.annotatedText = '';
         this.currentID = '';
         this.tags = {};
     }
     updateStatsAnnotated(payload) {
+        this.stats.prevAnnotated = this.stats.annotated;
         this.stats.annotated = payload.annotated;
         this.emitChange();
     }

@@ -304,6 +304,22 @@ class DatasetAnnotation extends React.Component {
         }
         let progressDIV = '';
         if(this.state.annotationMode){
+            let remainingTime = 0;
+            if(this.props.DatasetAnnotationStore.stats.prevAnnotated && this.props.DatasetAnnotationStore.stats.annotated && this.props.DatasetAnnotationStore.stats.total){
+                remainingTime = Math.floor(this.state.feedbackInterval * (this.props.DatasetAnnotationStore.stats.total-this.props.DatasetAnnotationStore.stats.annotated)/(this.props.DatasetAnnotationStore.stats.annotated-this.props.DatasetAnnotationStore.stats.prevAnnotated));
+            }
+            let remainingTimeDIV = '';
+            if(remainingTime){
+                if(remainingTime >= 60){
+                    if(remainingTime >= 3600){
+                        remainingTimeDIV = <span>Estimated Remaining Time: ~ <b>{Math.floor(remainingTime/3600)}</b> hour(s)</span>;
+                    }else{
+                        remainingTimeDIV = <span>Estimated Remaining Time: ~ <b>{Math.floor(remainingTime/60)}</b> minute(s)</span>;
+                    }
+                }else{
+                    remainingTimeDIV = <span>Estimated Remaining Time: ~ <b>{remainingTime}</b> second(s)</span>;
+                }
+            }
             formDIV = '';
             progressDIV = <div>
                 <div className='ui list'>
@@ -321,7 +337,13 @@ class DatasetAnnotation extends React.Component {
                             Enriched {this.props.DatasetAnnotationStore.stats.annotated} out of {this.props.DatasetAnnotationStore.stats.total} items <a className="ui button mini circular" onClick={this.handleAnnotateDataset.bind(this)}><i className="ui icon blue refresh"></i> refresh</a>
                         </Progress>
                         {this.state.hideFeedback ?
-                            null
+                            <div className="ui equal width center aligned padded grid">
+                                <div className="row">
+                                    <div className="column">
+                                        {remainingTimeDIV}
+                                    </div>
+                                </div>
+                            </div>
                             :
                             <div className="ui raised stacked segments">
                                 <div className="ui secondary compact segment">
