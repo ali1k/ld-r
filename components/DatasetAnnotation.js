@@ -16,13 +16,13 @@ import countAnnotatedResourcesWithProp from '../actions/countAnnotatedResourcesW
 class DatasetAnnotation extends React.Component {
     constructor(props){
         super(props);
-        this.state = {stopWords: '', confidence: 0.5, advancedMode: 0, storingDataset: '', datasetURI: '', resourceType: '', propertyURI: '', annotationMode: 0, storeInNewDataset : false, noDynamicConfig: 0};
+        this.state = {language: 'en', stopWords: '', confidence: 0.5, batchSize: 10, feedbackInterval: 3, advancedMode: 0, storingDataset: '', datasetURI: '', resourceType: '', propertyURI: '', annotationMode: 0, storeInNewDataset : false, noDynamicConfig: 0, hideFeedback: false};
     }
     componentDidMount() {
 
     }
     componentDidUpdate() {
-        if(this.state.annotationMode){
+        if(this.state.annotationMode && !this.state.hideFeedback){
             let tags = this.prepareTagsForCloud(this.props.DatasetAnnotationStore.tags);
             if(tags.length){
                 //$('.tagCloud').jQCloud(this.prepareTagsForCloud(this.props.DatasetAnnotationStore.tags));
@@ -92,6 +92,13 @@ class DatasetAnnotation extends React.Component {
             this.setState({storeInNewDataset: false, storingDataset: '', noDynamicConfig: 0});
         }
     }
+    handleFeedbackCheckBox(e, t){
+        if(t.value === '1'){
+            this.setState({hideFeedback: true});
+        }else{
+            this.setState({hideFeedback: false});
+        }
+    }
     startInterval(){
         let self=this;
         //set an interval for progress bar
@@ -106,7 +113,7 @@ class DatasetAnnotation extends React.Component {
             if(self.props.DatasetAnnotationStore.stats.annotated && self.props.DatasetAnnotationStore.stats.annotated===self.props.DatasetAnnotationStore.stats.total){
                 clearInterval(intervalId);
             }
-        }, 2200);
+        }, self.state.feedbackInterval*1000);
         this.setState({intervalId: intervalId});
     }
     handleAnnotateDataset() {
@@ -122,7 +129,9 @@ class DatasetAnnotation extends React.Component {
                 datasetLabel: self.findDatasetLabel(self.state.datasetURI),
                 noDynamicConfig: self.state.noDynamicConfig,
                 confidence: self.state.confidence,
-                stopWords: self.state.stopWords
+                stopWords: self.state.stopWords,
+                hideFeedback: self.state.hideFeedback,
+                batchSize: self.state.batchSize
             });
         }
     }
@@ -150,6 +159,24 @@ class DatasetAnnotation extends React.Component {
         if (!isNaN(val)){
             if(Number(val)<=1 && Number(val) >=0){
                 this.setState({confidence: val});
+            }
+        }
+    }
+    handleBatchSizeChange(event){
+        let val = event.target.value.trim();
+        //if it is a number
+        if (!isNaN(val)){
+            if(Number(val)<=100 && Number(val) >=1){
+                this.setState({batchSize: val});
+            }
+        }
+    }
+    handleFeedbackIntervalChange(event){
+        let val = event.target.value.trim();
+        //if it is a number
+        if (!isNaN(val)){
+            if(Number(val) >=1){
+                this.setState({feedbackInterval: val});
             }
         }
     }
@@ -254,6 +281,20 @@ class DatasetAnnotation extends React.Component {
                             <b>Stop Words</b>
                             <input type="text" value={this.state.stopWords} onChange={this.handleStopWordsChange.bind(this)} placeholder="Comma seperated list of stop words"/>
                         </div>
+                        <Divider hidden />
+                        <div className="item">
+                            <b>Batch Size (number of parallel requests)</b>
+                            <input type="text" value={this.state.batchSize} onChange={this.handleBatchSizeChange.bind(this)} placeholder="Batch Size: a number between 1 to 100"/>
+                        </div>
+                        <div className="item">
+                            <b>Feedback Interval (in seconds)</b>
+                            <input type="text" value={this.state.feedbackInterval} onChange={this.handleFeedbackIntervalChange.bind(this)} placeholder="Feedback Interval in seconds"/>
+                        </div>
+                        <Form.Group>
+                            <label>Hide Tag Cloud Feedback?</label>
+                            <Form.Radio label='No' name='hideFeedback' value='0' checked={!this.state.hideFeedback} onChange={this.handleFeedbackCheckBox.bind(this)} />
+                            <Form.Radio label='Yes, it helps for scalability' name='hideFeedback' value='1' checked={this.state.hideFeedback} onChange={this.handleFeedbackCheckBox.bind(this)} />
+                        </Form.Group>
                     </div>
                     : null}
                 <Divider hidden />
@@ -279,20 +320,28 @@ class DatasetAnnotation extends React.Component {
                         <Progress percent={this.props.DatasetAnnotationStore.stats.annotated ? Math.floor((this.props.DatasetAnnotationStore.stats.annotated / this.props.DatasetAnnotationStore.stats.total) * 100) : 0} progress active color='blue'>
                             Enriched {this.props.DatasetAnnotationStore.stats.annotated} out of {this.props.DatasetAnnotationStore.stats.total} items <a className="ui button mini circular" onClick={this.handleAnnotateDataset.bind(this)}><i className="ui icon blue refresh"></i> refresh</a>
                         </Progress>
-                        <div className="ui raised stacked segments">
-                            <div className="ui secondary compact segment">
-                                <a href={'/dataset/' + encodeURIComponent(this.state.datasetURI) + '/resource/'+encodeURIComponent(this.props.DatasetAnnotationStore.currentID)} target="_blank">{this.props.DatasetAnnotationStore.currentID}</a>
+                        {this.state.hideFeedback ?
+                            null
+                            :
+                            <div className="ui raised stacked segments">
+                                <div className="ui secondary compact segment">
+                                    <a href={'/dataset/' + encodeURIComponent(this.state.datasetURI) + '/resource/'+encodeURIComponent(this.props.DatasetAnnotationStore.currentID)} target="_blank">{this.props.DatasetAnnotationStore.currentID}</a>
+                                </div>
+                                <div className="ui compact segment">
+                                    <div dangerouslySetInnerHTML={{__html: this.props.DatasetAnnotationStore.annotatedText}} />
+                                </div>
                             </div>
-                            <div className="ui compact segment">
-                                <div dangerouslySetInnerHTML={{__html: this.props.DatasetAnnotationStore.annotatedText}} />
-                            </div>
-                        </div>
+                        }
                     </div>
                 }
-                <div className='ui segment'>
-                    <div ref="tagCloud" className="tagCloud" style={{minHeight: 300, minWidth: 300}}></div>
-                    {tagsDIV}
-                </div>
+                {this.state.hideFeedback ?
+                    null
+                    :
+                    <div className='ui segment'>
+                        <div ref="tagCloud" className="tagCloud" style={{minHeight: 300, minWidth: 300}}></div>
+                        {tagsDIV}
+                    </div>
+                }
             </div>
         }
         return (
