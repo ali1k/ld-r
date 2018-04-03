@@ -134,7 +134,8 @@ class DatasetPager extends React.Component {
                 { key: 3, icon: 'line chart', text:  'Scatter Chart', value: 'ScatterChartView' },
                 { key: 4, icon: 'bar chart', text:  'Bar Chart', value: 'BarChartView' },
                 { key: 5, icon: 'bullseye', text:  'Radar Chart', value: 'RadarChartView' },
-                { key: 6, icon: 'share alternate', text:  'Network Diagram', value: 'NetworkView' }
+                { key: 6, icon: 'share alternate', text:  'Network Diagram', value: 'NetworkView' },
+                { key: 6, icon: 'calendar minus', text:  'Timeline', value: 'TimelineView' }
             ]
             v_icons = {
                 'BasicResourceList': 'table',
@@ -142,7 +143,8 @@ class DatasetPager extends React.Component {
                 'ScatterChartView': 'line chart',
                 'BarChartView': 'bar chart',
                 'RadarChartView': 'bullseye',
-                'NetworkView': 'share alternate'
+                'NetworkView': 'share alternate',
+                'TimelineView': 'calendar minus'
             };
             defaultViewIcon = 'table';
         }else{

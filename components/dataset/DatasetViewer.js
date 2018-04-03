@@ -5,6 +5,7 @@ import TreeMapView from './viewer/TreeMapView';
 import RadarChartView from './viewer/RadarChartView';
 import BarChartView from './viewer/BarChartView';
 import NetworkView from './viewer/NetworkView';
+import TimelineView from './viewer/TimelineView';
 
 class DatasetViewer extends React.Component {
     render() {
@@ -32,6 +33,9 @@ class DatasetViewer extends React.Component {
                 break;
             case 'NetworkView':
                 viewer = <NetworkView expanded={this.props.expanded} enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={this.props.isBig} config={this.props.config} cloneable={this.props.cloneable} onCloneResource={this.props.onCloneResource} OpenInNewTab={this.props.OpenInNewTab}/>;
+                break;
+            case 'TimelineView':
+                viewer = <TimelineView expanded={this.props.expanded} enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={this.props.isBig} config={this.props.config} cloneable={this.props.cloneable} onCloneResource={this.props.onCloneResource} OpenInNewTab={this.props.OpenInNewTab}/>;
                 break;
             default:
                 viewer = <BasicResourceList expanded={this.props.expanded} enableAuthentication={this.props.enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={this.props.isBig} config={this.props.config} facetConfigs={this.props.facetConfigs} cloneable={this.props.cloneable} onCloneResource={this.props.onCloneResource} OpenInNewTab={this.props.OpenInNewTab}/>;
