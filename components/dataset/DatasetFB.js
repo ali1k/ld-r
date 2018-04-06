@@ -33,7 +33,7 @@ class DatasetFB extends React.Component {
     }
     handleExport(){
         let fields = this.getPropsForAnalysis();
-        let csv = json2csv({ data: this.props.resources, fields: fields });
+        let csv = json2csv.parse(this.props.resources, {fields});
         //console.log(csv);
         let uriContent = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
         window.open(uriContent, 'data.csv');

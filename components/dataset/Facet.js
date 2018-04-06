@@ -36,7 +36,7 @@ class Facet extends React.Component {
         this.filteredInstances.forEach((instance)=>{
             values.push({item: instance.value, resourceNo: instance.total})
         })
-        let csv = json2csv({ data: values, fields: ['item', 'resourceNo'] });
+        let csv = json2csv.parse(values, {fields: ['item', 'resourceNo']});
         //console.log(csv);
         let uriContent = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
         window.open(uriContent, 'dataF.csv');
