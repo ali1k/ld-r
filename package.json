@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "webpack --config ./webpack/prod.config.js && NODE_ENV=production npm start",
-    "build:windows": "webpack --config ./webpack/prod.config.js && set NODE_ENV=production && npm start",
+    "build:windows": "webpack --config ./webpack/prod.config.js&&set NODE_ENV=production&&npm start",
     "build:nostart": "webpack --config ./webpack/prod.config.js",
     "dev": "node ./webpack/dev-server.js",
     "dev:windows": "node ./webpack/dev-server.js",
