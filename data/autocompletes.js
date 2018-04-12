@@ -24,6 +24,8 @@ module.exports = {
             {title: 'ldr:host'},
             {title: 'ldr:port'},
             {title: 'ldr:path'},
+            {title: 'ldr:username'},
+            {title: 'ldr:password'},
             {title: 'ldr:annotatedBy'},
             {title: 'ldr:annotations'},
             {title: 'ldr:surfaceForm'},

@@ -61,6 +61,12 @@ export default {
                 extendedOViewer: ['BasicIndividualDetailView'],
                 shortenURI: 1
             },
+            'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#password': {
+                label: ['Password'],
+                objectIViewer: ['PasswordView'],
+                objectIEditor: ['PasswordInput'],
+                allowNewValue: 0
+            },
             'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#cloneOf': {
                 readOnlyProperty: 1,
                 allowPropertyDelete: 0
@@ -327,11 +333,6 @@ export default {
                 'http://xmlns.com/foaf/0.1/mbox': {
                     label: ['Email Address'],
                     readOnlyProperty: 1
-                },
-                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#password': {
-                    label: ['Password'],
-                    objectIViewer: ['PasswordView'],
-                    objectIEditor: ['PasswordInput']
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#editorOf': {
                     label: ['Editor of Scope'],
