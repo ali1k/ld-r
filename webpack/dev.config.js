@@ -6,6 +6,7 @@ const mainPort = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const devPort = process.env.PORT ? parseInt(process.env.PORT) + 1 : 3001;
 
 let webpackConfig = {
+    mode: 'development',
     resolve: {
         extensions: ['.js', '.jsx'],
         alias: {

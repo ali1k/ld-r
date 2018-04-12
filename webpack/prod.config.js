@@ -1,10 +1,12 @@
 let webpack = require('webpack');
 let path = require('path');
-let StatsWriterPlugin = require('webpack-stats-plugin').StatsWriterPlugin;
-let Visualizer = require('webpack-visualizer-plugin');
-let ExtractTextPlugin = require('extract-text-webpack-plugin');
+//plugins
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 let webpackConfig = {
+    mode: 'production',
+    devtool: '',
     resolve: {
         extensions: ['.js'],
         alias: {
@@ -12,17 +14,29 @@ let webpackConfig = {
         }
     },
     entry: {
-        main: [
-            './client.js'
-        ],
-        vendor: [
-            'react', 'react-dom', 'async', 'fluxible', 'fluxible-addons-react', 'wicket/wicket', 'fluxible-plugin-fetchr', 'fluxible-router', 'moment', 'rc-calendar', 'semantic-ui-react', 'react-leaflet', 'react-sigma', 'lodash/collection', 'lodash/string', 'react-search-input', 'classnames/bind', 'chroma-js', 'password-hash', 'recharts'
-        ]
+        main: './client.js'
     },
     output: {
         path: path.resolve('./build/js'),
         publicPath: '/public/js/',
         filename: '[name].js'
+    },
+    optimization: {
+        minimize: true,
+        runtimeChunk: {
+            name: 'vendor.bundle'
+        },
+        splitChunks: {
+            cacheGroups: {
+                default: false,
+                commons: {
+                    test: /node_modules/,
+                    name: 'vendor.bundle',
+                    chunks: 'initial',
+                    minSize: 1
+                }
+            }
+        }
     },
     module: {
         rules: [
@@ -50,6 +64,9 @@ let webpackConfig = {
         setImmediate: false
     },
     plugins: [
+        new CleanWebpackPlugin([
+            'dist',
+        ]),
         // css files from the extract-text-plugin loader
         new ExtractTextPlugin({
             filename: '../css/vendor.bundle.css',
@@ -61,29 +78,12 @@ let webpackConfig = {
                 NODE_ENV: JSON.stringify('production'),
                 BROWSER: JSON.stringify('true')
             }
-        }),
-        new webpack.optimize.UglifyJsPlugin({
-            sourceMap: true,
-            compress: {
-                warnings: false
-            }
-        }),
-        new webpack.optimize.CommonsChunkPlugin({
-            name: 'vendor',
-            minChunks: Infinity,
-            filename: '[name].bundle.js'
-        }),
-        // Write out stats file to build directory.
-        new StatsWriterPlugin({
-            filename: 'webpack.stats.json', // Default
-            fields: null,
-            transform: function (data) {
-                return JSON.stringify(data, null, 2);
-            }
-        }),
-        new Visualizer()
+        })
     ],
-    devtool: 'cheap-module-source-map'
+    stats: {
+	       colors: true,
+		   children: false,
+	       }
 };
 
 module.exports = webpackConfig;
