@@ -3,6 +3,8 @@ let path = require('path');
 //plugins
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const StatsWriterPlugin = require('webpack-stats-plugin').StatsWriterPlugin;
+const Visualizer = require('webpack-visualizer-plugin');
 
 let webpackConfig = {
     mode: 'production',
@@ -78,7 +80,16 @@ let webpackConfig = {
                 NODE_ENV: JSON.stringify('production'),
                 BROWSER: JSON.stringify('true')
             }
-        })
+        }),
+        // Write out stats file to build directory.
+        new StatsWriterPlugin({
+            filename: 'webpack.stats.json', // Default
+            fields: null,
+            transform: function (data) {
+                return JSON.stringify(data, null, 2);
+            }
+        }),
+        new Visualizer()
     ],
     stats: {
 	       colors: true,
