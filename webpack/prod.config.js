@@ -20,8 +20,7 @@ let webpackConfig = {
     output: {
         path: path.resolve('./build/js'),
         publicPath: '/public/js/',
-        filename: '[name].js',
-        chunkFilename: '[name].bundle.js',
+        filename: '[name].js'
     },
     optimization: {
         minimize: true,
