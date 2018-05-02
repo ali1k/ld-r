@@ -19,7 +19,7 @@ export default {
             query = params.query;
             lookupClass = params.lookupClass ? params.lookupClass : '';
             //send request
-            rp({method: 'get', headers: {'Accept': 'application/json'}, accept: 'application/json', uri: 'http://' + dbpediaLookupService[0].host + '/api/search.asmx/PrefixSearch?QueryClass=' + lookupClass + '&MaxHits=5&QueryString=' + query}).then(function(res){
+            rp({method: 'get', headers: {'Accept': 'application/json'}, accept: 'application/json', uri: 'http://' + dbpediaLookupService[0].host + '/api/search.asmx/KeywordSearch?QueryClass=' + lookupClass + '&MaxHits=5&QueryString=' + query}).then(function(res){
                 callback(null, {
                     suggestions: utilObject.parseDBpediaLookup(res)
                 });
