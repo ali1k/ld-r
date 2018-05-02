@@ -247,6 +247,7 @@ class IndividualObject extends React.Component {
                             <div className="twelve wide column field">
                                 {dataViewType}
                                 {this.props.spec.lang ? <span className='ui mini label ribbon left attached'>{this.getLanguage(this.props.spec.lang)}</span>: null}
+                                {this.props.spec.dataType ? <span className='ui mini label ribbon left attached'>Data Type: <b>{this.props.spec.dataType}</b></span>: null}
                             </div>
                             <div className="four wide column field animated pulse">
                                 {detailDIV}
