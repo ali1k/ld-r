@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {provideContext} from 'fluxible-addons-react';
 import ObjectIViewer from './ObjectIViewer';
+import PrefixBasedView from './viewer/individual/PrefixBasedView';
 import ObjectIEditor from './ObjectIEditor';
 import {navigateAction} from 'fluxible-router';
 import {Popup} from 'semantic-ui-react';
@@ -247,7 +248,7 @@ class IndividualObject extends React.Component {
                             <div className="twelve wide column field">
                                 {dataViewType}
                                 {this.props.spec.lang ? <span className='ui mini label ribbon left attached'>{this.getLanguage(this.props.spec.lang)}</span>: null}
-                                {this.props.spec.dataType ? <span className='ui mini label ribbon left attached'>Data Type: <b>{this.props.spec.dataType}</b></span>: null}
+                                {this.props.spec.dataType ? <span className='ui mini label ribbon left attached'><PrefixBasedView spec={{value: this.props.spec.dataType}} /></span>: null}
                             </div>
                             <div className="four wide column field animated pulse">
                                 {detailDIV}
