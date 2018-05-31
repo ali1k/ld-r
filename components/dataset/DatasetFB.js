@@ -90,7 +90,7 @@ class DatasetFB extends React.Component {
         //filtering
         let instances = this.props.resources;
         //console.log(instances);
-        if(instances.length && this.state.searchMode){
+        if(instances.length){
             let KEYS_TO_FILTERS = [];
             for(let prop in instances[0]){
                 if(prop !== 'propsForAnalysis' && prop !== 'v' && prop !== 'geo' && prop !== 'd' && prop !== 'image' && prop !== 'accessLevel'){
@@ -130,9 +130,7 @@ class DatasetFB extends React.Component {
                     <div className="ui segment">
                         <DatasetViewer expanded={this.props.expanded} enableAuthentication={enableAuthentication} cloneable={0} resources={instances} datasetURI={this.props.datasetURI} OpenInNewTab={true} isBig={this.props.isBig} config={dcnf} facetConfigs={facetConfigs} pivotConstraint={this.props.pivotConstraint}/>
                     </div>
-                    {this.state.searchMode ?
-                        <SearchInput placeholder='filter results by a keyword' className="ui fluid search icon input" onChange={this.filterUpdated.bind(this)} throttle={500}/>
-                        : null}
+                    <SearchInput placeholder='filter results by a keyword' className="ui fluid search icon input" onChange={this.filterUpdated.bind(this)} throttle={500}/>
                     <DatasetPager hasResources={instances.length} config={dcnf} enableQuerySaveImport={enableQuerySaveImport} resourceQuery={this.props.resourceQuery} showAllResources={this.props.showAllResources} onShowAllResources={this.props.onShowAllResources} onSearchMode={this.handleSearchMode.bind(this)} selection={this.props.selection} pivotConstraint={this.props.pivotConstraint} onExpandCollapse={this.props.onExpandCollapse} handleClick={this.props.handleClick} datasetURI={this.props.datasetURI} total={this.props.total} threshold={this.props.pagerSize} currentPage={this.props.currentPage} noOfAnalysisProps={this.getNoOfPropsForAnalysis()} handleViewerChange={this.handleViewerChange.bind(this)} handleToggleShowQuery={this.handleToggleShowQuery.bind(this)} handleExport={this.handleExport.bind(this)}/>
                     {dcnf.displayQueries ?
                         <div className= "ui tertiary segment">
