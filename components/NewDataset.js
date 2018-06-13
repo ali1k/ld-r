@@ -38,7 +38,7 @@ class NewDataset extends React.Component {
                 user = tmp.id;
             }
         }
-        let datasetURI, datasetLabel, endpointURI, graphName, resourceFocusType, host, port, path, endpointType;
+        let datasetURI, datasetLabel, endpointURI, graphName, resourceFocusType, host, port, path, protocol, endpointType;
         graphName= 'default';
         datasetLabel= 'd' + Math.round(+new Date() / 1000);
         datasetURI= baseResourceDomain[0] + '/' + datasetLabel;
@@ -75,6 +75,11 @@ class NewDataset extends React.Component {
             }else{
                 port = 80;
             }
+            if(parsed.protocol){
+                protocol = parsed.protocol.replace(':', '');
+            }else{
+                protocol = 'http';
+            }
             endpointType = 'ClioPatria';
             this.context.executeAction(createFromExistingDataset, {
                 datasetLabel: datasetLabel,
@@ -84,6 +89,7 @@ class NewDataset extends React.Component {
                 host: host,
                 port: port,
                 path: path,
+                protocol: protocol,
                 endpointType: endpointType
             });
         }

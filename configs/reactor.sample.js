@@ -281,6 +281,9 @@ export default {
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#path': {
                     allowNewValue: 0
                 },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#protocol': {
+                    allowNewValue: 0
+                },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#graphName': {
                     label: ['Graph Name'],
                     hint: ['use "default" to consider all graph names'],

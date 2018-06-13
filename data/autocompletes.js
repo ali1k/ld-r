@@ -22,6 +22,7 @@ module.exports = {
             {title: 'ldr:datasetLabel'},
             {title: 'ldr:datasetCategory'},
             {title: 'ldr:host'},
+            {title: 'ldr:protocol'},
             {title: 'ldr:port'},
             {title: 'ldr:path'},
             {title: 'ldr:username'},

@@ -57,7 +57,8 @@ export default {
             httpOptions = {
                 host: config.options.host,
                 port: config.options.port,
-                path: config.options.path
+                path: config.options.path,
+                protocol: config.options.protocol
             };
             let useReasoning = 0;
             if(config.options.useReasoning){
