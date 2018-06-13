@@ -36,6 +36,7 @@ export default {
                 readOnly: 1,
                 allowInlineConfig: 0,
                 resourceFocusType: ['http://dbpedia.org/ontology/University'],
+                resourceLabelProperty: ['http://xmlns.com/foaf/0.1/name'],
                 datasetLabel: ['DBpedia Universities']
             }
         },

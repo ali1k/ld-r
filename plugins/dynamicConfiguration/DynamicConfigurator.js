@@ -194,7 +194,7 @@ class DynamicConfigurator {
                 graphEnd = '';
             }
             const noAuthQuery  = `
-            SELECT DISTINCT ?config ?label ?host ?port ?path ?protocol ?endpointType ?setting ?settingValue WHERE {
+            SELECT DISTINCT ?config ?label ?host ?port ?path ?protocol ?username ?password ?endpointType ?setting ?settingValue WHERE {
                 ${graph}
                     ?config a ldr:ServerConfig ;
                             ldr:dataset <${datasetURI}> ;
@@ -204,15 +204,17 @@ class DynamicConfigurator {
                             ldr:endpointType ?endpointType ;
                             ?setting ?settingValue .
                             OPTIONAL { ?config ldr:protocol ?protocol . }
+                            OPTIONAL { ?config ldr:username ?username . }
+                            OPTIONAL { ?config ldr:password ?password . }
                             OPTIONAL { ?config rdfs:label ?label . }
-                            FILTER (?setting !=rdf:type && ?setting !=ldr:dataset && ?setting !=ldr:host && ?setting !=ldr:protocol && ?setting !=ldr:port && ?setting !=ldr:path && ?setting !=ldr:endpointType)
+                            FILTER (?setting !=rdf:type && ?setting !=ldr:dataset && ?setting !=ldr:host && ?setting !=ldr:protocol && ?setting !=ldr:port && ?setting !=ldr:path && ?setting !=ldr:endpointType && ?setting !=ldr:username && ?setting !=ldr:password)
                 ${graphEnd}
             }
             `;
             let query;
             if(userSt){
                 query = `
-                SELECT DISTINCT ?config ?label ?host ?port ?path ?endpointType ?setting ?settingValue WHERE {
+                SELECT DISTINCT ?config ?label ?host ?port ?path ?protocol ?username ?password ?endpointType ?setting ?settingValue WHERE {
                     ${graph}
                     {
                         ?config a ldr:ServerConfig ;
@@ -224,8 +226,10 @@ class DynamicConfigurator {
                                 ldr:endpointType ?endpointType ;
                                 ?setting ?settingValue .
                                 OPTIONAL { ?config ldr:protocol ?protocol . }
+                                OPTIONAL { ?config ldr:username ?username . }
+                                OPTIONAL { ?config ldr:password ?password . }
                                 OPTIONAL { ?config rdfs:label ?label . }
-                                FILTER (?setting !=rdf:type && ?setting !=ldr:dataset && ?setting !=ldr:host && ?setting !=ldr:protocol && ?setting !=ldr:port && ?setting !=ldr:path && ?setting !=ldr:endpointType)
+                                FILTER (?setting !=rdf:type && ?setting !=ldr:dataset && ?setting !=ldr:host && ?setting !=ldr:protocol && ?setting !=ldr:port && ?setting !=ldr:path && ?setting !=ldr:endpointType && ?setting !=ldr:username && ?setting !=ldr:password)
                     }
                     UNION
                     {
@@ -237,8 +241,10 @@ class DynamicConfigurator {
                                 ldr:endpointType ?endpointType ;
                                 ?setting ?settingValue .
                                 OPTIONAL { ?config ldr:protocol ?protocol . }
+                                OPTIONAL { ?config ldr:username ?username . }
+                                OPTIONAL { ?config ldr:password ?password . }
                                 OPTIONAL { ?config rdfs:label ?label . }
-                                FILTER (?setting !=rdf:type && ?setting !=ldr:dataset && ?setting !=ldr:host && ?setting !=ldr:protocol && ?setting !=ldr:port && ?setting !=ldr:path && ?setting !=ldr:endpointType)
+                                FILTER (?setting !=rdf:type && ?setting !=ldr:dataset && ?setting !=ldr:host && ?setting !=ldr:protocol && ?setting !=ldr:port && ?setting !=ldr:path && ?setting !=ldr:endpointType && ?setting !=ldr:username && ?setting !=ldr:password)
                                 filter not exists {
                                     ?config ldr:createdBy ?user.
                                 }
