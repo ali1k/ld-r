@@ -32,7 +32,7 @@ Config: Server
       If no endpoint is found for your dataset, the config for 'generic' will be used. At the moment only endpoint types 'cliopatria', 'virtuoso' , 'sesame', 'blazegraph' and 'stardog' are supported. Use 'endpointType' parameter to specify the endpoint type (default is set to 'virtuoso'). If you want to enable reasoning on your triple store, set 'useReasoning' parameter to '1'.</td>
       <td>
              'http://dbpedia.org': {
-                  host: 'dbpedia.org', port: 80, path: '/sparql', endpointType: 'virtuoso', graphName: 'default', useReasoning: 0
+                  host: 'dbpedia.org', port: 80, path: '/sparql', endpointType: 'virtuoso', graphName: 'default', useReasoning: 0, protocol: 'http'
               }
       </td>
     </tr>
