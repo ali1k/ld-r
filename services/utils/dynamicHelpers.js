@@ -58,7 +58,9 @@ export default {
                 host: config.options.host,
                 port: config.options.port,
                 path: config.options.path,
-                protocol: config.options.protocol
+                protocol: config.options.protocol,
+                username: config.options.username,
+                password: config.options.password,
             };
             let useReasoning = 0;
             if(config.options.useReasoning){
