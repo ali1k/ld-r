@@ -64,7 +64,8 @@ class MasterBrowser extends React.Component {
                     content: checkDIVc,
                     key: prop + keyI
                 },
-                title: prop
+                title: prop,
+                key: prop + 'k' + keyI
             });
         }
         //add others to the end
@@ -79,7 +80,8 @@ class MasterBrowser extends React.Component {
                         content: checkDIVc,
                         key: 'Others' + keyI
                     },
-                    title: 'Others'
+                    title: 'Others',
+                    key: 'OthersK' + keyI
                 });
             }
             checkDIV= <Accordion panels={cpanels} styled exclusive={false} fluid />;
