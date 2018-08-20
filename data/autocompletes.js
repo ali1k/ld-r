@@ -27,6 +27,7 @@ module.exports = {
             {title: 'ldr:path'},
             {title: 'ldr:username'},
             {title: 'ldr:password'},
+            {title: 'ldr:delimitedBy'},
             {title: 'ldr:annotatedBy'},
             {title: 'ldr:annotations'},
             {title: 'ldr:surfaceForm'},

@@ -74,6 +74,11 @@ class PropertyReactor extends React.Component {
                     ? this.props.config.category[0]
                     : '')
                 : ''),
+            delimitedBy: (this.props.config
+                ? (this.props.config.delimitedBy
+                    ? this.props.config.delimitedBy[0]
+                    : '')
+                : ''),
             dataset: this.props.datasetURI,
             resourceURI: this.props.resource,
             propertyPath: this.props.propertyPath,
