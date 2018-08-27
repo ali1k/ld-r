@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import URIUtil from '../../utils/URIUtil';
 
 class TagCloudBrowser extends React.Component {
@@ -9,16 +10,16 @@ class TagCloudBrowser extends React.Component {
     componentDidMount() {
         if(this.tags.length){
             //$('.tagCloud').jQCloud(this.prepareTagsForCloud(this.props.DatasetAnnotationStore.tags));
-            $('.tagCloud').jQCloud(this.tags, {autoResize: true});
+            $(ReactDOM.findDOMNode(this.refs.tagCloud)).jQCloud(this.tags, {autoResize: true});
         }
     }
     componentDidUpdate() {
         if(this.tags.length){
             //$('.tagCloud').jQCloud(this.prepareTagsForCloud(this.props.DatasetAnnotationStore.tags));
-            $('.tagCloud').css('width', '100%');
-            $('.tagCloud').css('height', '100%');
-            $('.tagCloud').empty();
-            $('.tagCloud').jQCloud('update', this.tags, {autoResize: true});
+            $(ReactDOM.findDOMNode(this.refs.tagCloud)).css('width', '100%');
+            $(ReactDOM.findDOMNode(this.refs.tagCloud)).css('height', '100%');
+            $(ReactDOM.findDOMNode(this.refs.tagCloud)).empty();
+            $(ReactDOM.findDOMNode(this.refs.tagCloud)).jQCloud('update', this.tags, {autoResize: true});
         }
     }
     doesExist(value){
