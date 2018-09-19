@@ -14,7 +14,7 @@ A file upload box to allow uploading files
 class FileInput extends React.Component {
     constructor() {
         super();
-        this.state = {status: 0, progress: 0}; //status 0: start, 1: uploading, 2: uploaded
+        this.state = {status: 0, progress: 0, filePath: ''}; //status 0: start, 1: uploading, 2: uploaded
     }
     getRandomNumber() {
         return Math.round(+new Date() / 1000);
@@ -34,12 +34,13 @@ class FileInput extends React.Component {
         });
 
         req.on('progress', function(e) {
-            console.log('Percentage done: ', e.percent);
+            //console.log('Percentage done: ', e.percent);
             self.setState({status: 1, progress: e.percent});
         }).end((err,res)=> {
             //console.log(err,res);
-            self.setState({status: 2, progress: 100});
-            self.props.onDataEdit(window.location.protocol+'//'+window.location.hostname+(window.location.port ? ':'+window.location.port: '') + '/uploaded/'+ fname);
+            let filePath = window.location.protocol+'//'+window.location.hostname+(window.location.port ? ':'+window.location.port: '') + '/uploaded/'+ fname;
+            self.setState({status: 2, progress: 100, filePath: filePath});
+            self.props.onDataEdit(filePath);
         });
 
     }
@@ -69,7 +70,7 @@ class FileInput extends React.Component {
                 }
                 {this.state.status === 2 ?
                     <div className="uploaded">
-                        File was successfully uploaded.
+                        File was successfully uploaded at <a href={this.state.filePath}>{this.state.filePath}</a>.
                     </div>
                     :null
                 }
