@@ -19,6 +19,8 @@ import cookieParser from 'cookie-parser';
 import favicon from 'serve-favicon';
 //required for authentication
 import handleAuthentication from './plugins/authentication/handleAuth';
+//required for file upload
+import handleUpload from './plugins/import/handleUpload';
 //required for export resources
 import handleExport from './plugins/export/handleExport';
 //required for generating docs
@@ -58,6 +60,8 @@ server.use(cookieSession({
 if(enableAuthentication){
     handleAuthentication(server);
 }
+//handling file upload
+handleUpload(server);
 //handling content export
 handleExport(server);
 //handling docs
@@ -86,6 +90,7 @@ server.use('/codemirror', express.static(path.join(__dirname, '/node_modules/cod
 server.use('/jqcloud2', express.static(path.join(__dirname, '/node_modules/jqcloud2')));
 
 server.use('/assets', express.static(path.join(__dirname, '/assets')));
+server.use('/uploaded', express.static(path.join(__dirname, '/uploaded')));
 // Get access to the fetchr plugin instance
 let fetchrPlugin = app.getPlugin('FetchrPlugin');
 // Register our services

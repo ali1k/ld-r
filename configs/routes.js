@@ -28,6 +28,16 @@ export default {
             done();
         }
     },
+    importCSV: {
+        path: '/importCSV',
+        method: 'get',
+        handler: require('../plugins/import/CSVImport'),
+        label: 'CSVImport',
+        action: (context, payload, done) => {
+            context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Import CSV files'});
+            done();
+        }
+    },
     newDataset: {
         path: '/newDataset',
         method: 'get',

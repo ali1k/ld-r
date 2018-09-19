@@ -12,3 +12,6 @@ plugins/email/config.js
 react-codemod
 .DS_Store
 package-lock.json
+uploaded/*.csv
+uploaded/*.txt
+uploaded/*.tsv
