@@ -14,7 +14,7 @@ A file upload box to allow uploading files
 class FileInput extends React.Component {
     constructor() {
         super();
-        this.state = {status: 0}; //status 0: start, 1: uploading, 2: uploaded
+        this.state = {status: 0, progress: 0}; //status 0: start, 1: uploading, 2: uploaded
     }
     getRandomNumber() {
         return Math.round(+new Date() / 1000);
@@ -34,6 +34,7 @@ class FileInput extends React.Component {
 
         req.on('progress', function(e) {
             console.log('Percentage done: ', e.percent);
+            this.setState({status: 1, progress: e.percent});
         }).end((err,res)=> {
             //console.log(err,res);
             this.props.onDataEdit(window.location.protocol+'//'+window.location.hostname+(window.location.port ? ':'+window.location.port: '') + '/uploaded/'+ fname);
@@ -48,11 +49,11 @@ class FileInput extends React.Component {
         return (
             <div className="ui fluid container ldr-padding" ref="fileInput">
                 <div className="dropzone">
-                    <Dropzone  ref={(node) => { dropzoneRef = node; }} accept={acceptedMimeTypes} maxSize={maxFileSize} multiple={false} onDrop={this.onDrop.bind(this)}>
-                        <p>Drop your CSV file here</p>
+                    <Dropzone style={{'width': '100%', 'height': '200px', borderWidth: '2px', borderStyle: 'dashed', borderRadius: '5px'}} ref={(node) => { dropzoneRef = node; }} accept={acceptedMimeTypes} maxSize={maxFileSize} multiple={false} onDrop={this.onDrop.bind(this)}>
+                        <p>Drop your file here</p>
                     </Dropzone> or
-                    <button type="button" onClick={() => { dropzoneRef.open() }}>
-                        Browse and select a CSV file
+                    &nbsp;<button className="ui button" type="button" onClick={() => { dropzoneRef.open() }}>
+                    Browse and select a file
                     </button>
                 </div>
             </div>
