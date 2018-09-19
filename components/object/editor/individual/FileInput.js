@@ -5,7 +5,7 @@ import request from 'superagent';
 
 /*----config
     accepted mime-types
-    maximum File size
+    maximum File size in bytes
     file name prefix
 ------------*/
 /**
@@ -14,7 +14,7 @@ A file upload box to allow uploading files
 class FileInput extends React.Component {
     constructor() {
         super();
-        this.state = {status: 0}; //0: start, 1: uploading, 2: uploaded
+        this.state = {status: 0}; //status 0: start, 1: uploading, 2: uploaded
     }
     getRandomNumber() {
         return Math.round(+new Date() / 1000);
@@ -35,7 +35,8 @@ class FileInput extends React.Component {
         req.on('progress', function(e) {
             console.log('Percentage done: ', e.percent);
         }).end((err,res)=> {
-            console.log(err,res);
+            //console.log(err,res);
+            this.props.onDataEdit(window.location.protocol+'//'+window.location.hostname+(window.location.port ? ':'+window.location.port: '') + '/uploaded/'+ fname);
         });
 
     }
@@ -43,10 +44,11 @@ class FileInput extends React.Component {
     render() {
         let dropzoneRef;
         let acceptedMimeTypes = this.props.config && this.props.config.acceptedMimeTypes ? this.props.config.acceptedMimeTypes : '';
+        let maxFileSize = this.props.config && this.props.config.maxFileSize ? Number(this.props.config.maxFileSize) : 157286400; //150MB default
         return (
             <div className="ui fluid container ldr-padding" ref="fileInput">
                 <div className="dropzone">
-                    <Dropzone  ref={(node) => { dropzoneRef = node; }} accept={acceptedMimeTypes} multiple={false} onDrop={this.onDrop.bind(this)}>
+                    <Dropzone  ref={(node) => { dropzoneRef = node; }} accept={acceptedMimeTypes} maxSize={maxFileSize} multiple={false} onDrop={this.onDrop.bind(this)}>
                         <p>Drop your CSV file here</p>
                     </Dropzone> or
                     <button type="button" onClick={() => { dropzoneRef.open() }}>
