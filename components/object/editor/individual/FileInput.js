@@ -24,6 +24,7 @@ class FileInput extends React.Component {
         return tmp[tmp.length - 1];
     }
     onDrop(files) {
+        let self = this;
         let filePrefixName = this.props.config && this.props.config.fileNamePrefix ? this.props.config.fileNamePrefix : 'file';
         let req, fname;
         files.forEach((file)=> {
@@ -34,10 +35,11 @@ class FileInput extends React.Component {
 
         req.on('progress', function(e) {
             console.log('Percentage done: ', e.percent);
-            this.setState({status: 1, progress: e.percent});
+            self.setState({status: 1, progress: e.percent});
         }).end((err,res)=> {
             //console.log(err,res);
-            this.props.onDataEdit(window.location.protocol+'//'+window.location.hostname+(window.location.port ? ':'+window.location.port: '') + '/uploaded/'+ fname);
+            self.setState({status: 2, progress: 100});
+            self.props.onDataEdit(window.location.protocol+'//'+window.location.hostname+(window.location.port ? ':'+window.location.port: '') + '/uploaded/'+ fname);
         });
 
     }
@@ -47,15 +49,30 @@ class FileInput extends React.Component {
         let acceptedMimeTypes = this.props.config && this.props.config.acceptedMimeTypes ? this.props.config.acceptedMimeTypes : '';
         let maxFileSize = this.props.config && this.props.config.maxFileSize ? Number(this.props.config.maxFileSize) : 157286400; //150MB default
         return (
-            <div className="ui fluid container ldr-padding" ref="fileInput">
-                <div className="dropzone">
-                    <Dropzone style={{'width': '100%', 'height': '200px', borderWidth: '2px', borderStyle: 'dashed', borderRadius: '5px'}} ref={(node) => { dropzoneRef = node; }} accept={acceptedMimeTypes} maxSize={maxFileSize} multiple={false} onDrop={this.onDrop.bind(this)}>
-                        <p>Drop your file here</p>
-                    </Dropzone> or
-                    &nbsp;<button className="ui button" type="button" onClick={() => { dropzoneRef.open() }}>
-                    Browse and select a file
-                    </button>
-                </div>
+            <div ref="fileInput">
+                {!this.state.status ?
+                    <div className="dropzone">
+                        <Dropzone style={{'width': '100%', 'height': '200px', borderWidth: '2px', borderStyle: 'dashed', borderRadius: '5px'}} ref={(node) => { dropzoneRef = node; }} accept={acceptedMimeTypes} maxSize={maxFileSize} multiple={false} onDrop={this.onDrop.bind(this)}>
+                            <p>Drop your file here</p>
+                        </Dropzone> or
+                        &nbsp;<button className="ui button" type="button" onClick={() => { dropzoneRef.open() }}>
+                        Browse and select a file
+                        </button>
+                    </div>
+                    :null
+                }
+                {this.state.status === 1 ?
+                    <div className="progress">
+                        {this.state.progress}%
+                    </div>
+                    :null
+                }
+                {this.state.status === 2 ?
+                    <div className="uploaded">
+                        File was successfully uploaded.
+                    </div>
+                    :null
+                }
             </div>
         );
     }
