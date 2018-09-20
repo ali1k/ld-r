@@ -63,10 +63,10 @@ export default {
                 let noOfRows = result.length;
                 if(noOfRows){
                     if(noOfRows > 5){
-                        console.log(result.slice(0, 5));
+                        //console.log(result.slice(0, 5));
                         callback(null, {rows: result.slice(0, 5), total: noOfRows});
                     }else{
-                        console.log(result);
+                        //console.log(result);
                         callback(null, {rows: result, total: noOfRows});
                     }
                 }else{
