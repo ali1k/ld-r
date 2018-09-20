@@ -57,10 +57,12 @@ export default {
             }
             const parser = csv(options, function (err, result) {
                 if (err) {
+                    console.log(err);
                     throw err;
                     callback(null, {rows: [], total: 0});
                 }
                 let noOfRows = result.length;
+                //console.log(noOfRows);
                 if(noOfRows){
                     if(noOfRows > 5){
                         //console.log(result.slice(0, 5));

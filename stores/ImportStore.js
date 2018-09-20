@@ -7,6 +7,15 @@ class ImportStore extends BaseStore {
         this.total = 0;
         this.completed = 0;
     }
+    clearAll() {
+        this.rows = [];
+        this.total = 0;
+        this.completed = 0;
+    }
+    clearConf(){
+        this.clearAll();
+        this.emitChange();
+    }
     updateAttribs(payload) {
         this.rows = payload.rows;
         this.total = payload.total;
@@ -32,7 +41,8 @@ class ImportStore extends BaseStore {
 
 ImportStore.storeName = 'ImportStore'; // PR open in dispatchr to remove this need
 ImportStore.handlers = {
-    'READ_CSV_SUCCESS': 'updateAttribs'
+    'READ_CSV_SUCCESS': 'updateAttribs',
+    'CLEAR_IMPORT_CONFFIG_SUCCESS': 'clearConf'
 };
 
 export default ImportStore;
