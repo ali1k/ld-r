@@ -10,6 +10,7 @@ class CSVPreview extends React.Component {
     render() {
         let theaderDIV, dtableHeaders = [], dtableCells = [], list;
         let outDIV = '';
+        let countDIV = '';
         if(this.props.spec.total){
             for(let prop in this.props.spec.rows[0]){
                 dtableHeaders.push(<Table.HeaderCell key={prop}>{prop}</Table.HeaderCell>);
@@ -34,7 +35,7 @@ class CSVPreview extends React.Component {
                     {list}
                 </Table.Body>
             </Table>;
-
+            countDIV = this.props.spec.total + ' row(s) found. Displaying a few of them:'
         }else{
             outDIV = <div className="ui warning message">
                 <div className="header">
@@ -44,6 +45,7 @@ class CSVPreview extends React.Component {
         }
         return (
             <div className="ui" ref="CSVPreview" style={{overflow: 'scroll'}}>
+                <center>{countDIV}</center>
                 {outDIV}
             </div>
         );
