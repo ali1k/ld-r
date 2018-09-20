@@ -99,6 +99,7 @@ fetchrPlugin.registerService(require('./services/dataset'));
 fetchrPlugin.registerService(require('./services/resource'));
 fetchrPlugin.registerService(require('./services/facet'));
 fetchrPlugin.registerService(require('./services/admin'));
+fetchrPlugin.registerService(require('./services/import'));
 // Set up the fetchr middleware
 server.use(fetchrPlugin.getXhrPath(), fetchrPlugin.getMiddleware());
 server.use(compression());
