@@ -47,6 +47,7 @@ export default {
             let csvPath = path.join(__dirname, '..', params.fileName);
             const options = {
                 delimiter: params.delimiter,
+                rowDelimiter: '\n',
                 headers: true,
                 objectMode: true,
                 quote: '"',
