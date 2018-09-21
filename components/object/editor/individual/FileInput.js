@@ -64,7 +64,7 @@ class FileInput extends React.Component {
                 }
                 {this.state.status === 1 ?
                     <div className="progress">
-                        {this.state.progress}%
+                        <div className="ui active inline loader"></div> {this.state.progress}% uploaded.
                     </div>
                     :null
                 }

@@ -6,7 +6,7 @@ import ImportQuery from './sparql/ImportQuery';
 import ImportUtil from './utils/ImportUtil';
 import rp from 'request-promise';
 //CSV parsing
-import csv from 'csv-streamify';
+import csv from 'fast-csv';
 import fs from 'fs';
 import path from 'path';
 import camelCase from 'camelcase';
@@ -46,37 +46,40 @@ export default {
             //console.log(params.fileName, params.delimiter);
             let csvPath = path.join(__dirname, '..', params.fileName);
             const options = {
-                delimiter: params.delimiter, // comma, semicolon, whatever
-                newline: '\n', // newline character (use \r\n for CRLF files)
-                quote: '"', // what's considered a quote
-                empty: 'NA', // empty fields are replaced by this,
-                // if true, emit arrays instead of stringified arrays or buffers
-                objectMode: false,
-                // if set to true, uses first row as keys -> [ { column1: value1, column2: value2 }, ...]
-                columns: true
+                delimiter: params.delimiter,
+                headers: true,
+                objectMode: true,
+                quote: '"',
+                escape: '"',
+                ignoreEmpty: true
             }
-            const parser = csv(options, function (err, result) {
-                if (err) {
-                    console.log(err);
-                    throw err;
-                    callback(null, {rows: [], total: 0});
-                }
-                let noOfRows = result.length;
-                //console.log(noOfRows);
-                if(noOfRows){
-                    if(noOfRows > 5){
-                        //console.log(result.slice(0, 5));
-                        callback(null, {rows: result.slice(0, 5), total: noOfRows});
-                    }else{
-                        //console.log(result);
-                        callback(null, {rows: result, total: noOfRows});
+            let stream = fs.createReadStream(csvPath).setEncoding('utf-8');
+            let rows = [];
+            let csvStream = csv(options)
+                .on('data', function(data){
+                    counter++;
+                    //to limi the number of rows returned
+                    if(counter > 5){
+                        stream.destroy();
+                        callback(null, {rows: rows, total: counter - 1});
+                        return 0;
                     }
-                }else{
-                    callback(null, {rows: [], total: 0});
-                }
+                    rows.push(data);
+                })
+                .on('data-invalid', function(data){
+                    //do something with invalid row
+                    callback(null, {rows: rows, total: 0});
+                })
+                .on('error', function(data){
+                    //do something with invalid row
+                    callback(null, {rows: rows, total: 0});
+                })
+                .on('end', function(){
+                    callback(null, {rows: rows, total: counter});
+                });
 
-            });
-            fs.createReadStream(csvPath).pipe(parser);
+            let counter = 0;
+            stream.pipe(csvStream);
         }
 
     },

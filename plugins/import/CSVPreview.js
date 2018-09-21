@@ -11,7 +11,7 @@ class CSVPreview extends React.Component {
         let theaderDIV, dtableHeaders = [], dtableCells = [], list;
         let outDIV = '';
         let countDIV = '';
-        if(this.props.spec.total){
+        if(parseInt(this.props.spec.total)){
             for(let prop in this.props.spec.rows[0]){
                 dtableHeaders.push(<Table.HeaderCell key={prop}>{prop}</Table.HeaderCell>);
             }
@@ -35,16 +35,16 @@ class CSVPreview extends React.Component {
                     {list}
                 </Table.Body>
             </Table>;
-            countDIV = this.props.spec.total + ' row(s) found. Displaying a few of them:'
+            countDIV = 'Displaying ' + this.props.spec.total + ' rows as preview:'
         }else{
-            outDIV = <div className="ui warning message">
+            outDIV = <div className="ui red segment">
                 <div className="header">
-                    No records was found in the file!
+                    No records was found in the file! It might be a parsing issue, please check your file and the delimiter used.
                 </div>
             </div>;
         }
         return (
-            <div className="ui" ref="CSVPreview" style={{overflow: 'scroll'}}>
+            <div className="ui segment" ref="CSVPreview" style={{overflow: 'scroll'}}>
                 <center>{countDIV}</center>
                 {outDIV}
             </div>
