@@ -37,7 +37,7 @@ class CSVImport extends React.Component {
                     <div className="ui row">
                         <div className="column">
                             <div className="ui segment content">
-                                <h2 className="ui header">Import CSV files</h2>
+                                <h2 className="ui header">Import CSV files (as JSON-LD RDF Graph)</h2>
                                 <section>
                                     <Form size='big'>
                                         {!this.state.status ? <Form.Field label='Delimiter*' control='input' placeholder='Delimiter e.g. , or ;' onChange={this.handleDelimiterChange.bind(this)} value={this.state.delimiter} style={{width: '100px'}}/> :null}
@@ -53,6 +53,12 @@ class CSVImport extends React.Component {
                                                     : 'Processing the file...'}
                                             </div>
                                             :null
+                                        }
+                                        <Divider hidden />
+                                        {
+                                            this.props.ImportStore.completed &&  this.props.ImportStore.total ?
+                                                <center><a className="ui icon button" href="/importCSV"><i className="left arrow icon"></i> Reset</a> <div className="ui primary icon button">Configuration <i className="right arrow icon"></i></div></center>
+                                                : null
                                         }
                                     </Form>
                                 </section>
