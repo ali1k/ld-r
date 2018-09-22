@@ -1,6 +1,7 @@
 'use strict';
 import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
 import {getDynamicEndpointParameters} from './utils/dynamicHelpers';
+import {createASampleMapping} from './utils/dynamicHelpers';
 import {enableCSVImport, mappingsDatasetURI, authDatasetURI, enableAuthentication, enableEmailNotifications, baseResourceDomain} from '../configs/general';
 import ImportQuery from './sparql/ImportQuery';
 import ImportUtil from './utils/ImportUtil';
@@ -87,19 +88,10 @@ export default {
     // other methods
     create: function(req, resource, params, body, config, callback) {
         if (resource === 'import.csvmapping') {
-            if(enableAuthentication){
-                if(!req.user){
-                    callback(null, {rows: [], total: 0});
-                }else{
-                    user = req.user;
-                    //only super users have access to admin services
-                    if(!parseInt(user.isSuperUser)){
-                        callback(null, {rows: [], total: 0});
-                    }
-                }
-            }else{
-                user = {accountName: 'open'};
-            }
+            //console.log(params.filePath, params.delimiter, params.columns);
+            createASampleMapping(req.user, params.filePath, params.delimiter, params.columns, {}, (res)=>{
+                callback(null, {r: res, d: mappingsDatasetURI[0]});
+            });
         }
     },
     update: (req, resource, params, body, config, callback) => {

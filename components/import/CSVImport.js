@@ -13,21 +13,32 @@ import ImportStore from '../../stores/ImportStore';
 class CSVImport extends React.Component {
     constructor() {
         super();
-        this.state = {status: 0, delimiter: ','};
+        this.state = {status: 0, delimiter: ',', filePath: ''};
     }
     handleDelimiterChange(event) {
         this.setState({delimiter: event.target.value});
     }
-    handleConfigCreation() {
+    handleMappingCreation() {
         //create a sample mapping configuration editable by user
+        let self = this;
+        let sample = self.props.ImportStore.rows[0];
+        let columns = [];
+        for(let prop in sample){
+            columns.push(prop);
+        }
+        this.context.executeAction(createSampleCSVMapping, {
+            filePath: self.state.filePath,
+            delimiter: self.state.delimiter,
+            columns: columns
+        });
     }
     handleDataEdit(value){
         let self = this;
         //after the file is uploaded should start the processing
         //console.log(value);
-        self.setState({status: 1});
         //call parsing action
         let fileBase= window.location.protocol+'//'+window.location.hostname+(window.location.port ? ':'+window.location.port: '');
+        self.setState({status: 1, filePath: value});
         this.context.executeAction(parseCSV, {
             fileName: value.replace(fileBase, ''),
             delimiter: self.state.delimiter
@@ -61,7 +72,7 @@ class CSVImport extends React.Component {
                                         <Divider hidden />
                                         {
                                             this.props.ImportStore.completed &&  this.props.ImportStore.total ?
-                                                <center><a className="ui icon button" href="/importCSV"><i className="left arrow icon"></i> Reset</a> <div className="ui primary icon button">Configuration <i className="right arrow icon"></i></div></center>
+                                                <center><a className="ui icon button" href="/importCSV"><i className="left arrow icon"></i> Reset</a> <div className="ui primary icon button" onClick={this.handleMappingCreation.bind(this)}>Configuration <i className="right arrow icon"></i></div></center>
                                                 : null
                                         }
                                     </Form>
