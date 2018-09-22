@@ -1,7 +1,7 @@
 'use strict';
 import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
 import {getDynamicEndpointParameters} from './utils/dynamicHelpers';
-import {authDatasetURI, enableAuthentication, enableEmailNotifications, baseResourceDomain} from '../configs/general';
+import {enableCSVImport, mappingsDatasetURI, authDatasetURI, enableAuthentication, enableEmailNotifications, baseResourceDomain} from '../configs/general';
 import ImportQuery from './sparql/ImportQuery';
 import ImportUtil from './utils/ImportUtil';
 import rp from 'request-promise';
