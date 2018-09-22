@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {provideContext} from 'fluxible-addons-react';
 import FileInput from '../../components/object/editor/individual/FileInput';
 import parseCSV from '../../actions/parseCSV';
+import createSampleCSVMapping from '../../actions/createSampleCSVMapping';
 import CSVPreview from './CSVPreview';
 import { Button, Divider, Form } from 'semantic-ui-react';
 import {connectToStores} from 'fluxible-addons-react';
@@ -16,6 +17,9 @@ class CSVImport extends React.Component {
     }
     handleDelimiterChange(event) {
         this.setState({delimiter: event.target.value});
+    }
+    handleConfigCreation() {
+        //create a sample mapping configuration editable by user
     }
     handleDataEdit(value){
         let self = this;

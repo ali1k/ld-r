@@ -31,7 +31,7 @@ export default {
     importCSV: {
         path: '/importCSV',
         method: 'get',
-        handler: require('../plugins/import/CSVImport'),
+        handler: require('../components/import/CSVImport'),
         label: 'CSVImport',
         action: (context, payload, done) => {
             context.dispatch('UPDATE_PAGE_TITLE', { pageTitle: appFullTitle + ' | Import CSV files'});
