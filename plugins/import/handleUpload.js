@@ -1,4 +1,6 @@
 'use strict';
+let generalConfig = require('../../configs/general');
+let uploadFolder = generalConfig.uploadFolder;
 const fileUpload = require('express-fileupload');
 const http = require('http'),
     fs = require('fs'),
@@ -16,7 +18,7 @@ module.exports = function handleUpload(server) {
         // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
         let sampleFile = req.files[fname];
 
-        let saveTo = path.join('./uploaded/', fname);
+        let saveTo = path.join(uploadFolder + '/', fname);
         // Use the mv() method to place the file somewhere on your server
         sampleFile.mv(saveTo, function(err) {
             if (err)

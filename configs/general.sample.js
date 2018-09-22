@@ -44,6 +44,8 @@ export default {
     configDatasetURI: ['http://ld-r.org/configurations'],
     //will enable/disable auto config
     enableAutomaticConfiguration: 0,
+    //the path to the upload folder
+    uploadFolder: ['/uploaded'],
     //will enable csv imports
     enableCSVImport: 1,
     //graph that stores your mapping configurations for imprting other formats such as CSV
