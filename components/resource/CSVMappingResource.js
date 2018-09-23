@@ -7,6 +7,7 @@ import {connectToStores} from 'fluxible-addons-react';
 import cloneResource from '../../actions/cloneResource';
 import createJSONLD from '../../actions/createJSONLD';
 import ImportStore from '../../stores/ImportStore';
+import WaitAMoment from '../WaitAMoment';
 
 class CSVMappingResource extends React.Component {
     constructor(props) {
@@ -48,6 +49,7 @@ class CSVMappingResource extends React.Component {
                 </div>
             )
         }
+        let fileURL = '';
         //continue
         let readOnly = 1;
         let createdByDIV, createdOnDIV;
@@ -82,6 +84,8 @@ class CSVMappingResource extends React.Component {
                 }
                 if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdOn'){
                     dateDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#csvFile') {
+                    fileURL = node.instances[0].value;
                 }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy') {
                     creatorDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
                 }else{
@@ -179,7 +183,7 @@ class CSVMappingResource extends React.Component {
                         <div className="ui column">
                             {this.props.ImportStore.output ?
                                 <div>The JSON-LD file is ready. You can download it from <a href={this.props.ImportStore.output}>here</a>.</div>
-                                :<div><div className="ui active inline loader"></div> Generating the JSON-LD output. This might take a few seconds. Please be patient... </div>
+                                : <div><WaitAMoment msg="Generating the JSON-LD output. This might take a few seconds. Please be patient..."/> <center>Check <a href={fileURL.replace('.csv','.json')} target="_blank">here</a> to see the current status of the output.</center></div>
                             }
                         </div>
                         : null
