@@ -25,33 +25,60 @@ class CSVMapper {
             PREFIX owl: <http://www.w3.org/2002/07/owl#>
         `;
         const query = `
-        SELECT DISTINCT ?setting ?settingValue ?source ?target WHERE {
+        SELECT DISTINCT ?setting ?settingValue ?cm WHERE {
             ${graph}
                 <${resourceURI}> ?setting ?settingValue ;
                                  ldr:customMappings ?cm .
-                        OPTIONAL { ?cm ?source ?target . }
-                FILTER (?setting !=rdf:type && ?setting !=rdfs:label && ?setting !=ldr:createdOn)
+                FILTER (?setting !=ldr:customMappings && ?setting !=rdf:type && ?setting !=rdfs:label && ?setting !=ldr:createdOn)
             ${graphEnd}
         }
         `;
-        console.log(query);
+        //console.log(query);
         //send request
         let self = this;
         rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
-            let confs = self.parseCSVConfigs(res);
-            callback(confs);
+            let parsed = JSON.parse(res);
+            //custom Mapping uri
+            let customMappingURI = 0;
+            if(parsed.results.bindings.length && parsed.results.bindings[0].cm){
+                customMappingURI = parsed.results.bindings[0].cm.value;
+            }
+            if(customMappingURI){
+                const subquery = `
+                SELECT DISTINCT ?source ?target WHERE {
+                    ${graph}
+                        <${customMappingURI}> ?source ?target .
+                        FILTER (?source !=rdf:type)
+                    ${graphEnd}
+                }
+                `;
+                //console.log(subquery);
+                rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + subquery, endpointParameters, outputFormat)), headers: headers}).then(function(res2){
+                    let confs = self.parseCSVConfigs(res, res2);
+                    callback(confs);
+                }).catch(function (err2) {
+                    console.log('Error in custom mappings config query:', prefixes + subquery);
+                    console.log(sparql_endpoint_error);
+                    console.log('---------------------------------------------------------');
+                    callback({});
+                });
+            }
         }).catch(function (err) {
-            console.log('Error in mappings config query:', prefixes + query);
+            console.log('Error in general mappings config query:', prefixes + query);
             console.log(sparql_endpoint_error);
             console.log('---------------------------------------------------------');
             callback({});
         });
     }
-    parseCSVConfigs(body) {
+    parseCSVConfigs(body, body2) {
         let output = {};
-        let parsed = JSON.parse(body);
+        let parsed1 = JSON.parse(body);
+        let parsed2 = JSON.parse(body2);
         let settingProp = '';
-        parsed.results.bindings.forEach(function(el) {
+        parsed1.results.bindings.forEach(function(el) {
+            console.log(el);
+        });
+        parsed2.results.bindings.forEach(function(el) {
             console.log(el);
         });
         return output;
