@@ -174,7 +174,6 @@ export default {
                 catch(error) {
                     callback(null, {output: ''});
                 }
-                let stream = fs.createReadStream(csvPath).setEncoding('utf-8');
                 let graphArr = [];
                 let csvStream = csv(options)
                     .on('data', function(data){
