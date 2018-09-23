@@ -21,7 +21,18 @@ const outputFormat = 'application/sparql-results+json';
 let endpointParameters, dg, graphName, datasetURI, query, queryObject, utilObject, HTTPQueryObject;
 queryObject = new ImportQuery();
 utilObject = new ImportUtil();
-
+//in order to add prefixes for URIs
+function findPrefixForValue(cm){
+    //need to find the prefix and add the prefix to list
+    let o = {prefix: '', uri: ''};
+    for(let propf in prefixes.list){
+        if(cm.indexOf(prefixes.list[propf]) !== -1){
+            o.prefix = propf;
+            o.uri = prefixes.list[propf];
+        }
+    }
+    return o;
+}
 export default {
     name: 'import',
     // At least one of the CRUD methods is Required
@@ -95,7 +106,7 @@ export default {
         } else if (resource === 'import.jsonld') {
             //generate and upload the JSON-LD file from CSV config
             getJSONLDConfig(params.resourceURI, {}, (res)=>{
-                console.log(res);
+                //console.log(res);
                 //start creating JOSN-LD
                 let csvPath = path.join(__dirname, '..', uploadFolder[0] + '/' + res.csvFile);
                 const options = {
@@ -127,16 +138,10 @@ export default {
                     //check if it is not based on default vocab
                     if(cm.replace(res.vocabPrefix, '') === cm){
                         //need to find the prefix and add the prefix to list
-                        let o = {prefix: '', uri: ''};
-                        for(let propf in prefixes.list){
-                            if(cm.indexOf(prefixes.list[propf]) !== -1){
-                                o.prefix = propf;
-                                o.uri = prefixes.list[propf];
-                            }
-                        }
+                        let o = findPrefixForValue(cm);
                         if(o.prefix){
                             if(!contextObj[o.prefix]){
-                                contextObj[o.prefix] = o.uri;                                
+                                contextObj[o.prefix] = o.uri;
                             }
                             contextOptions.customMappings[prop] = contextOptions.customMappings[prop].replace(o.uri, o.prefix + ':');
                         }
@@ -144,15 +149,57 @@ export default {
                         delete contextOptions.customMappings[prop];
                     }
                 }
-                console.log(contextObj);
-                console.log(contextOptions);
-                /*
+                //add prefix for entity type
+                if(res.entityType.replace(res.vocabPrefix, '') !== res.entityType){
+                    contextOptions.entityType = 'r:' + contextOptions.entityType.replace(res.vocabPrefix, '');
+                }else{
+                    let o = findPrefixForValue(res.entityType);
+                    if(o.prefix){
+                        if(!contextObj[o.prefix]){
+                            contextObj[o.prefix] = o.uri;
+                        }
+                        contextOptions.entityType = contextOptions.entityType.replace(o.uri, o.prefix + ':');
+                    }
+                }
+                //console.log(contextObj);
+                //console.log(contextOptions);
                 let stream = fs.createReadStream(csvPath).setEncoding('utf-8');
-                let rows = [];
+                let graphArr = [];
                 let csvStream = csv(options)
                     .on('data', function(data){
                         counter++;
-                        rows.push(data);
+                        if(counter === 1){
+                            for(let prop in data){
+                                if (validUrl.isUri(data[prop]) && contextOptions['skippedColumns'].indexOf(camelCase(prop)) == -1){
+                                    if(contextOptions['customMappings'] && contextOptions['customMappings'][camelCase(prop)]){
+                                        contextObj[contextOptions['customMappings'][camelCase(prop)]] = {
+                                            '@type': '@id'
+                                        };
+                                    }else{
+                                        contextObj['v:' + camelCase(prop)] = {
+                                            '@type': '@id'
+                                        };
+                                    }
+                                }
+                            }
+                        }
+                        let tmpObj = {};
+                        tmpObj['@type'] = contextOptions['entityType'];
+                        for(let prop in data){
+                            //console.log(line[prop]);
+                            if(prop == contextOptions['idColumn']){
+                                tmpObj['@id'] = 'r:' + encodeURIComponent(camelCase(data[prop]));
+                            } else {
+                                if(contextOptions['skippedColumns'].indexOf(camelCase(prop)) == -1){
+                                    if(contextOptions['customMappings'] && contextOptions['customMappings'][camelCase(prop)]){
+                                        tmpObj[contextOptions['customMappings'][camelCase(prop)]] = isNaN(data[prop]) ? data[prop] : Number(data[prop]) ;
+                                    }else{
+                                        tmpObj['v:'+camelCase(prop)] = isNaN(data[prop]) ? data[prop] : Number(data[prop]) ;
+                                    }
+                                }
+                            }
+                        }
+                        graphArr.push(tmpObj);
                         //console.log(data);
                     })
                     .on('data-invalid', function(data){
@@ -164,12 +211,16 @@ export default {
                         callback(null, {output: ''});
                     })
                     .on('end', function(){
+                        let jsonLD = {
+                            '@context': contextObj,
+                            '@graph': graphArr
+                        };
+                        console.log(JSON.stringify(jsonLD));
                         callback(null, {output: ''});
                     });
 
                 let counter = 0;
                 stream.pipe(csvStream);
-                */
                 callback(null, {output: ''});
             });
         }
