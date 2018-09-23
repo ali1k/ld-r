@@ -33,7 +33,6 @@ export default {
             },
             'http://ld-r.org/mappings': {
                 readOnly: 0,
-                allowResourceClone: 1,
                 resourceFocusType: ['https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#CSVMapping'],
                 datasetLabel: ['LD-R Mapping Configurations'],
                 resourceLabelProperty: ['http://www.w3.org/2000/01/rdf-schema#label']

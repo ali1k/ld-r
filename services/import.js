@@ -43,10 +43,6 @@ export default {
                     callback(null, {rows: [], total: 0});
                 }else{
                     user = req.user;
-                    //only super users have access to admin services
-                    if(!parseInt(user.isSuperUser)){
-                        callback(null, {rows: [], total: 0});
-                    }
                 }
             }else{
                 user = {accountName: 'open'};
