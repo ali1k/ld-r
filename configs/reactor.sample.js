@@ -121,12 +121,12 @@ export default {
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#CSVMapping' :{
                     treatAsResourceType: 1,
                     resourceReactor: ['CSVMappingResource']
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#CustomMapping' :{
+                    treatAsResourceType: 1,
+                    objectIEditor: ['PrefixBasedInput'],
+                    objectIViewer: ['PrefixBasedView']
                 }
-            },
-            'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#CustomMapping' :{
-                treatAsResourceType: 1,
-                objectIEditor: ['PrefixBasedInput'],
-                objectIViewer: ['PrefixBasedView']
             }
         },
         dataset_property: {
