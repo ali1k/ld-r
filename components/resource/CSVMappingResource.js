@@ -49,7 +49,7 @@ class CSVMappingResource extends React.Component {
                 </div>
             )
         }
-        let fileURL = '';
+        let fileURL = '', allowJSONLD = 0;
         //continue
         let readOnly = 1;
         let createdByDIV, createdOnDIV;
@@ -84,11 +84,15 @@ class CSVMappingResource extends React.Component {
                 }
                 if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdOn'){
                     dateDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
-                }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#csvFile') {
-                    fileURL = node.instances[0].value;
                 }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy') {
                     creatorDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
                 }else{
+                    if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#csvFile') {
+                        fileURL = node.instances[0].value;
+                    }
+                    if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#delimiter') {
+                        allowJSONLD = !configReadOnly;
+                    }
                     return (
                         <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
                     );
@@ -175,7 +179,7 @@ class CSVMappingResource extends React.Component {
                                     : ''}
                             </h2>
                             {mainDIV}
-                            <div className="ui big primary button" onClick={this.handleCreateJSONLD.bind(this, decodeURIComponent(this.props.resource))}>Create JSON-LD</div>
+                            {allowJSONLD ? <div className="ui big primary button" onClick={this.handleCreateJSONLD.bind(this, decodeURIComponent(this.props.resource))}>Create JSON-LD</div>: null}
                         </div>
                         : null
                     }
