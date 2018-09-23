@@ -55,6 +55,7 @@ class CSVMapper {
                 //console.log(subquery);
                 rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + subquery, endpointParameters, outputFormat)), headers: headers}).then(function(res2){
                     let confs = self.parseCSVConfigs(res, res2);
+                    console.log(confs);
                     callback(confs);
                 }).catch(function (err2) {
                     console.log('Error in custom mappings config query:', prefixes + subquery);
@@ -75,11 +76,25 @@ class CSVMapper {
         let parsed1 = JSON.parse(body);
         let parsed2 = JSON.parse(body2);
         let settingProp = '';
+        let r = '',v = '';
         parsed1.results.bindings.forEach(function(el) {
-            console.log(el);
+            settingProp = el.setting.value.replace(ldr_prefix, '').trim();
+            if(settingProp === 'resourcePrefix'){
+                r = el.settingValue.value;
+            } else if(settingProp === 'vocabPrefix'){
+                v = el.settingValue.value;
+            }
+            output[settingProp] = el.settingValue.value;
         });
+        for(let prop in output){
+            output[prop] = output[prop];
+            //output[prop] = output[prop].replace(v, '');
+        }
+        output['customMappings'] = {};
         parsed2.results.bindings.forEach(function(el) {
-            console.log(el);
+            settingProp = el.source.value.replace(v, '').replace('_mapTo', '').trim();
+            output['customMappings'][settingProp] = el.target.value;
+            //output['customMappings'][settingProp] = el.target.value.replace(v, '').trim();
         });
         return output;
     }
@@ -130,9 +145,11 @@ class CSVMapper {
                      rdfs:label "mapping configurations for ${filePath}" ;
                      ldr:delimiter """${delimiter}""";
                      ldr:entityType v:Entity ;
-                     rdfs:IDColumn v:${camelCase(columns[0])};
-                     ldr:SkippedColumns v:${camelCase(columns[0])};
+                     ldr:idColumn v:${camelCase(columns[0])};
+                     ldr:skippedColumns v:${camelCase(columns[0])};
                      ldr:customMappings r:${cmRND};
+                     ldr:resourcePrefix <${resourcePrefix}>;
+                     ldr:vocabPrefix <${vocabPrefix}>;
                      ${userSt}
                      ldr:createdOn "${currentDate}"^^xsd:dateTime .
                      r:${cmRND} ${customMappings.join(' ')}
