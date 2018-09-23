@@ -6,6 +6,56 @@ const ldr_prefix = 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/i
 const sparql_endpoint_error = '**Please also check if the mapping SPARQL endpoint is running and is updateable**';
 
 class CSVMapper {
+    createJSONLD(resourceURI, options, callback) {
+        const endpointParameters = getStaticEndpointParameters(mappingsDatasetURI[0]);
+        const graphName = endpointParameters.graphName;
+        const headers = {'Accept': 'application/sparql-results+json'};
+        const outputFormat = 'application/sparql-results+json';
+        let graph = ' GRAPH <'+ graphName +'> {';
+        let graphEnd = ' }';
+        if(!graphName || graphName === 'default'){
+            graph ='';
+            graphEnd = '';
+        }
+        //query the triple store for mapping configs
+        const prefixes = `
+            PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
+            PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+            PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+            PREFIX owl: <http://www.w3.org/2002/07/owl#>
+        `;
+        const query = `
+        SELECT DISTINCT ?setting ?settingValue ?source ?target WHERE {
+            ${graph}
+                <${resourceURI}> ?setting ?settingValue ;
+                                 ldr:customMappings ?cm .
+                        OPTIONAL { ?cm ?source ?target . }
+                FILTER (?setting !=rdf:type && ?setting !=rdfs:label && ?setting !=ldr:createdOn)
+            ${graphEnd}
+        }
+        `;
+        console.log(query);
+        //send request
+        let self = this;
+        rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + query, endpointParameters, outputFormat)), headers: headers}).then(function(res){
+            let confs = self.parseCSVConfigs(res);
+            callback(confs);
+        }).catch(function (err) {
+            console.log('Error in mappings config query:', prefixes + query);
+            console.log(sparql_endpoint_error);
+            console.log('---------------------------------------------------------');
+            callback({});
+        });
+    }
+    parseCSVConfigs(body) {
+        let output = {};
+        let parsed = JSON.parse(body);
+        let settingProp = '';
+        parsed.results.bindings.forEach(function(el) {
+            console.log(el);
+        });
+        return output;
+    }
     createASampleMapping(user, filePath, delimiter, columns, options, callback) {
         let userSt = '';
         if(user && user.accountName !== 'open' && !Number(user.isSuperUser)){
@@ -34,7 +84,7 @@ class CSVMapper {
         let cmRND = 'cm' + Math.round(+new Date() / 1000);
         let date = new Date();
         let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
-        //query the triple store for property configs
+        //query the triple store for adding configs
         const prefixes = `
             PREFIX ldr: <https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#>
             PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>

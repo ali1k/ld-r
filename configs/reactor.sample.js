@@ -492,7 +492,8 @@ export default {
             //for mappings
             'http://ld-r.org/mappings': {
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#csvFile': {
-                    readOnlyProperty: 1
+                    readOnlyProperty: 1,
+                    label: ['CSV File']
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#SkippedColumns': {
                     allowNewValue: 1

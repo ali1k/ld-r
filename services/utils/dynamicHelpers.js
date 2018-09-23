@@ -117,5 +117,10 @@ export default {
         csvMapper.createASampleMapping(user, filePath, delimiter, columns, options, (res)=> {
             callback(res);
         });
+    },
+    createJSONLD: function(resourceURI, options, callback) {
+        csvMapper.createJSONLD(resourceURI, options, (res)=> {
+            callback(res);
+        });
     }
 }

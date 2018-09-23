@@ -4,6 +4,7 @@ import PropertyReactor from '../reactors/PropertyReactor';
 import {NavLink} from 'fluxible-router';
 import URIUtil from '../utils/URIUtil';
 import cloneResource from '../../actions/cloneResource';
+import createJSONLD from '../../actions/createJSONLD';
 
 class CSVMappingResource extends React.Component {
     constructor(props) {
@@ -20,6 +21,12 @@ class CSVMappingResource extends React.Component {
     handleCloneResource(datasetURI, resourceURI, e) {
         this.context.executeAction(cloneResource, {
             dataset: datasetURI,
+            resourceURI: resourceURI
+        });
+        e.stopPropagation();
+    }
+    handleCreateJSONLD(resourceURI, e) {
+        this.context.executeAction(createJSONLD, {
             resourceURI: resourceURI
         });
         e.stopPropagation();
@@ -163,6 +170,7 @@ class CSVMappingResource extends React.Component {
                                 : ''}
                         </h2>
                         {mainDIV}
+                        <div className="ui big primary button" onClick={this.handleCreateJSONLD.bind(this, decodeURIComponent(this.props.resource))}>Create JSON-LD</div>
                     </div>
                 </div>
             </div>

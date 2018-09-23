@@ -1,7 +1,7 @@
 'use strict';
 import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
 import {getDynamicEndpointParameters} from './utils/dynamicHelpers';
-import {createASampleMapping} from './utils/dynamicHelpers';
+import {createASampleMapping, createJSONLD} from './utils/dynamicHelpers';
 import {enableCSVImport, mappingsDatasetURI, authDatasetURI, enableAuthentication, enableEmailNotifications, baseResourceDomain} from '../configs/general';
 import ImportQuery from './sparql/ImportQuery';
 import ImportUtil from './utils/ImportUtil';
@@ -91,6 +91,11 @@ export default {
             //console.log(params.filePath, params.delimiter, params.columns);
             createASampleMapping(req.user, params.filePath, params.delimiter, params.columns, {}, (res)=>{
                 callback(null, {r: res, d: mappingsDatasetURI[0]});
+            });
+        } else if (resource === 'import.jsonld') {
+            //generate and upload the JSON-LD file from CSV config
+            createJSONLD(params.resourceURI, {}, (res)=>{
+                callback(null, {r: res});
             });
         }
     },
