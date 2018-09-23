@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 //import ReactDOM from 'react-dom';
 import {navigateAction} from 'fluxible-router';
-import {enableAuthentication, enableAddingNewDatasets, baseResourceDomain} from '../configs/general';
+import {enableAuthentication, enableAddingNewDatasets, baseResourceDomain, enableCSVImport} from '../configs/general';
 import { Button, Divider, Form } from 'semantic-ui-react';
 import PrefixBasedInput from './object/editor/individual/PrefixBasedInput';
 import url from 'url';
@@ -133,11 +133,15 @@ class NewDataset extends React.Component {
                 <Divider hidden />
             </Form>;
         }
+        let headerDIV = <h2>Add a new dataset by connecting to a SPARQL endpoint </h2>;
+        if(enableCSVImport){
+            headerDIV = <h2>Add a new dataset by connecting to a SPARQL endpoint or <a className="ui big icon button" href="/importCSV"><i className="icon file alternate outline"></i> Import CSV data</a></h2>;
+        }
         return (
             <div className="ui fluid container ldr-padding-more" ref="datasets">
                 <div className="ui grid">
                     <div className="ui column">
-                        <h2>Add a new dataset by connecting to a SPARQL endpoint or <a className="ui big icon button" href="/importCSV"><i className="icon file alternate outline"></i> Import CSV data</a></h2>
+                        {headerDIV}
                         {errorDIV}
                         {formDIV}
                     </div>
