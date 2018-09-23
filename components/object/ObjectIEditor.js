@@ -9,6 +9,7 @@ import LanguageInput from './editor/individual/LanguageInput';
 import BasicCalendarInput from './editor/individual/BasicCalendarInput';
 import PrefixBasedInput from './editor/individual/PrefixBasedInput';
 import ToggleEdit from './editor/individual/ToggleEdit';
+import FileInput from './editor/individual/FileInput';
 
 class ObjectIEditor extends React.Component {
     handleDataEdit(value){
@@ -43,7 +44,7 @@ class ObjectIEditor extends React.Component {
         //normal edit
         switch(editorConfig){
             case 'BasicIndividualInput':
-                editor = <BasicIndividualInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;
+                editor = <BasicIndividualInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey={true} onEnterPress={this.handleEnterPress.bind(this)}/>;
                 break;
             case 'BasicTextareaInput':
                 editor = <BasicTextareaInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
@@ -52,10 +53,10 @@ class ObjectIEditor extends React.Component {
                 editor = <ToggleEdit spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
                 break;
             case 'PasswordInput':
-                editor = <PasswordInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;
+                editor = <PasswordInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey={true} onEnterPress={this.handleEnterPress.bind(this)}/>;
                 break;
             case 'DBpediaInput':
-                editor = <DBpediaInput asWikipedia="1" spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;
+                editor = <DBpediaInput asWikipedia="1" spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey={true} onEnterPress={this.handleEnterPress.bind(this)}/>;
                 break;
             case 'LanguageInput':
                 editor = <LanguageInput spec={this.props.spec} config={this.props.config}   onDataEdit={this.handleDataEdit.bind(this)}/>;
@@ -64,13 +65,16 @@ class ObjectIEditor extends React.Component {
                 editor = <BasicCalendarInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
                 break;
             case 'BasicOptionInput':
-                editor = <BasicOptionInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;
+                editor = <BasicOptionInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey={true} onEnterPress={this.handleEnterPress.bind(this)}/>;
                 break;
             case 'PrefixBasedInput':
-                editor = <PrefixBasedInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;
+                editor = <PrefixBasedInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey={true} onEnterPress={this.handleEnterPress.bind(this)}/>;
+                break;
+            case 'FileInput':
+                editor = <FileInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)}/>;
                 break;
             default:
-                editor = <BasicIndividualInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey="1" onEnterPress={this.handleEnterPress.bind(this)}/>;
+                editor = <BasicIndividualInput spec={this.props.spec} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} allowActionByKey={true} onEnterPress={this.handleEnterPress.bind(this)}/>;
         }
         //check if it has a blank node value config
         let hideObject = 0;

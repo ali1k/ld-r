@@ -54,7 +54,7 @@ class BasicOptionInput extends React.Component {
     render() {
         let output;
         if(this.state.userDefinedMode){
-            output = <BasicIndividualInput spec={{value: '', valueType: this.props.spec.valueType, dataType: this.props.spec.dataType}} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onEnterPress={this.handleEnterPress.bind(this)} allowActionByKey="1"/>;
+            output = <BasicIndividualInput spec={{value: '', valueType: this.props.spec.valueType, dataType: this.props.spec.dataType}} config={this.props.config} onDataEdit={this.handleDataEdit.bind(this)} onEnterPress={this.handleEnterPress.bind(this)} allowActionByKey={true}/>;
         }else{
             let optionList = this.buildOptions();
             output = <div className="field">

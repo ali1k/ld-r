@@ -99,7 +99,10 @@ module.exports = {
             {title: 'ldr:hasLinkedValue'},
             {title: 'ldr:constraint'},
             {title: 'ldr:restrictAnalysisToSelected'},
-            {title: 'ldr:enabled'}
+            {title: 'ldr:enabled'},
+            {title: 'ldr:acceptedMimeTypes'},
+            {title: 'ldr:fileNamePrefix'},
+            {title: 'ldr:maxFileSize'}
         ],
         ldrLiterals: [
             {title: 'OrgResource'},
@@ -128,6 +131,7 @@ module.exports = {
             {title: 'PasswordInput'},
             {title: 'PrefixBasedInput'},
             {title: 'ToggleEdit'},
+            {title: 'FileInput'},
             {title: 'BasicResourceList'},
             {title: 'TagListBrowser'},
             {title: 'GeoListBrowser'},

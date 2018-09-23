@@ -1,7 +1,9 @@
 import {sparqlEndpoint} from '../../configs/server';
 import {defaultDatasetURI} from '../../configs/general';
 import DynamicConfigurator from '../../plugins/dynamicConfiguration/DynamicConfigurator';
+import CSVMapper from '../../plugins/import/CSVMapper';
 let dynamicConfigurator = new DynamicConfigurator();
+let csvMapper = new CSVMapper();
 let prepareDGFunc = function (user, datasetURI, callback){
     let d = datasetURI, g = datasetURI, options = {};
     //try default graph if no datasetURI is given
@@ -108,6 +110,16 @@ export default {
     },
     getSavedQueries: function(user, callback) {
         dynamicConfigurator.getSavedQueries(user, (res)=> {
+            callback(res);
+        });
+    },
+    createASampleMapping: function(user, filePath, delimiter, columns, options, callback) {
+        csvMapper.createASampleMapping(user, filePath, delimiter, columns, options, (res)=> {
+            callback(res);
+        });
+    },
+    getJSONLDConfig: function(resourceURI, options, callback) {
+        csvMapper.getJSONLDConfig(resourceURI, options, (res)=> {
             callback(res);
         });
     }
