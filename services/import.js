@@ -62,7 +62,13 @@ export default {
                 escape: '"',
                 ignoreEmpty: true
             }
-            let stream = fs.createReadStream(csvPath).setEncoding('utf-8');
+            let stream;
+            try {
+                stream = fs.createReadStream(csvPath).setEncoding('utf-8');
+            }
+            catch(error) {
+                callback(null, {rows: rows, total: 0});
+            }
             let rows = [];
             let csvStream = csv(options)
                 .on('data', function(data){
@@ -161,6 +167,13 @@ export default {
                 }
                 //console.log(contextObj);
                 //console.log(contextOptions);
+                let stream;
+                try {
+                    stream = fs.createReadStream(csvPath).setEncoding('utf-8');
+                }
+                catch(error) {
+                    callback(null, {output: ''});
+                }
                 let stream = fs.createReadStream(csvPath).setEncoding('utf-8');
                 let graphArr = [];
                 let csvStream = csv(options)
