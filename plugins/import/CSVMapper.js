@@ -50,6 +50,7 @@ class CSVMapper {
         INSERT DATA { ${graph}
             <${rnc}> a ldr:CSVMapping ;
                      ldr:csvFile <${filePath}> ;
+                     rdfs:label "mapping configurations for ${filePath}" ;
                      ldr:delimiter """${delimiter}""";
                      ldr:entityType v:Entity ;
                      rdfs:IDColumn v:${camelCase(columns[0])};
@@ -58,7 +59,7 @@ class CSVMapper {
                      ${userSt}
                      ldr:createdOn "${currentDate}"^^xsd:dateTime .
                      r:${cmRND} ${customMappings.join(' ')}
-                     a ldr:customMapping .
+                     a ldr:CustomMapping .
         ${graphEnd} }
         `;
         //ToDO, add also a configuration for the above resource

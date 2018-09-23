@@ -137,7 +137,7 @@ class NewDataset extends React.Component {
             <div className="ui fluid container ldr-padding-more" ref="datasets">
                 <div className="ui grid">
                     <div className="ui column">
-                        <h2>Add a new dataset</h2>
+                        <h2>Add a new dataset by connecting to a SPARQL endpoint or <a className="ui big icon button" href="/importCSV"><i className="icon file alternate outline"></i> Import CSV data</a></h2>
                         {errorDIV}
                         {formDIV}
                     </div>
