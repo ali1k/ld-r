@@ -219,14 +219,13 @@ export default {
                         };
                         fs.writeFile(jsonPath, JSON.stringify(jsonLD), function(err, data){
                             if (err) console.log(err);
-                            callback(null, {output: jsonFileName});
+                            callback(null, {output: '/' + uploadFolder[0]+ '/' + jsonFileName});
                         });
 
                     });
 
                 let counter = 0;
                 stream.pipe(csvStream);
-                callback(null, {output: ''});
             });
         }
     },

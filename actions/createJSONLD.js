@@ -4,7 +4,7 @@ export default function createJSONLD(context, payload, done) {
             context.dispatch('CREATE_JSONLD_FAILURE', err);
             done();
         } else {
-
+            context.dispatch('CREATE_JSONLD_SUCCESS', res);
             done();
         }
     });

@@ -6,19 +6,26 @@ class ImportStore extends BaseStore {
         this.rows = [];
         this.total = 0;
         this.completed = 0;
+        this.output = '';
     }
     clearAll() {
         this.rows = [];
         this.total = 0;
         this.completed = 0;
+        this.output = '';
     }
     clearConf(){
         this.clearAll();
         this.emitChange();
     }
+    updateOutput(payload){
+        this.output = payload.output;
+        this.emitChange();
+    }
     updateAttribs(payload) {
         this.rows = payload.rows;
         this.total = payload.total;
+        this.output = payload.output;
         this.completed = 1;
         this.emitChange();
     }
@@ -26,7 +33,8 @@ class ImportStore extends BaseStore {
         return {
             rows: this.rows,
             total: this.total,
-            completed: this.completed
+            completed: this.completed,
+            output: this.output
         };
     }
     dehydrate() {
@@ -42,7 +50,8 @@ class ImportStore extends BaseStore {
 ImportStore.storeName = 'ImportStore'; // PR open in dispatchr to remove this need
 ImportStore.handlers = {
     'READ_CSV_SUCCESS': 'updateAttribs',
-    'CLEAR_IMPORT_CONFFIG_SUCCESS': 'clearConf'
+    'CLEAR_IMPORT_CONFFIG_SUCCESS': 'clearConf',
+    'CREATE_JSONLD_SUCCESS': 'updateOutput'
 };
 
 export default ImportStore;

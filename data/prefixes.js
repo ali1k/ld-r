@@ -1620,7 +1620,6 @@ module.exports = {
         'soc': 'http://purl.org/net/hdlipcores/ontology/soc#',
         'st': 'http://semweb.mmlab.be/ns/stoptimes#',
         'sw': 'http://linkedwidgets.org/statisticalwidget/ontology/',
-        'swcomp': 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#',
         'tadirah': 'http://tadirah.dariah.eu/vocab/',
         'td5': 'http://td5.org/#',
         'traffic': 'http://www.sensormeasurement.appspot.com/ont/transport/traffic#',

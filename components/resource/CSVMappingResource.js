@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 import PropertyReactor from '../reactors/PropertyReactor';
 import {NavLink} from 'fluxible-router';
 import URIUtil from '../utils/URIUtil';
+import {connectToStores} from 'fluxible-addons-react';
 import cloneResource from '../../actions/cloneResource';
 import createJSONLD from '../../actions/createJSONLD';
+import ImportStore from '../../stores/ImportStore';
 
 class CSVMappingResource extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {status: 0};
     }
     componentDidMount() {
         //scroll to top of the page
@@ -26,6 +29,7 @@ class CSVMappingResource extends React.Component {
         e.stopPropagation();
     }
     handleCreateJSONLD(resourceURI, e) {
+        this.setState({status: 1});
         this.context.executeAction(createJSONLD, {
             resourceURI: resourceURI
         });
@@ -80,10 +84,6 @@ class CSVMappingResource extends React.Component {
                     dateDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
                 }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy') {
                     creatorDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
-                }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#annotatedBy') {
-                    annotationMetaDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
-                }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#annotations') {
-                    annotationDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
                 }else{
                     return (
                         <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
@@ -161,17 +161,29 @@ class CSVMappingResource extends React.Component {
         return (
             <div className="ui fluid container ldr-padding-more" ref="resource">
                 <div className="ui grid">
-                    <div className="ui column">
-                        CSV Mapping: {breadcrumb}
-                        <h2>
-                            <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon cube"></i></a> <a href={this.props.resource} target="_blank">{this.props.title}</a>&nbsp;&nbsp;
-                            {cloneable ?
-                                <a className="medium ui circular basic icon button" onClick={this.handleCloneResource.bind(this, this.props.datasetURI, decodeURIComponent(this.props.resource))} title="clone this resource"><i className="icon teal superscript"></i></a>
-                                : ''}
-                        </h2>
-                        {mainDIV}
-                        <div className="ui big primary button" onClick={this.handleCreateJSONLD.bind(this, decodeURIComponent(this.props.resource))}>Create JSON-LD</div>
-                    </div>
+                    {!this.state.status ?
+                        <div className="ui column">
+                            {breadcrumb}
+                            <h2>
+                                <a target="_blank" href={'/export/NTriples/' + encodeURIComponent(this.props.datasetURI) + '/' + encodeURIComponent(this.props.resource)}><i className="blue icon cube"></i></a> <a href={this.props.resource} target="_blank">{this.props.title}</a>&nbsp;&nbsp;
+                                {cloneable ?
+                                    <a className="medium ui circular basic icon button" onClick={this.handleCloneResource.bind(this, this.props.datasetURI, decodeURIComponent(this.props.resource))} title="clone this resource"><i className="icon teal superscript"></i></a>
+                                    : ''}
+                            </h2>
+                            {mainDIV}
+                            <div className="ui big primary button" onClick={this.handleCreateJSONLD.bind(this, decodeURIComponent(this.props.resource))}>Create JSON-LD</div>
+                        </div>
+                        : null
+                    }
+                    {this.state.status === 1 ?
+                        <div className="ui column">
+                            {this.props.ImportStore.output ?
+                                <div>The JSON-LD file is ready. You can download it from <a href={this.props.ImportStore.output}>here</a>.</div>
+                                :<div><div className="ui active inline loader"></div> Generating the JSON-LD output. This might take a few seconds. Please be patient... </div>
+                            }
+                        </div>
+                        : null
+                    }
                 </div>
             </div>
         );
@@ -181,4 +193,7 @@ CSVMappingResource.contextTypes = {
     executeAction: PropTypes.func.isRequired,
     getUser: PropTypes.func
 };
+CSVMappingResource = connectToStores(CSVMappingResource, [ImportStore], function(context, props) {
+    return {ImportStore: context.getStore(ImportStore).getState()};
+});
 export default CSVMappingResource;
