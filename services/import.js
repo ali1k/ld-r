@@ -109,6 +109,8 @@ export default {
                 //console.log(res);
                 //start creating JOSN-LD
                 let csvPath = path.join(__dirname, '..', uploadFolder[0] + '/' + res.csvFile);
+                let jsonFileName = res.csvFile.split('\.')[0]+'.json';
+                let jsonPath = path.join(__dirname, '..', uploadFolder[0] + '/' + jsonFileName);
                 const options = {
                     delimiter: res.delimiter,
                     rowDelimiter: '\n',
@@ -151,7 +153,7 @@ export default {
                 }
                 //add prefix for entity type
                 if(res.entityType.replace(res.vocabPrefix, '') !== res.entityType){
-                    contextOptions.entityType = 'r:' + contextOptions.entityType.replace(res.vocabPrefix, '');
+                    contextOptions.entityType = 'v:' + contextOptions.entityType.replace(res.vocabPrefix, '');
                 }else{
                     let o = findPrefixForValue(res.entityType);
                     if(o.prefix){
@@ -215,8 +217,11 @@ export default {
                             '@context': contextObj,
                             '@graph': graphArr
                         };
-                        console.log(JSON.stringify(jsonLD));
-                        callback(null, {output: ''});
+                        fs.writeFile(jsonPath, JSON.stringify(jsonLD), function(err, data){
+                            if (err) console.log(err);
+                            callback(null, {output: jsonFileName});
+                        });
+
                     });
 
                 let counter = 0;
