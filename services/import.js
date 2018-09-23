@@ -120,13 +120,40 @@ export default {
                     'customMappings': res.customMappings
                 }
                 //-----------------------------
+                //automatically add other prefixes from the list
+                for(let prop in contextOptions.customMappings){
+                    //an external prefix is used
+                    let cm = contextOptions.customMappings[prop];
+                    //check if it is not based on default vocab
+                    if(cm.replace(res.vocabPrefix, '') === cm){
+                        //need to find the prefix and add the prefix to list
+                        let o = {prefix: '', uri: ''};
+                        for(let propf in prefixes.list){
+                            if(cm.indexOf(prefixes.list[propf]) !== -1){
+                                o.prefix = propf;
+                                o.uri = prefixes.list[propf];
+                            }
+                        }
+                        if(o.prefix){
+                            if(!contextObj[o.prefix]){
+                                contextObj[o.prefix] = o.uri;                                
+                            }
+                            contextOptions.customMappings[prop] = contextOptions.customMappings[prop].replace(o.uri, o.prefix + ':');
+                        }
+                    }else{
+                        delete contextOptions.customMappings[prop];
+                    }
+                }
+                console.log(contextObj);
+                console.log(contextOptions);
+                /*
                 let stream = fs.createReadStream(csvPath).setEncoding('utf-8');
                 let rows = [];
                 let csvStream = csv(options)
                     .on('data', function(data){
                         counter++;
                         rows.push(data);
-                        console.log(data);
+                        //console.log(data);
                     })
                     .on('data-invalid', function(data){
                         //do something with invalid row
@@ -142,6 +169,8 @@ export default {
 
                 let counter = 0;
                 stream.pipe(csvStream);
+                */
+                callback(null, {output: ''});
             });
         }
     },

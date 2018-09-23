@@ -6,7 +6,7 @@ Display compact URIs using common prefixes
 */
 class PrefixBasedView extends React.Component {
     getPrefix(uri) {
-        let o = {prefix: '', url: ''};
+        let o = {prefix: '', uri: ''};
         for(let prop in list){
             if(uri.indexOf(list[prop]) !== -1){
                 o.prefix = prop;
