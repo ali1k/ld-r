@@ -15,3 +15,4 @@ package-lock.json
 uploaded/*.csv
 uploaded/*.txt
 uploaded/*.tsv
+uploaded/*.json
