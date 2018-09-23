@@ -25,7 +25,7 @@ import handleUpload from './plugins/import/handleUpload';
 import handleExport from './plugins/export/handleExport';
 //required for generating docs
 import handleDocumentation from './plugins/documentation/handleDocumentation';
-import {enableAuthentication} from './configs/general';
+import {enableAuthentication, uploadFolder} from './configs/general';
 import cookieSession from 'cookie-session';
 import hogan from 'hogan-express';
 import serverConfig from './configs/server';
@@ -90,7 +90,7 @@ server.use('/codemirror', express.static(path.join(__dirname, '/node_modules/cod
 server.use('/jqcloud2', express.static(path.join(__dirname, '/node_modules/jqcloud2')));
 
 server.use('/assets', express.static(path.join(__dirname, '/assets')));
-server.use('/uploaded', express.static(path.join(__dirname, '/uploaded')));
+server.use('/uploaded', express.static(path.join(__dirname, uploadFolder[0].replace('\.', ''))));
 // Get access to the fetchr plugin instance
 let fetchrPlugin = app.getPlugin('FetchrPlugin');
 // Register our services
