@@ -6,7 +6,7 @@ const ldr_prefix = 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/i
 const sparql_endpoint_error = '**Please also check if the mapping SPARQL endpoint is running and is updateable**';
 
 class CSVMapper {
-    createJSONLD(resourceURI, options, callback) {
+    getJSONLDConfig(resourceURI, options, callback) {
         const endpointParameters = getStaticEndpointParameters(mappingsDatasetURI[0]);
         const graphName = endpointParameters.graphName;
         const headers = {'Accept': 'application/sparql-results+json'};
@@ -55,7 +55,6 @@ class CSVMapper {
                 //console.log(subquery);
                 rp.get({uri: getHTTPGetURL(getHTTPQuery('read', prefixes + subquery, endpointParameters, outputFormat)), headers: headers}).then(function(res2){
                     let confs = self.parseCSVConfigs(res, res2);
-                    console.log(confs);
                     callback(confs);
                 }).catch(function (err2) {
                     console.log('Error in custom mappings config query:', prefixes + subquery);
@@ -77,19 +76,35 @@ class CSVMapper {
         let parsed2 = JSON.parse(body2);
         let settingProp = '';
         let r = '',v = '';
+        output['skippedColumns'] = [];
         parsed1.results.bindings.forEach(function(el) {
             settingProp = el.setting.value.replace(ldr_prefix, '').trim();
             if(settingProp === 'resourcePrefix'){
                 r = el.settingValue.value;
+                output[settingProp] = el.settingValue.value;
             } else if(settingProp === 'vocabPrefix'){
                 v = el.settingValue.value;
+                output[settingProp] = el.settingValue.value;
+            } else if(settingProp === 'skippedColumns'){
+                output.skippedColumns.push(el.settingValue.value);
+            }else{
+                output[settingProp] = el.settingValue.value;
             }
-            output[settingProp] = el.settingValue.value;
         });
         for(let prop in output){
-            output[prop] = output[prop];
-            //output[prop] = output[prop].replace(v, '');
+            if(prop === 'idColumn'){
+                output[prop] = output[prop].replace(v, '');
+            }else if(prop === 'skippedColumns'){
+                output.skippedColumns = output.skippedColumns.map((item)=> {
+                    return item.replace(v, '');
+                })
+            } else {
+                output[prop] = output[prop];
+            }
         }
+        //fix file name
+        let tmp2 = output['csvFile'].split('\/');
+        output['csvFile'] = tmp2[tmp2.length - 1];
         output['customMappings'] = {};
         parsed2.results.bindings.forEach(function(el) {
             settingProp = el.source.value.replace(v, '').replace('_mapTo', '').trim();

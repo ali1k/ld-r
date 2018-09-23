@@ -118,8 +118,8 @@ export default {
             callback(res);
         });
     },
-    createJSONLD: function(resourceURI, options, callback) {
-        csvMapper.createJSONLD(resourceURI, options, (res)=> {
+    getJSONLDConfig: function(resourceURI, options, callback) {
+        csvMapper.getJSONLDConfig(resourceURI, options, (res)=> {
             callback(res);
         });
     }

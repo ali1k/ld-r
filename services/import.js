@@ -1,8 +1,8 @@
 'use strict';
 import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
 import {getDynamicEndpointParameters} from './utils/dynamicHelpers';
-import {createASampleMapping, createJSONLD} from './utils/dynamicHelpers';
-import {enableCSVImport, mappingsDatasetURI, authDatasetURI, enableAuthentication, enableEmailNotifications, baseResourceDomain} from '../configs/general';
+import {createASampleMapping, getJSONLDConfig} from './utils/dynamicHelpers';
+import {uploadFolder, enableCSVImport, mappingsDatasetURI, authDatasetURI, enableAuthentication, enableEmailNotifications, baseResourceDomain} from '../configs/general';
 import ImportQuery from './sparql/ImportQuery';
 import ImportUtil from './utils/ImportUtil';
 import rp from 'request-promise';
@@ -94,8 +94,54 @@ export default {
             });
         } else if (resource === 'import.jsonld') {
             //generate and upload the JSON-LD file from CSV config
-            createJSONLD(params.resourceURI, {}, (res)=>{
-                callback(null, {r: res});
+            getJSONLDConfig(params.resourceURI, {}, (res)=>{
+                console.log(res);
+                //start creating JOSN-LD
+                let csvPath = path.join(__dirname, '..', uploadFolder[0] + '/' + res.csvFile);
+                const options = {
+                    delimiter: res.delimiter,
+                    rowDelimiter: '\n',
+                    headers: true,
+                    objectMode: true,
+                    quote: '"',
+                    escape: '"',
+                    ignoreEmpty: true
+                }
+                //---------configurations--------
+                let contextObj = {
+                    'r': res.resourcePrefix,
+                    'v': res.vocabPrefix,
+                    'xsd': 'http://www.w3.org/2001/XMLSchema#'
+                }
+                let contextOptions ={
+                    'idColumn': res.idColumn,
+                    'entityType': res.entityType,
+                    'skippedColumns': res.skippedColumns,
+                    'customMappings': res.customMappings
+                }
+                //-----------------------------
+                let stream = fs.createReadStream(csvPath).setEncoding('utf-8');
+                let rows = [];
+                let csvStream = csv(options)
+                    .on('data', function(data){
+                        counter++;
+                        rows.push(data);
+                        console.log(data);
+                    })
+                    .on('data-invalid', function(data){
+                        //do something with invalid row
+                        callback(null, {output: ''});
+                    })
+                    .on('error', function(data){
+                        //do something with invalid row
+                        callback(null, {output: ''});
+                    })
+                    .on('end', function(){
+                        callback(null, {output: ''});
+                    });
+
+                let counter = 0;
+                stream.pipe(csvStream);
             });
         }
     },
