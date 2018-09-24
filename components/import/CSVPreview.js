@@ -39,7 +39,7 @@ class CSVPreview extends React.Component {
         }else{
             outDIV = <div className="ui red segment">
                 <div className="header">
-                    No records was found in the file! It might be a parsing issue, please check your file and the delimiter used.
+                    No records was found in the file! It might be a parsing issue, please check your file and the delimiter used. It could also occur because you have not set the right permission on your upload folder!
                 </div>
             </div>;
         }

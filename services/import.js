@@ -53,6 +53,10 @@ export default {
             }
             //console.log(params.fileName, params.delimiter);
             let csvPath = path.join(__dirname, '..', params.fileName);
+            if (!fs.existsSync(csvPath)) {
+                callback(null, {rows: [], total: 0});
+                return 0;
+            }
             const options = {
                 delimiter: params.delimiter,
                 rowDelimiter: '\n',
@@ -167,6 +171,10 @@ export default {
                 }
                 //console.log(contextObj);
                 //console.log(contextOptions);
+                if (!fs.existsSync(csvPath)) {
+                    callback(null, {output: ''});
+                    return 0;
+                }
                 let stream;
                 try {
                     stream = fs.createReadStream(csvPath).setEncoding('utf-8');
