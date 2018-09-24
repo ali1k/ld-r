@@ -168,6 +168,7 @@ class CSVMapper {
                      ${userSt}
                      ldr:createdOn "${currentDate}"^^xsd:dateTime .
                      r:${cmRND} ${customMappings.join(' ')}
+                        ${userSt}  
                      a ldr:CustomMapping .
         ${graphEnd} }
         `;
