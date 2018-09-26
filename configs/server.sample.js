@@ -19,6 +19,10 @@ export default {
         //Example for connecting to a ClioPatria triple store
         'http://localhost:3020/sparql/': {
             host: 'localhost', port: 3020, path: '/sparql/', endpointType: 'ClioPatria'
+        },
+        //Example for connecting to a GraphDB triple store
+        'http://localhost:7200/repositories/test': {
+            host: 'localhost', port: 7200, path: '/repositories/test', endpointType: 'graphdb'
         }
     },
     dbpediaLookupService: [

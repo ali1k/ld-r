@@ -318,6 +318,7 @@ export default {
                         {label: 'Virtuoso', value: 'virtuoso'},
                         {label: 'Stardog', value: 'stardog'},
                         {label: 'Blazegraph', value: 'blazegraph'},
+                        {label: 'GraphDB', value: 'graphdb'},
                         {label: 'Sesame', value: 'sesame'}
                     ]
                 }

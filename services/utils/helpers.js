@@ -165,6 +165,18 @@ export default {
                 outputObject.params['format'] = 'json';
 
                 break;
+            case 'graphdb':
+                if(mode === 'update'){
+                    outputObject.uri = protocol + '://' + userPass + host + ':' + port + path + '/statements';
+                    outputObject.params['update'] = query;
+                    //outputObject.params['format'] = outputFormat;
+                }else{
+                    outputObject.uri = protocol + '://' + userPass + host + ':' + port + path;
+                    outputObject.params['query'] = query;
+                    outputObject.params['format'] = outputFormat;
+                }
+
+                break;
             case 'stardog':
                 //to make it compatible with old Stardog API
                 if(endpointParameters.httpOptions.path.indexOf('annex') !== -1){
