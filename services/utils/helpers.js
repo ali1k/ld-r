@@ -175,7 +175,10 @@ export default {
                     outputObject.params['query'] = query;
                     outputObject.params['format'] = outputFormat;
                 }
-
+                //use infer instead of reasoning
+                if(endpointParameters.useReasoning){
+                    outputObject.params['infer'] = 'true';
+                }
                 break;
             case 'stardog':
                 //to make it compatible with old Stardog API
