@@ -1,4 +1,5 @@
 'use strict';
+import {sparqlEndpoint} from '../configs/server';
 import {getHTTPQuery, getHTTPGetURL, prepareDG} from './utils/helpers';
 import {checkViewAccess, checkEditAccess} from './utils/accessManagement';
 import {getDynamicEndpointParameters, createASampleReactorConfig, createASampleFacetsConfig, createASampleServerConfig, createAnEnvState, getSavedQueries} from './utils/dynamicHelpers';
@@ -417,6 +418,10 @@ export default {
             });
         }else if (resource === 'resource.newServerConfig') {
             datasetURI = params.dataset;
+            // use generic endpointType for new datasets
+            if(sparqlEndpoint['generic'] && sparqlEndpoint['generic'].endpointType){
+                params.options.endpointType = sparqlEndpoint['generic'].endpointType;
+            }
             createASampleServerConfig(req.user, datasetURI, params.options, (res)=>{
                 callback(null, {datasetURI: datasetURI, redirect: params.redirect});
             });
