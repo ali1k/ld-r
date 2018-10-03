@@ -147,6 +147,8 @@ export default {
         let host = endpointParameters.httpOptions.host;
         let port = endpointParameters.httpOptions.port;
         let path = endpointParameters.httpOptions.path;
+        //remove the tralining slash at the end of the path if applicable
+        path = (path.length > 1 && path.slice(-1) ) === '/' ? path.slice(0, -1) : path;
         let userPass = '';
         if(endpointParameters.httpOptions.username && endpointParameters.httpOptions.password){
             userPass = endpointParameters.httpOptions.username + ':' + endpointParameters.httpOptions.password + '@';
