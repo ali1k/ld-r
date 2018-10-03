@@ -1,4 +1,4 @@
-import {enableDynamicReactorConfiguration, enableDynamicServerConfiguration, enableDynamicFacetsConfiguration, configDatasetURI, enableAutomaticConfiguration, authDatasetURI, enableQuerySaveImport} from '../../configs/general';
+import {enableDynamicReactorConfiguration, enableDynamicServerConfiguration, enableDynamicFacetsConfiguration, configDatasetURI, enableAutomaticConfiguration, authDatasetURI, enableQuerySaveImport, mappingsDatasetURI} from '../../configs/general';
 import {getStaticEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
 import rp from 'request-promise';
 const ldr_prefix = 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#';
@@ -361,7 +361,7 @@ class DynamicConfigurator {
     prepareDynamicFacetsConfig(user, datasetURI, callback) {
         let config = {facets: {}};
         //the following graphs shold be only locally reachable
-        let exceptions = [configDatasetURI[0], authDatasetURI[0]];
+        let exceptions = [configDatasetURI[0], authDatasetURI[0], mappingsDatasetURI[0]];
         //do not config if disabled or exceptions
         if(!enableDynamicFacetsConfiguration || exceptions.indexOf(datasetURI) !== -1){
             callback(config);
@@ -473,7 +473,7 @@ class DynamicConfigurator {
     }
     prepareDynamicDatasetConfig(user, datasetURI, callback) {
         let config = {dataset: {}};
-        let exceptions = [configDatasetURI[0], authDatasetURI[0]];
+        let exceptions = [configDatasetURI[0], authDatasetURI[0], mappingsDatasetURI[0]];
         //do not config if disabled or exceptions
         if(!enableDynamicReactorConfiguration || exceptions.indexOf(datasetURI) !== -1){
             callback(config);
@@ -603,7 +603,7 @@ class DynamicConfigurator {
 
     }
     createASampleReactorConfig(user, scope, datasetURI, resourceURI, propertyURI, options, callback) {
-        let exceptions = [configDatasetURI[0], authDatasetURI[0]];
+        let exceptions = [configDatasetURI[0], authDatasetURI[0], mappingsDatasetURI[0]];
         //do not config if disabled or exceptions
         if(!enableDynamicReactorConfiguration || exceptions.indexOf(datasetURI) !== -1){
             callback(0);
@@ -725,7 +725,7 @@ class DynamicConfigurator {
 
     }
     createASampleServerConfig(user, datasetURI, options, callback) {
-        let exceptions = [configDatasetURI[0], authDatasetURI[0]];
+        let exceptions = [configDatasetURI[0], authDatasetURI[0], mappingsDatasetURI[0]];
         //do not config if disabled or exceptions
         if(!enableDynamicReactorConfiguration || exceptions.indexOf(datasetURI) !== -1){
             callback(0);
@@ -1524,6 +1524,11 @@ class DynamicConfigurator {
                     }else if(settingProp === 'position' || settingProp === 'isHidden'){
                         dynamicReactorDS.dataset[el.dataset.value][settingProp] = Number(el.settingValue.value);
                     }  else {
+                        //skip the mapping dataset configs
+                        let exceptions =[mappingsDatasetURI[0]]
+                        if(exceptions.indexOf(el.dataset.value) !== -1){
+                            dynamicReactorDS.dataset[el.dataset.value]['isHidden'] = 1;
+                        }
                         //list of relevant datasets attributes should be defined here:
                         let relatedProps = ['resourceFocusType', 'datasetLabel', 'metadata', 'datasetCategory'];
                         if(relatedProps.indexOf(settingProp) !== -1){

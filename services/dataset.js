@@ -2,7 +2,7 @@
 import {getHTTPQuery, getHTTPGetURL} from './utils/helpers';
 import {checkViewAccess, checkEditAccess} from './utils/accessManagement';
 import {getDynamicEndpointParameters, getDynamicDatasets} from './utils/dynamicHelpers';
-import {enableAuthentication, authDatasetURI, configDatasetURI, defaultDatasetURI} from '../configs/general';
+import {enableAuthentication, authDatasetURI, configDatasetURI, defaultDatasetURI, mappingsDatasetURI} from '../configs/general';
 import staticReactor from '../configs/reactor';
 import staticFacets from '../configs/facets';
 import DatasetQuery from './sparql/DatasetQuery';
@@ -275,7 +275,7 @@ export default {
             let sources = ['dataset', 'dataset_resource', 'dataset_property', 'dataset_resource_property'];
             sources.forEach(function(s){
                 for(let ds in staticReactor.config[s]){
-                    if(ds !== authDatasetURI[0] && ds !== configDatasetURI[0] && ds !== 'generic'){
+                    if(ds !== authDatasetURI[0] && ds !== configDatasetURI[0] && ds !== mappingsDatasetURI[0] && ds !== 'generic'){
                         if(!staticReactorDS.dataset[ds]){
                             staticReactorDS.dataset[ds] = {};
                         }
@@ -289,7 +289,7 @@ export default {
                 }
             });
             for(let ds in staticFacets.facets){
-                if(ds !== authDatasetURI[0] && ds !== configDatasetURI[0] && ds !== 'generic'){
+                if(ds !== authDatasetURI[0] && ds !== configDatasetURI[0] && ds !== mappingsDatasetURI[0] && ds !== 'generic'){
                     if(!staticFacetsDS.facets[ds]){
                         staticFacetsDS.facets[ds]= {};
                     }
