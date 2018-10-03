@@ -1,4 +1,4 @@
-import {enableCSVImport, mappingsDatasetURI, baseResourceDomain} from '../../configs/general';
+import {enableCSVImport, mappingsDatasetURI, baseResourceDomain, configDatasetURI} from '../../configs/general';
 import {getStaticEndpointParameters, getHTTPQuery, getHTTPGetURL} from '../../services/utils/helpers';
 import rp from 'request-promise';
 import camelCase from 'camelcase';
@@ -120,12 +120,15 @@ class CSVMapper {
         }
         //start config
         const endpointParameters = getStaticEndpointParameters(mappingsDatasetURI[0]);
+        const endpointParameters2 = getStaticEndpointParameters(configDatasetURI[0]);
         const graphName = endpointParameters.graphName;
+        const graphName2 = endpointParameters2.graphName;
         const headers = {'Accept': 'application/sparql-results+json'};
         const outputFormat = 'application/sparql-results+json';
         let graph = ' GRAPH <'+ graphName +'> {';
+        let graph2 = ' GRAPH <'+ graphName2 +'> {';
         let graphEnd = ' }';
-        if(!graphName || graphName === 'default'){
+        if(!graphName || graphName === 'default' || !graphName2 || graphName2 === 'default'){
             graph ='';
             graphEnd = '';
         }
@@ -150,9 +153,12 @@ class CSVMapper {
             PREFIX r: <${resourcePrefix}>
             PREFIX v: <${vocabPrefix}>
         `;
+        let options_select = [];
         let customMappings = columns.map((item, itemc)=> {
+            options_select.push(`v:${camelCase(item)}`);
             return `v:${camelCase(item)}_mapTo v:${camelCase(item)} ;`;
         });
+        let options_select_St = options_select.join(', ');
         const query = `
         INSERT DATA { ${graph}
             <${rnc}> a ldr:CSVMapping ;
@@ -168,8 +174,33 @@ class CSVMapper {
                      ${userSt}
                      ldr:createdOn "${currentDate}"^^xsd:dateTime .
                      r:${cmRND} ${customMappings.join(' ')}
-                        ${userSt}  
+                        ${userSt}
                      a ldr:CustomMapping .
+        ${graphEnd} }
+        `;
+        const query2 = `
+        INSERT DATA { ${graph2}
+            <${rnc}C> a ldr:ReactorConfig ;
+                     ldr:dataset <${mappingsDatasetURI[0]}> ;
+                     ldr:resource <${rnc}> ;
+                     ldr:property ldr:idColumn ;
+                     ldr:label "ID Column" ;
+                     ldr:hint "A combination of this column and the resource prefix will be used to create URIs for the entities." ;
+                     rdfs:label "reactor configurations for CSV mapping ${rnc}" ;
+                     ldr:objectIEditor "BasicOptionInput" ;
+                     ldr:options ${options_select_St} ;
+                     ldr:scope "DRP" .
+            <${rnc}C2> a ldr:ReactorConfig ;
+                     ldr:dataset <${mappingsDatasetURI[0]}> ;
+                     ldr:resource <${rnc}> ;
+                     ldr:property ldr:skippedColumns ;
+                     rdfs:label "skippedColumns property config for ${rnc}" ;
+                     ldr:hint "The selected columns will not be included in the generated RDF file." ;
+                     ldr:label "Skipped Columns" ;
+                     ldr:objectIEditor "BasicOptionInput" ;
+                     ldr:options ${options_select_St} ;
+                     ldr:allowNewValue "1" ;
+                     ldr:scope "DRP" .
         ${graphEnd} }
         `;
         //ToDO, add also a configuration for the above resource
@@ -177,8 +208,17 @@ class CSVMapper {
         //console.log(prefixes + query);
         let self = this;
         let HTTPQueryObject = getHTTPQuery('update', prefixes + query, endpointParameters, outputFormat);
+        let HTTPQueryObject2 = getHTTPQuery('update', prefixes + query2, endpointParameters2, outputFormat);
         rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
-            callback(rnc);
+            //run the second query
+            rp.post({uri: HTTPQueryObject2.uri, form: HTTPQueryObject2.params}).then(function(res2){
+                callback(rnc);
+            }).catch(function (err) {
+                console.log('Error in reactor config creation update query:', prefixes + query2);
+                console.log(sparql_endpoint_error);
+                console.log('---------------------------------------------------------');
+                callback(rnc);
+            });
         }).catch(function (err) {
             console.log('Error in mapping config creation update query:', prefixes + query);
             console.log(sparql_endpoint_error);

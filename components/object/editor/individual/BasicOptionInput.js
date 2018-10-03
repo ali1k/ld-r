@@ -44,7 +44,11 @@ class BasicOptionInput extends React.Component {
         let optionsList;
         if(this.props.config && this.props.config.options){
             optionsList = this.props.config.options.map(function(option, index) {
-                return <option key={index} value={(option.value)}> {option.label} </option>;
+                if(option.value && option.label){
+                    return <option key={index} value={(option.value)}> {option.label} </option>;
+                }else{
+                    return <option key={index} value={(option)}> {option} </option>;
+                }
             });
         }else{
             optionsList = <option value="0"> No option found in config! </option>;
