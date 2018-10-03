@@ -180,13 +180,13 @@ class CSVMapper {
         `;
         const query2 = `
         INSERT DATA { ${graph2}
-            <${rnc}C> a ldr:ReactorConfig ;
+            <${rnc}C1> a ldr:ReactorConfig ;
                      ldr:dataset <${mappingsDatasetURI[0]}> ;
                      ldr:resource <${rnc}> ;
                      ldr:property ldr:idColumn ;
                      ldr:label "ID Column" ;
                      ldr:hint "A combination of this column and the resource prefix will be used to create URIs for the entities." ;
-                     rdfs:label "reactor configurations for CSV mapping ${rnc}" ;
+                     rdfs:label "idColumn property config for ${rnc}" ;
                      ldr:objectIEditor "BasicOptionInput" ;
                      ldr:options ${options_select_St} ;
                      ldr:scope "DRP" .
