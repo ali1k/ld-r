@@ -495,11 +495,18 @@ export default {
                     readOnlyProperty: 1,
                     label: ['CSV File']
                 },
-                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#SkippedColumns': {
-                    allowNewValue: 1
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#skippedColumns': {
+                    allowNewValue: 1,
+                    label: ['Skipped Columns'],
+                    hint: ['The selected columns will not be included in the generated RDF file.']
+                },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#idColumn': {
+                    label: ['ID Column'],
+                    hint: ['A combination of this column and the resource prefix will be used to create URIs for the entities.']
                 },
                 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': {
-                    readOnlyProperty: 1
+                    readOnlyProperty: 1,
+                    isHidden: 1
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#entityType': {
                     objectIEditor: ['PrefixBasedInput'],

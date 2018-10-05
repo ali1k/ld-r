@@ -78,7 +78,7 @@ export default {
                 .on('data', function(data){
                     counter++;
                     //to limi the number of rows returned
-                    if(counter > 5){
+                    if(counter > 10){
                         stream.destroy();
                         callback(null, {rows: rows, total: counter - 1});
                         return 0;

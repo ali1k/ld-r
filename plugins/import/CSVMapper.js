@@ -184,8 +184,6 @@ class CSVMapper {
                      ldr:dataset <${mappingsDatasetURI[0]}> ;
                      ldr:resource <${rnc}> ;
                      ldr:property ldr:idColumn ;
-                     ldr:label "ID Column" ;
-                     ldr:hint "A combination of this column and the resource prefix will be used to create URIs for the entities." ;
                      rdfs:label "idColumn property config for ${rnc}" ;
                      ldr:objectIEditor "BasicOptionInput" ;
                      ldr:options ${options_select_St} ;
@@ -195,11 +193,8 @@ class CSVMapper {
                      ldr:resource <${rnc}> ;
                      ldr:property ldr:skippedColumns ;
                      rdfs:label "skippedColumns property config for ${rnc}" ;
-                     ldr:hint "The selected columns will not be included in the generated RDF file." ;
-                     ldr:label "Skipped Columns" ;
                      ldr:objectIEditor "BasicOptionInput" ;
                      ldr:options ${options_select_St} ;
-                     ldr:allowNewValue "1" ;
                      ldr:scope "DRP" .
         ${graphEnd} }
         `;
