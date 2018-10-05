@@ -52,7 +52,7 @@ class CSVMappingResource extends React.Component {
         let fileURL = '', allowJSONLD = 0;
         //continue
         let readOnly = 1;
-        let createdByDIV, createdOnDIV;
+        let createdByDIV, createdOnDIV, csvFileDIV, delimiterDIV, labelDIV, rpDIV, vpDIV, cmDIV;
         let isUserTheCreator = 0;
         let user = this.context.getUser();
         let self = this;
@@ -82,17 +82,26 @@ class CSVMappingResource extends React.Component {
                         }
                     }
                 }
+
                 if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdOn'){
                     dateDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
                 }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#createdBy') {
                     creatorDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                }else if(node.propertyURI === 'http://www.w3.org/2000/01/rdf-schema#label') {
+                    labelDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#resourcePrefix') {
+                    rpDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#customMappings') {
+                    cmDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#vocabPrefix') {
+                    vpDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#delimiter') {
+                    allowJSONLD = !configReadOnly;
+                    delimiterDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
+                }else if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#csvFile') {
+                    fileURL = node.instances[0].value;
+                    csvFileDIV = <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>;
                 }else{
-                    if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#csvFile') {
-                        fileURL = node.instances[0].value;
-                    }
-                    if(node.propertyURI === 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#delimiter') {
-                        allowJSONLD = !configReadOnly;
-                    }
                     return (
                         <PropertyReactor key={index} enableAuthentication={self.props.enableAuthentication} spec={node} readOnly={configReadOnly} config={node.config} datasetURI ={self.props.datasetURI } resource={self.props.resource} property={node.propertyURI} propertyPath= {self.props.propertyPath}/>
                     );
@@ -134,7 +143,16 @@ class CSVMappingResource extends React.Component {
             mainDIV = <div className="ui segment">
                 <div className="ui grid">
                     <div className="column ui list">
+                        <h2 className="ui dividing header orange"> File Info</h2>
+                        {csvFileDIV}
+                        {delimiterDIV}
+                        <h2 className="ui dividing header orange"> Mapping Configurations</h2>
+                        {vpDIV}
+                        {rpDIV}
                         {list}
+                        {cmDIV}
+                        <h2 className="ui dividing header orange"> Metadata</h2>
+                        {labelDIV}
                         {annotationDIV}
                         {annotationMetaDIV}
                         {dateDIV}

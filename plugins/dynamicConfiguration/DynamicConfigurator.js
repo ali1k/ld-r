@@ -806,7 +806,9 @@ class DynamicConfigurator {
             }
             let typeFilter = [];
             resourceType.forEach(function(el) {
-                typeFilter.push(`?resource=<${el}>`);
+                if(el){
+                    typeFilter.push(`?resource=<${el}>`);
+                }
             });
             let typeFilterStr = '';
             if(typeFilter.length){
