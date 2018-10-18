@@ -208,13 +208,12 @@ export default {
                             //console.log(prop.toLowerCase(), contextOptions['idColumn'].toLowerCase());
                             if(prop.toLowerCase() === contextOptions['idColumn'].toLowerCase()){
                                 tmpObj['@id'] = 'r:' + encodeURIComponent(camelCase(data[prop]));
-                            } else {
-                                if(contextOptions['skippedColumns'].indexOf(camelCase(prop)) == -1){
-                                    if(contextOptions['customMappings'] && contextOptions['customMappings'][camelCase(prop)]){
-                                        tmpObj[contextOptions['customMappings'][camelCase(prop)]] = isNaN(data[prop]) ? data[prop] : Number(data[prop]) ;
-                                    }else{
-                                        tmpObj['v:'+camelCase(prop)] = isNaN(data[prop]) ? data[prop] : Number(data[prop]) ;
-                                    }
+                            }
+                            if(contextOptions['skippedColumns'].indexOf(camelCase(prop)) === -1){
+                                if(contextOptions['customMappings'] && contextOptions['customMappings'][camelCase(prop)]){
+                                    tmpObj[contextOptions['customMappings'][camelCase(prop)]] = isNaN(data[prop]) ? data[prop] : Number(data[prop]) ;
+                                }else{
+                                    tmpObj['v:'+camelCase(prop)] = isNaN(data[prop]) ? data[prop] : Number(data[prop]) ;
                                 }
                             }
                         }

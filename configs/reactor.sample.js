@@ -497,6 +497,7 @@ export default {
                 },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#skippedColumns': {
                     allowNewValue: 1,
+                    allowPropertyDelete: 1,
                     label: ['Skipped Columns'],
                     hint: ['The selected columns will not be included in the generated RDF file.']
                 },
