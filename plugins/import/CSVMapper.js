@@ -93,10 +93,10 @@ class CSVMapper {
         });
         for(let prop in output){
             if(prop === 'idColumn'){
-                output[prop] = output[prop].replace(v, '');
+                output[prop] = output[prop];
             }else if(prop === 'skippedColumns'){
                 output.skippedColumns = output.skippedColumns.map((item)=> {
-                    return item.replace(v, '');
+                    return item;
                 })
             } else {
                 output[prop] = output[prop];
@@ -106,10 +106,14 @@ class CSVMapper {
         let tmp2 = output['csvFile'].split('\/');
         output['csvFile'] = tmp2[tmp2.length - 1];
         output['customMappings'] = {};
+        const vFixed = 'http://ld-r.org/v/';
         parsed2.results.bindings.forEach(function(el) {
-            settingProp = el.source.value.replace(v, '').replace('_mapTo', '').trim();
-            output['customMappings'][settingProp] = el.target.value;
-            //output['customMappings'][settingProp] = el.target.value.replace(v, '').trim();
+            settingProp = el.source.value.replace(vFixed, '').replace('_mapTo', '').trim();
+            if(settingProp === el.target.value.replace(vFixed, '')){
+                output['customMappings'][settingProp] = el.target.value.replace(vFixed, '');
+            }else{
+                output['customMappings'][settingProp] = el.target.value;
+            }
         });
         return output;
     }
@@ -155,8 +159,10 @@ class CSVMapper {
         `;
         let options_select = [];
         let customMappings = columns.map((item, itemc)=> {
-            options_select.push(`v:${camelCase(item)}`);
-            return `v:${camelCase(item)}_mapTo v:${camelCase(item)} ;`;
+            if(item.trim()){
+                options_select.push(`"""${camelCase(item)}"""`);
+                return `v:${camelCase(item)}_mapTo v:${camelCase(item)} ;`;
+            }
         });
         let options_select_St = options_select.join(', ');
         const query = `
@@ -166,8 +172,8 @@ class CSVMapper {
                      rdfs:label "mapping configurations for ${filePath}" ;
                      ldr:delimiter """${delimiter}""";
                      ldr:entityType v:Entity ;
-                     ldr:idColumn v:${camelCase(columns[0])};
-                     ldr:skippedColumns v:${camelCase(columns[0])};
+                     ldr:idColumn """${camelCase(columns[0])}""";
+                     ldr:skippedColumns """${camelCase(columns[0])}""";
                      ldr:customMappings r:${cmRND};
                      ldr:resourcePrefix <${resourcePrefix}>;
                      ldr:vocabPrefix <${vocabPrefix}>;
