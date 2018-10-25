@@ -102,7 +102,10 @@ module.exports = {
             {title: 'ldr:enabled'},
             {title: 'ldr:acceptedMimeTypes'},
             {title: 'ldr:fileNamePrefix'},
-            {title: 'ldr:maxFileSize'}
+            {title: 'ldr:maxFileSize'},
+            {title: 'ldr:decodeURIComponent'},
+            {title: 'ldr:encodeURIComponent'},
+            {title: 'ldr:rtl'}
         ],
         ldrLiterals: [
             {title: 'OrgResource'},

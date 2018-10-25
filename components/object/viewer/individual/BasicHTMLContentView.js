@@ -7,10 +7,22 @@ Default component to display object values
 class BasicHTMLContentView extends React.Component {
     render() {
         let val, outputDIV;
+        let cstyle={direction: 'ltr'};
         val = this.props.spec.value;
+        if(this.props.config){
+            if(this.props.config.decodeURIComponent || this.props.decodeURIComponent){
+                val = decodeURIComponent(val);
+            }else if (this.props.config.encodeURIComponent || this.props.encodeURIComponent) {
+                val = encodeURIComponent(val);
+            }
+            //allow view RightToLeft languages
+            if (this.props.config.rtl || this.props.rtl) {
+                cstyle.direction= 'rtl';
+            }
+        }
         outputDIV = <div itemProp={this.props.property} dangerouslySetInnerHTML={{__html: val}} />;
         return (
-            <div className="ui" ref="basicIndividualView">
+            <div className="ui" style={cstyle} ref="basicHTMLContentView">
                 {outputDIV}
             </div>
         );
