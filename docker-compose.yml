@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+   virtuoso:
+     image: tenforce/virtuoso:1.1.0-virtuoso7.2.4
+     volumes:
+       - virtuoso-db:/data
+     environment:
+       DBA_PASSWORD: dba
+       SPARQL_UPDATE: "true"
+       DEFAULT_GRAPH: "http://ld-r.org"
+     ports:
+       - "8890:8890" #SPARQL web endpoint port
+       - "1111:1111" #isql port
+   ld-r:
+     depends_on:
+       - virtuoso
+     image: ali1k/ld-r
+     ports:
+       - "4000:4000"  #LD-R application port
+volumes:
+  virtuoso-db:   #the location of Virtuoso DB
