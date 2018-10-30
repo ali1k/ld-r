@@ -12,11 +12,11 @@ services:
      ports:
        - "8890:8890" #SPARQL web endpoint port
        - "1111:1111" #isql port
+       - "4000:4000"  #LD-R application port
    ld-r:
      depends_on:
        - virtuoso
      image: ali1k/ld-r
-     ports:
-       - "4000:4000"  #LD-R application port
+     network_mode: service:virtuoso
 volumes:
   virtuoso-db:
