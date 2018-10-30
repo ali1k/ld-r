@@ -2,7 +2,7 @@ version: '3'
 
 services:
    virtuoso:
-     image: tenforce/virtuoso:1.3.2-virtuoso7.2.5.1
+     image: tenforce/virtuoso:1.3.2-virtuoso7.2.4
      volumes:
        - virtuoso-db:/data #the location of Virtuoso DB
      environment:
