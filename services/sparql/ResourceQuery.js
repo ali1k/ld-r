@@ -79,7 +79,7 @@ class ResourceQuery{
         `;
         return this.query;
     }
-    newResource(endpointParameters, user, graphName, newResourceURI) {
+    newResource(endpointParameters, user, graphName, newResourceURI, templateResourceURI) {
         //todo: consider different value types
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let userSt = '';
@@ -88,16 +88,37 @@ class ResourceQuery{
         }
         let date = new Date();
         let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
-        this.query = `
-        INSERT DATA {
-            ${gStart}
-                <${newResourceURI}> a ldr:Resource ;
-                ldr:createdOn "${currentDate}"^^xsd:dateTime;
-                ${userSt}
-                rdfs:label "New Resource" .
-            ${gEnd}
+        // use a template for resource if set
+        if(templateResourceURI){
+            this.query = `
+            INSERT {
+                ${gStart}
+                    <${newResourceURI}> ?p ?o ;
+                    ldr:createdOn "${currentDate}"^^xsd:dateTime;
+                    ${userSt}
+                ${gEnd}
+            } WHERE {
+                ${gStart}
+                    <${templateResourceURI}> ?p ?o .
+                    FILTER (?p != ldr:cloneOf && ?p != ldr:createdOn && ?p != ldr:createdBy)
+                ${gEnd}
+            }
+            `;
+        } else {
+            // create an empty resource
+            this.query = `
+            INSERT DATA {
+                ${gStart}
+                    <${newResourceURI}> a ldr:Resource ;
+                    ldr:createdOn "${currentDate}"^^xsd:dateTime;
+                    ${userSt}
+                    rdfs:label "New Resource" .
+                ${gEnd}
+            }
+            `;
         }
-        `;
+
+
         return this.query;
     }
     annotateResource(endpointParameters, user, datasetURI, graphName, resourceURI, propertyURI, annotations, inNewDataset) {

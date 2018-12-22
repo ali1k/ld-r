@@ -141,6 +141,11 @@ export default {
                     isHidden: 0,
                     shortenURI: 0
                 },
+                'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#templateResource': {
+                    label: ['The Template Resource'],
+                    hint: ['If set, this resource will be used as template for new resources.'],
+                    allowNewValue: 0
+                },
                 'https://github.com/ali1k/ld-reactor/blob/master/vocabulary/index.ttl#scope': {
                     hint: ['Determines the type of scope in LD-R'],
                     objectIEditor: ['BasicOptionInput'],

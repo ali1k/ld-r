@@ -44,6 +44,7 @@ module.exports = {
             {title: 'ldr:resourceImageProperty'},
             {title: 'ldr:resourceLabelProperty'},
             {title: 'ldr:maxNumberOfResourcesOnPage'},
+            {title: 'ldr:templateResource'},
             {title: 'ldr:readOnly'},
             {title: 'ldr:readOnlyProperty'},
             {title: 'ldr:readOnlyResource'},

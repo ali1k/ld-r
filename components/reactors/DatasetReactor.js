@@ -19,9 +19,10 @@ class DatasetReactor extends React.Component {
             resourceURI: resourceURI
         });
     }
-    handleCreateResource(datasetURI) {
+    handleCreateResource(datasetURI, templateResource) {
         this.context.executeAction(createResource, {
-            dataset: datasetURI
+            dataset: datasetURI,
+            templateResource: templateResource
         });
     }
     //removes properties from an object
