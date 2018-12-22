@@ -94,8 +94,8 @@ class ResourceQuery{
             INSERT {
                 ${gStart}
                     <${newResourceURI}> ?p ?o ;
-                    ldr:createdOn "${currentDate}"^^xsd:dateTime;
                     ${userSt}
+                    ldr:createdOn "${currentDate}"^^xsd:dateTime .
                 ${gEnd}
             } WHERE {
                 ${gStart}
