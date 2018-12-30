@@ -74,7 +74,7 @@ class CSVImport extends React.Component {
                                         {!this.state.status ? <Form.Field label='Delimiter*' control='input' placeholder='Delimiter e.g. , or ;' onChange={this.handleDelimiterChange.bind(this)} value={this.state.delimiter} style={{width: '100px'}}/> :null}
                                         <Divider hidden />
                                         {!this.state.status ?
-                                            <FileInput onDataEdit={this.handleDataEdit.bind(this)} config={{acceptedMimeTypes: 'text/*, text/csv, application/csv', maxFileSize: 157286400, fileNamePrefix: 'data'}}/>
+                                            <FileInput onDataEdit={this.handleDataEdit.bind(this)} config={{acceptedMimeTypes: 'text/*, text/csv, application/csv, application/vnd.ms-excel', maxFileSize: 157286400, fileNamePrefix: 'data'}}/>
                                             :null
                                         }
                                         {this.state.status === 1 ?

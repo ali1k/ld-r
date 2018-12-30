@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import classNames from 'classnames';
 import Dropzone from 'react-dropzone';
 import request from 'superagent';
 
@@ -54,11 +55,21 @@ class FileInput extends React.Component {
                 {!this.state.status ?
                     <div className="dropzone">
                         <Dropzone style={{'width': '100%', 'height': '200px', borderWidth: '2px', borderStyle: 'dashed', borderRadius: '5px'}} ref={(node) => { dropzoneRef = node; }} accept={acceptedMimeTypes} maxSize={maxFileSize} multiple={false} onDrop={this.onDrop.bind(this)}>
-                            <p>Drop your file here</p>
-                        </Dropzone> or
-                        &nbsp;<button className="ui button" type="button" onClick={() => { dropzoneRef.open() }}>
-                        Browse and select a file
-                        </button>
+                            {({getRootProps, getInputProps, isDragActive}) => {
+                                return (
+                                    <div style={{'width': '100%', 'height': '200px', borderWidth: '2px', borderStyle: 'dashed', borderRadius: '5px'}}
+                                        {...getRootProps()}
+                                        className={classNames('dropzone', {'dropzone--isActive': isDragActive})}>
+                                        <input {...getInputProps()} />
+                                        {
+                                            isDragActive ?
+                                                <p>Drop your CSV file here...</p> :
+                                                <p>Try dropping your CSV file here, or <b>click</b> to select files to upload.</p>
+                                        }
+                                    </div>
+                                )
+                            }}
+                        </Dropzone>
                     </div>
                     :null
                 }
