@@ -128,6 +128,7 @@ module.exports = {
             {title: 'TwoLetterCountryView'},
             {title: 'BasicAggregateMapView'},
             {title: 'DBpediaMapView'},
+            {title: 'MarkdownView'},
             {title: 'BasicCalendarInput'},
             {title: 'BasicTextareaInput'},
             {title: 'DBpediaInput'},

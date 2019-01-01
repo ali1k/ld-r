@@ -16,6 +16,7 @@ import PrefixBasedView from './viewer/individual/PrefixBasedView';
 import ToggleView from './viewer/individual/ToggleView';
 import BasicMapView from './viewer/individual/BasicMapView';
 import YASQEViewer from './viewer/individual/YASQEViewer';
+import MarkdownView from './viewer/individual/MarkdownView';
 
 class ObjectIViewer extends React.Component {
     render() {
@@ -97,6 +98,9 @@ class ObjectIViewer extends React.Component {
                 break;
             case 'ThreeLetterCountryView':
                 viewer = <ThreeLetterCountryView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
+                break;
+            case 'MarkdownView':
+                viewer = <MarkdownView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
                 break;
             default:
                 viewer = <BasicIndividualView spec={this.props.spec} config={this.props.config} property={this.props.property}/>;
