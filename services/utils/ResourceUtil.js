@@ -73,7 +73,28 @@ class ResourceUtil {
                     });
                 });
             }
+            //fix the title issue for property categories
+            let newTitel = title;
+            let searchForTitle = false;
+            if (rconfig && rconfig.resourceLabelProperty && rconfig.resourceLabelProperty.length) {
+                searchForTitle = true;
+                newTitel = '';
+            }
             for(let propURI in rpIndex.propIndex){
+                // preserve the title of resource
+                if(searchForTitle){
+                    if (rconfig.resourceLabelProperty.indexOf(propURI) !== -1) {
+                        let tmpArr = [];
+                        rpIndex.propIndex[propURI].forEach((tvalA) => {
+                            tmpArr.push(tvalA.value);
+                        });
+                        if (tmpArr.length) {
+                            newTitel = tmpArr.join('-');
+                        } else {
+                            newTitel = title;
+                        }
+                    }
+                }
                 asyncTasks.push(function(callback2){
                     configurator.preparePropertyConfig(user, 1, datasetURI, resourceURI, resourceType, propURI, (dconfig)=> {
                         //handle categories
@@ -166,26 +187,10 @@ class ResourceUtil {
                         }
                     });
                 }
-                //make the right title for resource if propertyLabel is defined in config
-                let newTitel = title;
+
                 if(rconfig){
                     rconfig.userIsCreator = userIsCreator;
                     rconfig.userIsEditor = userIsEditor;
-                    if (rconfig.resourceLabelProperty && rconfig.resourceLabelProperty.length) {
-                        newTitel = '';
-                        let tmpArr = [];
-                        finalOutput.forEach(function(el) {
-                            if (rconfig.resourceLabelProperty.indexOf(el.propertyURI) !== -1) {
-                                tmpArr.push(el.instances[0].value);
-                            }
-                        });
-
-                        if (tmpArr.length) {
-                            newTitel = tmpArr.join('-');
-                        } else {
-                            newTitel = title;
-                        }
-                    }
                 }
 
                 callback( {
