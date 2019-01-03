@@ -125,7 +125,7 @@ class DatasetFB extends React.Component {
         }
         return (
             <div className="ui" ref="datasetFB">
-                <DatasetHeader importedEnvState={this.props.importedEnvState} config={dcnf} total={this.props.total}  datasetURI={this.props.datasetURI} searchMode={this.state.searchMode} resourcesLength={this.props.resourcesLength} hasResources={this.props.resources.length} pivotConstraint={this.props.pivotConstraint} prevEnvState={this.props.prevEnvState} handleBackToPrevPivotState={this.props.handleBackToPrevPivotState}/>
+                <DatasetHeader importedEnvState={this.props.importedEnvState} resourceQuery={this.props.resourceQuery} config={dcnf} total={this.props.total}  datasetURI={this.props.datasetURI} searchMode={this.state.searchMode} resourcesLength={this.props.resourcesLength} hasResources={this.props.resources.length} pivotConstraint={this.props.pivotConstraint} prevEnvState={this.props.prevEnvState} handleBackToPrevPivotState={this.props.handleBackToPrevPivotState}/>
                 <div className="ui segments">
                     <div className="ui segment">
                         <DatasetViewer expanded={this.props.expanded} enableAuthentication={enableAuthentication} cloneable={0} resources={instances} datasetURI={this.props.datasetURI} OpenInNewTab={true} isBig={this.props.isBig} config={dcnf} facetConfigs={facetConfigs} pivotConstraint={this.props.pivotConstraint}/>

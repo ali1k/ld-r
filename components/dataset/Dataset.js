@@ -98,7 +98,7 @@ class Dataset extends React.Component {
             <div className="ui fluid container ldr-padding-more" ref="dataset">
                 <div className="ui grid">
                     <div className="ui column">
-                        <DatasetHeader config={dcnf} total ={this.props.total} datasetURI={this.props.datasetURI} searchMode={this.state.searchMode} resourcesLength={this.props.resources.length}/>
+                        <DatasetHeader config={dcnf} total ={this.props.total} resourceQuery={this.props.resourceQuery} datasetURI={this.props.datasetURI} searchMode={this.state.searchMode} resourcesLength={this.props.resources.length}/>
                         <div className="ui segments">
                             <div className="ui segment">
                                 <DatasetViewer enableAuthentication={enableAuthentication} resources={this.props.resources} datasetURI={this.props.datasetURI} isBig={true} config={dcnf} cloneable={1} onCloneResource={this.props.onCloneResource}/>

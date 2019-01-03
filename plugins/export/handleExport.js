@@ -77,6 +77,61 @@ let exportResource = function(format, datasetURI, resourceURI, req, res) {
         */
     });
 }
+let exportQuery = function(format, datasetURI, query, req, res) {
+    helpers2.getDynamicEndpointParameters(req.user, [datasetURI], (endpoint) => {
+        let httpOptions = endpoint.httpOptions;
+        let outputFormat;
+        switch (format.toLowerCase()) {
+            case 'RDF/XML':
+                outputFormat = 'application/rdf+xml';
+                break;
+            case 'JSON':
+                outputFormat = 'application/sparql-results+json';
+                break;
+            case 'NTriples':
+                outputFormat = 'text/plain';
+                break;
+            default:
+                outputFormat = 'text/plain';
+        }
+        if(endpoint.type === 'cliopatria'){
+            outputFormat = 'rdf+xml';
+        }
+        //console.log(query);
+        let rpPath = helpers.getHTTPGetURL(helpers.getHTTPQuery('read', query, endpoint, outputFormat));
+        rp.get({
+            uri: rpPath
+        }).then(function(result) {
+            res.set({
+                'Content-Type': outputFormat,
+                'Content-Length': result.length
+            });
+            //res.download(result);
+            res.write(result);
+            res.end();
+            //res.send(result);
+        }).catch(function(err) {
+            res.send(err);
+        });
+        /* todo: content negotiation
+        res.format({
+          'text/plain': function(){
+
+          },
+          'text/html': function(){
+              res.render('export', {appShortTitle: appShortTitle, appFullTitle: appFullTitle, data: 'data', errorMsg: ''});
+          },
+          'application/json': function(){
+
+          },
+          'default': function() {
+            // log the request and respond with 406
+
+          }
+        });
+        */
+    });
+}
 module.exports = function handleExport(server) {
     server.get('/export/:t/:d/:r?', function(req, res) {
         let format = req.params.t;
@@ -109,6 +164,37 @@ module.exports = function handleExport(server) {
             }
         } else {
             exportResource(format, datasetURI, resourceURI, req, res);
+        }
+    });
+    server.get('/exportQuery/:t/:d/:q', function(req, res) {
+        let format = req.params.t;
+        let query = decodeURIComponent(req.params.q);
+        //replace SELECT BY DESCRIBE
+        query = query.replace('SELECT DISTINCT', 'DESCRIBE');
+        let dataset = decodeURIComponent(req.params.d);
+        if (generalConfig.enableAuthentication) {
+            if (!req.isAuthenticated()) {
+                res.render('export', {
+                    appShortTitle: appShortTitle,
+                    appFullTitle: appFullTitle,
+                    data: '',
+                    errorMsg: 'Permission denied! Please login to system to access the page...'
+                });
+            } else {
+                //only super users can export in batch mode
+                if (dataset && query && req.user.isSuperUser === '1') {
+                    exportQuery(format, dataset, query, req, res);
+                } else {
+                    res.render('export', {
+                        appShortTitle: appShortTitle,
+                        appFullTitle: appFullTitle,
+                        data: '',
+                        errorMsg: 'Permission denied! You do not have enough permission to access the page...'
+                    });
+                }
+            }
+        } else {
+            exportQuery(format, dataset, query, req, res);
         }
     });
 };
