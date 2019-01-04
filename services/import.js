@@ -151,10 +151,22 @@ export default {
                             if(!contextObj[o.prefix]){
                                 contextObj[o.prefix] = o.uri;
                             }
-                            contextOptions.customMappings[prop] = contextOptions.customMappings[prop].replace(o.uri, o.prefix + ':');
+                            let propW = prop.replace(res.vocabPrefix, '').replace(baseResourceDomain[0]+'/v/', '');
+                            contextOptions.customMappings[propW] = contextOptions.customMappings[prop].replace(o.uri, o.prefix + ':');
                         }
                     }else{
-                        delete contextOptions.customMappings[prop];
+                        //it is the same vocab but not the same property
+                        if(prop.endsWith(cm.replace(res.vocabPrefix, ''))){
+                            delete contextOptions.customMappings[prop];
+                        }else{
+                          //fix the mapping by removing the
+                          //remove prefix, laso the default one
+                          let propW = prop.replace(res.vocabPrefix, '').replace(baseResourceDomain[0]+'/v/', '');
+                          let propW_mapping = contextOptions.customMappings[prop];
+                          delete contextOptions.customMappings[prop];
+                          contextOptions.customMappings[propW] = propW_mapping;
+                        }
+
                     }
                 }
                 //add prefix for entity type
@@ -169,7 +181,7 @@ export default {
                         contextOptions.entityType = contextOptions.entityType.replace(o.uri, o.prefix + ':');
                     }
                 }
-                //console.log(contextObj);
+              //  console.log(contextObj);
                 //console.log(contextOptions);
                 if (!fs.existsSync(csvPath)) {
                     callback(null, {output: ''});
@@ -212,7 +224,7 @@ export default {
                             }
                             if(contextOptions['skippedColumns'].indexOf(camelCase(prop)) === -1){
                                 if(contextOptions['customMappings'] && contextOptions['customMappings'][camelCase(prop)] && contextOptions['customMappings'][camelCase(prop)] !== camelCase(prop)){
-                                    tmpObj[contextOptions['customMappings'][camelCase(prop)]] = isNaN(data[prop]) ? data[prop] : Number(data[prop]) ;
+                                    tmpObj[contextOptions['customMappings'][camelCase(prop)].replace(res.vocabPrefix, 'v:')] = isNaN(data[prop]) ? data[prop] : Number(data[prop]) ;
                                 }else{
                                     tmpObj['v:'+camelCase(prop)] = isNaN(data[prop]) ? data[prop] : Number(data[prop]) ;
                                 }
