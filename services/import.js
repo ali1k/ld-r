@@ -159,12 +159,12 @@ export default {
                         if(prop.endsWith(cm.replace(res.vocabPrefix, ''))){
                             delete contextOptions.customMappings[prop];
                         }else{
-                          //fix the mapping by removing the
-                          //remove prefix, laso the default one
-                          let propW = prop.replace(res.vocabPrefix, '').replace(baseResourceDomain[0]+'/v/', '');
-                          let propW_mapping = contextOptions.customMappings[prop];
-                          delete contextOptions.customMappings[prop];
-                          contextOptions.customMappings[propW] = propW_mapping;
+                            //fix the mapping by removing the
+                            //remove prefix, laso the default one
+                            let propW = prop.replace(res.vocabPrefix, '').replace(baseResourceDomain[0]+'/v/', '');
+                            let propW_mapping = contextOptions.customMappings[prop];
+                            delete contextOptions.customMappings[prop];
+                            contextOptions.customMappings[propW] = propW_mapping;
                         }
 
                     }
@@ -181,7 +181,7 @@ export default {
                         contextOptions.entityType = contextOptions.entityType.replace(o.uri, o.prefix + ':');
                     }
                 }
-              //  console.log(contextObj);
+                // console.log(contextObj);
                 //console.log(contextOptions);
                 if (!fs.existsSync(csvPath)) {
                     callback(null, {output: ''});
