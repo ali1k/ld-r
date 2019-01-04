@@ -69,6 +69,7 @@ module.exports = {
             {title: 'ldr:hasNumericValues'},
             {title: 'ldr:defaultValue'},
             {title: 'ldr:allowResourceClone'},
+            {title: 'ldr:allowResourceDelete'},
             {title: 'ldr:allowResourceNew'},
             {title: 'ldr:allowPropertyNew'},
             {title: 'ldr:allowNewValue'},
