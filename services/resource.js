@@ -252,7 +252,6 @@ export default {
                 });
 
             });
-
         } else if (resource === 'resource.clone') {
             datasetURI = params.dataset;
             //control access on authentication
@@ -655,6 +654,38 @@ export default {
                     }
                     callback(null, {category: params.category});
                 });
+            });
+        } else if (resource === 'resource.delete') {
+            datasetURI = params.dataset;
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {datasetURI: datasetURI, resourceURI: params.resourceURI});
+                    return 0;
+                }else{
+                    user = req.user;
+                    //todo: think about the access level in the case of clone
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
+            getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
+                graphName = endpointParameters.graphName;
+                query = queryObject.getPrefixes() + queryObject.deleteResource(endpointParameters, user, graphName, params.resourceURI);
+                HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
+                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                    if(enableLogs){
+                        log.info('\n User: ' + user.accountName + ' \n Query: \n' + query);
+                    }
+                    callback(null, {datasetURI: datasetURI, resourceURI: params.resourceURI});
+                }).catch(function (err) {
+                    console.log(err);
+                    if(enableLogs){
+                        log.error('\n User: ' + user.accountName + '\n Status Code: \n' + err.statusCode + '\n Error Msg: \n' + err.message);
+                    }
+                    callback(null, {datasetURI: datasetURI, resourceURI: params.resourceURI});
+                });
+
             });
         } else if(resource === 'resource.property') {
             datasetURI = params.dataset;
