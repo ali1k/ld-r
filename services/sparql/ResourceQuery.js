@@ -53,6 +53,22 @@ class ResourceQuery{
         `;
         return this.query;
     }
+    deleteResource(endpointParameters, user, graphName, resourceURI) {
+        //todo: consider different value types
+        let {gStart, gEnd} = this.prepareGraphName(graphName);
+        this.query = `
+        DELETE {
+            ${gStart}
+                <${resourceURI}> ?p ?o .
+            ${gEnd}
+        } WHERE {
+            ${gStart}
+                <${resourceURI}> ?p ?o .
+            ${gEnd}
+        }
+        `;
+        return this.query;
+    }
     cloneResource(endpointParameters, user, graphName, resourceURI, newResourceURI) {
         //todo: consider different value types
         let {gStart, gEnd} = this.prepareGraphName(graphName);
