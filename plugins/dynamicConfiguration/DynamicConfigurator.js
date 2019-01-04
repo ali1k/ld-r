@@ -1309,7 +1309,7 @@ class DynamicConfigurator {
     parseDatasetConfigs(config, datasetURI, body) {
         //list of properties which should be taken into account for access management
         const viewProps = ['hasLimitedAccess', 'readOnly'];
-        const editProps = ['allowResourceClone', 'allowPropertyDelete', 'allowResourceNew', 'allowPropertyNew', 'allowNewValue'];
+        const editProps = ['allowResourceClone', 'allowPropertyDelete', 'allowResourceNew', 'allowPropertyNew', 'allowNewValue', 'allowResourceDelete'];
         let output = config;
         let parsed = JSON.parse(body);
         let settingProp = '';
