@@ -119,7 +119,23 @@ class DatasetFB extends React.Component {
         }
         //continue
         let self = this;
+        let createResourceDIV = '';
         let dcnf = this.state.config;
+        let templateResource = '';
+        if(dcnf && !this.props.readOnly && dcnf.allowResourceNew){
+            if(dcnf.templateResource){
+                templateResource = dcnf.templateResource[0];
+            }
+            createResourceDIV =
+            <div className="ui list">
+                <div className="item">
+                    <div  className="medium ui basic icon labeled button" onClick={this.props.onCreateResource.bind(this, this.props.datasetURI, templateResource, true)}>
+                        <i className="cube large blue icon "></i> <i className="add black icon"></i> Add a New Resource
+                    </div>
+                </div>
+                <br/>
+            </div>;
+        }
         if(Object.keys(this.state.config).length === 0){
             dcnf = this.props.config;
         }
@@ -137,6 +153,9 @@ class DatasetFB extends React.Component {
                             <YASQEViewer spec={{value: this.props.resourceQuery}} />
                         </div>
                         : ''}
+                </div>
+                <div className= "ui bottom attached">
+                    {createResourceDIV}
                 </div>
             </div>
         );

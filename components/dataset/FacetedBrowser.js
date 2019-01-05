@@ -5,6 +5,7 @@ import {NavLink} from 'fluxible-router';
 import FacetedBrowserStore from '../../stores/FacetedBrowserStore';
 import {connectToStores} from 'fluxible-addons-react';
 import createASampleFacetsConfig from '../../actions/createASampleFacetsConfig';
+import createResource from '../../actions/createResource';
 import loadFacets from '../../actions/loadFacets';
 import getEnvState from '../../actions/getEnvState';
 import DatasetFB from './DatasetFB';
@@ -14,6 +15,13 @@ class FacetedBrowser extends React.Component {
     constructor(props) {
         super(props);
         this.state = {selection: {}, expandedFacet: 0, showAllResources: 0, expandedResources: 0, hideFirstCol: false, invert: {}, range:{}, datasetConfig: {}, analysisProps: {}, pivotConstraint: '', envState: this.props.FacetedBrowserStore.envState, importedEnvState: this.props.FacetedBrowserStore.importedEnvState};
+    }
+    handleCreateResource(datasetURI, templateResource, openInNewWindows) {
+        this.context.executeAction(createResource, {
+            dataset: datasetURI,
+            templateResource: templateResource,
+            openInNewWindows: openInNewWindows
+        });
     }
     componentDidMount() {
         //check if it is loaded from an address
@@ -537,7 +545,7 @@ class FacetedBrowser extends React.Component {
                         }
                         {facetsDIV}
                         <div className={'ui stackable ' + resSize + ' wide column'}>
-                            <DatasetFB importedEnvState={this.state.importedEnvState} expanded={this.state.expandedResources} showAllResources={this.state.showAllResources} resourceQuery={this.props.FacetedBrowserStore.resourceQuery} config={dcnf} total={this.props.FacetedBrowserStore.total} pagerSize={pagerSize} currentPage={this.props.FacetedBrowserStore.page} resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} searchMode={this.state.searchMode} resourcesLength={this.props.FacetedBrowserStore.resources.length} isBig={!showFactes} prevEnvState={this.state.envState.length ? this.state.envState[this.state.envState.length-1] : ''} pivotConstraint={this.state.pivotConstraint} selection={{prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}} onExpandCollapse={this.toggleResourceCol.bind(this)} onShowAllResources={this.toggleShowAllResources.bind(this)} handleClick={this.gotoPage.bind(this)} handleBackToPrevPivotState={this.handleBackToPrevPivotState.bind(this)}/>
+                            <DatasetFB onCreateResource={this.handleCreateResource.bind(this)} importedEnvState={this.state.importedEnvState} expanded={this.state.expandedResources} showAllResources={this.state.showAllResources} resourceQuery={this.props.FacetedBrowserStore.resourceQuery} config={dcnf} total={this.props.FacetedBrowserStore.total} pagerSize={pagerSize} currentPage={this.props.FacetedBrowserStore.page} resources={this.props.FacetedBrowserStore.resources} datasetURI={this.props.FacetedBrowserStore.datasetURI} searchMode={this.state.searchMode} resourcesLength={this.props.FacetedBrowserStore.resources.length} isBig={!showFactes} prevEnvState={this.state.envState.length ? this.state.envState[this.state.envState.length-1] : ''} pivotConstraint={this.state.pivotConstraint} selection={{prevSelection: this.state.selection, options: {invert: this.state.invert, range: this.state.range, facetConfigs: facetConfigs, analysisProps: this.state.analysisProps}}} onExpandCollapse={this.toggleResourceCol.bind(this)} onShowAllResources={this.toggleShowAllResources.bind(this)} handleClick={this.gotoPage.bind(this)} handleBackToPrevPivotState={this.handleBackToPrevPivotState.bind(this)}/>
                         </div>
                     </div>
                 </div>
