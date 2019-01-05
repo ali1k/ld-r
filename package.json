@@ -1,6 +1,6 @@
 {
   "name": "linked-data-reactor",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Linked Data Reactor provides a framework to view, browse and edit Linked Data in a flexible way.",
   "private": false,
   "repository": {
