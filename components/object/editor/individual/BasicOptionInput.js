@@ -41,17 +41,28 @@ class BasicOptionInput extends React.Component {
         this.props.onEnterPress();
     }
     buildOptions() {
+        let self = this;
         let optionsList;
+        let notInOptions = 1;
         if(this.props.config && this.props.config.options){
             optionsList = this.props.config.options.map(function(option, index) {
                 if(option.value && option.label){
+                    if(self.props.spec.value === option.value){
+                        notInOptions = 0
+                    }
                     return <option key={index} value={(option.value)}> {option.label} </option>;
                 }else{
+                    if(self.props.spec.value === option){
+                        notInOptions = 0
+                    }
                     return <option key={index} value={(option)}> {option} </option>;
                 }
             });
         }else{
             optionsList = <option value="0"> No option found in config! </option>;
+        }
+        if(notInOptions){
+            optionsList.push(<option key={self.props.config.options.length + 1} value={(self.props.spec.value)}> {self.props.spec.value} </option>);
         }
         return optionsList;
     }
