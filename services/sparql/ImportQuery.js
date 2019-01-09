@@ -41,7 +41,7 @@ class ImportQuery{
             let propsSt = '';
             for(let prop in node){
                 if(prop !== '@type' && prop !=='@id'){
-                  propsSt = propsSt + `${validUrl.is_web_uri(prop) ? '<'+prop+'>': prop} ${validUrl.is_web_uri(node[prop]) ? '<'+node[prop]+'>': '"""'+node[prop]+'"""'} ; `;
+                    propsSt = propsSt + `${validUrl.is_web_uri(prop) ? '<'+prop+'>': prop} ${validUrl.is_web_uri(node[prop]) ? '<'+node[prop]+'>': '"""'+node[prop]+'"""'} ; `;
                 }
             }
             this.query = this.query + `
