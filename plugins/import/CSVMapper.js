@@ -138,14 +138,18 @@ class CSVMapper {
         }
         let resourcePrefix = baseResourceDomain[0] + '/r/';
         let vocabPrefix = baseResourceDomain[0] + '/v/';
+        let datasetURI = baseResourceDomain[0] + '/dataset/';
         let rnc = resourcePrefix + Math.round(+new Date() / 1000);
         //do not add two slashes
         if(baseResourceDomain[0].slice(-1) === '/'){
             resourcePrefix = baseResourceDomain[0] + 'r/';
             vocabPrefix = baseResourceDomain[0] + 'v/';
+            datasetURI = baseResourceDomain[0] + 'dataset/';
             rnc = resourcePrefix + Math.round(+new Date() / 1000);
         }
         let cmRND = 'cm' + Math.round(+new Date() / 1000);
+        //create a dataset if not given
+        datasetURI = options.datasetURI ? options.datasetURI : datasetURI + Math.round(+new Date() / 1000);
         let date = new Date();
         let currentDate = date.toISOString(); //"2011-12-19T15:28:46.493Z"
         //query the triple store for adding configs
@@ -177,6 +181,7 @@ class CSVMapper {
                      ldr:customMappings r:${cmRND};
                      ldr:resourcePrefix <${resourcePrefix}>;
                      ldr:vocabPrefix <${vocabPrefix}>;
+                     ldr:dataset <${datasetURI}>;
                      ${userSt}
                      ldr:createdOn "${currentDate}"^^xsd:dateTime .
                      r:${cmRND} ${customMappings.join(' ')}

@@ -6,6 +6,7 @@ import URIUtil from '../utils/URIUtil';
 import {connectToStores} from 'fluxible-addons-react';
 import cloneResource from '../../actions/cloneResource';
 import createJSONLD from '../../actions/createJSONLD';
+import importCSV from '../../actions/importCSV';
 import ImportStore from '../../stores/ImportStore';
 import WaitAMoment from '../WaitAMoment';
 
@@ -33,6 +34,13 @@ class CSVMappingResource extends React.Component {
         this.setState({status: 1});
         this.context.executeAction(createJSONLD, {
             resourceURI: resourceURI
+        });
+        e.stopPropagation();
+    }
+    handleImportCSV(resourceURI, e) {
+        this.context.executeAction(importCSV, {
+            resourceURI: resourceURI,
+            importMethod: 'batchInsert'
         });
         e.stopPropagation();
     }
@@ -197,7 +205,8 @@ class CSVMappingResource extends React.Component {
                                     : ''}
                             </h2>
                             {mainDIV}
-                            {allowJSONLD ? <div className="ui big primary button" onClick={this.handleCreateJSONLD.bind(this, decodeURIComponent(this.props.resource))}>Create JSON-LD</div>: null}
+                            {allowJSONLD ? <div className="ui big primary button" onClick={this.handleImportCSV.bind(this, decodeURIComponent(this.props.resource))}>Import Data</div>: null}
+                            {allowJSONLD ? <div className="ui big button" onClick={this.handleCreateJSONLD.bind(this, decodeURIComponent(this.props.resource))}>Export Data as JSON-LD</div>: null}
                         </div>
                         : null
                     }

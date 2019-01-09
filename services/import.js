@@ -110,6 +110,17 @@ export default {
                 callback(null, {r: res, d: mappingsDatasetURI[0]});
             });
         } else if (resource === 'import.jsonld') {
+            //control access on authentication
+            if(enableAuthentication){
+                if(!req.user){
+                    callback(null, {output: ''});
+                    return 0;
+                }else{
+                    user = req.user;
+                }
+            }else{
+                user = {accountName: 'open'};
+            }
             //generate and upload the JSON-LD file from CSV config
             getJSONLDConfig(params.resourceURI, {}, (res)=>{
                 //console.log(res);
@@ -219,7 +230,7 @@ export default {
                             if(!prop.trim()){
                                 continue;
                             }
-                            if(prop.toLowerCase() === contextOptions['idColumn'].toLowerCase()){
+                            if(contextOptions['idColumn'] && prop.toLowerCase() === contextOptions['idColumn'].toLowerCase()){
                                 tmpObj['@id'] = 'r:' + encodeURIComponent(camelCase(data[prop]));
                             }
                             if(contextOptions['skippedColumns'].indexOf(camelCase(prop)) === -1){
@@ -229,6 +240,10 @@ export default {
                                     tmpObj['v:'+camelCase(prop)] = isNaN(data[prop]) ? data[prop] : Number(data[prop]) ;
                                 }
                             }
+                        }
+                        //add a random ID if no ID column is specified
+                        if(!contextOptions['idColumn'] ){
+                            tmpObj['@id'] = 'r:' + counter+ '_' + Math.round(+new Date() / 1000);
                         }
                         graphArr.push(tmpObj);
                         //console.log(data);
@@ -246,11 +261,35 @@ export default {
                             '@context': contextObj,
                             '@graph': graphArr
                         };
-                        fs.writeFile(jsonPath, JSON.stringify(jsonLD), function(err, data){
-                            if (err) console.log(err);
-                            callback(null, {output: '/' + uploadFolder[0]+ '/' + jsonFileName});
-                        });
+                        if(params.importMethod){
+                            //todo: handle different import methods
+                            //default method: one big INSERT query
+                            //console.log(jsonLD);
+                            let importDatasetURI = res.dataset;
+                            if(!importDatasetURI){
+                                importDatasetURI = baseResourceDomain[0] +'/dataset/' + Math.round(+new Date() / 1000);
+                            }
+                            getDynamicEndpointParameters(user, importDatasetURI, (endpointParameters)=>{
+                                graphName = endpointParameters.graphName;
+                                let query = queryObject.csvBatchInsert(endpointParameters, user, graphName, jsonLD);
+                                //console.log(query);
+                                //build http uri
+                                //send request
+                                HTTPQueryObject = getHTTPQuery('update', query, endpointParameters, outputFormat);
+                                rp.post({uri: HTTPQueryObject.uri, form: HTTPQueryObject.params}).then(function(res){
+                                    callback(null, {datasetURI: importDatasetURI});
+                                }).catch(function (err) {
+                                    console.log(err);
+                                    callback(null, {datasetURI: importDatasetURI});
+                                });
 
+                            });
+                        }else{
+                            fs.writeFile(jsonPath, JSON.stringify(jsonLD), function(err, data){
+                                if (err) console.log(err);
+                                callback(null, {output: '/' + uploadFolder[0]+ '/' + jsonFileName});
+                            });
+                        }
                     });
 
                 let counter = 0;
