@@ -38,6 +38,7 @@ class CSVMappingResource extends React.Component {
         e.stopPropagation();
     }
     handleImportCSV(resourceURI, e) {
+        this.setState({status: 2});
         this.context.executeAction(importCSV, {
             resourceURI: resourceURI,
             importMethod: 'batchInsert'
@@ -216,6 +217,12 @@ class CSVMappingResource extends React.Component {
                                 <div>The JSON-LD file is ready. You can download it from <a href={this.props.ImportStore.output}>here</a>.</div>
                                 : <div><WaitAMoment msg="Generating the JSON-LD output. This might take a few seconds. Please be patient..."/> <center>Check <a href={fileURL.replace('.csv','.json')} target="_blank">here</a> to see the current status of the output.</center></div>
                             }
+                        </div>
+                        : null
+                    }
+                    {this.state.status === 2 ?
+                        <div className="ui column">
+                            <WaitAMoment msg="Importing the Data. This might take a few seconds. Please be patient until you are redirected to the database page..."/>
                         </div>
                         : null
                     }
