@@ -211,7 +211,7 @@ export default {
                         counter++;
                         if(counter === 1){
                             for(let prop in data){
-                                if (validUrl.isUri(data[prop]) && contextOptions['skippedColumns'].indexOf(camelCase(prop)) == -1){
+                                if (validUrl.isUri(data[prop].toString()) && contextOptions['skippedColumns'].indexOf(camelCase(prop)) == -1){
                                     if(contextOptions['customMappings'] && contextOptions['customMappings'][camelCase(prop)]){
                                         contextObj[contextOptions['customMappings'][camelCase(prop)]] = {
                                             '@type': '@id'
@@ -231,7 +231,7 @@ export default {
                                 continue;
                             }
                             if(contextOptions['idColumn'] && prop.toLowerCase() === contextOptions['idColumn'].toLowerCase()){
-                                tmpObj['@id'] = 'r:' + encodeURIComponent(camelCase(data[prop]));
+                                tmpObj['@id'] = validUrl.isUri(data[prop].toString()) ? data[prop] : 'r:' + encodeURIComponent(camelCase(data[prop]));
                             }
                             if(contextOptions['skippedColumns'].indexOf(camelCase(prop)) === -1){
                                 if(contextOptions['customMappings'] && contextOptions['customMappings'][camelCase(prop)] && contextOptions['customMappings'][camelCase(prop)] !== camelCase(prop)){

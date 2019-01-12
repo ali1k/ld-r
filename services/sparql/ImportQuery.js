@@ -40,14 +40,14 @@ class ImportQuery{
         jsonld['@graph'].forEach((node, index)=>{
             let propsSt = '';
             for(let prop in node){
-                if(prop !== '@type' && prop !=='@id'){
-                    propsSt = propsSt + `${validUrl.is_web_uri(prop) ? '<'+prop+'>': prop} ${validUrl.is_web_uri(node[prop]) ? '<'+node[prop]+'>': '"""'+node[prop]+'"""'} ; `;
+                if(prop && prop !== '@type' && prop !=='@id'){
+                    propsSt = propsSt + `${validUrl.is_web_uri(prop.toString()) ? '<'+prop+'>': prop} ${validUrl.is_web_uri(node[prop].toString()) ? '<'+node[prop]+'>': '"""'+node[prop]+'"""'} ; `;
                 }
             }
             this.query = this.query + `
             INSERT DATA {
                 ${gStart}
-                    ${node['@id']} a ${node['@type']} ;
+                    ${validUrl.is_web_uri(node['@id'].toString()) ? '<'+node['@id']+'>': node['@id']} a ${node['@type']} ;
                     ${propsSt}
                     ${userSt}
                     ldr:createdOn "${currentDate}"^^xsd:dateTime .
