@@ -351,11 +351,19 @@ class FacetQuery{
             let st = '?s '+ this.filterPropertyPath(propertyURI) + ' ?v.';
             queryheart = st;
         }
+        //apply other types of filter on facet
+        let facetFilters ='';
+        if(rconfig.facetConfigs && rconfig.facetConfigs[propertyURI] && rconfig.facetConfigs[propertyURI].language){
+            facetFilters = `
+            FILTER(lang(?v)="${rconfig.facetConfigs[propertyURI].language}")
+            `;
+        }
         queryheart = st_extra + ' ' + queryheart;
         this.query = `
         SELECT (count(DISTINCT ?v) AS ?total) WHERE {
             ${gStart}
                 ${queryheart}
+                ${facetFilters}
             ${gEnd}
         }
         `;
@@ -382,6 +390,13 @@ class FacetQuery{
               ${queryheart}
           ${gEnd}
         `;
+        //apply other types of filter on facet
+        let facetFilters ='';
+        if(rconfig.facetConfigs && rconfig.facetConfigs[propertyURI] && rconfig.facetConfigs[propertyURI].language){
+            facetFilters = `
+            FILTER(lang(?v)="${rconfig.facetConfigs[propertyURI].language}")
+            `;
+        }
         //need to change the ?s and ?v to a random variable to not overlap with the new pivot
         let rnd = Math.floor(Date.now() / 1000);
         queryConstraint = queryConstraint.replace(/\?s/g, '?pvs'+rnd);
@@ -393,6 +408,7 @@ class FacetQuery{
         SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
           ${gStart}
               ${queryheart}
+              ${facetFilters}
           ${gEnd}
         } GROUP BY ?v ORDER BY DESC(?total) OFFSET ${page*500} LIMIT 500
         `;

@@ -160,6 +160,11 @@ class FacetedBrowser extends React.Component {
                     facetConfigs[prop] = {dataType: cnf[prop].dataType[0]};
                 }
             }
+            if(cnf[prop].language && cnf[prop].language.length){
+                if(!facetConfigs[prop]){
+                    facetConfigs[prop] = {language: cnf[prop].language[0]};
+                }
+            }
             if(cnf[prop].restrictAnalysisToSelected){
                 if(!facetConfigs[prop]){
                     facetConfigs[prop] = {restrictAnalysisToSelected: cnf[prop].restrictAnalysisToSelected};

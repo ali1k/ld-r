@@ -49,6 +49,7 @@ export default {
                     if(pivotConstraint){
                         rftconfig['pivotConstraint'] = pivotConstraint;
                     }
+                    rftconfig['facetConfigs'] = params.selection.options ? params.selection.options.facetConfigs : {};
                     query = queryObject.getSideEffectsCount(endpointParameters, graphName, rftconfig, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, params.selection.options);
                     //build http uri
                     //send request
@@ -91,6 +92,7 @@ export default {
                     if(pivotConstraint){
                         rftconfig['pivotConstraint'] = pivotConstraint;
                     }
+                    rftconfig['facetConfigs'] = params.selection.options ? params.selection.options.facetConfigs : {};
                     let fullQueries = queryObject.getSideEffects(endpointParameters, graphName, rftconfig, decodeURIComponent(params.selection.propertyURI), params.selection.prevSelection, params.selection.options);
                     //build http uri
                     //console.log(fullQueries);
@@ -145,6 +147,7 @@ export default {
                     if(pivotConstraint){
                         rftconfig['pivotConstraint'] = pivotConstraint;
                     }
+                    rftconfig['facetConfigs'] = params.selection.options ? params.selection.options.facetConfigs : {};
                     query = queryObject.getMasterPropertyValuesCount(endpointParameters, graphName, rftconfig, decodeURIComponent(params.selection.value));
                     //console.log(query);
                     //build http uri
@@ -198,6 +201,7 @@ export default {
                     if(pivotConstraint){
                         rftconfig['pivotConstraint'] = pivotConstraint;
                     }
+                    rftconfig['facetConfigs'] = params.selection.options ? params.selection.options.facetConfigs : {};
                     let fullQueries = queryObject.getMasterPropertyValues(endpointParameters, graphName,
                         rftconfig, decodeURIComponent(params.selection.value), params.fpage ? params.fpage : 0);
                     //query = fullQueries.query;
@@ -259,6 +263,7 @@ export default {
                     if(pivotConstraint){
                         rftconfig['pivotConstraint'] = pivotConstraint;
                     }
+                    rftconfig['facetConfigs'] = params.selection.options ? params.selection.options.facetConfigs : {};
                     let maxOnPage = parseInt(rconfig.maxNumberOfResourcesOnPage);
                     if(!maxOnPage){
                         maxOnPage = 20;
