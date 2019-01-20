@@ -457,6 +457,10 @@ class FacetQuery{
                     rangeDataType = '<' + options.facetConfigs[key].dataType + '>';
                     rangeDataTypeTail = '^^' + '<' + options.facetConfigs[key].dataType + '>';
                 }
+                //add language filters
+                if(options.facetConfigs && options.facetConfigs[key] && options.facetConfigs[key].language){
+                    filters.push('(lang(?v' + i + ')="'+options.facetConfigs[key].language+'")');
+                }
                 //-----------
                 //apply range filters
                 if(tmp.length && options && options.range && options.range[key]){
@@ -768,18 +772,26 @@ class FacetQuery{
     handleAnalysisProps(options, endpointParameters, graphName, type){
         let self = this;
         let apLabel = '', analysisSelector = '', analysisPhrase = '', analysisPropsList= [], aCounter = 0;
+        let filters =[];
         if(options && options.analysisProps){
             for(let prop in options.analysisProps){
                 aCounter++;
                 apLabel = 'ldr_ap'+aCounter+'_' + self.getPropertyLabel(prop);
                 analysisSelector = analysisSelector + ' ?' + apLabel;
                 analysisPropsList.push(apLabel);
+                //add language filters
+                if(options.facetConfigs && options.facetConfigs[prop] && options.facetConfigs[prop].language){
+                    filters.push('(lang(?' + apLabel + ')="'+options.facetConfigs[prop].language+'")');
+                }
                 if(self.isMultiGraphFacet(prop)){
                     //to support browsing mutiple graphs
                     analysisPhrase = analysisPhrase + self.prepareMultiGraphQuery(endpointParameters, graphName, type, prop, '', '', apLabel);
                 }else{
                     analysisPhrase = analysisPhrase + '?s ' + self.filterPropertyPath(prop) + ' ?' + apLabel + ' .';
                 }
+            }
+            if(filters.length){
+                analysisPhrase = analysisPhrase + 'FILTER('+filters.join(' && ')+')';
             }
         }
         //todo: OPTIONAL for missing values
