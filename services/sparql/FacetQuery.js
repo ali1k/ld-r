@@ -694,6 +694,13 @@ class FacetQuery{
             queryheart = st;
         }
         queryheart = st_extra + ' ' + queryheart;
+        //apply other types of filter on facet
+        let facetFilters ='';
+        if(options.facetConfigs && options.facetConfigs[propertyURI] && options.facetConfigs[propertyURI].language){
+            facetFilters = `
+            FILTER(lang(?v)="${options.facetConfigs[propertyURI].language}")
+            `;
+        }
         let queryConstraint = '';
         if(options.facetConfigs && options.facetConfigs[propertyURI] && options.facetConfigs[propertyURI].pivotDataset){
             if(options.facetConfigs[propertyURI]){
@@ -714,6 +721,7 @@ class FacetQuery{
         SELECT (count(DISTINCT ?s) AS ?total) ?v WHERE {
           ${gStart}
               ${queryheart}
+              ${facetFilters}
           ${gEnd}
         } GROUP BY ?v ORDER BY DESC(?total) LIMIT 500
         `;
@@ -725,6 +733,13 @@ class FacetQuery{
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let st_extra = this.makeExtraTypeFilters(endpointParameters, rconfig);
         let st = this.getMultipleFilters(endpointParameters, graphName, prevSelection, rconfig, options);
+        //apply other types of filter on facet
+        let facetFilters ='';
+        if(options.facetConfigs && options.facetConfigs[propertyURI] && options.facetConfigs[propertyURI].language){
+            facetFilters = `
+            FILTER(lang(?v)="${options.facetConfigs[propertyURI].language}")
+            `;
+        }
         if(this.isMultiGraphFacet(propertyURI)){
             //to support browsing mutiple graphs
             queryheart = this.prepareMultiGraphQuery(endpointParameters, graphName, type, propertyURI, '', st, '');
@@ -737,6 +752,7 @@ class FacetQuery{
         SELECT (count(DISTINCT ?v) AS ?total) WHERE {
             ${gStart}
                 ${queryheart}
+                ${facetFilters}
             ${gEnd}
         }
         `;
