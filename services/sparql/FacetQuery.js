@@ -498,7 +498,7 @@ class FacetQuery{
                     prevSelection[key].forEach(function(el){
                         tmp.push('"' + el.value + '"');
                     });
-                    if(endpointParameters.type === 'stardog' || endpointParameters.type === 'sesame'){
+                    if(endpointParameters.type === 'stardog' || endpointParameters.type === 'sesame'|| endpointParameters.type === 'neptune'){
                         ///---for sesame
                         tmp2 = [];
                         if(tmp.length && options && options.invert && options.invert[key]){
