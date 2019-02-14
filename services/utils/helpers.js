@@ -226,8 +226,12 @@ export default {
                 break;
             case 'neptune':
                 outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
-                outputObject.params['query'] = query;
                 outputObject.params['Accept'] = outputFormat;
+                if(mode === 'update'){
+                    outputObject.params['update'] = query;
+                }else{
+                    outputObject.params['query'] = query;
+                }
 
                 break;
             default:
