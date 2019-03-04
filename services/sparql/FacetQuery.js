@@ -835,6 +835,7 @@ class FacetQuery{
         let self = this;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
         let type = rtconfig.type;
+        let languageTag = rtconfig.languageTag;
         let labelProperty = rtconfig.labelProperty;
         let imageProperty = rtconfig.imageProperty;
         let geoProperty = rtconfig.geoProperty;
@@ -866,10 +867,14 @@ class FacetQuery{
             }
         }
         //add labels for entities
+        let langPhrase = '';
+        if(languageTag && languageTag.length){
+            langPhrase = ` FILTER(lang(?title)="${languageTag[0]}")`;
+        }
         if(labelProperty && labelProperty.length){
             selectStr = ' ?title ';
             if(labelProperty.length === 1){
-                titleStr = 'OPTIONAL { ?s ' + self.filterPropertyPath(labelProperty[0]) + ' ?title .} ';
+                titleStr = 'OPTIONAL { ?s ' + self.filterPropertyPath(labelProperty[0]) + ' ?title . '+langPhrase+'} ';
             }else {
                 titleStr = '';
                 let tmpA = [];
@@ -881,7 +886,7 @@ class FacetQuery{
             }
         }else{
             selectStr = ' ?title ';
-            titleStr = 'OPTIONAL { ?s rdfs:label ?title .} ';
+            titleStr = 'OPTIONAL { ?s rdfs:label ?title . '+langPhrase+'} ';
         }
         if(imageProperty && imageProperty.length){
             selectStr = selectStr + ' ?image ';

@@ -44,6 +44,7 @@ module.exports = {
             {title: 'ldr:resourceGeoProperty'},
             {title: 'ldr:resourceImageProperty'},
             {title: 'ldr:resourceLabelProperty'},
+            {title: 'ldr:resourceLanguageTag'},
             {title: 'ldr:maxNumberOfResourcesOnPage'},
             {title: 'ldr:templateResource'},
             {title: 'ldr:readOnly'},

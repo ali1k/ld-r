@@ -293,6 +293,13 @@ class Configurator{
         let out = {'type':[], 'labelProperty': [], 'imageProperty': []};
         if(cnf && cnf.resourceFocusType){
             out['type'] = cnf.resourceFocusType;
+            if(cnf.resourceLanguageTag && cnf.resourceLanguageTag.length){
+                out['languageTag'] = cnf.resourceLanguageTag;
+            } else if(config.dataset[datasetURI] && config.dataset[datasetURI].resourceLanguageTag){
+                if(config.dataset[datasetURI].resourceLanguageTag && config.dataset[datasetURI].resourceLanguageTag.length){
+                    out['languageTag'] = config.dataset[datasetURI].resourceLanguageTag;
+                }
+            }
             if(cnf.resourceLabelProperty && cnf.resourceLabelProperty.length){
                 out['labelProperty'] = cnf.resourceLabelProperty;
             } else if(config.dataset[datasetURI] && config.dataset[datasetURI].resourceFocusType){

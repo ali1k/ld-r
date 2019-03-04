@@ -121,7 +121,10 @@ class DatasetQuery{
     getResourcesByType(endpointParameters, graphName, searchTerm, rconfig, limit, offset) {
         let self = this;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
-        let resourceLabelProperty, resourceImageProperty, resourceGeoProperty;
+        let resourceLabelProperty, resourceImageProperty, resourceGeoProperty, resourceLanguageTag;
+        if(rconfig.resourceLanguageTag){
+            resourceLanguageTag = rconfig.resourceLanguageTag;
+        }
         if(rconfig.resourceLabelProperty){
             resourceLabelProperty = rconfig.resourceLabelProperty;
         }
@@ -133,7 +136,11 @@ class DatasetQuery{
         }
         let selectSt = '';
         //specify the right label for resources
-        let optPhase = 'OPTIONAL { ?resource dcterms:title ?title .} ';
+        let langPhrase = '';
+        if(resourceLanguageTag && resourceLanguageTag.length){
+            langPhrase = ` FILTER(lang(?title)="${resourceLanguageTag[0]}")`;
+        }
+        let optPhase = 'OPTIONAL { ?resource dcterms:title ?title . '+langPhrase+'} ';
         let searchPhase='';
         if(searchTerm && searchTerm.length>2){
             if(searchTerm === 'ldr_showAll'){
@@ -145,7 +152,7 @@ class DatasetQuery{
         let bindPhase = '';
         if(resourceLabelProperty && resourceLabelProperty.length){
             if(resourceLabelProperty.length === 1){
-                optPhase = 'OPTIONAL { ?resource ' + self.filterPropertyPath(resourceLabelProperty[0]) + ' ?title .} ';
+                optPhase = 'OPTIONAL { ?resource ' + self.filterPropertyPath(resourceLabelProperty[0]) + ' ?title .'+langPhrase+'} ';
             }else {
                 optPhase = '';
                 let tmpA = [];
@@ -169,6 +176,9 @@ class DatasetQuery{
         if(searchPhase){
             limitOffsetPharse = '';
         }
+        if(resourceLanguageTag && resourceLanguageTag.length){
+            langPhrase = ` FILTER(lang(?label)="${resourceLanguageTag[0]}")`;
+        }
         this.query = `
         SELECT DISTINCT ?resource ?title ?label ${selectSt} WHERE {
             ${gStart}
@@ -180,7 +190,7 @@ class DatasetQuery{
                     }
                     ${limitOffsetPharse}
                 }
-                OPTIONAL { ?resource rdfs:label ?label .}
+                OPTIONAL { ?resource rdfs:label ?label . ${langPhrase}}
                 ${optPhase}
                 ${bindPhase}
                 ${searchPhase}
