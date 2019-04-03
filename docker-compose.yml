@@ -21,4 +21,4 @@ services:
      restart: always
      network_mode: service:virtuoso
 volumes:
- virtuoso-db:
+  virtuoso-db:
