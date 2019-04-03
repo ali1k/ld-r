@@ -1,16 +1,24 @@
-version: '2'
+version: '3'
+
 services:
-
-  ld-r:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    environment:
-      - DOWNLOAD_TIMEOUT=10
-    volumes:
-      - ./logs:/var/log/ld-r
-    ports:
-      - 8080:4000
-
-
-
+   virtuoso:
+     image: tenforce/virtuoso:1.3.2-virtuoso7.2.4
+     restart: always
+     volumes:
+       - virtuoso-db:/data #the location of Virtuoso DB
+     environment:
+       DBA_PASSWORD: dba
+       SPARQL_UPDATE: "true"
+       DEFAULT_GRAPH: "http://ld-r.org"
+     ports:
+       - "8890:8890" #SPARQL web endpoint port
+       - "1111:1111" #isql port
+       - "4000:4000"  #LD-R application port
+   ld-r:
+     depends_on:
+       - virtuoso
+     image: ali1k/ld-r
+     restart: always
+     network_mode: service:virtuoso
+volumes:
+virtuoso-db:
