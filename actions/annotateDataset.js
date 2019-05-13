@@ -32,6 +32,7 @@ let processData = (page, maxPerPage, totalPages, payload, done)=> {
                         id: resource.r,
                         confidence: payload.confidence,
                         language: payload.language,
+                        api: payload.api,
                         stopWords: payload.stopWords,
                         hideFeedback: payload.hideFeedback
                     }, (err3, res3)=>{
@@ -47,6 +48,7 @@ let processData = (page, maxPerPage, totalPages, payload, done)=> {
                                     dataset: payload.storingDataset ? payload.storingDataset : res2.datasetURI,
                                     resource: res3.id,
                                     property: res2.propertyURI,
+                                    api: payload.api,
                                     annotations: res3.tags,
                                     inNewDataset: payload.storingDataset ? payload.storingDataset : 0
                                 }, (err4, res4)=>{

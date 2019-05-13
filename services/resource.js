@@ -395,7 +395,7 @@ export default {
             }
             getDynamicEndpointParameters(user, targetDataset, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
-                query = queryObject.getPrefixes() + queryObject.annotateResource(endpointParameters, user, targetDataset, graphName, params.resource, propertyURI, params.annotations, params.inNewDataset);
+                query = queryObject.getPrefixes() + queryObject.annotateResource(endpointParameters, user, targetDataset, graphName, params.resource, propertyURI, params.annotations, params.inNewDataset, {api: params.api});
                 //console.log(query);
                 //build http uri
                 //send request

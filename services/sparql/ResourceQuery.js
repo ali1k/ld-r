@@ -137,7 +137,7 @@ class ResourceQuery{
 
         return this.query;
     }
-    annotateResource(endpointParameters, user, datasetURI, graphName, resourceURI, propertyURI, annotations, inNewDataset) {
+    annotateResource(endpointParameters, user, datasetURI, graphName, resourceURI, propertyURI, annotations, inNewDataset, options) {
         //todo: consider different value types
         let self = this;
         let {gStart, gEnd} = this.prepareGraphName(graphName);
@@ -155,7 +155,9 @@ class ResourceQuery{
         if(inNewDataset){
             newDSt = `<${resourceURI}> a  ldr:AnnotatedResource .`;
         }
-        let annotatedByURI = self.createDynamicURI(datasetURI, 'dbspotlight'+'_'+Math.floor((Math.random() * 1000) + 1)+'_');
+        let default_api = options && options.api ? options.api : 'dbspotlight';
+        let default_api_name = options && options.api ? options.api : 'DBpedia Spotlight';
+        let annotatedByURI = self.createDynamicURI(datasetURI, default_api+'_'+Math.floor((Math.random() * 1000) + 1)+'_');
         annotations.forEach((annotation, index)=>{
             eresource = '<'+self.createDynamicURI(datasetURI, 'annotation_'+index+'_'+Math.floor((Math.random() * 1000) + 1)+'_')+'>';
             aresources.push(eresource);
@@ -193,7 +195,7 @@ class ResourceQuery{
             ${gStart}
                 <${resourceURI}> ldr:annotatedBy  <${annotatedByURI}> .
                 ${newDSt}
-                <${annotatedByURI}> ${userSt} ldr:createdOn "${currentDate}"^^xsd:dateTime ; ldr:property "${propertyURI}" ; ldr:API "DBpedia Spotlight" .
+                <${annotatedByURI}> ${userSt} ldr:createdOn "${currentDate}"^^xsd:dateTime ; ldr:property "${propertyURI}" ; ldr:API "${default_api_name}" .
                 ${mainAnnSt}
                 ${annotationsSTR}
             ${gEnd}

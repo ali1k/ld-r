@@ -1,0 +1,9 @@
+{
+  "http://ld-r.org/term/1": ["LD-R", "Linked Data Reactor", "LD-Reactor"],
+  "http://ld-r.org/term/2": ["software", "application"],
+  "http://ld-r.org/term/3": ["React"],
+  "http://ld-r.org/term/4": ["component-based"],
+  "http://ld-r.org/term/5": ["named entity recognition"],
+  "http://ld-r.org/term/6": ["JS", "JavaScript"],
+  "http://ld-r.org/term/7": ["NodeJS"]
+}

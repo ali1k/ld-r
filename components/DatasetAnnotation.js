@@ -16,7 +16,7 @@ import countAnnotatedResourcesWithProp from '../actions/countAnnotatedResourcesW
 class DatasetAnnotation extends React.Component {
     constructor(props){
         super(props);
-        this.state = {language: 'en', stopWords: '', confidence: 0.5, batchSize: 10, feedbackInterval: 3, advancedMode: 0, storingDataset: '', datasetURI: '', resourceType: '', propertyURI: '', annotationMode: 0, storeInNewDataset : false, noDynamicConfig: 0, hideFeedback: false};
+        this.state = {api: 'dbspotlight', language: 'en', stopWords: '', confidence: 0.5, batchSize: 10, feedbackInterval: 3, advancedMode: 0, storingDataset: '', datasetURI: '', resourceType: '', propertyURI: '', annotationMode: 0, storeInNewDataset : false, noDynamicConfig: 0, hideFeedback: false};
     }
     componentDidMount() {
 
@@ -129,6 +129,7 @@ class DatasetAnnotation extends React.Component {
                 datasetLabel: self.findDatasetLabel(self.state.datasetURI),
                 noDynamicConfig: self.state.noDynamicConfig,
                 confidence: self.state.confidence,
+                api: self.state.api,
                 stopWords: self.state.stopWords,
                 hideFeedback: self.state.hideFeedback,
                 batchSize: self.state.batchSize
@@ -161,6 +162,10 @@ class DatasetAnnotation extends React.Component {
                 this.setState({confidence: val});
             }
         }
+    }
+    handleAPIChange(event){
+        let val = event.target.value.trim();
+        this.setState({api: val});
     }
     handleBatchSizeChange(event){
         let val = event.target.value.trim();
@@ -263,8 +268,9 @@ class DatasetAnnotation extends React.Component {
                     <div className="ui list">
                         <div className="item">
                             <b>Annotator API</b>
-                            <select ref="language" className="ui disabled search dropdown">
-                                <option value="en"> DBpedia Spotlight </option>
+                            <select ref="api" className="ui search dropdown" onChange={this.handleAPIChange.bind(this)} value={this.state.api}>
+                                <option value="dbspotlight"> DBpedia Spotlight </option>
+                                <option value="custom"> Custom </option>
                             </select>
                         </div>
                         <div className="item">
