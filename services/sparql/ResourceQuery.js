@@ -157,6 +157,7 @@ class ResourceQuery{
         }
         let default_api = options && options.api ? options.api : 'dbspotlight';
         let default_api_name = options && options.api ? options.api : 'DBpedia Spotlight';
+        let annotation_Detail = '';
         let annotatedByURI = self.createDynamicURI(datasetURI, default_api+'_'+Math.floor((Math.random() * 1000) + 1)+'_');
         annotations.forEach((annotation, index)=>{
             eresource = '<'+self.createDynamicURI(datasetURI, 'annotation_'+index+'_'+Math.floor((Math.random() * 1000) + 1)+'_')+'>';
@@ -174,13 +175,20 @@ class ResourceQuery{
             if(atypes.length){
                 atypeSt = `<${annotation.uri}> a ${atypes.join(',')} .`;
             }
+            if(default_api === 'spotlight'){
+                annotation_Detail = `
+                ldr:offset "${annotation.offset}"^^xsd:integer;
+                ldr:similarityScore "${annotation.similarityScore}"^^xsd:float;
+                ldr:percentageOfSecondRank "${annotation.percentageOfSecondRank}"^^xsd:float;
+              `;
+            }else{
+                annotation_Detail = '';
+            }
             annotationsSTR = annotationsSTR + `
                 ${eresource} a ldr:Annotation;
                              ldr:annotationDetail <${annotatedByURI}> ;
                              ldr:surfaceForm """${annotation.surfaceForm}""";
-                             ldr:offset "${annotation.offset}"^^xsd:integer;
-                             ldr:similarityScore "${annotation.similarityScore}"^^xsd:float;
-                             ldr:percentageOfSecondRank "${annotation.percentageOfSecondRank}"^^xsd:float;
+                             ${annotation_Detail}
                              rdfs:label """${annotation.surfaceForm}""" ;
                              ldr:uri <${annotation.uri}> .
                              ${atypeSt}
