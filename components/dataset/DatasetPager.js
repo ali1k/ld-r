@@ -135,7 +135,7 @@ class DatasetPager extends React.Component {
                 { key: 4, icon: 'bar chart', text:  'Bar Chart', value: 'BarChartView' },
                 { key: 5, icon: 'bullseye', text:  'Radar Chart', value: 'RadarChartView' },
                 { key: 6, icon: 'share alternate', text:  'Network Diagram', value: 'NetworkView' },
-                { key: 6, icon: 'calendar minus', text:  'Timeline', value: 'TimelineView' }
+                { key: 7, icon: 'calendar minus', text:  'Timeline', value: 'TimelineView' }
             ]
             v_icons = {
                 'BasicResourceList': 'table',
