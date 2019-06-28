@@ -169,10 +169,16 @@ class BasicResourceList extends React.Component {
                     There was no resource in the selected dataset! This might be due to the connection problems or because the estimated query execution time exceeds the configured limit. Please check the connection parameters of your dataset&apos;s Sparql endpoint or add resources to your dataset...</div>
             </div>;
         } else {
+            let sortedProps = [];
             if(this.checkAnalysisProps()){
+                //first sort the analysis property
                 for(let prop in this.props.resources[0].propsForAnalysis){
-                    dtableHeaders.push(<Table.HeaderCell key={prop}>{prop}</Table.HeaderCell>);
+                    sortedProps.push(prop);
+                    sortedProps.sort();
                 }
+                dtableHeaders = sortedProps.map((item)=> {
+                    return (<Table.HeaderCell key={item}>{item}</Table.HeaderCell>);
+                });
                 theaderDIV =
                 <Table.Header>
                     <Table.Row>
@@ -214,9 +220,10 @@ class BasicResourceList extends React.Component {
                 }
                 dtableCells = [];
                 if(self.checkAnalysisProps()){
-                    for(let prop in node.propsForAnalysis){
-                        dtableCells.push(<Table.Cell key={'c'+prop} title={node.propsForAnalysis[prop]}>{Object.keys(analysisPropsConfgis).length && analysisPropsConfgis[prop] ? <ObjectIViewer datasetURI={this.props.datasetURI} property={prop} spec={{value: node.propsForAnalysis[prop]}} config={analysisPropsConfgis[prop]}/> : URIUtil.getURILabel(node.propsForAnalysis[prop])}</Table.Cell>);
-                    }
+                    //get the values in order
+                    dtableCells = sortedProps.map((prop)=> {
+                        return (<Table.Cell key={'c'+prop} title={node.propsForAnalysis[prop]}>{Object.keys(analysisPropsConfgis).length && analysisPropsConfgis[prop] ? <ObjectIViewer datasetURI={this.props.datasetURI} property={prop} spec={{value: node.propsForAnalysis[prop]}} config={analysisPropsConfgis[prop]}/> : URIUtil.getURILabel(node.propsForAnalysis[prop])}</Table.Cell>);
+                    });
                     resourceDIV =
                         <Table.Row key={index}>
                             <Table.Cell>{self.buildLink(0, encodeURIComponent(node.v), encodeURIComponent(node.d), title, image, dbClass, cloneable)}</Table.Cell>
