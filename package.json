@@ -20,7 +20,9 @@
     "lint": "eslint --ignore-path .gitignore -c .eslintrc \"./**/*.js\"",
     "start": "node start.js",
     "validate": "npm ls",
-    "generate:docs": "react-docgen components/object/viewer/individual/ > documentation/object_viewer_individual.json && react-docgen components/object/viewer/aggregate/ > documentation/object_viewer_aggregate.json && react-docgen components/object/editor/individual/ > documentation/object_editor_individual.json && react-docgen components/object/editor/aggregate/ > documentation/object_editor_aggregate.json"
+    "generate:docs": "react-docgen components/object/viewer/individual/ > documentation/object_viewer_individual.json && react-docgen components/object/viewer/aggregate/ > documentation/object_viewer_aggregate.json && react-docgen components/object/editor/individual/ > documentation/object_editor_individual.json && react-docgen components/object/editor/aggregate/ > documentation/object_editor_aggregate.json",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "husky": {
     "hooks": {
@@ -88,7 +90,8 @@
     "superagent": "^5.0.2",
     "valid-url": "^1.0.9",
     "wicket": "^1.3.3",
-    "yasgui-yasqe": "^2.11.22"
+    "yasgui-yasqe": "^2.11.22",
+    "snyk": "^1.230.5"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-bridge.0",
@@ -128,5 +131,6 @@
     "webpack-stats-plugin": "^0.2.1",
     "webpack-vendor-chunk-plugin": "^1.0.0",
     "webpack-visualizer-plugin": "^0.1.11"
-  }
+  },
+  "snyk": true
 }
