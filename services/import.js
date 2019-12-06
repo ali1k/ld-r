@@ -74,7 +74,7 @@ export default {
                 callback(null, {rows: rows, total: 0});
             }
             let rows = [];
-            let csvStream = csv(options)
+            let csvStream = csv.parse(options)
                 .on('data', function(data){
                     counter++;
                     //to limi the number of rows returned
@@ -206,7 +206,7 @@ export default {
                     callback(null, {output: ''});
                 }
                 let graphArr = [];
-                let csvStream = csv(options)
+                let csvStream = csv.parse(options)
                     .on('data', function(data){
                         counter++;
                         if(counter === 1){
@@ -230,7 +230,7 @@ export default {
                             if(!prop.trim()){
                                 continue;
                             }
-                            if(contextOptions['idColumn'] && prop.toLowerCase() === contextOptions['idColumn'].toLowerCase()){
+                            if(contextOptions['idColumn'] && camelCase(prop).toLowerCase() === contextOptions['idColumn'].toLowerCase()){
                                 tmpObj['@id'] = validUrl.isUri(data[prop].toString()) ? data[prop] : 'r:' + encodeURIComponent(camelCase(data[prop]));
                             }
                             if(contextOptions['skippedColumns'].indexOf(camelCase(prop)) === -1){
@@ -242,8 +242,8 @@ export default {
                             }
                         }
                         //add a random ID if no ID column is specified
-                        if(!contextOptions['idColumn'] ){
-                            tmpObj['@id'] = 'r:' + counter+ '_' + Math.round(+new Date() / 1000);
+                        if(!contextOptions['idColumn'] || contextOptions['idColumn']==='Not Applicable'){
+                            tmpObj['@id'] = 'r:' + counter+ '-' + Math.floor(Math.random() * 10000000);
                         }
                         graphArr.push(tmpObj);
                         //console.log(data);
