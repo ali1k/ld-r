@@ -161,7 +161,7 @@ class CSVMapper {
             PREFIX r: <${resourcePrefix}>
             PREFIX v: <${vocabPrefix}>
         `;
-        let options_select = [];
+        let options_select = ['"Not Applicable"'];
         let customMappings = columns.map((item, itemc)=> {
             if(item.trim()){
                 options_select.push(`"""${camelCase(item)}"""`);
@@ -176,8 +176,8 @@ class CSVMapper {
                      rdfs:label "mapping configurations for ${filePath}" ;
                      ldr:delimiter """${delimiter}""";
                      ldr:entityType v:Entity ;
-                     ldr:idColumn """${camelCase(columns[0])}""";
-                     ldr:skippedColumns """${camelCase(columns[0])}""";
+                     ldr:idColumn """Not Applicable""";
+                     ldr:skippedColumns """Not Applicable""";
                      ldr:customMappings r:${cmRND};
                      ldr:resourcePrefix <${resourcePrefix}>;
                      ldr:vocabPrefix <${vocabPrefix}>;
