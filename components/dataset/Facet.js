@@ -346,22 +346,22 @@ class Facet extends React.Component {
         let rangeStat = !this.state.rangeEnabled ? 'Show' : 'Hide';
         let addedAsVarStat = !this.props.analysisProps[this.props.spec.propertyURI] ? 'Analyze property' : 'Remove from analysis';
         let d_options = [
-            { key: 5, text: addedAsVarStat , value: 'asVariable' },
-            { key: 6, text: shuffleStat + ' the list', value: 'shuffle' },
-            { key: 7, text: rangeStat + ' range options', value: 'range' },
-            { key: 8, text: 'Download the list', value: 'download' }
+            { key: 5, text: addedAsVarStat , value: 'asVariable', onClick: this.handleDropDownClick.bind(this)},
+            { key: 6, text: shuffleStat + ' the list', value: 'shuffle', onClick: this.handleDropDownClick.bind(this) },
+            { key: 7, text: rangeStat + ' range options', value: 'range', onClick: this.handleDropDownClick.bind(this) },
+            { key: 8, text: 'Download the list', value: 'download', onClick: this.handleDropDownClick.bind(this) }
         ];
         let selectAllFlag = 0;
         if(this.props.selection && this.props.selection[this.props.spec.propertyURI] && this.props.selection[this.props.spec.propertyURI].length){
-            d_options.unshift({ key: 4, text:  'Deselect All', value: 'deselectAll' });
+            d_options.unshift({ key: 4, text:  'Deselect All', value: 'deselectAll', onClick: this.handleDropDownClick.bind(this) });
             selectAllFlag = 1;
         }
         //can select maximum 100 items
         if(!selectAllFlag && this.filteredInstances.length && this.filteredInstances.length <100){
-            d_options.unshift({ key: 4, text:  'Select All', value: 'selectAll' });
+            d_options.unshift({ key: 4, text:  'Select All', value: 'selectAll', onClick: this.handleDropDownClick.bind(this) });
         }
         if(this.props.selection && this.props.selection[this.props.spec.propertyURI] && this.props.selection[this.props.spec.propertyURI].length){
-            d_options.unshift({ key: 3, text: invertStat + ' the selection', value: 'invert' });
+            d_options.unshift({ key: 3, text: invertStat + ' the selection', value: 'invert', onClick: this.handleDropDownClick.bind(this) });
         }
         let b_options = [
             { key: 1, icon: 'list layout', text:  'Check List', value: 'CheckListBrowser' },
@@ -529,7 +529,7 @@ class Facet extends React.Component {
                         </div>
                         <div className="right stackable menu">
                             {this.props.spec.property ?
-                                <Dropdown className="item" title="actions" selectOnBlur={false} onChange={this.handleDropDownClick.bind(this)} trigger={d_trigger} options={d_options} icon={null} pointing="top left" floating />
+                                <Dropdown className="item" title="actions" selectOnBlur={false} trigger={d_trigger} options={d_options} icon={null} pointing="top left" floating />
                                 : ''
                             }
                             {this.props.spec.property ?

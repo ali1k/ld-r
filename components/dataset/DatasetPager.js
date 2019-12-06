@@ -168,11 +168,11 @@ class DatasetPager extends React.Component {
         }
         //action menu
         let a_options = [
-            { key: 1, icon: 'search', text:  'Search in Results', value: 'searchInResults' },
-            { key: 2, icon: 'download', text:  'Download Results', value: 'downloadResults' }
+            { key: 1, icon: 'search', text:  'Search in Results', value: 'searchInResults' , onClick: this.handleActionDropDownClick.bind(this)},
+            { key: 2, icon: 'download', text:  'Download Results', value: 'downloadResults', onClick: this.handleActionDropDownClick.bind(this) }
         ];
         if(this.props.enableQuerySaveImport){
-            a_options.push({ key: 3, icon: 'save', text:  'Save Query', value: 'saveQuery' });
+            a_options.push({ key: 3, icon: 'save', text:  'Save Query', value: 'saveQuery', onClick: this.handleActionDropDownClick.bind(this)});
         }
         let iconC =  (this.state.config && this.state.config.datasetViewer) ? (v_icons[this.state.config.datasetViewer] ? v_icons[this.state.config.datasetViewer] : defaultViewIcon) : defaultViewIcon;
         const v_trigger = (
@@ -255,7 +255,7 @@ class DatasetPager extends React.Component {
                     </div>
                     <div className="right menu stackable">
                         {this.props.total || (this.props.hasResources && !this.props.total) ?
-                            <Dropdown className="item" title="actions" selectOnBlur={false} onChange={this.handleActionDropDownClick.bind(this)} trigger={a_trigger} options={a_options} icon={null} pointing="top right" floating />
+                            <Dropdown className="item" title="actions" selectOnBlur={false} trigger={a_trigger} options={a_options} icon={null} pointing="top right" floating />
                             : ''}
                         <Dropdown className="item" title="views" selectOnBlur={false} onChange={this.handleViewsDropDownClick.bind(this)} trigger={v_trigger} options={v_options} icon={null} pointing="top right" floating />
                         {this.props.onExpandCollapse ?
