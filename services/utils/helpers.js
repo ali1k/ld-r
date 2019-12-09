@@ -262,7 +262,7 @@ export default {
             case 'bnode':
             case 'literal':
                 // automatically detect uris even in literal values
-                if(validUrl.is_web_uri(objectValue.toString())){
+                if(validUrl.isUri(objectValue.toString())){
                     newValue='<'+objectValue+'>';
                     dtype = 'uri';
                 }else{

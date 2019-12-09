@@ -23,13 +23,12 @@ class PrefixBasedInput extends React.Component {
         };
     }
     componentDidMount() {
+        //to initialize value in Property state
+        this.props.onDataEdit(this.state.value);
+        //focus on the input
         if (!this.props.noFocus) {
             ReactDOM.findDOMNode(this.refs.prefixBasedInput).focus();
         }
-    }
-    componentWillMount() {
-        //to initialize value in Property state
-        this.props.onDataEdit(this.state.value);
     }
     handleKeyDown(evt) {
         if (this.props.allowActionByKey) {
