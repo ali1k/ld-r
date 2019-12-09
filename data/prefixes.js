@@ -621,7 +621,6 @@ module.exports = {
         'uniprot': 'http://purl.uniprot.org/core/',
         'unit': 'http://qudt.org/vocab/unit#',
         'units': 'http://eulersharp.sourceforge.net/2003/03swap/unitsExtension#',
-        'urn': 'http://fliqz.com/',
         'user': 'http://schemas.talis.com/2005/user/schema#',
         'usgov': 'http://www.rdfabout.com/rdf/schema/usgovt/',
         'uta': 'http://uptheasset.org/ontology#',

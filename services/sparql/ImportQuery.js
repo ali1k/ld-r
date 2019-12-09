@@ -41,13 +41,13 @@ class ImportQuery{
             let propsSt = '';
             for(let prop in node){
                 if(prop && prop !== '@type' && prop !=='@id'){
-                    propsSt = propsSt + `${validUrl.is_web_uri(prop.toString()) ? '<'+prop+'>': prop} ${validUrl.is_web_uri(node[prop].toString()) ? '<'+node[prop]+'>': '"""'+node[prop]+'"""'} ; `;
+                    propsSt = propsSt + `${validUrl.isUri(prop.toString()) ? '<'+prop+'>': prop} ${validUrl.isUri(node[prop].toString()) ? '<'+node[prop]+'>': '"""'+node[prop]+'"""'} ; `;
                 }
             }
             this.query = this.query + `
             INSERT DATA {
                 ${gStart}
-                    ${validUrl.is_web_uri(node['@id'].toString()) ? '<'+node['@id']+'>': node['@id']} a ${node['@type']} ;
+                    ${validUrl.isUri(node['@id'].toString()) ? '<'+node['@id']+'>': node['@id']} a ${node['@type']} ;
                     ${propsSt}
                     ${userSt}
                     ldr:createdOn "${currentDate}"^^xsd:dateTime .
