@@ -140,7 +140,7 @@ export default {
             if (!datasetURI) {
                 datasetURI = 0;
             }
-            context.executeAction(loadResource, { dataset: decodeURIComponent(datasetURI), resource: decodeURIComponent(payload.params.rid), category: category, propertyPath: propertyPath}, done);
+            context.executeAction(loadResource, { dataset: datasetURI, resource: payload.params.rid, category: category, propertyPath: propertyPath}, done);
         }
     },
     user: {
