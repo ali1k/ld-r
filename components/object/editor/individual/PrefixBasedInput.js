@@ -121,58 +121,58 @@ class PrefixBasedInput extends React.Component {
                     if(tmp22.length > 1){
                         tmp5 = tmp22[0];
                         tmp6 = tmp22[1];
-                        if(tmp5.split(':')[0]!=='http' && tmp5.split(':')[0]!=='https'){
+                        if(tmp5.split(':')[0]!=='http' && tmp5.split(':')[0]!=='https' && tmp5.split(':')[0]!=='urn'){
                             tmp5 = tmp5.replace(tmp5.split(':')[0] + ':', list[tmp5.split(':')[0]]);
                         }
-                        if(tmp6.split(':')[0]!=='http' && tmp6.split(':')[0]!=='https'){
+                        if(tmp6.split(':')[0]!=='http' && tmp6.split(':')[0]!=='https' && tmp6.split(':')[0]!=='urn'){
                             tmp6 = tmp6.replace(tmp6.split(':')[0] + ':', list[tmp6.split(':')[0]]);
                         }
                         //for intermediate links
                         let tmp4i = tmp4.split('||');
                         let tmp_i;
                         if(tmp4i.length > 1){
-                            if(tmp4i[0].split(':')[0]!=='http' && tmp4i[0].split(':')[0]!=='https'){
+                            if(tmp4i[0].split(':')[0]!=='http' && tmp4i[0].split(':')[0]!=='https' && tmp4i[0].split(':')[0]!=='urn'){
                                 tmp_i = tmp4i[0].replace(tmp4i[0].split(':')[0] + ':', list[tmp4i[0].split(':')[0]]);
                             }
-                            if(tmp4i[1].split(':')[1]!=='http' && tmp4i[1].split(':')[0]!=='https'){
+                            if(tmp4i[1].split(':')[1]!=='http' && tmp4i[1].split(':')[0]!=='https' && tmp4i[1].split(':')[0]!=='urn'){
                                 tmp_i = tmp_i + '||' + tmp4i[1].replace(tmp4i[1].split(':')[0] + ':', list[tmp4i[1].split(':')[0]]);
                             }
                             tmp4 = tmp_i ;
                         }else{
-                            if(tmp4.split(':')[0]!=='http' && tmp4.split(':')[0]!=='https'){
+                            if(tmp4.split(':')[0]!=='http' && tmp4.split(':')[0]!=='https' && tmp4.split(':')[0]!=='urn'){
                                 tmp4 = tmp4.replace(tmp4.split(':')[0] + ':', list[tmp4.split(':')[0]]);
                             }
                         }
 
                         out.push('['+tmp5+'>>'+tmp6+']'+tmp4);
                     }else{
-                        if(tmp3.split(':')[0]!=='http' && tmp3.split(':')[0]!=='https'){
+                        if(tmp3.split(':')[0]!=='http' && tmp3.split(':')[0]!=='https'  && tmp3.split(':')[0]!=='urn'){
                             tmp3 = tmp3.replace(tmp3.split(':')[0] + ':', list[tmp3.split(':')[0]]);
                         }
                         //for intermediate links
                         let tmp4i = tmp4.split('||');
                         let tmp_i;
                         if(tmp4i.length > 1){
-                            if(tmp4i[0].split(':')[0]!=='http' && tmp4i[0].split(':')[0]!=='https'){
+                            if(tmp4i[0].split(':')[0]!=='http' && tmp4i[0].split(':')[0]!=='https' && tmp4i[0].split(':')[0]!=='urn'){
                                 tmp_i = tmp4i[0].replace(tmp4i[0].split(':')[0] + ':', list[tmp4i[0].split(':')[0]]);
                             }else{
                                 tmp_i = tmp4i[0];
                             }
-                            if(tmp4i[1].split(':')[0]!=='http' && tmp4i[1].split(':')[0]!=='https'){
+                            if(tmp4i[1].split(':')[0]!=='http' && tmp4i[1].split(':')[0]!=='https' && tmp4i[1].split(':')[0]!=='urn'){
                                 tmp_i = tmp_i + '||' + tmp4i[1].replace(tmp4i[1].split(':')[0] + ':', list[tmp4i[1].split(':')[0]]);
                             }else{
                                 tmp_i = tmp_i + '||' + tmp4i[1];
                             }
                             tmp4 = tmp_i ;
                         }else{
-                            if(tmp4.split(':')[0]!=='http' && tmp4.split(':')[0]!=='https'){
+                            if(tmp4.split(':')[0]!=='http' && tmp4.split(':')[0]!=='https' && tmp4.split(':')[0]!=='urn'){
                                 tmp4 = tmp4.replace(tmp4.split(':')[0] + ':', list[tmp4.split(':')[0]]);
                             }
                         }
                         out.push('['+tmp3+']'+tmp4);
                     }
                 }else{
-                    if(v.split(':')[0]!=='http' && v.split(':')[0]!=='https'){
+                    if(v.split(':')[0]!=='http' && v.split(':')[0]!=='https' && v.split(':')[0]!=='urn'){
                         out.push(v.replace(v.split(':')[0] + ':', list[v.split(':')[0]]));
                     }else{
                         out.push(v);
@@ -182,9 +182,10 @@ class PrefixBasedInput extends React.Component {
             return out.join('->');
         }else{
             let tmp2 = uri.split(':');
-            if(tmp2[0]!=='http'){
+            if(tmp2[0]!=='http' && tmp2[0]!=='urn'){
                 return uri.replace(tmp2[0] + ':', list[tmp2[0]]);
-            }else{
+            }
+            else{
                 return uri;
             }
 
@@ -197,7 +198,7 @@ class PrefixBasedInput extends React.Component {
             return this.removePrefix(valueD);
         }else{
             let tmp2 = valueD.split(':');
-            if (tmp2.length && valueD.indexOf('http://') === -1) {
+            if (tmp2.length && valueD.indexOf('http://') === -1 && valueD.indexOf('urn:') === -1) {
                 if (list[tmp2[0]]) {
                     return valueD.replace(tmp2[0] + ':', list[tmp2[0]]);
                 } else {
