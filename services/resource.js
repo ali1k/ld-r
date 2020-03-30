@@ -3,7 +3,7 @@ import {sparqlEndpoint} from '../configs/server';
 import {getHTTPQuery, getHTTPGetURL, prepareDG} from './utils/helpers';
 import {checkViewAccess, checkEditAccess} from './utils/accessManagement';
 import {getDynamicEndpointParameters, createASampleReactorConfig, createASampleFacetsConfig, createASampleServerConfig, createAnEnvState, getSavedQueries} from './utils/dynamicHelpers';
-import {enableLogs, enableAuthentication, authDatasetURI, configDatasetURI} from '../configs/general';
+import {baseResourceDomain, enableLogs, enableAuthentication, authDatasetURI, configDatasetURI} from '../configs/general';
 import ResourceQuery from './sparql/ResourceQuery';
 import ResourceUtil from './utils/ResourceUtil';
 import Configurator from './utils/Configurator';
@@ -272,7 +272,7 @@ export default {
             }
             let newResourceURI = datasetURI + '/c' + Math.round(+new Date() / 1000);
             //do not add two slashes
-            if(datasetURI.slice(-1) === '/'){
+            if(datasetURI.slice(-1) === '/' || datasetURI.slice(-1) === '#'){
                 newResourceURI = datasetURI + 'c' + Math.round(+new Date() / 1000);
             }
             getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
@@ -350,10 +350,10 @@ export default {
             }else{
                 user = {accountName: 'open'};
             }
-            let newResourceURI = datasetURI + '/n' + Math.round(+new Date() / 1000);
+            let newResourceURI = baseResourceDomain[0] + '/n' + Math.round(+new Date() / 1000);
             //do not add two slashes
-            if(datasetURI.slice(-1) === '/'){
-                newResourceURI = datasetURI + 'n' + Math.round(+new Date() / 1000);
+            if(baseResourceDomain[0].slice(-1) === '/' || baseResourceDomain[0].slice(-1) === '#'){
+                newResourceURI = baseResourceDomain[0] + 'n' + Math.round(+new Date() / 1000);
             }
             getDynamicEndpointParameters(user, datasetURI, (endpointParameters)=>{
                 graphName = endpointParameters.graphName;
