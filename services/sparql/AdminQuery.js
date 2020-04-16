@@ -32,7 +32,9 @@ class AdminQuery{
                     foaf:mbox ?mbox .
                  OPTIONAL {?subject dcterms:created ?created .}
             ${gEnd}
-        } ORDER BY DESC(?created)
+        } 
+        GROUP BY ?subject ?username ?isActive ?firstName ?lastName ?created ?isSuperUser ?mbox
+        ORDER BY DESC(?created)
         `;
         return this.prefixes + this.query;
     }
