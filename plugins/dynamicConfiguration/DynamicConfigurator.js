@@ -1450,6 +1450,9 @@ class DynamicConfigurator {
             output.sparqlEndpoint[datasetURI].path = el.path.value;
             output.sparqlEndpoint[datasetURI].protocol = el.protocol && el.protocol.value ? el.protocol.value : 'http';
             output.sparqlEndpoint[datasetURI].endpointType = el.endpointType.value;
+            //username/pw config
+            output.sparqlEndpoint[datasetURI].username = el.username.value;
+            output.sparqlEndpoint[datasetURI].password = el.password.value;
             //assume that all values will be stored in an array expect numbers: Not-a-Number
             settingProp = el.setting.value.replace(ldr_prefix, '').trim();
             if(!isNaN(el.settingValue.value)){
