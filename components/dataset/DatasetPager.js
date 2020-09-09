@@ -271,7 +271,7 @@ class DatasetPager extends React.Component {
                     </div>
                 }
                 {!this.state.saveMode ? '' :
-                    <div className="ui secondary segment bottom attached animated slideInDown">
+                    <div className="ui secondary segment bottom attached animate__animated animate__slideInDown">
                         <div className="ui icon input fluid">
                             <input ref="saveInput" type="text" placeholder="Write a description for your query and press enter to save..." value={this.state.saveText} onChange={this.handleSaveTextChange.bind(this)} onKeyDown={this.handleSaveKeyDown.bind(this)}/>
                             <i className="save icon"></i>
@@ -279,7 +279,7 @@ class DatasetPager extends React.Component {
                     </div>
                 }
                 {!this.state.searchMode ? '' :
-                    <div className="ui secondary segment bottom attached animated slideInDown">
+                    <div className="ui secondary segment bottom attached animate__animated animate__slideInDown">
                         <div className="ui icon input fluid">
                             <input ref="searchInput" type="text" placeholder="Type your search keywords and press enter to search..." value={this.state.searchTerm} onChange={this.handleSearchChange.bind(this)} onKeyDown={this.handleSearchKeyDown.bind(this)}/>
                             <i className="search icon"></i>

@@ -198,8 +198,8 @@ class BasicResourceList extends React.Component {
                 geo = node.geo ? node.geo : '';
                 itemClass = classNames({
                     'ui': true,
-                    'item fadeIn': true,
-                    'animated': !cloneable
+                    'item animate__fadeIn': true,
+                    'animate__animated': !cloneable
                 });
                 if (!self.props.enableAuthentication) {
                     dbClass = 'black cube icon';

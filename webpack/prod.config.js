@@ -1,7 +1,7 @@
 let webpack = require('webpack');
 let path = require('path');
 //plugins
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ExtractCssChunks = require('extract-css-chunks-webpack-plugin');
 const StatsWriterPlugin = require('webpack-stats-plugin').StatsWriterPlugin;
 const Visualizer = require('webpack-visualizer-plugin');
 
@@ -51,11 +51,15 @@ let webpackConfig = {
             },
             {
                 test: /\.css$/,
-                loader: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: 'css-loader',
-                    publicPath: '/public/css/'
-                })
+                use: [
+                    {
+                        loader: ExtractCssChunks.loader,
+                        options: {
+                            publicPath: '/public/css/'
+                        },
+                    },
+                    'css-loader',
+                ],
             }
         ]
     },
@@ -64,10 +68,9 @@ let webpackConfig = {
     },
     plugins: [
         // css files from the extract-text-plugin loader
-        new ExtractTextPlugin({
-            filename: '../css/vendor.bundle.css',
-            disable: false,
-            allChunks: true
+        new ExtractCssChunks({
+            filename: '../css/[name].css',
+            chunkFilename: '../css/vendor.bundle.css',
         }),
         new webpack.DefinePlugin({
             'process.env': {

@@ -92,7 +92,7 @@ class UsersList extends React.Component {
                 if (node.v !== user.id && !parseInt(node.isSuperUser)) {
                     i++;
                     return (
-                        <div className="item animated fadeIn" key={index}>
+                        <div className="item animate__animated animate__fadeIn" key={index}>
                             <div className="ui horizontal list">
                                 <NavLink className="item" routeName="resource" href={'/dataset/' + encodeURIComponent(currentComponent.props.UserStore.datasetURI) + '/resource/' + encodeURIComponent(node.v)}>
                                     <div className="content">
@@ -132,7 +132,7 @@ class UsersList extends React.Component {
                                     : ''}
                             </div>
                             {this.props.UserStore.msgSent ?
-                                <div className="ui message info animated pulse">Your message was successfully sent to all users...</div>
+                                <div className="ui message info animate__animated animate__pulse">Your message was successfully sent to all users...</div>
                                 : parseInt(user.isSuperUser) ?
                                     <div className="ui segment inverted blue">
                                         <Form>

@@ -131,7 +131,7 @@ class AggregateObjectReactor extends React.Component {
                             <div className="twelve wide column field">
                                 {dataEditType}
                             </div>
-                            <div className="four wide column field animated fadeInLeft">
+                            <div className="four wide column field animate__animated animate__fadeInLeft">
                                 {saveDIV}
                                 {(this.state.showDelete ? deleteDIV : '')}
                                 {undoDIV}
@@ -148,7 +148,7 @@ class AggregateObjectReactor extends React.Component {
                             <div className="twelve wide column field">
                                 {dataViewType}
                             </div>
-                            <div className="four wide column field animated fadeInLeft">
+                            <div className="four wide column field animate__animated animate__fadeInLeft">
                                 {editDIV}
                             </div>
                         </div>
