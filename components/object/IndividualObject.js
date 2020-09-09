@@ -250,7 +250,7 @@ class IndividualObject extends React.Component {
                                 {this.props.spec.lang ? <span className='ui mini label ribbon left attached'>{this.getLanguage(this.props.spec.lang)}</span>: null}
                                 {this.props.spec.dataType ? <span className='ui mini label ribbon left attached'><PrefixBasedView spec={{value: this.props.spec.dataType}} /></span>: null}
                             </div>
-                            <div className="four wide column field animated pulse">
+                            <div className="four wide column field animate__animated animate__pulse">
                                 {detailDIV}
                                 {editDIV}
                                 {deleteDIV}
