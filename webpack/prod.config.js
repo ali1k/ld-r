@@ -53,13 +53,13 @@ let webpackConfig = {
                 test: /\.css$/,
                 use: [
                     {
-                      loader: ExtractCssChunks.loader,
-                      options: {
-                        publicPath: '/public/css/'
-                      },
+                        loader: ExtractCssChunks.loader,
+                        options: {
+                            publicPath: '/public/css/'
+                        },
                     },
                     'css-loader',
-                  ],
+                ],
             }
         ]
     },
@@ -71,7 +71,7 @@ let webpackConfig = {
         new ExtractCssChunks({
             filename: '../css/[name].css',
             chunkFilename: '../css/vendor.bundle.css',
-          }),
+        }),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify('production'),
