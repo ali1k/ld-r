@@ -7,7 +7,7 @@ import ImportQuery from './sparql/ImportQuery';
 import ImportUtil from './utils/ImportUtil';
 import rp from 'request-promise';
 //CSV parsing
-import csv from 'fast-csv';
+import * as csv from 'fast-csv';
 import fs from 'fs';
 import path from 'path';
 import camelCase from 'camelcase';
@@ -76,6 +76,7 @@ export default {
             let rows = [];
             let csvStream = csv.parse(options)
                 .on('data', function(data){
+                    //console.log(data);
                     counter++;
                     //to limi the number of rows returned
                     if(counter > 10){
