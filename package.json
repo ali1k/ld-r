@@ -32,7 +32,7 @@
     "animate.css": "^4.1.1",
     "async": "^3.1.0",
     "body-parser": "^1.18.3",
-    "camelcase": "^5.0.0",
+    "camelcase": "^6.0.0",
     "chroma-js": "^2.0.2",
     "classnames": "^2.2.6",
     "codemirror": "^5.40.2",
