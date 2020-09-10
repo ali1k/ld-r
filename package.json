@@ -81,7 +81,7 @@
     "recharts": "^1.8.5",
     "request-promise": "^4.2.6",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^0.88.1",
+    "semantic-ui-react": "^1.2.1",
     "serialize-javascript": "^5.0.0",
     "serve-favicon": "^2.5.0",
     "simplify-js": "^1.2.4",
