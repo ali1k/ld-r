@@ -1,6 +1,5 @@
-FROM node:10.15
-MAINTAINER Ali Khalili "hyperir@gmail.com"
-
+FROM node:14.10
+LABEL maintainer="Ali Khalili hyperir@gmail.com"
 # Update aptitude with new repo
 RUN apt-get update
 # Install software
