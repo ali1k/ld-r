@@ -34,7 +34,7 @@ import HtmlComponent from './components/DefaultHTMLLayout';
 import { createElementWithContext } from 'fluxible-addons-react';
 
 const env = process.env.NODE_ENV;
-const htmlComponent = React.createFactory(HtmlComponent);
+const htmlComponent = HtmlComponent;
 const debug = debugLib('linked-data-reactor');
 const publicRoutes = ['/', '/about'];
 
