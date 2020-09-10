@@ -2,7 +2,7 @@ version: '3'
 
 services:
    virtuoso:
-     image: tenforce/virtuoso:1.3.2-virtuoso7.2.4
+     image: tenforce/virtuoso:latest
      restart: always
      volumes:
        - virtuoso-db:/data #the location of Virtuoso DB
@@ -17,7 +17,7 @@ services:
    ld-r:
      depends_on:
        - virtuoso
-     image: ali1k/ld-r
+     image: ali1k/ld-r:latest
      restart: always
      network_mode: service:virtuoso
 volumes:
