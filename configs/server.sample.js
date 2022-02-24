@@ -14,7 +14,7 @@ export default {
         },
         //Example for connecting to a Virtuoso triple store
         'http://dbpedia.org/sparql': {
-            host: 'dbpedia.org', port: 80, path: '/sparql', graphName: 'default', endpointType: 'virtuoso'
+            host: 'dbpedia.org', port: 80, path: '/sparql', graphName: 'default', endpointType: 'virtuoso', protocol: 'https'
         },
         //Example for connecting to a ClioPatria triple store
         'http://localhost:3020/sparql/': {

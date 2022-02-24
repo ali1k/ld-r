@@ -155,13 +155,13 @@ export default {
         }
         switch (endpointParameters.type.toLowerCase()) {
             case 'virtuoso':
-                outputObject.uri = protocol + '://' + userPass + host + ':' + port + path;
+                outputObject.uri = protocol + '://' + userPass + host + (port == '80' ? '' : ':' + port) + path;
                 outputObject.params['query'] = query;
                 outputObject.params['format'] = outputFormat;
 
                 break;
             case 'blazegraph':
-                outputObject.uri = protocol + '://' + userPass + host + ':' + port + path;
+                outputObject.uri = protocol + '://' + userPass + host + (port == '80' ? '' : ':' + port) + path;
                 outputObject.params['query'] = query;
                 //application/sparql-results+json is not supported!
                 outputObject.params['format'] = 'json';
@@ -169,11 +169,11 @@ export default {
                 break;
             case 'graphdb':
                 if(mode === 'update'){
-                    outputObject.uri = protocol + '://' + userPass + host + ':' + port + path + '/statements';
+                    outputObject.uri = protocol + '://' + userPass + host + (port == '80' ? '' : ':' + port) + path + '/statements';
                     outputObject.params['update'] = query;
                     //outputObject.params['format'] = outputFormat;
                 }else{
-                    outputObject.uri = protocol + '://' + userPass + host + ':' + port + path;
+                    outputObject.uri = protocol + '://' + userPass + host + (port == '80' ? '' : ':' + port) + path;
                     outputObject.params['query'] = query;
                     outputObject.params['format'] = outputFormat;
                 }
@@ -185,25 +185,25 @@ export default {
             case 'stardog':
                 //to make it compatible with old Stardog API
                 if(endpointParameters.httpOptions.path.indexOf('annex') !== -1){
-                    outputObject.uri = protocol + '://' + userPass + host + (port === '80' ? '' : ':' + port) + path;
+                    outputObject.uri = protocol + '://' + userPass + host + (port == '80' ? '' : ':' + port) + path;
                     outputObject.params['query'] = query;
                     outputObject.params['Accept'] = outputFormat;
                 }else{
                     //new Stardog API /query and /update
                     if(mode === 'update'){
-                        outputObject.uri = protocol + '://' + userPass + host + (port === '80' ? '' : ':' + port) + path + '/update';
+                        outputObject.uri = protocol + '://' + userPass + host + (port == '80' ? '' : ':' + port) + path + '/update';
                         outputObject.params['update'] = query;
                         outputObject.params['query'] = query;
                     }else{
                         outputObject.params['query'] = query;
-                        outputObject.uri = protocol + '://' + userPass + host + (port === '80' ? '' : ':' + port) + path + '/query';
+                        outputObject.uri = protocol + '://' + userPass + host + (port == '80' ? '' : ':' + port) + path + '/query';
                         outputObject.params['Accept'] = outputFormat;
                     }
                 }
                 break;
             case 'cliopatria':
                 if(mode === 'update'){
-                    outputObject.uri = protocol + '://' + userPass + host + (port === '80' ? '' : ':' + port) + path + 'update';
+                    outputObject.uri = protocol + '://' + userPass + host + (port == '80' ? '' : ':' + port) + path + 'update';
                     outputObject.params['update'] = query;
                 }else{
                     outputObject.params['query'] = query;
@@ -215,17 +215,17 @@ export default {
                 //todo: check the differences for other triple stores
             case 'sesame':
                 if(mode === 'update'){
-                    outputObject.uri = protocol + '://' + userPass + host + (port === '80' ? '' : ':' + port) + path + '/statements';
+                    outputObject.uri = protocol + '://' + userPass + host + (port == '80' ? '' : ':' + port) + path + '/statements';
                     outputObject.params['update'] = query;
                 }else{
                     outputObject.params['query'] = query;
-                    outputObject.uri = protocol + '://' + userPass + host + (port === '80' ? '' : ':' + port) + path;
+                    outputObject.uri = protocol + '://' + userPass + host + (port == '80' ? '' : ':' + port) + path;
                     outputObject.params['Accept'] = outputFormat;
                 }
 
                 break;
             case 'neptune':
-                outputObject.uri = 'http://' + endpointParameters.httpOptions.host + ':' + endpointParameters.httpOptions.port + endpointParameters.httpOptions.path;
+                outputObject.uri = 'http://' + host +  (port == '80' ? '' : ':' + port) + path ;
                 outputObject.params['Accept'] = outputFormat;
                 if(mode === 'update'){
                     outputObject.params['update'] = query;
@@ -235,7 +235,7 @@ export default {
 
                 break;
             default:
-                outputObject.uri = protocol + '://' + userPass + host+ (port === '80' ? '' : ':' + port) + path;
+                outputObject.uri = protocol + '://' + userPass + host+ (port == '80' ? '' : ':' + port) + path;
                 outputObject.params['query'] = query;
                 outputObject.params['format'] = outputFormat;
         }
