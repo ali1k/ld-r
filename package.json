@@ -64,7 +64,7 @@
     "nodemailer": "^6.4.11",
     "nodemailer-smtp-transport": "^2.7.4",
     "npm": "^7.0.0",
-    "passport": "^0.4.1",
+    "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "password-hash": "^1.2.2",
     "prop-types": "^15.7.2",
