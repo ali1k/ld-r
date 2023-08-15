@@ -63,7 +63,7 @@
     "moment": "^2.27.0",
     "nodemailer": "^6.4.11",
     "nodemailer-smtp-transport": "^2.7.4",
-    "npm": "^7.0.0",
+    "npm": ">=8.11.0",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "password-hash": "^1.2.2",
