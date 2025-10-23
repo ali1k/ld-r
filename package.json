@@ -51,7 +51,7 @@
     "flashtext.js": "^1.0.5",
     "fluxible": "^1.4.0",
     "fluxible-addons-react": "^0.2.16",
-    "fluxible-plugin-fetchr": "^0.3.11",
+    "fluxible-plugin-fetchr": "^0.5.0",
     "fluxible-router": "^1.5.1",
     "hogan-express": "^0.5.2",
     "jqcloud2": "^2.0.3",
